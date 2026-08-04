@@ -1,0 +1,12 @@
+/* Show field inserter button for calculated field configurations */
+.acf-field-form-calculated-fields .af-field-dropdown.button {
+  display: inline-block;
+}
+
+.acf-field-object-calculated .acf-field-setting-instruction_message .acf-input p {
+  margin: 0;
+}
+
+.acf-field-af-recaptcha .acf-input p {
+  margin: 0;
+}
