@@ -130,6 +130,28 @@ return array(
 					),
 				),
 			),
+			/*
+			 * ClassDetail's "WHAT TO EXPECT" list — 4 ChecklistItem rows with
+			 * `index` set, so the order is meaningful and the markup is
+			 * <ol>/<li>. A repeater rather than prose because the numerals are
+			 * structured data: deriving them by regexing the_content() is the
+			 * same trap single.php and templates/legal.php each avoided.
+			 */
+			array(
+				'name'         => 'what_to_expect',
+				'label'        => __( 'What to expect', 'londonparkour_v8' ),
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => __( 'Add step', 'londonparkour_v8' ),
+				'instructions' => __( 'The numbered checklist on the class page. Order is meaningful.', 'londonparkour_v8' ),
+				'sub_fields'   => array(
+					array(
+						'name'  => 'text',
+						'label' => __( 'Step', 'londonparkour_v8' ),
+						'type'  => 'text',
+					),
+				),
+			),
 
 			lp_tab( __( 'Actions', 'londonparkour_v8' ) ),
 			array(
@@ -205,6 +227,20 @@ return array(
 				'default_value' => 0,
 				'instructions'  => __( 'Featured above the roster, and left out of it.', 'londonparkour_v8' ),
 			),
+			/*
+			 * ClassDetail's Meeting Point band closes with Byline `size: 'lg'`
+			 * carrying a `bio`. `quote` beside it is a different thing — a
+			 * pull-quote the Coaches block prints in the coach's own voice —
+			 * so the two do not collapse into one field.
+			 */
+			array(
+				'name'         => 'bio',
+				'label'        => __( 'Bio', 'londonparkour_v8' ),
+				'type'         => 'textarea',
+				'rows'         => 3,
+				'new_lines'    => '',
+				'instructions' => __( 'One or two sentences, shown beside the coach on a class page.', 'londonparkour_v8' ),
+			),
 		),
 	),
 
@@ -254,6 +290,15 @@ return array(
 				'ui'            => 1,
 				'default_value' => 0,
 			),
+			/*
+			 * Plain text, not ACF's `google_map` field: that type needs a
+			 * Google Maps JS API key registered on `acf/init`, which this
+			 * project has never configured and which would put an external
+			 * service and a billing account behind the admin screen. Two text
+			 * fields need neither. ClassesMap projects them into its
+			 * placeholder rectangle; if a key is ever added, `google_map` is
+			 * the upgrade and the projection is unaffected.
+			 */
 			array(
 				'name'  => 'latitude',
 				'label' => __( 'Latitude', 'londonparkour_v8' ),
@@ -263,6 +308,35 @@ return array(
 				'name'  => 'longitude',
 				'label' => __( 'Longitude', 'londonparkour_v8' ),
 				'type'  => 'text',
+			),
+			/*
+			 * The three SitePanel fields ClassesMap's Meeting Points grid
+			 * needs. `site-panel.php` already takes all three as args; only
+			 * the storage was missing. Every value is transcribed from the
+			 * .pen (ClassesMap.js's SITE_PANELS, Phase 8 note), not authored.
+			 *
+			 * `meta` beside them is NOT `code`: it carries an opening-hours
+			 * segment SitePanel's code line does not print.
+			 */
+			array(
+				'name'         => 'meeting_point',
+				'label'        => __( 'Meeting point', 'londonparkour_v8' ),
+				'type'         => 'textarea',
+				'rows'         => 2,
+				'new_lines'    => '',
+				'instructions' => __( 'Where to stand, in one sentence. e.g. "Outside Tube station exit 2, next to metal pillars and open area."', 'londonparkour_v8' ),
+			),
+			array(
+				'name'         => 'transport_rail',
+				'label'        => __( 'Transport — rail', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'e.g. "Victoria Underground Line · Vauxhall (South Western Railway)"', 'londonparkour_v8' ),
+			),
+			array(
+				'name'         => 'transport_bus',
+				'label'        => __( 'Transport — bus', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'e.g. "Buses — 2 · 36 · 87 · 88 · 156 · 185 · 196 · 344 · 436"', 'londonparkour_v8' ),
 			),
 		),
 	),

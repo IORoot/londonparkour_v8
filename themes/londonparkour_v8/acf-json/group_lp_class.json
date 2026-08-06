@@ -121,6 +121,23 @@
             "key": "field_32a8e26b541cefbb"
         },
         {
+            "name": "what_to_expect",
+            "label": "What to expect",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add step",
+            "instructions": "The numbered checklist on the class page. Order is meaningful.",
+            "sub_fields": [
+                {
+                    "name": "text",
+                    "label": "Step",
+                    "type": "text",
+                    "key": "field_2eda05c923126aea"
+                }
+            ],
+            "key": "field_14bbdf7eb37f3425"
+        },
+        {
             "name": "tab_actions",
             "label": "Actions",
             "type": "tab",

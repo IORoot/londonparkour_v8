@@ -10,7 +10,10 @@
       "type": "INDOOR",
       "is_flagship": true,
       "latitude": "51.4861",
-      "longitude": "-0.1253"
+      "longitude": "-0.1253",
+      "meeting_point": "Outside Tube station exit 2, next to metal pillars and open area.",
+      "transport_rail": "Victoria Underground Line · Vauxhall (South Western Railway)",
+      "transport_bus": "Note: Oval Northern Line is walking distance. Buses — 2 · 36 · 87 · 88 · 156 · 185 · 196 · 344 · 436"
     }
   },
   {
@@ -23,7 +26,10 @@
       "type": "INDOOR",
       "is_flagship": false,
       "latitude": "51.4695",
-      "longitude": "-0.0699"
+      "longitude": "-0.0699",
+      "meeting_point": "Outside the Rye Lane station exit, on the open area by the arches.",
+      "transport_rail": "Overground — Windrush line · Southeastern (Peckham Rye)",
+      "transport_bus": "Buses — 12 · 36 · 37 · 63 · 78 · 197 · 312 · 343 · 363 · P12"
     }
   },
   {
@@ -37,7 +43,10 @@
       "type": "OUTDOOR",
       "is_flagship": false,
       "latitude": "51.5060",
-      "longitude": "-0.1160"
+      "longitude": "-0.1160",
+      "meeting_point": "Under the Queen Elizabeth Hall, by the painted banks at the river end.",
+      "transport_rail": "Waterloo — Jubilee · Northern · Bakerloo · Waterloo & City Underground Lines",
+      "transport_bus": "Buses — 1 · 4 · 26 · 59 · 68 · 76 · 139 · 168 · 171 · 176 · 243 · 341"
     }
   },
   {
@@ -50,7 +59,10 @@
       "type": "INDOOR",
       "is_flagship": false,
       "latitude": "51.5434",
-      "longitude": "-0.0086"
+      "longitude": "-0.0086",
+      "meeting_point": "Outside the station's main western entrance, on the open paved area by the steps.",
+      "transport_rail": "Central · Jubilee Underground Lines · Elizabeth line · DLR · Overground",
+      "transport_bus": "Buses — 25 · 86 · 108 · 158 · 238 · 241 · 262 · 276 · 308 · 388"
     }
   },
   {
@@ -63,7 +75,10 @@
       "type": "OUTDOOR",
       "is_flagship": false,
       "latitude": "51.5533",
-      "longitude": "-0.0342"
+      "longitude": "-0.0342",
+      "meeting_point": "By the marshes car park entrance on Homerton Road, next to the pavilion.",
+      "transport_rail": "Overground — Mildmay line (Homerton)",
+      "transport_bus": "Buses — 26 · 30 · 236 · 276 · 308 · 388 · W15"
     }
   },
   {
@@ -76,7 +91,10 @@
       "type": "OUTDOOR",
       "is_flagship": false,
       "latitude": "51.5633",
-      "longitude": "-0.2795"
+      "longitude": "-0.2795",
+      "meeting_point": "Outside the station's Olympic Way exit, on the wide steps by the arch.",
+      "transport_rail": "Metropolitan · Jubilee Underground Lines",
+      "transport_bus": "Buses — 18 · 83 · 92 · 182 · 204 · 206 · 223 · 224 · 245 · 297"
     }
   }
 ]
