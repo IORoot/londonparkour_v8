@@ -98,6 +98,18 @@ if [ -n "$BLOG_ID" ]; then
 	echo "  posts page = #$BLOG_ID"
 fi
 
+# WordPress's own sample post is dated at install time, so it is always the
+# newest post on the site — it takes the blog index's featured slot and sits in
+# the prev/next chain ahead of every seeded article. Drafted rather than
+# deleted: reversible, and it is core's content to remove, not ours.
+say "Parking WordPress's sample content"
+for slug in hello-world; do
+	ID="$(wp post list --post_type=post --name="$slug" --field=ID --format=csv 2>/dev/null | head -1)"
+	if [ -n "$ID" ]; then
+		wp post update "$ID" --post_status=draft >/dev/null && echo "  drafted $slug (#$ID)"
+	fi
+done
+
 say "Discourage search engines on local"
 wp option update blog_public 0
 
