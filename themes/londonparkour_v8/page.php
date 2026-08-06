@@ -36,7 +36,7 @@ $lp_has_sections = is_array( $lp_sections ) && $lp_sections;
 			continue;
 		}
 		?>
-		<div class="mx-auto w-full max-w-[720px] px-6 md:px-16 py-[64px]">
+		<div class="mx-auto w-full max-w-[720px] px-6 lg:px-16 py-scale-2xl">
 			<div <?php londonparkour_v8_content_class(); ?>>
 				<?php the_content(); ?>
 			</div>

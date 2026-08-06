@@ -24,8 +24,17 @@ fail=0
 # <button>, and the third is a 60px icon-only bar cell — button.php's `icon`
 # variant is `btn btn-primary btn-square`, the exact chrome these must not have.
 # It is NOT exempt from the <svg>/<use>/<img>/btn-class rules.
+#
+# 404.php is exempt from the <button> rule on the same terms, for a reason that
+# was measured rather than assumed. Its search submit is the ONLY instance of
+# that shape in the whole design — a grep of the Storybook finds the dark-band
+# bordered block at src/stories/Pages/NotFound/NotFound.js:123 and nowhere else,
+# and every Button the remaining pages ask for is `primary`, `inverse` or
+# `icon`, all of which button.php already ships. Promoting a one-page shape
+# would be building ahead, so the shape stays here and the rule steps around it.
+# If a second file ever needs it, that is the moment it becomes a variant.
 rules=(
-  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php'
+  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|404\.php'
   'daisyUI btn class|class="[^"]*\bbtn\b|parts/elements/button.php|'
   'hand-rolled separator|role="separator"|parts/elements/rule.php|'
   'inline <svg>|<svg[[:space:]>]|lp_icon() in app/includes/html.php|'
@@ -35,7 +44,11 @@ rules=(
 
 # Directories that compose, and must therefore never define.
 targets=(blocks template-parts)
-for t in blocks parts/components parts/site; do [ -d "$t" ] && targets+=("$t"); done
+for t in blocks parts/components parts/site inc templates; do [ -d "$t" ] && targets+=("$t"); done
+# The theme-root templates compose too, and until now went unscanned — which is
+# how 404.php's hand-built controls passed unremarked. The glob expands here, so
+# every page template added later is covered without touching this line.
+targets+=(*.php)
 # parts/components compose primitives too, but parts/elements and parts/brand
 # are where markup is allowed to be defined.
 scan=$(printf '%s\n' "${targets[@]}" | sort -u | tr '\n' ' ')
@@ -48,7 +61,10 @@ for rule in "${rules[@]}"; do
   # ("never emit a raw <svg>"), and a rule that punishes accurate documentation
   # gets documentation written around it instead. Comments emit nothing.
   hits=$(printf '%s' "$hits" | grep -vE '^[^:]+:[0-9]+:[[:space:]]*\*' || true)
-  [ -n "$exempt" ] && hits=$(printf '%s' "$hits" | grep -v "$exempt" || true)
+  # -E, not -v's default BRE: a rule may exempt more than one file, and it
+  # separates them with the same `|` the rule fields use, so `read` hands the
+  # whole alternation over as the final field.
+  [ -n "$exempt" ] && hits=$(printf '%s' "$hits" | grep -vE "$exempt" || true)
   if [ -n "$hits" ]; then
     fail=1
     echo "✗ $label — belongs in $owner"
@@ -72,11 +88,17 @@ done
 #
 # So: flag a `<?php` inside a class attribute only when the character before it
 # is neither a quote nor a space, i.e. it is welded to a partial class name.
-glued=$(grep -rnE 'class="[^"]*[^ "]<\?(php|=)' blocks parts template-parts --include='*.php' 2>/dev/null || true)
+# Same reach as the markup rules above, plus parts/elements and parts/brand:
+# defining markup there is allowed, building a class name from fragments is not.
+lit_scan="$scan parts"
+
+# `parts` overlaps the `parts/components` already in $scan, so the same hit can
+# come back twice; sort -u makes a failure report list each line once.
+glued=$(grep -rnE 'class="[^"]*[^ "]<\?(php|=)' $lit_scan --include='*.php' 2>/dev/null | sort -u || true)
 
 # And flag string concatenation that starts a Tailwind-shaped prefix.
 concat=$(grep -rnE "'(text|bg|border|fill|stroke|ring|from|to|via|p|m|px|py|pt|pb|pl|pr|mx|my|w|h|min-w|max-w|gap|grid-cols|col-span|flex|items|justify|rounded|shadow|opacity|scale|translate)-'[[:space:]]*\." \
-         blocks parts template-parts --include='*.php' 2>/dev/null || true)
+         $lit_scan --include='*.php' 2>/dev/null | sort -u || true)
 
 if [ -n "$glued$concat" ]; then
   fail=1
