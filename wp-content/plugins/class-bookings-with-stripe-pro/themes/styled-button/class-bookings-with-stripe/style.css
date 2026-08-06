@@ -1,0 +1,14 @@
+/**
+ * Example 2 — submit-button component override
+ *
+ * ↓↓↓ CHANGE THIS — button colour ↓↓↓
+ */
+.cbfs-form__button {
+	background: #15803d;
+	border-color: #15803d;
+}
+.cbfs-form__button:hover:not(:disabled) {
+	background: #166534;
+	border-color: #166534;
+}
+/* ↑↑↑ CHANGE THIS ↑↑↑ */

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Slide</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-370.000000, -580.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Slide" transform="translate(360.000000, 180.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-14" xlink:href="#path-1"></use>
+                    <g id="Triangles" mask="url(#mask-2)" fill="#242424" fill-rule="nonzero">
+                        <g transform="translate(101.931919, 113.399332) rotate(-59.000000) translate(-101.931919, -113.399332) translate(35.099132, 57.544652)" id="Combined-Shape">
+                            <path d="M133.665574,5.54223334e-13 L101.457,53.668 L66.8327869,111.709358 L2.14583906e-12,0.0494454545 L0.029,0.049 L2.1032065e-12,5.40012479e-13 L133.665574,5.54223334e-13 Z M22.589,8.909 L15.738453,8.90909091 L66.8327869,94.0477045 L96.008,45.431 L117.772,8.909 L111.076,8.909 L66.8327869,82.6318182 L22.589,8.909 Z M100.684,8.909 L93.699,8.909 L66.8327869,53.6772727 L39.966,8.909 L32.981,8.909 L66.8327869,65.3158864 L100.684,8.909 Z M83.307,8.909 L50.357,8.909 L66.8327869,36.3613409 L83.307,8.909 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

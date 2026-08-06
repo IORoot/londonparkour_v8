@@ -1,0 +1,17 @@
+{
+  "slug": "wellspring",
+  "name": "Wellspring",
+  "description": "Centered premium card \u2014 soft grey canvas, magenta accents, and a calm clinical-studio booking flow.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "booking-status",
+    "global-schedule",
+    "packs-list",
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "premium"
+  ]
+}

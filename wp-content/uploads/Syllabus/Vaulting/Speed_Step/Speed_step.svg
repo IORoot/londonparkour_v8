@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Speed Vault</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-370.000000, -400.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Speed-Vault" transform="translate(360.000000, 0.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-6" xlink:href="#path-1"></use>
+                    <g id="Triangles" mask="url(#mask-2)" fill="#242424" fill-rule="nonzero">
+                        <g transform="translate(85.139330, 85.399332) rotate(-180.000000) translate(-85.139330, -85.399332) translate(18.402591, 10.656016)" id="Combined-Shape">
+                            <path d="M133.473479,37.7772727 L66.8327869,149.486631 L-8.52651283e-14,37.8267182 L10.3920528,37.8267182 L66.8327869,132.170699 L123.081872,37.7772727 L133.473479,37.7772727 Z M27.664541,18.8267182 L66.8327869,84.0931591 L106.001478,18.8267182 L116.393086,18.8267182 L66.8327869,101.409091 L17.2724882,18.8267182 L27.664541,18.8267182 Z M45.1448792,3.19744231e-14 L66.8327869,36.1386136 L88.5209173,3.19744231e-14 L98.9125246,3.19744231e-14 L66.8327869,53.4545455 L34.7530492,3.19744231e-14 L45.1448792,3.19744231e-14 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

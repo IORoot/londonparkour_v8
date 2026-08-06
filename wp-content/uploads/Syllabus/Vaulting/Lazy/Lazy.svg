@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Lazy</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-190.000000, -580.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Lazy" transform="translate(180.000000, 180.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-13" xlink:href="#path-1"></use>
+                    <polygon id="Combined-Shape" fill="#242424" fill-rule="nonzero" mask="url(#mask-2)" transform="translate(85.091394, 84.758556) rotate(-180.000000) translate(-85.091394, -84.758556) " points="117.171132 58.0312834 85.0913944 111.485829 53.0116567 58.0312834 63.4034867 58.0312834 85.0913944 94.1698971 106.779525 58.0312834"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

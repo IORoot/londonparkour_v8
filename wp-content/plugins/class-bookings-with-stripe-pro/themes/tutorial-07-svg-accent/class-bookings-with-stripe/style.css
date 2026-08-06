@@ -1,0 +1,15 @@
+/**
+ * Tutorial 07 — SVG accent placement.
+ */
+
+.cbfs-tut07__accent-wrap {
+	display: flex;
+	justify-content: center;
+	margin: 0 0 20px;
+}
+
+.cbfs-tut07__accent {
+	width: 72px;
+	height: 72px;
+	display: block;
+}

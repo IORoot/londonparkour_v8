@@ -1,0 +1,13 @@
+{
+  "slug": "custom-labels",
+  "name": "Custom Labels",
+  "description": "Labels only \u2014 changes the pay button text (no layout or CSS changes). Look for \u201cReserve & pay securely\u201d on the submit button.",
+  "version": "1.0.0",
+  "provides": [
+    "labels"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "basic"
+  ]
+}

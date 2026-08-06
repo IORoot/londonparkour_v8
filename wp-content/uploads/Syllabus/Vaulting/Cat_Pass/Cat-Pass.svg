@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Cat-Pass</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-730.000000, -400.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Cat-Pass" transform="translate(720.000000, 0.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-10" xlink:href="#path-1"></use>
+                    <path d="M146.704124,29.8510786 L85.4770211,144.528079 L151.062266,144.528583 L151.062266,154.528583 L19.0622657,154.528583 L19.0622657,144.528583 L85.3430211,144.528079 L80.0620249,135.739337 L131.861473,38.7694428 L21.9800945,39.1707753 L16.6280211,30.2634294 L146.704124,29.8510786 Z M121.779807,44.8271189 L76.5183387,129.841653 L71.1660358,120.933925 L106.937157,53.7454831 L30.8195304,53.7860637 L25.467457,44.8787177 L121.779807,44.8271189 Z M96.9609178,59.7398122 L67.6637157,114.768641 L62.3115276,105.861104 L82.1182673,68.6581764 L39.9712164,68.6805822 L34.619143,59.7732362 L96.9609178,59.7398122 Z" id="Combined-Shape" fill="#242424" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

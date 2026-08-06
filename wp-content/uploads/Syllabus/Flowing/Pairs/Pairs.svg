@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Pairs</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-550.000000, -1840.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Flowing" transform="translate(361.000000, 1440.000000)">
+                    <g id="Pairs" transform="translate(179.000000, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle" xlink:href="#path-1"></use>
+                        <path d="M148,88 L148,148 L128,148 L128,88 L148,88 Z M118,88 L118,148 L102,148 L102,88 L118,88 Z M91.9999999,88 L91.9999999,148 L81.9999999,148 L81.9999999,88 L91.9999999,88 Z M71.9999999,88 L71.9999999,148 L63.9999999,148 L63.9999999,88 L71.9999999,88 Z M53.9999999,88 L53.9999999,148 L47.9999999,148 L47.9999999,88 L53.9999999,88 Z M37.9999999,88 L37.9999999,148 L33.9999999,148 L33.9999999,88 L37.9999999,88 Z M23.9999999,88 L23.9999999,148 L21.9999999,148 L21.9999999,88 L23.9999999,88 Z M148,21 L148,81 L128,81 L128,21 L148,21 Z M118,21 L118,81 L102,81 L102,21 L118,21 Z M91.9999999,21 L91.9999999,81 L81.9999999,81 L81.9999999,21 L91.9999999,21 Z M71.9999999,21 L71.9999999,81 L63.9999999,81 L63.9999999,21 L71.9999999,21 Z M53.9999999,21 L53.9999999,81 L47.9999999,81 L47.9999999,21 L53.9999999,21 Z M37.9999999,21 L37.9999999,81 L33.9999999,81 L33.9999999,21 L37.9999999,21 Z M23.9999999,21 L23.9999999,81 L21.9999999,81 L21.9999999,21 L23.9999999,21 Z" id="Combined-Shape" fill="#242424" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

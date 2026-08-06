@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Step Vault</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-10.000000, -400.000000)">
+            <g id="Step-Vault" transform="translate(10.000000, 400.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Rectangle-Copy-7" fill="#C6F6D5" xlink:href="#path-1"></use>
+                <g id="Triangles-Copy-3" mask="url(#mask-2)" fill="#242424" fill-rule="nonzero">
+                    <g transform="translate(85.000000, 85.500000) rotate(-180.000000) translate(-85.000000, -85.500000) translate(20.000000, 31.000000)" id="Triangle">
+                        <path d="M65,0 L130,109 L0,109 L65,0 Z M65,16.94841 L15.3066333,100.28 L114.69315,100.28 L65,16.94841 Z" transform="translate(65.000000, 54.500000) rotate(-180.000000) translate(-65.000000, -54.500000) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

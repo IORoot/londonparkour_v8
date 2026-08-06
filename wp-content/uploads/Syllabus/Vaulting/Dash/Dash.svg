@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Dash</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-10.000000, -760.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Dash" transform="translate(0.000000, 360.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-18" xlink:href="#path-1"></use>
+                    <g id="Triangles" mask="url(#mask-2)" fill="#242424" fill-rule="nonzero">
+                        <g transform="translate(84.931919, 85.275856) rotate(-90.000000) translate(-84.931919, -85.275856) translate(12.975657, 29.421177)" id="Combined-Shape">
+                            <path d="M66.640692,1.13686838e-13 L78.235,19.373 L89.8327869,0.0494454545 L100.884,18.465 L111.832787,0.222727273 L143.912525,53.6772727 L133.520695,53.6772727 L111.832787,17.5386591 L106.08,27.123 L139.393086,82.6318182 L129.001033,82.6318182 L100.884,35.781 L94.462,46.483 L133.473479,111.659913 L123.081426,111.659913 L88.394,53.677 L79.7530492,53.6772727 L84.08,46.467 L78.233,36.693 L50.6640955,82.6318182 L40.2724882,82.6318182 L73.045,28.021 L66.640692,17.3159318 L10.3916073,111.709358 L1.70530257e-13,111.709358 L66.640692,1.13686838e-13 Z M89.8327869,17.3653773 L83.424,28.042 L89.273,37.814 L95.688,27.123 L89.8327869,17.3653773 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

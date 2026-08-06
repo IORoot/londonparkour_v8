@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>TicTac</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-550.000000, -400.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="TicTac" transform="translate(540.000000, 0.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-9"  xlink:href="#path-1"></use>
+                    <g id="Triangles" mask="url(#mask-2)" fill="#242424" fill-rule="nonzero">
+                        <g transform="translate(84.577240, 85.495379) rotate(-90.000000) translate(-84.577240, -85.495379) translate(17.840500, 24.995379)" id="Combined-Shape">
+                            <path d="M133.473479,-4.40536496e-13 L67.255,111 L132,111 L132,121 L0,121 L0,111 L66.408,111 L7.10542736e-14,0.0494454545 L10.3920528,0.0494454545 L66.8327869,94.3934265 L123.081872,-4.40536496e-13 L133.473479,-4.40536496e-13 Z M27.664541,0.0494454545 L66.8327869,65.3158864 L106.001478,0.0494454545 L116.393086,0.0494454545 L66.8327869,82.6318182 L17.2724882,0.0494454545 L27.664541,0.0494454545 Z M45.1448792,0.222727273 L66.8327869,36.3613409 L88.5209173,0.222727273 L98.9125246,0.222727273 L66.8327869,53.6772727 L34.7530492,0.222727273 L45.1448792,0.222727273 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

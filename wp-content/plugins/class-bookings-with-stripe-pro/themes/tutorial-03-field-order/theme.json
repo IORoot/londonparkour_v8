@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-03-field-order",
+  "name": "Tutorial 03: Field order",
+  "description": "Reorder fields by moving $view->render() calls in booking-form.php \u2014 here date and seats come before name and email.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-06-typography",
+  "name": "Tutorial 06: Typography",
+  "description": "Change font family, style, size, and text colour in style.css. Uses Google Fonts via bootstrap.php.",
+  "version": "1.0.0",
+  "provides": [
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

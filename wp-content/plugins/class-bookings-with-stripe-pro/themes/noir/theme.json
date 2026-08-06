@@ -1,0 +1,17 @@
+{
+  "slug": "noir",
+  "name": "Noir",
+  "description": "Dark asymmetric split \u2014 moody photography, gold accents, and evening creative-studio atmosphere.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "booking-status",
+    "global-schedule",
+    "packs-list",
+    "style"
+  ],
+  "screenshot": "screenshot.jpg",
+  "tags": [
+    "premium"
+  ]
+}

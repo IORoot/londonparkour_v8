@@ -1,0 +1,112 @@
+{
+    "key": "group_6728969e00be0",
+    "title": "Tutorial Transcripts Bulk",
+    "fields": [
+        {
+            "key": "field_672896f2856da",
+            "label": "WP Query",
+            "name": "bulk_wp_query",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "0": false,
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6728969e03904",
+            "label": "📜 Get YouTube Transcript &amp; SRT",
+            "name": "bulk_enable_transcript",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_6728969e0394f",
+            "label": "📜 Process Transcript through ChatGPT",
+            "name": "bulk_enable_transcript_chatgpt",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_6728969e03996",
+            "label": "📜 ChatGPT System Text for Transcript",
+            "name": "bulk_transcript_chatgpt_prompt",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "The command to perform on the description.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "default_value": "You are an expert technical writer. Take the provided transcript and turn it into a clear, engaging three-paragraph tutorial. The tutorial should be structured as follows:\r\n\r\nIntroduction: Briefly introduce the topic, including any relevant context or problem the tutorial addresses.\r\n\r\nBody: Summarise the main steps or concepts covered in the transcript, using straightforward language and aiming to make the instructions feel conversational and approachable.\r\n\r\nConclusion: Wrap up with a summary or key takeaway, reinforcing the main value of the tutorial.\r\n\r\nDo not use any titles, just use paragraphs. \r\n\r\nAfter the paragraphs, include three concise highlights to recap the essential points or practical tips.\r\n\r\nThe tone should be friendly, concise, and informative. Avoid jargon where possible, and make sure the text flows naturally, as if explaining to someone one-on-one.\r\n\r\nNever mention the speaker in the video or the transcript. I want this to sound like I wrote the result.",
+            "maxlength": "",
+            "rows": "",
+            "placeholder": "",
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "tutorial_transcripts"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1786009895
+}

@@ -1,0 +1,108 @@
+/**
+ * Resets default status card chrome when a gallery theme wrapper is active.
+ * Theme packs add colours and layout in their style.css.
+ */
+
+.cbfs-status.cbfs-status--layout-modern:is(
+	.cbfs-horizon,
+	.cbfs-wellspring,
+	.cbfs-noir,
+	.cbfs-summit,
+	.cbfs-atelier,
+	.cbfs-lime,
+	.cbfs-ex4,
+	.cbfs-ex5,
+	.cbfs-tut03,
+	.cbfs-tut04,
+	.cbfs-tut07,
+	.cbfs-tut11,
+	.twentytwentyfive-example3-layout
+) {
+	max-width: none;
+	padding: 0;
+	background: transparent;
+	border: none;
+	box-shadow: none;
+	border-radius: 0;
+	overflow: visible;
+}
+
+.cbfs-status.cbfs-status--layout-modern:is(
+	.cbfs-horizon,
+	.cbfs-wellspring,
+	.cbfs-noir,
+	.cbfs-summit,
+	.cbfs-atelier,
+	.cbfs-lime,
+	.cbfs-ex4,
+	.cbfs-ex5,
+	.cbfs-tut03,
+	.cbfs-tut04,
+	.cbfs-tut07,
+	.cbfs-tut11,
+	.twentytwentyfive-example3-layout
+) .cbfs-status__title {
+	margin: 0 0 8px;
+	padding: 0;
+	background: none;
+	border: none;
+	font-family: inherit;
+	font-weight: 700;
+	letter-spacing: normal;
+}
+
+.cbfs-status.cbfs-status--layout-modern:is(
+	.cbfs-horizon,
+	.cbfs-wellspring,
+	.cbfs-noir,
+	.cbfs-summit,
+	.cbfs-atelier,
+	.cbfs-lime,
+	.cbfs-ex4,
+	.cbfs-ex5
+) .cbfs-status__lede,
+.cbfs-status.cbfs-status--layout-modern:is(
+	.cbfs-horizon,
+	.cbfs-wellspring,
+	.cbfs-noir,
+	.cbfs-summit,
+	.cbfs-atelier,
+	.cbfs-lime,
+	.cbfs-ex4,
+	.cbfs-ex5
+) .cbfs-status__hint,
+.cbfs-status.cbfs-status--layout-modern:is(
+	.cbfs-horizon,
+	.cbfs-wellspring,
+	.cbfs-noir,
+	.cbfs-summit,
+	.cbfs-atelier,
+	.cbfs-lime,
+	.cbfs-ex4,
+	.cbfs-ex5
+) .cbfs-status__detail,
+.cbfs-status.cbfs-status--layout-modern:is(
+	.cbfs-horizon,
+	.cbfs-wellspring,
+	.cbfs-noir,
+	.cbfs-summit,
+	.cbfs-atelier,
+	.cbfs-lime,
+	.cbfs-ex4,
+	.cbfs-ex5
+) .cbfs-status__pending,
+.cbfs-status.cbfs-status--layout-modern:is(
+	.cbfs-horizon,
+	.cbfs-wellspring,
+	.cbfs-noir,
+	.cbfs-summit,
+	.cbfs-atelier,
+	.cbfs-lime,
+	.cbfs-ex4,
+	.cbfs-ex5
+) .cbfs-status__actions {
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 0;
+	padding-right: 0;
+}

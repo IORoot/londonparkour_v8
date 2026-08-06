@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-01-button-label",
+  "name": "Tutorial 01: Button label",
+  "description": "Change only the submit button text via bootstrap.php and the clasbpro_booking_labels filter. Look for \u201cComplete my booking\u201d.",
+  "version": "1.0.0",
+  "provides": [
+    "labels"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

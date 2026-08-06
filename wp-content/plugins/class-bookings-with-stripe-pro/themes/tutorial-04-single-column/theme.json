@@ -1,0 +1,14 @@
+{
+  "slug": "tutorial-04-single-column",
+  "name": "Tutorial 04: Single column",
+  "description": "Stack every field full-width in one column \u2014 edit booking-form.php (remove the 2-column grid) and style.css.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

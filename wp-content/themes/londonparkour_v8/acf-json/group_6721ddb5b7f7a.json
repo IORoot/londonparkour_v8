@@ -1,0 +1,255 @@
+{
+    "key": "group_6721ddb5b7f7a",
+    "title": "Tutorial Sidebar",
+    "fields": [
+        {
+            "key": "field_6721f35249446",
+            "label": "🎥 YouTube",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_6721ddb5e8fdf",
+            "label": "🎥 Get Youtube Video Data from API",
+            "name": "enable_youtube_api",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_67225378495f0",
+            "label": "🎥 Process YouTube Description Through Filter",
+            "name": "enable_youtube_filter",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Use the youtube description for content",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_6722538b495f1",
+            "label": "🎥 Filter Name",
+            "name": "wordpress_filter_name",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "wordpress filter name to parse content through",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "default_value": "tutorial_filter",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6721f22d49ffe",
+            "label": "🎥 Process Description Through ChatGPT",
+            "name": "enable_youtube_chatgpt",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Send Youtube description to ChatGPT for a TL;DR.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_67222f1d7722b",
+            "label": "🎥 ChatGPT System Prompt for processing",
+            "name": "youtube_chatgpt_prompt",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "System prompt for ChatGPT",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "default_value": "Summarise the following description into three paragraphs :",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_67225a0b50411",
+            "label": "🎥 Use ChatGPT response as Excerpt",
+            "name": "enable_use_as_excerpt",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Use the generated TL;DR for post excerpt.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_6722086170e83",
+            "label": "📜 Youtube Transcript",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_6722088670e84",
+            "label": "📜 Get YouTube Transcript &amp; SRT",
+            "name": "enable_transcript",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_67223080dbaa5",
+            "label": "📜 Process Transcript through ChatGPT",
+            "name": "enable_transcript_chatgpt",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "message": "",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_672214208bf31",
+            "label": "📜 ChatGPT System Text for Transcript",
+            "name": "transcript_chatgpt_prompt",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "The command to perform on the description.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "hide_admin": 0,
+            "default_value": "Summarise the following transcript into three paragraphs and summarise with three key points. Never mention the speaker or the transcript. I want this to sound like I wrote the result.",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "lp_tutorial"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1786009895
+}

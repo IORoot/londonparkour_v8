@@ -1,0 +1,23 @@
+/**
+ * Tutorial 08 — square corners, no shadows.
+ */
+
+/* ↓↓↓ CHANGE THESE — flat, square look ↓↓↓ */
+.cbfs-form {
+	--cbfs-radius: 0;
+	--cbfs-radius-sm: 0;
+	--cbfs-shadow: none;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.cbfs-form .cbfs-form__surface,
+.cbfs-form .cbfs-form__card,
+.cbfs-form .cbfs-form__input,
+.cbfs-form .cbfs-form__select,
+.cbfs-form .cbfs-form__button,
+.cbfs-form .cbfs-form__notice {
+	border-radius: 0;
+	box-shadow: none;
+}
+/* ↑↑↑ CHANGE THESE ↑↑↑ */

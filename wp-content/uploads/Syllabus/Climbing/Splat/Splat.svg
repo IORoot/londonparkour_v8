@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Splat</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-10.000000, -1300.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Climbing" transform="translate(0.000000, 721.000000)">
+                    <g id="Splat" transform="translate(0.000000, 179.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle-Copy-36" xlink:href="#path-1"></use>
+                        <path d="M84.9670376,102.215167 L131.728561,116.551519 L131.728561,125.15333 L84.9670376,110.816978 L38.2055144,125.15333 L38.2055144,116.551519 L84.9670376,102.215167 Z M84.9670376,87.215167 L131.728561,101.551519 L131.728561,110.15333 L84.9670376,95.816978 L38.2055144,110.15333 L38.2055144,101.551519 L84.9670376,87.215167 Z M131.728561,59.215167 L131.728561,67.816978 L84.9670376,82.1533298 L38.2055144,67.816978 L38.2055144,59.215167 L84.9670376,73.5515187 L131.728561,59.215167 Z M131.728561,44.8788152 L131.728561,53.4806263 L84.9670376,67.816978 L38.2055144,53.4806263 L38.2055144,44.8788152 L84.9670376,59.215167 L131.728561,44.8788152 Z" id="Combined-Shape" fill="#242424" mask="url(#mask-2)" transform="translate(84.967038, 85.016073) rotate(-270.000000) translate(-84.967038, -85.016073) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

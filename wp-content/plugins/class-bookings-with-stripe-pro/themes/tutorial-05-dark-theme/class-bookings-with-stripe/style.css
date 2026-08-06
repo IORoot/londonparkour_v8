@@ -1,0 +1,37 @@
+/**
+ * Tutorial 05 — dark theme colours.
+ *
+ * Override the plugin CSS variables on .cbfs-form. Tweak hex values below.
+ */
+
+/* ↓↓↓ CHANGE THESE — dark palette ↓↓↓ */
+.cbfs-form {
+	--cbfs-bg: #12151c;
+	--cbfs-fg: #e8eaed;
+	--cbfs-muted: rgba(232, 234, 237, 0.72);
+	--cbfs-border: rgba(255, 255, 255, 0.14);
+	--cbfs-accent: #5b8def;
+	--cbfs-accent-hover: #7aa3f5;
+	--cbfs-warn-bg: #2a2218;
+	--cbfs-warn-fg: #f0c674;
+	--cbfs-error-bg: #2b1818;
+	--cbfs-error-fg: #f28b82;
+	--cbfs-success-bg: #152419;
+	--cbfs-success-fg: #81c995;
+}
+/* ↑↑↑ CHANGE THESE ↑↑↑ */
+
+.cbfs-form .cbfs-form__surface {
+	background: var(--cbfs-bg);
+	color: var(--cbfs-fg);
+}
+
+.cbfs-form .cbfs-form__input,
+.cbfs-form .cbfs-form__select {
+	background: #1a1f28;
+	color: var(--cbfs-fg);
+}
+
+.cbfs-form .cbfs-form__input::placeholder {
+	color: var(--cbfs-muted);
+}

@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-08-square-flat",
+  "name": "Tutorial 08: Square & flat",
+  "description": "Remove rounded corners and shadows \u2014 set border-radius to 0 and box-shadow to none in style.css.",
+  "version": "1.0.0",
+  "provides": [
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

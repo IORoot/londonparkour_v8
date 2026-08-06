@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-05-dark-theme",
+  "name": "Tutorial 05: Dark theme",
+  "description": "Switch to a dark colour palette by overriding --cbfs-* CSS variables in style.css.",
+  "version": "1.0.0",
+  "provides": [
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

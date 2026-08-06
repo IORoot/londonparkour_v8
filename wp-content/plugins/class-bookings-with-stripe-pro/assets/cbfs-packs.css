@@ -1,0 +1,259 @@
+/* Coupons — base styles (themes override via --cbfs-packs-* and wrapper class) */
+
+.cbfs-packs {
+	--cbfs-packs-ink: #1a2233;
+	--cbfs-packs-muted: #555;
+	--cbfs-packs-border: rgba(0, 0, 0, 0.12);
+	--cbfs-packs-surface: #fff;
+	--cbfs-packs-bg: transparent;
+	--cbfs-packs-accent: #635bff;
+	--cbfs-packs-accent-hover: #5147e5;
+	--cbfs-packs-accent-ink: #fff;
+	--cbfs-packs-radius: 12px;
+	--cbfs-packs-shadow: none;
+	--cbfs-packs-error: #b32d2e;
+
+	box-sizing: border-box;
+	width: 100%;
+	max-width: none;
+	margin: 0 auto;
+	padding: 0;
+	color: var(--cbfs-packs-ink);
+	background: var(--cbfs-packs-bg);
+	font-family: inherit;
+}
+
+.cbfs-packs *,
+.cbfs-packs *::before,
+.cbfs-packs *::after {
+	box-sizing: border-box;
+}
+
+.cbfs-packs__heading {
+	margin: 0 0 1.25rem;
+	color: var(--cbfs-packs-ink);
+	font-size: 1.5rem;
+	font-weight: 700;
+}
+
+.cbfs-packs__empty {
+	margin: 0;
+	color: var(--cbfs-packs-muted);
+}
+
+.cbfs-packs__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 1.25rem;
+}
+
+.cbfs-packs__item {
+	border: 1px solid var(--cbfs-packs-border);
+	border-radius: var(--cbfs-packs-radius);
+	padding: 1.25rem;
+	background: var(--cbfs-packs-surface);
+	box-shadow: var(--cbfs-packs-shadow);
+}
+
+.cbfs-packs__title {
+	margin: 0 0 0.5rem;
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--cbfs-packs-ink);
+}
+
+.cbfs-packs__description,
+.cbfs-packs__meta {
+	margin: 0 0 0.5rem;
+	color: var(--cbfs-packs-muted);
+	font-size: 0.95rem;
+	line-height: 1.45;
+}
+
+.cbfs-packs__price {
+	margin: 0 0 1rem;
+	font-size: 1.35rem;
+	font-weight: 700;
+	color: var(--cbfs-packs-ink);
+}
+
+.cbfs-packs__form {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.cbfs-packs__label {
+	display: grid;
+	gap: 0.35rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--cbfs-packs-ink);
+}
+
+.cbfs-packs__input {
+	width: 100%;
+	padding: 0.65rem 0.8rem;
+	border: 1px solid var(--cbfs-packs-border);
+	border-radius: calc(var(--cbfs-packs-radius) - 4px);
+	background: #fff;
+	color: var(--cbfs-packs-ink);
+	font: inherit;
+}
+
+.cbfs-packs__input:focus {
+	outline: none;
+	border-color: var(--cbfs-packs-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--cbfs-packs-accent) 20%, transparent);
+}
+
+.cbfs-packs__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	width: 100%;
+	padding: 0.8rem 1rem;
+	border: 0;
+	border-radius: calc(var(--cbfs-packs-radius) - 4px);
+	cursor: pointer;
+	background: var(--cbfs-packs-accent);
+	color: var(--cbfs-packs-accent-ink);
+	font: inherit;
+	font-weight: 700;
+	transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+.cbfs-packs__button:hover:not(:disabled) {
+	background: var(--cbfs-packs-accent-hover);
+}
+
+.cbfs-packs__button.is-loading,
+.cbfs-packs__button:disabled {
+	opacity: 0.75;
+	cursor: wait;
+}
+
+.cbfs-packs__spinner {
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	border: 2px solid color-mix(in srgb, var(--cbfs-packs-accent-ink) 40%, transparent);
+	border-top-color: var(--cbfs-packs-accent-ink);
+	border-radius: 50%;
+	animation: cbfs-pack-spin 0.7s linear infinite;
+}
+
+.cbfs-packs__button.is-loading .cbfs-packs__spinner {
+	display: inline-block;
+}
+
+.cbfs-packs__error {
+	margin: 0;
+	color: var(--cbfs-packs-error);
+	font-size: 0.92rem;
+}
+
+/* In-form pack redeem panel (booking form) */
+
+.cbfs-form__pack {
+	margin: 0.65rem 0 0.85rem;
+	padding: 0.7rem 0.85rem;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	border-radius: 10px;
+	background: rgba(0, 0, 0, 0.02);
+	font-size: 0.8125rem; /* ~13px — sit with field labels / hints */
+	line-height: 1.4;
+}
+
+.cbfs-form__pack-summary {
+	margin: 0 0 0.4rem;
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.cbfs-form__pack-message {
+	margin: 0 0 0.4rem;
+	color: #8a5a00;
+	font-size: 0.75rem;
+}
+
+.cbfs-form__pack-choice {
+	display: flex;
+	gap: 0.4rem;
+	align-items: flex-start;
+	margin: 0.25rem 0;
+	font-size: 0.8125rem;
+	font-weight: 400;
+}
+
+.cbfs-form__pack-switch,
+.cbfs-form__pack-attach-btn {
+	margin-top: 0.4rem;
+	padding: 0.28rem 0.65rem;
+	border: 1px solid rgba(0, 0, 0, 0.18);
+	border-radius: 6px;
+	background: #fff;
+	cursor: pointer;
+	font: inherit;
+	font-size: 0.75rem;
+	font-weight: 500;
+	line-height: 1.3;
+}
+
+.cbfs-form__pack-cancel:not([hidden]) {
+	display: inline-block;
+	margin-top: 0.35rem;
+	padding: 0.2rem 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	text-decoration: underline;
+	cursor: pointer;
+	font: inherit;
+	font-size: 0.75rem;
+	font-weight: 400;
+	line-height: 1.3;
+	color: inherit;
+	opacity: 0.85;
+}
+
+.cbfs-form__pack-attach-intro {
+	margin: 0 0 0.35rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	text-transform: none;
+}
+
+.cbfs-form__pack-attach-row {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+}
+
+.cbfs-form__pack-attach-row .cbfs-form__input {
+	flex: 1;
+	min-height: 0;
+	padding: 0.4rem 0.6rem;
+	font-size: 0.8125rem;
+	line-height: 1.3;
+}
+
+.cbfs-form__pack-attach-btn {
+	margin-top: 0;
+	flex-shrink: 0;
+}
+
+.cbfs-form__pack-attach-error {
+	margin: 0.35rem 0 0;
+	color: #b32d2e;
+	font-size: 0.75rem;
+}
+
+@keyframes cbfs-pack-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

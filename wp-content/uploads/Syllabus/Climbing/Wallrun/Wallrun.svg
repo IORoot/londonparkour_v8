@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Wallrun</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-550.000000, -1121.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Climbing" transform="translate(0.000000, 721.000000)">
+                    <g id="Wallrun" transform="translate(540.000000, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle-Copy-33" xlink:href="#path-1"></use>
+                        <path d="M84.8033893,95.0515187 L131.564912,109.38787 L131.564912,117.989682 L84.8033893,103.65333 L38.0418662,117.989682 L38.0418662,109.38787 L84.8033893,95.0515187 Z M84.8033893,80.715167 L131.564912,95.0515187 L131.564912,103.65333 L84.8033893,89.316978 L38.0418662,103.65333 L38.0418662,95.0515187 L84.8033893,80.715167 Z M84.8033893,66.3788152 L131.564912,80.715167 L131.564912,89.316978 L84.8033893,74.9806263 L38.0418662,89.316978 L38.0418662,80.715167 L84.8033893,66.3788152 Z M84.8033893,52.0424635 L131.564912,66.3788152 L131.564912,74.9806263 L84.8033893,60.6442745 L38.0418662,74.9806263 L38.0418662,66.3788152 L84.8033893,52.0424635 Z" id="Combined-Shape" fill="#242424" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

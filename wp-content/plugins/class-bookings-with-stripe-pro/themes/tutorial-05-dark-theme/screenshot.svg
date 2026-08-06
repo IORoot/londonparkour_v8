@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <rect width="640" height="400" fill="#12151c"/>
+  <text x="320" y="56" text-anchor="middle" fill="#e8eaed" font-family="system-ui,sans-serif" font-size="20" font-weight="700">Tutorial 05</text>
+  <text x="320" y="84" text-anchor="middle" fill="#9aa0a6" font-family="system-ui,sans-serif" font-size="14">Dark theme</text>
+  <rect x="180" y="120" width="280" height="200" rx="12" fill="#1a1f28" stroke="rgba(255,255,255,0.14)"/>
+  <rect x="200" y="150" width="240" height="24" rx="5" fill="#12151c" stroke="rgba(255,255,255,0.14)"/>
+  <rect x="200" y="190" width="240" height="24" rx="5" fill="#12151c" stroke="rgba(255,255,255,0.14)"/>
+  <rect x="200" y="260" width="240" height="36" rx="6" fill="#5b8def"/>
+</svg>

@@ -1,0 +1,24 @@
+/**
+ * Example 3 — stacked full-width fields
+ */
+.twentytwentyfive-example3-layout .cbfs-form__card {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.twentytwentyfive-example3-layout .cbfs-form__row,
+.twentytwentyfive-example3-layout .cbfs-form__row--total {
+	width: 100%;
+}
+
+.twentytwentyfive-example3-layout .cbfs-form__input,
+.twentytwentyfive-example3-layout .cbfs-form__select {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.twentytwentyfive-example3-layout .cbfs-form__button {
+	width: 100%;
+}

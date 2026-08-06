@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Koala</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-910.000000, -1121.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Climbing" transform="translate(0.000000, 721.000000)">
+                    <g id="Koala" transform="translate(900.000000, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle-Copy-35" xlink:href="#path-1"></use>
+                        <path d="M155.564912,94.0515187 L155.564912,102.65333 L108.803389,116.989682 L62.0418662,102.65333 L62.0418662,94.0515187 L108.803389,108.38787 L155.564912,94.0515187 Z M61.8033893,79.3788152 L108.564912,93.715167 L108.564912,102.316978 L61.8033893,87.9806263 L15.0418662,102.316978 L15.0418662,93.715167 L61.8033893,79.3788152 Z M155.564912,65.715167 L155.564912,74.316978 L108.803389,88.6533298 L62.0418662,74.316978 L62.0418662,65.715167 L108.803389,80.0515187 L155.564912,65.715167 Z M61.8033893,52.0424635 L108.564912,66.3788152 L108.564912,74.9806263 L61.8033893,60.6442745 L15.0418662,74.9806263 L15.0418662,66.3788152 L61.8033893,52.0424635 Z" id="Combined-Shape" fill="#242424" mask="url(#mask-2)" transform="translate(85.303389, 84.516073) rotate(-270.000000) translate(-85.303389, -84.516073) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

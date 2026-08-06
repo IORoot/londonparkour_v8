@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Challenge</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-730.000000, -1660.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Understanding" transform="translate(0.000000, 1260.000000)">
+                    <g id="Challenge" transform="translate(720.000000, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle" fill="#68D391" xlink:href="#path-1"></use>
+                        <path d="M86,47 L134,74.4952641 L134,129.504736 L86,157 L85.75,156.857 L85.5,157 L85.5,157 L84.638,156.507 L51,137.262034 L51,136.951 L38,129.504736 L38,74.4952641 L86,47 Z M85.5,116 L70,124.758419 L69.999,141.889 L85.748,150.856 L100.999,142.063 L101,124.759167 L85.5,116 Z M86,85 L57,101.511843 L57,134.488157 L64.999,139.042 L65,121.741167 L85.5,110 L106,121.741167 L105.999,139.18 L115,133.99 L115,101.512594 L86,85 Z M85.5,53 L43,77.5043425 L43,126.495658 L51,131.108 L51,97.7379664 L85.5,78 L120,97.7379664 L120,131.107 L128,126.494902 L128,77.5050977 L85.5,53 Z M85.3548387,12 L89.4908214,29.5324922 L102.116621,42 L85.3548387,36.9350155 L68.5930567,42 L81.218856,29.5324922 L85.3548387,12 Z" id="Combined-Shape" fill="#242424" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

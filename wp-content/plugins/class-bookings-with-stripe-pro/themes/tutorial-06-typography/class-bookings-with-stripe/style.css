@@ -1,0 +1,34 @@
+/**
+ * Tutorial 06 — typography (family, style, size, colour).
+ */
+
+/* ↓↓↓ CHANGE THESE — body copy ↓↓↓ */
+.cbfs-form {
+	font-family: 'Source Sans 3', system-ui, sans-serif;
+	font-size: 17px;
+	color: #3d2c29;
+}
+/* ↑↑↑ CHANGE THESE ↑↑↑ */
+
+/* ↓↓↓ CHANGE THESE — heading ↓↓↓ */
+.cbfs-form .cbfs-form__title {
+	font-family: 'Playfair Display', Georgia, serif;
+	font-style: italic;
+	font-weight: 600;
+	font-size: clamp(28px, 4vw, 42px);
+	color: #6b3e2e;
+}
+/* ↑↑↑ CHANGE THESE ↑↑↑ */
+
+.cbfs-form .cbfs-form__label {
+	font-weight: 600;
+	font-size: 0.92rem;
+	letter-spacing: 0.02em;
+	color: #5c4033;
+}
+
+.cbfs-form .cbfs-form__meta,
+.cbfs-form .cbfs-form__hint {
+	font-size: 0.95rem;
+	color: #7a5c4f;
+}

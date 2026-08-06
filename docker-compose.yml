@@ -28,8 +28,7 @@ services:
       # see the same install. Without it, core sits in the container's own
       # writable layer and `wp` has nothing to operate on.
       - wp_core:/var/www/html
-      - ./themes:/var/www/html/wp-content/themes
-      - ./plugins:/var/www/html/wp-content/plugins
+      - ./wp-content:/var/www/html/wp-content
 
   # WP-CLI sidecar, held open so commands run with `exec` rather than spawning
   # a fresh container each time (an order of magnitude faster, and quiet):
@@ -50,8 +49,7 @@ services:
       WORDPRESS_DB_NAME: wordpress
     volumes:
       - wp_core:/var/www/html
-      - ./themes:/var/www/html/wp-content/themes
-      - ./plugins:/var/www/html/wp-content/plugins
+      - ./wp-content:/var/www/html/wp-content
 
 volumes:
   db_data:

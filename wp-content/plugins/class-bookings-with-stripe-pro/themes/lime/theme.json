@@ -1,0 +1,17 @@
+{
+  "slug": "lime",
+  "name": "Lime Checkout",
+  "description": "Bright lime two-column checkout \u2014 white cards, tab-style header, session panel, and order summary sidebar.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "booking-status",
+    "global-schedule",
+    "packs-list",
+    "style"
+  ],
+  "screenshot": "screenshot.jpg",
+  "tags": [
+    "premium"
+  ]
+}

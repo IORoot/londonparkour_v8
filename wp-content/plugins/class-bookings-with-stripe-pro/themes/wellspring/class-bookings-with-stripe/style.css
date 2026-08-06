@@ -1,0 +1,379 @@
+/**
+ * Wellspring — centered magenta premium card theme
+ */
+
+.cbfs-wellspring.cbfs-form--layout-modern,
+.cbfs-wellspring.cbfs-status--layout-modern,
+.cbfs-wellspring.cbfs-schedule,
+.cbfs-wellspring.cbfs-packs {
+	--ws-bg: #eef1f6;
+	--ws-card: #ffffff;
+	--ws-ink: #1f2430;
+	--ws-muted: #6d7788;
+	--ws-border: #e3e8f0;
+	--ws-magenta: #d12c8b;
+	--ws-magenta-dark: #b32376;
+	--ws-magenta-soft: #fce8f4;
+	--ws-radius: 18px;
+
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: clamp(20px, 4vw, 40px);
+	background: var(--ws-bg);
+	font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+	color: var(--ws-ink);
+}
+
+.cbfs-wellspring__canvas {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.cbfs-wellspring__card {
+	width: 100%;
+	max-width: 640px;
+	padding: clamp(28px, 4vw, 40px);
+	background: var(--ws-card);
+	border-radius: var(--ws-radius);
+	box-shadow: 0 18px 50px rgba(31, 36, 48, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.cbfs-wellspring__header {
+	margin-bottom: 22px;
+	text-align: left;
+}
+
+.cbfs-wellspring__title {
+	margin: 0 0 8px;
+	font-size: clamp(1.5rem, 3vw, 1.9rem);
+	font-weight: 700;
+	color: var(--ws-ink);
+	letter-spacing: -0.02em;
+}
+
+.cbfs-wellspring__subtitle {
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.55;
+	color: var(--ws-muted);
+	max-width: 48ch;
+}
+
+.cbfs-wellspring__highlights {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	margin: 0 0 26px;
+	padding: 0;
+	list-style: none;
+}
+
+.cbfs-wellspring__highlight {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	padding: 14px 10px;
+	border: 2px solid var(--ws-border);
+	border-radius: 14px;
+	background: #fafbfd;
+	text-align: center;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cbfs-wellspring__highlight:first-child {
+	border-color: var(--ws-magenta);
+	background: var(--ws-magenta-soft);
+	box-shadow: 0 0 0 1px rgba(209, 44, 139, 0.08);
+}
+
+.cbfs-wellspring__highlight-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: #fff;
+	border: 2px solid var(--ws-border);
+	color: var(--ws-muted);
+}
+
+.cbfs-wellspring__highlight:first-child .cbfs-wellspring__highlight-icon {
+	border-color: var(--ws-magenta);
+	color: var(--ws-magenta);
+	background: #fff;
+}
+
+.cbfs-wellspring__highlight-label {
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: var(--ws-ink);
+	line-height: 1.25;
+}
+
+.cbfs-wellspring__form {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.cbfs-wellspring__grid {
+	display: grid;
+	gap: 14px;
+}
+
+.cbfs-wellspring__grid--2 {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cbfs-wellspring__field-span {
+	min-width: 0;
+}
+
+.cbfs-wellspring .cbfs-form__label {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--ws-muted);
+}
+
+.cbfs-wellspring .cbfs-form__input,
+.cbfs-wellspring .cbfs-form__select {
+	width: 100%;
+	padding: 12px 14px;
+	background: #fff;
+	background-color: #fff;
+	border: 1.5px solid var(--ws-border);
+	border-radius: 10px;
+	color: var(--ws-ink);
+	font-size: 0.95rem;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cbfs-wellspring .cbfs-form__input::placeholder {
+	color: #9aa3b2;
+}
+
+.cbfs-wellspring .cbfs-form__input:focus,
+.cbfs-wellspring .cbfs-form__select:focus {
+	border-color: var(--ws-magenta);
+	box-shadow: 0 0 0 3px rgba(209, 44, 139, 0.14);
+	outline: none;
+}
+
+.cbfs-wellspring__total {
+	padding: 14px 16px;
+	background: var(--ws-magenta-soft);
+	border: 1px solid rgba(209, 44, 139, 0.22);
+	border-radius: 12px;
+}
+
+.cbfs-wellspring__total .cbfs-form__row--total {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--ws-ink);
+}
+
+.cbfs-wellspring .cbfs-form__check {
+	color: var(--ws-muted);
+}
+
+.cbfs-wellspring .cbfs-form__button {
+	width: 100%;
+	padding: 14px 20px;
+	border: none;
+	border-radius: 12px;
+	background: var(--ws-magenta);
+	color: #fff;
+	font-size: 1rem;
+	font-weight: 700;
+	box-shadow: 0 10px 24px rgba(209, 44, 139, 0.22);
+	transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.cbfs-wellspring .cbfs-form__button:hover:not(:disabled) {
+	background: var(--ws-magenta-dark);
+	transform: translateY(-1px);
+	box-shadow: 0 14px 28px rgba(209, 44, 139, 0.28);
+}
+
+.cbfs-wellspring .cbfs-form__hint {
+	font-size: 0.82rem;
+	color: var(--ws-muted);
+	text-align: center;
+}
+
+/* Appointment calendar within Wellspring */
+
+.cbfs-wellspring .cbfs-appointment-calendar {
+	--cbfs-cal-hover-border: var(--ws-magenta);
+	--cbfs-cal-selected-bg: var(--ws-magenta);
+	--cbfs-cal-available: #157a3a;
+}
+
+.cbfs-wellspring .cbfs-appointment-calendar__slots-panel.is-active {
+	border-color: var(--ws-magenta);
+}
+
+.cbfs-wellspring .cbfs-appointment-calendar__selection {
+	border-color: rgba(209, 44, 139, 0.25);
+	background: var(--ws-magenta-soft);
+	color: #7a1d52;
+}
+
+@media (max-width: 640px) {
+	.cbfs-wellspring__highlights {
+		grid-template-columns: 1fr;
+	}
+
+	.cbfs-wellspring__grid--2 {
+		grid-template-columns: 1fr;
+	}
+
+	.cbfs-wellspring__card {
+		padding: 24px 18px 28px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cbfs-wellspring .cbfs-form__button,
+	.cbfs-wellspring__highlight {
+		transition: none;
+	}
+}
+
+/* —— Status pages —— */
+
+.cbfs-wellspring__card--status {
+	padding: clamp(28px, 4vw, 40px);
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__title {
+	font-size: clamp(1.4rem, 3vw, 1.85rem);
+	color: var(--ws-ink);
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__lede,
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__hint {
+	color: var(--ws-muted);
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__details {
+	background: var(--ws-magenta-soft);
+	border: 1px solid rgba(209, 44, 139, 0.2);
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__button {
+	background: var(--ws-magenta);
+	color: #fff;
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__button:hover {
+	background: var(--ws-magenta-dark);
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__pending {
+	background: #fafbfd;
+	border: 1px solid var(--ws-border);
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern .cbfs-status__detail {
+	color: var(--cbfs-error-fg);
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern.cbfs-status--paid .cbfs-status__title,
+.cbfs-wellspring.cbfs-status--layout-modern.cbfs-status--pending .cbfs-status__title {
+	color: #157a3a;
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern.cbfs-status--cancelled .cbfs-status__title {
+	color: #9a6700;
+}
+
+.cbfs-wellspring.cbfs-status--layout-modern.cbfs-status--error .cbfs-status__title {
+	color: #b42318;
+}
+
+/* —— Global schedule calendar —— */
+
+.cbfs-wellspring.cbfs-schedule {
+	--cbfs-schedule-ink: var(--ws-ink);
+	--cbfs-schedule-muted: var(--ws-muted);
+	--cbfs-schedule-border: var(--ws-magenta);
+	--cbfs-schedule-event-border: rgba(209, 44, 139, 0.1);
+	--cbfs-schedule-today-bg: var(--ws-magenta-soft);
+	--cbfs-schedule-bg: var(--ws-card);
+}
+
+.cbfs-wellspring.cbfs-schedule .cbfs-schedule__filter.is-active {
+	background: var(--ws-magenta);
+	border-color: var(--ws-magenta);
+}
+
+.cbfs-wellspring.cbfs-schedule .cbfs-schedule__filter:hover:not(.is-active) {
+	background: #f8fafc;
+}
+
+.cbfs-wellspring.cbfs-schedule .cbfs-schedule__day-head.is-today {
+	border-bottom-color: var(--ws-magenta);
+}
+
+.cbfs-wellspring.cbfs-schedule .cbfs-schedule__nav-btn:hover:not(:disabled) .cbfs-schedule__nav-icon-ring {
+	fill: #f8fafc;
+}
+
+.cbfs-wellspring.cbfs-schedule .cbfs-schedule__backdrop {
+	background: rgba(31, 36, 48, 0.45);
+}
+
+.cbfs-wellspring.cbfs-schedule .cbfs-schedule__sheet {
+	border-radius: var(--ws-radius) var(--ws-radius) 0 0;
+	box-shadow: 0 -8px 33px rgba(31, 36, 48, 0.16);
+}
+
+.cbfs-wellspring.cbfs-schedule .cbfs-schedule__sheet-header {
+	border-bottom-color: var(--ws-border);
+}
+
+/* —— Class packs —— */
+
+.cbfs-wellspring.cbfs-packs {
+	--cbfs-packs-ink: var(--ws-ink);
+	--cbfs-packs-muted: var(--ws-muted);
+	--cbfs-packs-border: var(--ws-border);
+	--cbfs-packs-surface: var(--ws-card);
+	--cbfs-packs-bg: var(--ws-bg);
+	--cbfs-packs-accent: var(--ws-magenta);
+	--cbfs-packs-accent-hover: var(--ws-magenta-dark);
+	--cbfs-packs-accent-ink: #fff;
+	--cbfs-packs-radius: var(--ws-radius);
+	--cbfs-packs-shadow: 0 16px 36px rgba(31, 36, 48, 0.08);
+
+	max-width: 720px;
+	padding: clamp(20px, 4vw, 40px);
+	font-family: 'Inter', system-ui, sans-serif;
+}
+
+.cbfs-wellspring .cbfs-form__pack {
+	border-color: var(--ws-border);
+	border-radius: var(--ws-radius);
+	background: var(--ws-magenta-soft);
+}
+
+.cbfs-wellspring .cbfs-form__pack-switch,
+.cbfs-wellspring .cbfs-form__pack-attach-btn {
+	border-color: var(--ws-border);
+	border-radius: 999px;
+	background: #fff;
+	color: var(--ws-ink);
+}
+
+.cbfs-wellspring .cbfs-form__pack-switch:hover,
+.cbfs-wellspring .cbfs-form__pack-attach-btn:hover {
+	border-color: var(--ws-magenta);
+	color: var(--ws-magenta);
+}

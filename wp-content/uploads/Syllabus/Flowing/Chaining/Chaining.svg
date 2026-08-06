@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Chaining</title>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-371.000000, -1840.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Chaining" transform="translate(361.000000, 1440.000000)">
+                    <g id="Lines-Copy" mask="url(#mask-2)" fill="#242424" fill-rule="nonzero">
+                        <g transform="translate(84.500000, 86.500000) rotate(-90.000000) translate(-84.500000, -86.500000) translate(21.500000, 26.500000)" id="Combined-Shape">
+                            <path d="M50,60 L50,120 L42,120 L42,60 L50,60 Z M96,59 L96,119 L80,119 L80,59 L96,59 Z M16,59 L16,119 L12,119 L12,59 L16,59 Z M126,29 L126,89 L106,89 L106,29 L126,29 Z M2,29 L2,89 L0,89 L0,29 L2,29 Z M70,0 L70,60 L60,60 L60,0 L70,0 Z M32,0 L32,60 L26,60 L26,0 L32,0 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

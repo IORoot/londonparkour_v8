@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-02-field-labels",
+  "name": "Tutorial 02: Field labels",
+  "description": "Rename every form field label in bootstrap.php via clasbpro_booking_labels \u2014 name, email, date, seats, total, and more.",
+  "version": "1.0.0",
+  "provides": [
+    "labels"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

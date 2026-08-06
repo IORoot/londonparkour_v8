@@ -1,0 +1,17 @@
+{
+  "slug": "maison",
+  "name": "Maison",
+  "description": "Full-width Atelier-inspired card \u2014 warm cream field, sage and sand accents, terracotta actions. No image backdrop.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "booking-status",
+    "global-schedule",
+    "packs-list",
+    "style"
+  ],
+  "screenshot": "screenshot.jpg",
+  "tags": [
+    "premium"
+  ]
+}

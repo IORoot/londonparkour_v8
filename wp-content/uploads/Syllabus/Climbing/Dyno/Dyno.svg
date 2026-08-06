@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Dyno</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-730.000000, -1121.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Climbing" transform="translate(0.000000, 721.000000)">
+                    <g id="Dyno" transform="translate(720.000000, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle-Copy-34" xlink:href="#path-1"></use>
+                        <path d="M84.8033893,104.051519 L131.564912,118.38787 L131.564912,126.989682 L84.8033893,112.65333 L38.0418662,126.989682 L38.0418662,118.38787 L84.8033893,104.051519 Z M84.8033893,89.715167 L131.564912,104.051519 L131.564912,112.65333 L84.8033893,98.316978 L38.0418662,112.65333 L38.0418662,104.051519 L84.8033893,89.715167 Z M84.8033893,57.3788152 L131.564912,71.715167 L131.564912,80.316978 L84.8033893,65.9806263 L38.0418662,80.316978 L38.0418662,71.715167 L84.8033893,57.3788152 Z M84.8033893,43.0424635 L131.564912,57.3788152 L131.564912,65.9806263 L84.8033893,51.6442745 L38.0418662,65.9806263 L38.0418662,57.3788152 L84.8033893,43.0424635 Z" id="Combined-Shape" fill="#242424" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

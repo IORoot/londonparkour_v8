@@ -1,0 +1,28 @@
+/**
+ * Tutorial 09 — narrow form (max 400px).
+ */
+
+/* ↓↓↓ CHANGE THIS — form max width ↓↓↓ */
+.cbfs-form {
+	max-width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.cbfs-form .cbfs-form__surface {
+	max-width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+/* ↑↑↑ CHANGE THIS ↑↑↑ */
+
+.cbfs-form .cbfs-form__grid--2 {
+	grid-template-columns: 1fr;
+}
+
+.cbfs-form .cbfs-form__input,
+.cbfs-form .cbfs-form__select,
+.cbfs-form .cbfs-form__button {
+	width: 100%;
+	max-width: 100%;
+}

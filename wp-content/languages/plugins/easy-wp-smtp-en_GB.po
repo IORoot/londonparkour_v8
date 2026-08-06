@@ -1,0 +1,210 @@
+# Translation of Plugins - Easy WP SMTP – WordPress SMTP and Email Logs: Gmail SMTP, Office 365, Outlook, Custom SMTP, and more - Stable (latest release) in English (UK)
+# This file is distributed under the same license as the Plugins - Easy WP SMTP – WordPress SMTP and Email Logs: Gmail SMTP, Office 365, Outlook, Custom SMTP, and more - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-03-13 13:32:01+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: en_GB\n"
+"Project-Id-Version: Plugins - Easy WP SMTP – WordPress SMTP and Email Logs: Gmail SMTP, Office 365, Outlook, Custom SMTP, and more - Stable (latest release)\n"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:508
+msgid "Write your email message"
+msgstr "Write your email message"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:494
+msgid "Enter the recipient's email address"
+msgstr "Enter the recipient's email address"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:213
+msgid "SMTP Configuration Settings"
+msgstr "SMTP Configuration Settings"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:172
+msgid "Please enter a valid email address in the recipient email field."
+msgstr "Please enter a valid email address in the recipient email field."
+
+#: inc/deprecated/class-easywpsmtp-admin.php:333
+#: inc/deprecated/class-easywpsmtp-admin.php:398
+msgid "Save Changes"
+msgstr "Save Changes"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:513
+#: src/Admin/EmailSendingErrors/EmailSendingErrors.php:488
+#: src/Admin/EmailSendingErrors/EmailSendingErrors.php:505
+#: src/Admin/Pages/TestTab.php:290
+msgid "Send Test Email"
+msgstr "Send Test Email"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:306
+msgid "No"
+msgstr "No"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:312 src/Admin/Area.php:500
+#: src/Admin/Area.php:535 src/Admin/Pages/DebugEventsTab.php:150
+#: src/Admin/UserFeedback.php:112
+msgid "Yes"
+msgstr "Yes"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:491
+msgid "To"
+msgstr "To"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:505
+#: src/Admin/Pages/TestTab.php:259
+msgid "Message"
+msgstr "Message"
+
+#: assets/languages/easy-wp-smtp-vue.php:577
+#: inc/deprecated/class-easywpsmtp-admin.php:292
+#: src/Providers/OptionsAbstract.php:354
+msgid "SMTP Port"
+msgstr "SMTP Port"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:498
+#: src/Admin/Pages/ExportTab.php:214 src/Admin/Pages/SmartRoutingTab.php:164
+#: src/Admin/Pages/TestTab.php:246
+msgid "Subject"
+msgstr "Subject"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:299
+#: src/Providers/OptionsAbstract.php:393
+msgid "SMTP Authentication"
+msgstr "SMTP Authentication"
+
+#: assets/languages/easy-wp-smtp-vue.php:598
+#: inc/deprecated/class-easywpsmtp-admin.php:324
+#: src/Providers/OptionsAbstract.php:432
+msgid "SMTP Password"
+msgstr "SMTP Password"
+
+#: assets/languages/easy-wp-smtp-vue.php:595
+#: inc/deprecated/class-easywpsmtp-admin.php:317
+#: src/Providers/OptionsAbstract.php:415
+msgid "SMTP Username"
+msgstr "SMTP username"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:158
+msgid "Settings saved."
+msgstr "Settings saved."
+
+#: inc/deprecated/class-easywpsmtp.php:444
+#: inc/deprecated/class-easywpsmtp.php:452 src/Admin/Area.php:313
+#: src/Admin/Area.php:314 src/Admin/Area.php:1269 src/Admin/Area.php:1602
+#: src/Admin/Area.php:1609 src/Admin/Pages/SettingsTab.php:48
+msgid "Settings"
+msgstr "Settings"
+
+#: assets/languages/easy-wp-smtp-vue.php:604
+#: inc/deprecated/class-easywpsmtp-admin.php:275
+#: src/Admin/Pages/SettingsTab.php:443 src/Providers/OptionsAbstract.php:321
+msgid "None"
+msgstr "None"
+
+#: assets/languages/easy-wp-smtp-vue.php:186
+#: inc/deprecated/class-easywpsmtp-admin.php:227
+#: src/Admin/ConnectionSettings.php:282 src/Admin/Pages/ExportTab.php:207
+msgid "From Name"
+msgstr "From Name"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:220
+#: src/Admin/ConnectionSettings.php:221
+#: src/Providers/Sendlayer/QuickConnect.php:744
+msgid "From Email Address"
+msgstr "From Email Address"
+
+#: assets/languages/easy-wp-smtp-vue.php:607
+#: src/Providers/OptionsAbstract.php:331
+msgid "SSL"
+msgstr "SSL"
+
+#: assets/languages/easy-wp-smtp-vue.php:610
+#: src/Providers/OptionsAbstract.php:341
+msgid "TLS"
+msgstr "TLS"
+
+#. translators: %s URL to the plugin's settings page.
+#: inc/deprecated/class-easywpsmtp.php:365
+msgid "Please configure your SMTP credentials in the <a href=\"%s\">settings menu</a> in order to send email using Easy WP SMTP plugin."
+msgstr "Please configure your SMTP credentials in the <a href=\"%s\">settings menu</a> in order to send email using Easy WP SMTP plugin."
+
+#: inc/deprecated/class-easywpsmtp-admin.php:501
+msgid "Enter a subject for your message"
+msgstr "Enter a subject for your message"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:327
+msgid "The password to login to your mail server"
+msgstr "The password to login to your mail server"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:320
+msgid "The username to login to your mail server"
+msgstr "The username to login to your mail server"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:313
+msgid "This options should always be checked 'Yes'"
+msgstr "This options should always be checked 'Yes'"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:295
+msgid "The port to your mail server"
+msgstr "The port to your mail server"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:264
+msgid "Your mail server"
+msgstr "Your mail server"
+
+#: assets/languages/easy-wp-smtp-vue.php:571
+#: inc/deprecated/class-easywpsmtp-admin.php:261
+#: src/Providers/OptionsAbstract.php:293
+msgid "SMTP Host"
+msgstr "SMTP Host"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:230
+msgid "This text will be used in the 'FROM' field"
+msgstr "This text will be used in the 'FROM' field"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:223
+msgid "This email address will be used in the 'From' field."
+msgstr "This email address will be used in the 'From' field."
+
+#: inc/deprecated/class-easywpsmtp-admin.php:71
+msgid "Easy WP SMTP Settings"
+msgstr "Easy WP SMTP Settings"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:160
+msgid "Settings are not saved."
+msgstr "Settings are not saved."
+
+#: inc/deprecated/class-easywpsmtp-admin.php:149
+msgid "Please enter a valid port in the 'SMTP Port' field."
+msgstr "Please enter a valid port in the 'SMTP Port' field."
+
+#: inc/deprecated/class-easywpsmtp-admin.php:102
+msgid "Please enter a valid email address in the 'FROM' field."
+msgstr "Please enter a valid email address in the 'FROM' field."
+
+#. Plugin Name of the plugin
+#. Author of the plugin
+#: easy-wp-smtp.php inc/deprecated/class-easywpsmtp-admin.php:38
+#: src/Abilities/AbilityRegistrar.php:130 src/Admin/Area.php:294
+#: src/Admin/Area.php:295 src/Admin/Area.php:302 src/Admin/Area.php:303
+#: src/Admin/Area.php:1559 src/Admin/Area.php:1560
+#: src/Admin/DashboardWidget.php:159 src/Providers/Outlook/Provider.php:57
+#: src/SiteHealth.php:43
+msgid "Easy WP SMTP"
+msgstr "Easy WP SMTP"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:268
+#: src/Providers/OptionsAbstract.php:310
+msgid "Type of Encryption"
+msgstr "Type of Encryption"
+
+#: src/Admin/ConnectionSettings.php:213
+msgid "General Settings"
+msgstr "General Settings"
+
+#: inc/deprecated/class-easywpsmtp-admin.php:288
+msgid "For most servers SSL/TLS is the recommended option"
+msgstr "For most servers SSL/TLS is the recommended option"

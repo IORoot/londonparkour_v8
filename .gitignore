@@ -2,13 +2,20 @@
 # belong in it: our theme, and the plugins that are vendored rather than fetched.
 
 # WordPress ships these; `bin/bootstrap.sh` reinstalls what it needs.
-themes/twentytwenty*/
-plugins/akismet/
-plugins/hello.php
+wp-content/themes/twentytwenty*/
+wp-content/plugins/akismet/
+wp-content/plugins/hello.php
 
 # `bin/bootstrap.sh` installs Classic Editor from wp.org when it is absent,
 # so the checked-out copy is a build artefact, not source.
-plugins/classic-editor/
+wp-content/plugins/classic-editor/
 
 .DS_Store
 *.log
+.env
+.env.live
+.git
+.dockerignore
+.vscode
+.DS_Store
+docker-compose.override.yml

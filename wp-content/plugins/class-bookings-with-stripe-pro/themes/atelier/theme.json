@@ -1,0 +1,17 @@
+{
+  "slug": "atelier",
+  "name": "Atelier",
+  "description": "Editorial boutique card \u2014 warm terracotta tones, serif typography, and crafted workshop styling.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "booking-status",
+    "global-schedule",
+    "packs-list",
+    "style"
+  ],
+  "screenshot": "screenshot.jpg",
+  "tags": [
+    "premium"
+  ]
+}

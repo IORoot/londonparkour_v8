@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Climbup</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-10.000000, -1121.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Climbup" transform="translate(0.000000, 721.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-30" xlink:href="#path-1"></use>
+                    <path d="M76.2737346,91.6668296 L125.152418,93.4119092 L127.378731,101.720621 L127.175093,101.712786 L133.145329,107.682288 L89.942607,130.610346 L67.0145484,173.813068 L60.9321495,167.730669 L83.8602081,124.527947 L126.870093,101.701786 L78.5000471,99.975541 L37.0424051,125.926166 L34.8160926,117.617455 L76.2737346,91.6668296 Z M86.4532086,58.9457015 L127.910851,84.8963267 L125.684538,93.2050381 L84.2268961,67.254413 L35.3482124,68.9994926 L37.5745249,60.6907812 L86.4532086,58.9457015 Z M68.1909254,11.9217858 L111.393647,34.8498444 L134.321706,78.0525661 L128.239307,84.134965 L105.311248,40.9322433 L62.1085265,18.0041848 L68.1909254,11.9217858 Z" id="Combined-Shape" fill="#242424" mask="url(#mask-2)" transform="translate(84.568899, 92.867427) rotate(-315.000000) translate(-84.568899, -92.867427) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-10-gradient-bg",
+  "name": "Tutorial 10: Gradient background",
+  "description": "Give the form surface a CSS linear-gradient background. Edit colours and angle in style.css.",
+  "version": "1.0.0",
+  "provides": [
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

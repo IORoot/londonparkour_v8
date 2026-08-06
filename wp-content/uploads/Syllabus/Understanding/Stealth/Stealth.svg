@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Stealth</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-370.000000, -1660.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Understanding" transform="translate(0.000000, 1260.000000)">
+                    <g id="Stealth" transform="translate(360.000000, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle" fill="#68D391" xlink:href="#path-1"></use>
+                        <polygon id="Path" fill="#242424" fill-rule="nonzero" mask="url(#mask-2)" points="141.333333 52.494403 85 20 28.6666666 52.494403 28.6666666 117.505597 85 150 141.333333 117.505597"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

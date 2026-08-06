@@ -1,0 +1,22 @@
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+	color: #222;
+	line-height: 1.5;
+}
+
+.cbfs-mail {
+	max-width: 560px;
+	margin: 0 auto;
+	padding: 24px;
+	background: #fff;
+	border-radius: 14px;
+}
+
+.cbfs-mail dt {
+	color: #666;
+}
+
+.cbfs-mail dd {
+	margin: 0 0 6px;
+	font-weight: 600;
+}

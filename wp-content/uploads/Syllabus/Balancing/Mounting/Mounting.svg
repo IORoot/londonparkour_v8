@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Mounting</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-10.000000, -1480.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Mounting" transform="translate(0.000000, 1080.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle" xlink:href="#path-1"></use>
+                    <path d="M128,88 L79.9069686,160 L43,160 L43,88 L128,88 Z M113.372975,95.8324333 L50.8040618,95.8324333 L50.8040618,152.169143 L75.7421024,152.169143 L113.372975,95.8324333 Z M103.5,100.5 L72.292875,146.5 L55.5,146.5 L55.5,100.5 L103.5,100.5 Z M88.7520895,108.276005 L63.3667303,108.276005 L63.3667303,138.725195 L68.0951229,138.725195 L88.7520895,108.276005 Z M79.5,113.5 L68.5,130.5 L68.5,113.5 L79.5,113.5 Z M79.9069686,10 L128,82 L43,82 L43,10 L79.9069686,10 Z M75.7421024,17.8308574 L50.8040618,17.8308574 L50.8040618,74.1675667 L113.372975,74.1675667 L75.7421024,17.8308574 Z M72.292875,22.5 L103.5,68.5 L55.5,68.5 L55.5,22.5 L72.292875,22.5 Z M68.0951229,30.2748046 L63.3667303,30.2748046 L63.3667303,60.723995 L88.7520895,60.723995 L68.0951229,30.2748046 Z M67.5,38.5 L78.5,55.5 L67.5,55.5 L67.5,38.5 Z" id="logo" fill="#242424" fill-rule="nonzero" mask="url(#mask-2)" transform="translate(85.500000, 85.000000) rotate(-90.000000) translate(-85.500000, -85.000000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

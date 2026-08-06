@@ -1,0 +1,17 @@
+{
+  "slug": "secure-checkout",
+  "name": "Secure Checkout",
+  "description": "Card hero art with a structured secure checkout panel and sectioned fields.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "booking-status",
+    "global-schedule",
+    "packs-list",
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "premium"
+  ]
+}

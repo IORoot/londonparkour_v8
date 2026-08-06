@@ -1,0 +1,13 @@
+{
+  "slug": "tutorial-09-narrow-form",
+  "name": "Tutorial 09: Narrow form",
+  "description": "Cap the form at 400px wide \u2014 ideal for a slim mobile-friendly column. Edit max-width in style.css.",
+  "version": "1.0.0",
+  "provides": [
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

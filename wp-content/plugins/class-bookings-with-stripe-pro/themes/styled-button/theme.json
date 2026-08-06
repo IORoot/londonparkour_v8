@@ -1,0 +1,13 @@
+{
+  "slug": "styled-button",
+  "name": "Styled Button",
+  "description": "Keeps the default form layout and applies a green call-to-action button style.",
+  "version": "1.0.0",
+  "provides": [
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "basic"
+  ]
+}

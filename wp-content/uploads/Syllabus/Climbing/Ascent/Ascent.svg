@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Ascent</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-10.000000, -2200.000000)">
+            <g id="Movements" transform="translate(10.000000, 580.000000)">
+                <g id="Climbing" transform="translate(0.000000, 721.000000)">
+                    <g id="Ascent" transform="translate(0.000000, 899.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle-Copy-33" xlink:href="#path-1"></use>
+                        <path d="M113.803389,120.051519 L160.564912,134.38787 L160.564912,142.989682 L113.803389,128.65333 L67.0418662,142.989682 L67.0418662,134.38787 L113.803389,120.051519 Z M56.8033893,89.715167 L103.564912,104.051519 L103.564912,112.65333 L56.8033893,98.316978 L10.0418662,112.65333 L10.0418662,104.051519 L56.8033893,89.715167 Z M113.803389,59.3788152 L160.564912,73.715167 L160.564912,82.316978 L113.803389,67.9806263 L67.0418662,82.316978 L67.0418662,73.715167 L113.803389,59.3788152 Z M56.8033893,30.0424635 L103.564912,44.3788152 L103.564912,52.9806263 L56.8033893,38.6442745 L10.0418662,52.9806263 L10.0418662,44.3788152 L56.8033893,30.0424635 Z" id="Combined-Shape" fill="#242424" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

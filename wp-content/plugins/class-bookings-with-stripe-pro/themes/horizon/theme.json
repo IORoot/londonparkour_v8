@@ -1,0 +1,17 @@
+{
+  "slug": "horizon",
+  "name": "Horizon",
+  "description": "Split-screen booking \u2014 dark branded panel with electric blue accents and a clean checkout column.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "booking-status",
+    "global-schedule",
+    "packs-list",
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "premium"
+  ]
+}

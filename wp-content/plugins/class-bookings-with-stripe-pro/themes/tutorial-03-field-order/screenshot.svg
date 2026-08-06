@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <rect width="640" height="400" fill="#f0f6fc"/>
+  <text x="320" y="56" text-anchor="middle" fill="#1d2327" font-family="system-ui,sans-serif" font-size="20" font-weight="700">Tutorial 03</text>
+  <text x="320" y="84" text-anchor="middle" fill="#50575e" font-family="system-ui,sans-serif" font-size="14">Field order</text>
+  <text x="180" y="130" fill="#2271b1" font-family="system-ui,sans-serif" font-size="12" font-weight="600">1. Date</text>
+  <rect x="180" y="136" width="280" height="28" rx="6" fill="#fff" stroke="#c3c4c7"/>
+  <text x="180" y="190" fill="#2271b1" font-family="system-ui,sans-serif" font-size="12" font-weight="600">2. Seats</text>
+  <rect x="180" y="196" width="280" height="28" rx="6" fill="#fff" stroke="#c3c4c7"/>
+  <text x="180" y="250" fill="#2271b1" font-family="system-ui,sans-serif" font-size="12" font-weight="600">3. Email, 4. Name</text>
+  <rect x="180" y="256" width="135" height="28" rx="6" fill="#fff" stroke="#c3c4c7"/>
+  <rect x="325" y="256" width="135" height="28" rx="6" fill="#fff" stroke="#c3c4c7"/>
+</svg>

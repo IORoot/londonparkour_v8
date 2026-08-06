@@ -1,0 +1,72 @@
+{
+    "key": "taxonomy_lp0101level",
+    "title": "Levels",
+    "menu_order": 0,
+    "active": true,
+    "taxonomy": "lp_level",
+    "object_type": [
+        "lp_class",
+        "lp_tutorial"
+    ],
+    "advanced_configuration": true,
+    "import_source": "",
+    "import_date": "",
+    "labels": {
+        "name": "Levels",
+        "singular_name": "Level",
+        "menu_name": "Levels",
+        "all_items": "All Levels",
+        "add_new_item": "Add New Level",
+        "edit_item": "Edit Level",
+        "new_item": "New Level",
+        "view_item": "View Level",
+        "search_items": "Search Levels",
+        "not_found": "No levels found",
+        "not_found_in_trash": "No levels found in Trash",
+        "update_item": "Update Level",
+        "new_item_name": "New Level Name",
+        "parent_item": "Parent Level",
+        "parent_item_colon": "Parent Level:",
+        "most_used": "",
+        "no_terms": "No levels",
+        "back_to_items": "← Go to levels"
+    },
+    "description": "",
+    "capabilities": {
+        "manage_terms": "manage_categories",
+        "edit_terms": "manage_categories",
+        "delete_terms": "manage_categories",
+        "assign_terms": "edit_posts"
+    },
+    "public": true,
+    "publicly_queryable": true,
+    "hierarchical": true,
+    "show_ui": true,
+    "show_in_menu": true,
+    "show_in_nav_menus": true,
+    "show_in_rest": true,
+    "rest_base": "",
+    "rest_namespace": "wp/v2",
+    "rest_controller_class": "WP_REST_Terms_Controller",
+    "show_tagcloud": true,
+    "show_in_quick_edit": true,
+    "show_admin_column": true,
+    "rewrite": {
+        "permalink_rewrite": "custom_permalink",
+        "slug": "level",
+        "with_front": "0",
+        "rewrite_hierarchical": "0"
+    },
+    "query_var": "post_type_key",
+    "query_var_name": "",
+    "default_term": {
+        "default_term_enabled": "0"
+    },
+    "sort": 0,
+    "meta_box": "default",
+    "meta_box_cb": "",
+    "meta_box_sanitize_cb": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1786020924
+}

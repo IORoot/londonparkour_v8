@@ -1,0 +1,14 @@
+{
+  "slug": "tutorial-11-fullscreen-bg",
+  "name": "Tutorial 11: Fullscreen image",
+  "description": "Full-viewport form with a photo background \u2014 booking-form.php adds a backdrop; style.css and assets/background.jpg complete the look.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

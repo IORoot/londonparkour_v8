@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Underbars</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-190.000000, -1300.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Underbars" transform="translate(180.000000, 900.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle-Copy-37" xlink:href="#path-1"></use>
+                    <path d="M85,37 L93,45 L53,85 L93,125 L85,133 L37,85 L85,37 Z M61,37 L69,45 L29,85 L69,125 L61,133 L13,85 L61,37 Z M101,53 L133,85 L101,117 L93,109 L117,85 L93,61 L101,53 Z M125,53 L157,85 L125,117 L117,109 L141,85 L117,61 L125,53 Z" id="Path-3" fill="#242424" mask="url(#mask-2)" transform="translate(85.000000, 85.000000) rotate(-270.000000) translate(-85.000000, -85.000000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

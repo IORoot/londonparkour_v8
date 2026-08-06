@@ -1,0 +1,13 @@
+{
+  "slug": "single-column",
+  "name": "Single Column",
+  "description": "Stacked full-width fields with email first \u2014 one field per row.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "basic"
+  ]
+}

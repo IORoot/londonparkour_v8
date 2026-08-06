@@ -1,0 +1,299 @@
+.clasbpro-scheduled-rules-json-wrap {
+	display: none;
+}
+
+.clasbpro-scheduled-rules-json-acf-field .acf-input > textarea.clasbpro-scheduled-rules-json {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	opacity: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+}
+
+.clasbpro-scheduled-rules-json-acf-field .acf-input {
+	position: relative;
+}
+
+.clasbpro-scheduled-rules-wrap {
+	margin: 0.5rem 0 1.5rem;
+}
+
+.clasbpro-scheduled-rules-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.clasbpro-scheduled-rules-empty {
+	margin: 0;
+	padding: 1rem 1.25rem;
+	border: 1px dashed rgba(56, 189, 248, 0.35);
+	border-radius: 14px;
+	color: #94a3b8;
+	background: linear-gradient(
+		165deg,
+		#032a3a 0%,
+		#011d29 38%,
+		#010f16 100%
+	);
+}
+
+.clasbpro-rule-card {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	border: 1px solid rgba(56, 189, 248, 0.18);
+	border-radius: 14px;
+	padding: 1rem 1.25rem 0.25rem;
+	background: linear-gradient(
+		165deg,
+		#032a3a 0%,
+		#011d29 38%,
+		#010f16 100%
+	);
+	box-shadow:
+		0 0 0 1px rgba(0, 0, 0, 0.35),
+		0 2px 4px rgba(0, 0, 0, 0.25),
+		0 12px 24px -8px rgba(0, 0, 0, 0.35),
+		0 0 60px -24px rgba(34, 211, 238, 0.12);
+}
+
+.clasbpro-rule-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	background: linear-gradient(
+		90deg,
+		rgba(34, 211, 238, 0.55),
+		rgba(56, 189, 248, 0.35),
+		rgba(129, 140, 248, 0.45)
+	);
+	opacity: 0.95;
+}
+
+.clasbpro-rule-card__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.clasbpro-rule-card__title {
+	font-size: 14px;
+	color: #f8fafc;
+}
+
+.clasbpro-rule-field {
+	margin: 0 0 0.85rem;
+}
+
+.clasbpro-rule-field label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.35rem;
+	color: #cbd5e1;
+}
+
+.clasbpro-rule-field--body .clasbpro-rule-body-editor {
+	margin-top: 0.15rem;
+}
+
+.clasbpro-rule-field--body .wp-editor-wrap {
+	border: 1px solid rgba(148, 163, 184, 0.35);
+	border-radius: 6px;
+	background: #fff;
+	overflow: hidden;
+}
+
+.clasbpro-rule-field--body .wp-editor-tools {
+	background: #f6f7f7;
+	border-bottom: 1px solid #dcdcde;
+}
+
+.clasbpro-rule-field--body .wp-editor-container {
+	border-top: 0;
+}
+
+.clasbpro-rule-field--body .description {
+	display: block;
+	margin-top: 0.4rem;
+}
+
+.clasbpro-rule-field--offset {
+	width: auto;
+	max-width: 100%;
+}
+
+.clasbpro-rule-offset-controls {
+	display: grid;
+	grid-template-columns: 4.5rem 7.5rem auto;
+	align-items: center;
+	gap: 0.5rem;
+	width: max-content;
+	max-width: 100%;
+}
+
+/* ACF sets width:100% on inputs inside .acf-field — grid keeps number + unit on one row */
+.acf-field .clasbpro-rule-offset-controls input[type='number'],
+.acf-field .clasbpro-rule-offset-controls select,
+.clasbpro-scheduled-rules-wrap .clasbpro-rule-offset-controls input[type='number'],
+.clasbpro-scheduled-rules-wrap .clasbpro-rule-offset-controls select {
+	display: block;
+	width: 100% !important;
+	max-width: 100%;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+.clasbpro-rule-offset-hint {
+	color: #94a3b8;
+	font-size: 12px;
+	line-height: 1.35;
+	white-space: normal;
+}
+
+.clasbpro-rule-card .clasbpro-rule-field .description {
+	color: #94a3b8;
+}
+
+.clasbpro-rule-card .clasbpro-rule-remove {
+	color: #fca5a5;
+}
+
+.clasbpro-rule-card .clasbpro-rule-remove:hover,
+.clasbpro-rule-card .clasbpro-rule-remove:focus {
+	color: #fecaca;
+}
+
+@media screen and (max-width: 480px) {
+	.clasbpro-rule-offset-controls {
+		grid-template-columns: 4.5rem 7.5rem;
+	}
+
+	.clasbpro-rule-offset-hint {
+		grid-column: 1 / -1;
+	}
+}
+
+.clasbpro-scheduled-rules-add {
+	margin-top: 0.25rem;
+}
+
+.clasbpro-scheduled-email-tools {
+	margin-top: 0.5rem;
+}
+
+.clasbpro-scheduled-email-tools hr {
+	margin: 1.25rem 0;
+}
+
+.clasbpro-email-tab-intro-field > .acf-label {
+	display: none;
+}
+
+.clasbpro-email-tab-intro-field > .acf-input {
+	margin-top: 8px;
+}
+
+.clasbpro-email-tab-intro {
+	margin: 0;
+}
+
+.clasbpro-email-merge-tags-accordion {
+	margin: 0 0 0.75rem;
+}
+
+.clasbpro-email-merge-tags-accordion__summary {
+	display: inline-block;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 600;
+	color: #2271b1;
+	list-style: none;
+}
+
+.clasbpro-email-merge-tags-accordion__summary::-webkit-details-marker {
+	display: none;
+}
+
+.clasbpro-email-merge-tags-accordion__summary::before {
+	content: "▸";
+	display: inline-block;
+	margin-right: 0.35rem;
+	transition: transform 0.15s ease;
+}
+
+.clasbpro-email-merge-tags-accordion[open] .clasbpro-email-merge-tags-accordion__summary::before {
+	transform: rotate(90deg);
+}
+
+.clasbpro-email-merge-tags-accordion__content {
+	margin-top: 0.5rem;
+	padding: 10px 12px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff;
+}
+
+.clasbpro-email-merge-tags-accordion__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0 0 0.5rem;
+}
+
+.clasbpro-email-merge-tags-accordion__tags code {
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: #f0f0f1;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.clasbpro-email-merge-tags-accordion__note {
+	margin: 0;
+}
+
+.clasbpro-email-tab-test {
+	margin: 1rem 0 0;
+	padding: 12px 14px;
+	border: 1px solid #dbeafe;
+	border-radius: 8px;
+	background: #f8fafc;
+}
+
+.clasbpro-email-tab-test__form {
+	margin: 0;
+}
+
+.clasbpro-email-tab-test-field > .acf-label label {
+	font-weight: 600;
+}
+
+.clasbpro-email-test-tools__actions,
+.clasbpro-scheduled-email-tools__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin: 0.75rem 0 0;
+}
+
+.clasbpro-email-test-tools__actions form {
+	margin: 0;
+}
+
+.clasbpro-email-test-tools__actions .button,
+.clasbpro-scheduled-email-tools__actions .button {
+	margin: 0;
+}

@@ -1,0 +1,454 @@
+/**
+ * Horizon — split-screen electric blue premium theme
+ */
+
+.cbfs-horizon.cbfs-form--layout-modern,
+.cbfs-horizon.cbfs-status--layout-modern,
+.cbfs-horizon.cbfs-schedule,
+.cbfs-horizon.cbfs-packs {
+	--hz-navy: #1a1d2e;
+	--hz-navy-deep: #12151f;
+	--hz-blue: #1e8fff;
+	--hz-blue-dark: #1570d4;
+	--hz-ink: #1a2233;
+	--hz-muted: #6b7a90;
+	--hz-border: #dce4ef;
+	--hz-surface: #ffffff;
+	--hz-radius: 16px;
+
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: clamp(16px, 3vw, 28px);
+	background: #eef2f8;
+	font-family: 'Inter', system-ui, sans-serif;
+	color: var(--hz-ink);
+}
+
+.cbfs-horizon__shell {
+	display: grid;
+	grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.15fr);
+	max-width: 1080px;
+	margin: 0 auto;
+	min-height: min(680px, 90vh);
+	border-radius: calc(var(--hz-radius) + 4px);
+	overflow: hidden;
+	box-shadow: 0 24px 60px rgba(26, 29, 46, 0.18);
+	background: var(--hz-surface);
+}
+
+/* —— Brand panel —— */
+
+.cbfs-horizon__brand {
+	position: relative;
+	background: linear-gradient(165deg, #243049 0%, var(--hz-navy) 45%, var(--hz-navy-deep) 100%);
+	color: #fff;
+}
+
+.cbfs-horizon__brand-inner {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	padding: clamp(28px, 4vw, 40px);
+}
+
+.cbfs-horizon__logo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 28px;
+}
+
+.cbfs-horizon__logo-mark {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--hz-blue) 0%, #5eb3ff 100%);
+	box-shadow: 0 6px 18px rgba(30, 143, 255, 0.35);
+}
+
+.cbfs-horizon__logo-text {
+	font-size: 1.05rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+}
+
+.cbfs-horizon__welcome {
+	margin: 0 0 6px;
+	font-size: 0.9rem;
+	color: rgba(255, 255, 255, 0.72);
+}
+
+.cbfs-horizon__brand-title {
+	margin: 0 0 10px;
+	font-size: clamp(1.6rem, 3vw, 2.15rem);
+	font-weight: 700;
+	line-height: 1.15;
+}
+
+.cbfs-horizon__brand-meta {
+	margin: 0 0 20px;
+	font-size: 0.95rem;
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.78);
+	max-width: 28ch;
+}
+
+.cbfs-horizon__scene {
+	margin-top: auto;
+}
+
+.cbfs-horizon__illustration {
+	display: block;
+	width: 100%;
+	max-width: 360px;
+	height: auto;
+	border-radius: 12px;
+}
+
+/* —— Form panel —— */
+
+.cbfs-horizon__panel {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: clamp(28px, 4vw, 44px);
+	background: var(--hz-surface);
+}
+
+.cbfs-horizon__header {
+	margin-bottom: 22px;
+}
+
+.cbfs-horizon__title {
+	margin: 0 0 8px;
+	font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+	font-weight: 700;
+	color: var(--hz-ink);
+}
+
+.cbfs-horizon__lede {
+	margin: 0;
+	font-size: 0.92rem;
+	line-height: 1.55;
+	color: var(--hz-muted);
+	max-width: 46ch;
+}
+
+.cbfs-horizon__steps {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 0 0 24px;
+	padding: 0;
+	list-style: none;
+}
+
+.cbfs-horizon__step {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	min-width: 88px;
+	flex: 1 1 88px;
+	text-align: center;
+}
+
+.cbfs-horizon__step-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background: #f3f6fb;
+	border: 2px solid var(--hz-border);
+	color: var(--hz-muted);
+	box-shadow: 0 4px 12px rgba(26, 34, 51, 0.06);
+	transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cbfs-horizon__step.is-active .cbfs-horizon__step-icon {
+	background: var(--hz-blue);
+	border-color: var(--hz-blue);
+	color: #fff;
+	box-shadow: 0 8px 20px rgba(30, 143, 255, 0.28);
+}
+
+.cbfs-horizon__step-label {
+	font-size: 0.72rem;
+	font-weight: 600;
+	color: var(--hz-muted);
+	line-height: 1.25;
+}
+
+.cbfs-horizon__step.is-active .cbfs-horizon__step-label {
+	color: var(--hz-ink);
+}
+
+.cbfs-horizon__form {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.cbfs-horizon__grid {
+	display: grid;
+	gap: 14px;
+}
+
+.cbfs-horizon__grid--2 {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cbfs-horizon__field-span {
+	min-width: 0;
+}
+
+.cbfs-horizon .cbfs-form__label {
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: var(--hz-muted);
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.cbfs-horizon .cbfs-form__input,
+.cbfs-horizon .cbfs-form__select {
+	width: 100%;
+	padding: 12px 14px;
+	background: #fff;
+	background-color: #fff;
+	border: 1.5px solid var(--hz-border);
+	border-radius: 10px;
+	color: var(--hz-ink);
+	font-size: 0.95rem;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cbfs-horizon .cbfs-form__input::placeholder {
+	color: #9aa8ba;
+}
+
+.cbfs-horizon .cbfs-form__input:focus,
+.cbfs-horizon .cbfs-form__select:focus {
+	border-color: var(--hz-blue);
+	box-shadow: 0 0 0 3px rgba(30, 143, 255, 0.18);
+	outline: none;
+}
+
+.cbfs-horizon__total {
+	padding: 14px 16px;
+	background: #f5f9ff;
+	border: 1px solid #cfe3ff;
+	border-radius: 12px;
+}
+
+.cbfs-horizon__total .cbfs-form__row--total {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--hz-ink);
+}
+
+.cbfs-horizon .cbfs-form__button {
+	width: 100%;
+	padding: 14px 20px;
+	border: none;
+	border-radius: 12px;
+	background: var(--hz-blue);
+	color: #fff;
+	font-size: 1rem;
+	font-weight: 700;
+	box-shadow: 0 10px 24px rgba(30, 143, 255, 0.28);
+	transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.cbfs-horizon .cbfs-form__button:hover:not(:disabled) {
+	background: var(--hz-blue-dark);
+	transform: translateY(-1px);
+	box-shadow: 0 14px 28px rgba(30, 143, 255, 0.32);
+}
+
+.cbfs-horizon .cbfs-form__hint {
+	font-size: 0.82rem;
+	color: var(--hz-muted);
+}
+
+/* Appointment calendar within Horizon */
+
+.cbfs-horizon .cbfs-appointment-calendar {
+	--cbfs-cal-hover-border: var(--hz-blue);
+	--cbfs-cal-selected-bg: var(--hz-navy);
+	--cbfs-cal-available: #157a3a;
+}
+
+.cbfs-horizon .cbfs-appointment-calendar__slots-panel.is-active {
+	border-color: var(--hz-blue);
+}
+
+@media (max-width: 860px) {
+	.cbfs-horizon__shell {
+		grid-template-columns: 1fr;
+		min-height: auto;
+	}
+
+	.cbfs-horizon__brand-inner {
+		padding-bottom: 20px;
+	}
+
+	.cbfs-horizon__scene {
+		display: none;
+	}
+
+	.cbfs-horizon__grid--2 {
+		grid-template-columns: 1fr;
+	}
+
+	.cbfs-horizon__panel {
+		padding: 24px 20px 32px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cbfs-horizon .cbfs-form__button,
+	.cbfs-horizon__step-icon {
+		transition: none;
+	}
+}
+
+/* —— Status pages —— */
+
+.cbfs-horizon__panel--status {
+	padding: clamp(24px, 4vw, 36px);
+}
+
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__title {
+	font-size: clamp(1.35rem, 3vw, 1.75rem);
+	color: var(--hz-ink);
+}
+
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__lede,
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__hint {
+	color: var(--hz-muted);
+}
+
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__details {
+	background: #f5f9ff;
+	border: 1px solid var(--hz-border);
+}
+
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__button {
+	background: var(--hz-blue);
+	color: #fff;
+}
+
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__button:hover {
+	background: var(--hz-blue-dark);
+}
+
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__pending {
+	background: #f5f9ff;
+	border: 1px solid var(--hz-border);
+}
+
+.cbfs-horizon.cbfs-status--layout-modern .cbfs-status__detail {
+	color: var(--cbfs-error-fg);
+}
+
+.cbfs-horizon.cbfs-status--layout-modern.cbfs-status--paid .cbfs-status__title,
+.cbfs-horizon.cbfs-status--layout-modern.cbfs-status--pending .cbfs-status__title {
+	color: #157a3a;
+}
+
+.cbfs-horizon.cbfs-status--layout-modern.cbfs-status--cancelled .cbfs-status__title {
+	color: #9a6700;
+}
+
+.cbfs-horizon.cbfs-status--layout-modern.cbfs-status--error .cbfs-status__title {
+	color: #b42318;
+}
+
+/* —— Global schedule calendar —— */
+
+.cbfs-horizon.cbfs-schedule {
+	--cbfs-schedule-ink: var(--hz-ink);
+	--cbfs-schedule-muted: var(--hz-muted);
+	--cbfs-schedule-border: var(--hz-blue);
+	--cbfs-schedule-event-border: rgba(30, 143, 255, 0.1);
+	--cbfs-schedule-today-bg: rgba(30, 143, 255, 0.08);
+	--cbfs-schedule-bg: var(--hz-surface);
+}
+
+.cbfs-horizon.cbfs-schedule .cbfs-schedule__filter.is-active {
+	background: var(--hz-blue);
+	border-color: var(--hz-blue);
+}
+
+.cbfs-horizon.cbfs-schedule .cbfs-schedule__filter:hover:not(.is-active) {
+	background: #f5f8fc;
+}
+
+.cbfs-horizon.cbfs-schedule .cbfs-schedule__day-head.is-today {
+	border-bottom-color: var(--hz-blue);
+}
+
+.cbfs-horizon.cbfs-schedule .cbfs-schedule__nav-btn:hover:not(:disabled) .cbfs-schedule__nav-icon-ring {
+	fill: #f5f8fc;
+}
+
+.cbfs-horizon.cbfs-schedule .cbfs-schedule__backdrop {
+	background: rgba(26, 29, 46, 0.5);
+}
+
+.cbfs-horizon.cbfs-schedule .cbfs-schedule__sheet {
+	border-radius: var(--hz-radius) var(--hz-radius) 0 0;
+	box-shadow: 0 -8px 33px rgba(26, 29, 46, 0.18);
+}
+
+.cbfs-horizon.cbfs-schedule .cbfs-schedule__sheet-header {
+	border-bottom-color: var(--hz-border);
+}
+
+/* —— Class packs —— */
+
+.cbfs-horizon.cbfs-packs {
+	--cbfs-packs-ink: var(--hz-ink);
+	--cbfs-packs-muted: var(--hz-muted);
+	--cbfs-packs-border: var(--hz-border);
+	--cbfs-packs-surface: var(--hz-surface);
+	--cbfs-packs-bg: #eef2f8;
+	--cbfs-packs-accent: var(--hz-blue);
+	--cbfs-packs-accent-hover: var(--hz-blue-dark);
+	--cbfs-packs-accent-ink: #fff;
+	--cbfs-packs-radius: var(--hz-radius);
+	--cbfs-packs-shadow: 0 16px 40px rgba(26, 29, 46, 0.1);
+
+	max-width: 720px;
+	padding: clamp(16px, 3vw, 28px);
+	font-family: 'Inter', system-ui, sans-serif;
+}
+
+.cbfs-horizon .cbfs-packs__item {
+	box-shadow: var(--cbfs-packs-shadow);
+}
+
+.cbfs-horizon .cbfs-form__pack {
+	border-color: var(--hz-border);
+	border-radius: var(--hz-radius);
+	background: #f5f9ff;
+}
+
+.cbfs-horizon .cbfs-form__pack-switch,
+.cbfs-horizon .cbfs-form__pack-attach-btn {
+	border-color: var(--hz-border);
+	border-radius: 10px;
+	color: var(--hz-ink);
+	background: #fff;
+}
+
+.cbfs-horizon .cbfs-form__pack-switch:hover,
+.cbfs-horizon .cbfs-form__pack-attach-btn:hover {
+	border-color: var(--hz-blue);
+	color: var(--hz-blue);
+}

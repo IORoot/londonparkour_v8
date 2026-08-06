@@ -1,0 +1,14 @@
+{
+  "slug": "tutorial-07-svg-accent",
+  "name": "Tutorial 07: SVG accent",
+  "description": "Drop a decorative SVG into booking-form.php \u2014 includes accent.svg.php and styles it in style.css.",
+  "version": "1.0.0",
+  "provides": [
+    "booking-form",
+    "style"
+  ],
+  "screenshot": "screenshot.svg",
+  "tags": [
+    "tutorial"
+  ]
+}

@@ -1,0 +1,24 @@
+/* Restores select chevron after theme packs that reset background shorthand */
+.cbfs-form select.cbfs-form__select,
+.cbfs-form .cbfs-form__input.cbfs-form__select,
+.cbfs-form--layout-modern .cbfs-form__input.cbfs-form__select,
+[class*="cbfs-"] .cbfs-form select.cbfs-form__select,
+[class*="cbfs-"] .cbfs-form .cbfs-form__input.cbfs-form__select {
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	cursor: pointer;
+	background-image: var(--cbfs-select-chevron);
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+	background-size: 16px 16px;
+	padding-right: 40px;
+}
+
+.cbfs-form select.cbfs-form__select:focus,
+.cbfs-form .cbfs-form__input.cbfs-form__select:focus,
+.cbfs-form--layout-modern .cbfs-form__input.cbfs-form__select:focus,
+[class*="cbfs-"] .cbfs-form select.cbfs-form__select:focus,
+[class*="cbfs-"] .cbfs-form .cbfs-form__input.cbfs-form__select:focus {
+	background-image: var(--cbfs-select-chevron);
+}

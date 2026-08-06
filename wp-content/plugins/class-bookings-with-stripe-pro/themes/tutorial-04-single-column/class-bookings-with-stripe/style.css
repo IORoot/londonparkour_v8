@@ -1,0 +1,25 @@
+/**
+ * Tutorial 04 — single-column field layout.
+ */
+
+.cbfs-tut04 .cbfs-form__card {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.cbfs-tut04 .cbfs-form__row,
+.cbfs-tut04 .cbfs-form__row--total {
+	width: 100%;
+}
+
+.cbfs-tut04 .cbfs-form__input,
+.cbfs-tut04 .cbfs-form__select {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.cbfs-tut04 .cbfs-form__button {
+	width: 100%;
+}

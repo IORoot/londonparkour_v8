@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="m-auto" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Rail Balancing</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="170" height="170" rx="9.91666667"></rect>
+    </defs>
+    <g id="Labs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Glyphs-only" transform="translate(-190.000000, -1480.000000)">
+            <g id="Movements" transform="translate(10.000000, 400.000000)">
+                <g id="Balancing" transform="translate(0.000000, 1080.000000)">
+                    <g id="Rail-Balancing" transform="translate(180.000000, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Rectangle" xlink:href="#path-1"></use>
+                        <path d="M57.1768775,49.1249115 L106.062444,122.058245 L19.6617109,122.058245 L19.6617109,49.1249115 L57.1768775,49.1249115 Z M149.769274,48.8616134 L149.769274,121.794947 L114.126913,121.794947 L66.4724511,48.8616134 L149.769274,48.8616134 Z M52.9433776,57.0572801 L27.5943776,57.0572801 L27.5943776,114.12428 L91.1943776,114.12428 L52.9433776,57.0572801 Z M141.835378,56.7942801 L81.1313776,56.7942801 L118.419378,113.86128 L141.835378,113.86128 L141.835378,56.7942801 Z M136.563033,61.8518616 L136.563033,108.785195 L121.776359,108.785195 L90.1386903,61.8518616 L136.563033,61.8518616 Z M128.629845,69.7852729 L105.053845,69.7852729 L125.995845,100.852273 L128.629845,100.852273 L128.629845,69.7852729 Z M124.027006,74.5622531 L124.027006,91.5622531 L113.027006,74.5622531 L124.027006,74.5622531 Z" id="logo" fill="#242424" fill-rule="nonzero" mask="url(#mask-2)" transform="translate(84.715493, 85.459929) rotate(-60.000000) translate(-84.715493, -85.459929) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
