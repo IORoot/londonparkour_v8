@@ -1,10 +1,14 @@
 # Handoff — Storybook → WordPress port
 
 State: Phases 0–4 complete. Phase 5 has the site chrome, `front-page.php`,
-`404.php`, `page.php` and **`templates/legal.php`** done, with 10 page templates
-left — see "Phase 5b". Most of Phase 6 is done too, pulled forward: `wp lp seed`,
-`bin/README.md` and the theme `README.md` all exist. Everything needed to
-continue is on disk; this document is the map.
+`404.php`, `page.php`, `templates/legal.php`, `home.php`, `single.php`,
+`search.php`, `archive.php`, `index.php`, `archive-lp_class.php` and
+`templates/classes-agenda.php` done — **seven page templates left**: ClassesMap,
+ClassDetail, TutorialsIndex, TutorialsSeries, TutorialDetail, Contact, DocsFaq
+(see "Phase 5b" and "The remaining batches"). Most of Phase 6 is done too,
+pulled forward: `wp lp seed`, `bin/README.md` and the theme `README.md` all
+exist, and `lp_seed_template_pages()` now seeds pages with `_wp_page_template`
+set. Everything needed to continue is on disk; this document is the map.
 
 **The work is now committed.** It was uncommitted for the whole port; there is
 now a baseline commit of phases 0–5a and one commit per piece of work after it.
