@@ -162,7 +162,8 @@ function extract_database()
     if ! docker exec $MARIADB_CONTAINER_REF \
         mysqldump --add-drop-database -u$MARIADB_ROOT_USERNAME -p$MARIADB_ROOT_PASSWORD --single-transaction --databases $MARIADB_DATABASE_NAME > ./database/${DUMP_FILENAME};
     then
-        printf "\n${TEXT_RED_500}Error: Failed to dump database to /tmp/${DUMP_FILENAME}"
+        printf "\n${TEXT_RED_500}Error: Failed to dump database to ./database/${DUMP_FILENAME}"
+        printf "\n${TEXT_GRAY_500}Check .env: MARIADB_ROOT_USERNAME must be root (not the wordpress app user)."
         exit $FAIL_DUMP_DB
 	else
 		printf "\n%s  ${TEXT_EMERALD_500}%s${RESET_TEXT}" ${ICON_TICK} "Database dumped into ./database folder."
