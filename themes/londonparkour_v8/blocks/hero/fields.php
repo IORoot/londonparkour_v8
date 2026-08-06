@@ -109,7 +109,8 @@ return array(
 					'label' => __( 'Sold out', 'londonparkour_v8' ),
 					'type'  => 'true_false',
 				),
-			)
+			),
+			array( 'taxonomy' => 'lp_level' )
 		),
 
 		array(

@@ -660,6 +660,27 @@
                             ]
                         },
                         {
+                            "name": "source_terms",
+                            "label": "Filter by",
+                            "type": "taxonomy",
+                            "taxonomy": "lp_level",
+                            "field_type": "multi_select",
+                            "add_term": 0,
+                            "save_terms": 0,
+                            "load_terms": 0,
+                            "return_format": "id",
+                            "key": "field_64a43d544d976870",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_cbdb45acf830b266",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
                             "name": "source_items",
                             "label": "Session",
                             "type": "post_object",
@@ -955,6 +976,27 @@
                             "min": 1,
                             "max": 24,
                             "key": "field_74ff406040769a5c",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_ef0bdb057c0586ca",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_terms",
+                            "label": "Filter by",
+                            "type": "taxonomy",
+                            "taxonomy": "lp_level",
+                            "field_type": "multi_select",
+                            "add_term": 0,
+                            "save_terms": 0,
+                            "load_terms": 0,
+                            "return_format": "id",
+                            "key": "field_f8a5101c09379179",
                             "conditional_logic": [
                                 [
                                     {

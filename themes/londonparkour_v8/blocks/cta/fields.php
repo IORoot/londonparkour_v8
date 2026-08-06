@@ -74,7 +74,10 @@ return array(
 					'type'  => 'text',
 				),
 			),
-			array( 'multiple' => false )
+			array(
+				'multiple' => false,
+				'taxonomy' => 'lp_level',
+			)
 		),
 
 		array(
