@@ -56,6 +56,15 @@
             "key": "field_7fb232d1e03a7ac0"
         },
         {
+            "name": "is_featured",
+            "label": "Featured class",
+            "type": "true_false",
+            "ui": 1,
+            "default_value": 0,
+            "instructions": "Shown above the Classes grid, and left out of it.",
+            "key": "field_1d66919fedcdd7ad"
+        },
+        {
             "name": "tab_items",
             "label": "Items",
             "type": "tab",

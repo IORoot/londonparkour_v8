@@ -3,120 +3,259 @@
     "slug": "sunrise-session",
     "title": "Sunrise Session",
     "menu_order": 1,
-    "terms": { "lp_level": ["improver"] },
+    "terms": {
+      "lp_level": [
+        "improver"
+      ]
+    },
     "fields": {
       "subtitle": "60 min · outdoor, rain or shine",
       "location": "peckham-rye",
-      "coaches": ["kie-piccio"],
+      "coaches": [
+        "kie-piccio"
+      ],
       "price": "£15",
       "price_label": "DROP-IN",
-      "primary_action": { "link": { "title": "WAITLIST", "url": "/book/sunrise/", "target": "" } },
+      "primary_action": {
+        "link": {
+          "title": "WAITLIST",
+          "url": "/book/sunrise/",
+          "target": ""
+        }
+      },
       "sessions": [
-        { "date_label": "TODAY", "time": "07:00", "spaces": "FULL", "sold_out": true }
-      ]
-    }
+        {
+          "date_label": "TODAY",
+          "time": "07:00",
+          "spaces": "FULL",
+          "sold_out": true
+        }
+      ],
+      "is_featured": false
+    },
+    "excerpt": "Before work, outdoors, rain or shine. The quietest hour of the day."
   },
   {
     "slug": "kids-parkour-5-11",
     "title": "Kids Parkour 5–11",
     "menu_order": 2,
-    "terms": { "lp_level": ["all-levels"] },
+    "terms": {
+      "lp_level": [
+        "all-levels"
+      ]
+    },
     "fields": {
       "subtitle": "45 min · parents welcome to watch",
       "location": "hackney-marshes",
-      "coaches": ["leon-lawrence"],
+      "coaches": [
+        "leon-lawrence"
+      ],
       "price": "£12",
       "price_label": "PER CHILD",
-      "primary_action": { "link": { "title": "BOOK", "url": "/book/kids/", "target": "" } },
+      "primary_action": {
+        "link": {
+          "title": "BOOK",
+          "url": "/book/kids/",
+          "target": ""
+        }
+      },
       "sessions": [
-        { "date_label": "TODAY", "time": "10:00", "spaces": "2 LEFT", "sold_out": false }
-      ]
-    }
+        {
+          "date_label": "TODAY",
+          "time": "10:00",
+          "spaces": "2 LEFT",
+          "sold_out": false
+        }
+      ],
+      "is_featured": false
+    },
+    "excerpt": "Forty-five minutes for the under-elevens. Parents welcome to watch."
   },
   {
     "slug": "beginners-parkour",
     "title": "Beginners Parkour",
     "menu_order": 3,
-    "terms": { "lp_level": ["beginner"] },
+    "terms": {
+      "lp_level": [
+        "beginner"
+      ]
+    },
     "fields": {
       "subtitle": "60 min · all kit provided",
       "location": "vauxhall-the-arches",
-      "coaches": ["andy-pearson", "leon-lawrence"],
+      "coaches": [
+        "andy-pearson",
+        "leon-lawrence"
+      ],
       "price": "£15",
       "price_label": "DROP-IN",
-      "primary_action": { "link": { "title": "BOOK", "url": "/book/beginners/", "target": "" } },
+      "primary_action": {
+        "link": {
+          "title": "BOOK",
+          "url": "/book/beginners/",
+          "target": ""
+        }
+      },
       "sessions": [
-        { "date_label": "TODAY", "time": "18:30", "spaces": "4 LEFT", "sold_out": false },
-        { "date_label": "THU", "time": "18:30", "spaces": "8 LEFT", "sold_out": false }
-      ]
-    }
+        {
+          "date_label": "TODAY",
+          "time": "18:30",
+          "spaces": "4 LEFT",
+          "sold_out": false
+        },
+        {
+          "date_label": "THU",
+          "time": "18:30",
+          "spaces": "8 LEFT",
+          "sold_out": false
+        }
+      ],
+      "is_featured": true
+    },
+    "excerpt": "The first hour. Landing, rolling, and reading a wall before you touch it. No experience of any kind, all kit provided, and nothing is compulsory."
   },
   {
     "slug": "open-gym",
     "title": "Open Gym",
     "menu_order": 4,
-    "terms": { "lp_level": ["all-levels"] },
+    "terms": {
+      "lp_level": [
+        "all-levels"
+      ]
+    },
     "fields": {
       "subtitle": "90 min · unstructured, coach on floor",
       "location": "stratford-east",
-      "coaches": ["nirosh-ganeshalingam"],
+      "coaches": [
+        "nirosh-ganeshalingam"
+      ],
       "price": "£8",
       "price_label": "DROP-IN",
-      "primary_action": { "link": { "title": "BOOK", "url": "/book/open-gym/", "target": "" } },
+      "primary_action": {
+        "link": {
+          "title": "BOOK",
+          "url": "/book/open-gym/",
+          "target": ""
+        }
+      },
       "sessions": [
-        { "date_label": "TODAY", "time": "19:45", "spaces": "11 LEFT", "sold_out": false }
-      ]
-    }
+        {
+          "date_label": "TODAY",
+          "time": "19:45",
+          "spaces": "11 LEFT",
+          "sold_out": false
+        }
+      ],
+      "is_featured": false
+    },
+    "excerpt": "Unstructured, coach on the floor. Come and work on the thing you are stuck on."
   },
   {
     "slug": "womens-session",
     "title": "Women's Session",
     "menu_order": 5,
-    "terms": { "lp_level": ["all-levels"] },
+    "terms": {
+      "lp_level": [
+        "all-levels"
+      ]
+    },
     "fields": {
       "subtitle": "60 min · women and non-binary only",
       "location": "southbank-undercroft",
-      "coaches": ["sofia-reyes"],
+      "coaches": [
+        "sofia-reyes"
+      ],
       "price": "£15",
       "price_label": "DROP-IN",
-      "primary_action": { "link": { "title": "BOOK", "url": "/book/womens/", "target": "" } },
+      "primary_action": {
+        "link": {
+          "title": "BOOK",
+          "url": "/book/womens/",
+          "target": ""
+        }
+      },
       "sessions": [
-        { "date_label": "FRI", "time": "07:15", "spaces": "6 LEFT", "sold_out": false }
-      ]
-    }
+        {
+          "date_label": "FRI",
+          "time": "07:15",
+          "spaces": "6 LEFT",
+          "sold_out": false
+        }
+      ],
+      "is_featured": false
+    },
+    "excerpt": "Women and non-binary only. Same coaching, same ground, different room."
   },
   {
     "slug": "advanced-movement",
     "title": "Advanced Movement",
     "menu_order": 6,
-    "terms": { "lp_level": ["advanced"] },
+    "terms": {
+      "lp_level": [
+        "advanced"
+      ]
+    },
     "fields": {
       "subtitle": "75 min · by coach invitation",
       "location": "vauxhall-the-arches",
-      "coaches": ["tomas-vrba"],
+      "coaches": [
+        "tomas-vrba"
+      ],
       "price": "£15",
       "price_label": "DROP-IN",
-      "primary_action": { "link": { "title": "BOOK", "url": "/book/advanced/", "target": "" } },
+      "primary_action": {
+        "link": {
+          "title": "BOOK",
+          "url": "/book/advanced/",
+          "target": ""
+        }
+      },
       "sessions": [
-        { "date_label": "FRI", "time": "12:00", "spaces": "3 LEFT", "sold_out": false }
-      ]
-    }
+        {
+          "date_label": "FRI",
+          "time": "12:00",
+          "spaces": "3 LEFT",
+          "sold_out": false
+        }
+      ],
+      "is_featured": false
+    },
+    "excerpt": "By coach invitation only. Seventy-five minutes at the top of the progression."
   },
   {
     "slug": "family-session",
     "title": "Family Session",
     "menu_order": 7,
-    "terms": { "lp_level": ["all-levels"] },
+    "terms": {
+      "lp_level": [
+        "all-levels"
+      ]
+    },
     "fields": {
       "subtitle": "60 min · ages 5+ with an adult",
       "location": "wembley-park",
-      "coaches": ["leon-lawrence"],
+      "coaches": [
+        "leon-lawrence"
+      ],
       "price": "£24",
       "price_label": "2 PEOPLE",
-      "primary_action": { "link": { "title": "BOOK", "url": "/book/family/", "target": "" } },
+      "primary_action": {
+        "link": {
+          "title": "BOOK",
+          "url": "/book/family/",
+          "target": ""
+        }
+      },
       "sessions": [
-        { "date_label": "SAT", "time": "09:30", "spaces": "9 LEFT", "sold_out": false }
-      ]
-    }
+        {
+          "date_label": "SAT",
+          "time": "09:30",
+          "spaces": "9 LEFT",
+          "sold_out": false
+        }
+      ],
+      "is_featured": false
+    },
+    "excerpt": "Ages five and up with an adult. Everyone moves, nobody stands and watches."
   }
 ]

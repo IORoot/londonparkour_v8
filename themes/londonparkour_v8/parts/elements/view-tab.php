@@ -28,16 +28,17 @@
  * across; wiring a click handler for the rendered tab is the consumer
  * template/JS's job, same as any other interactive element this theme emits.
  *
- * Given a `href` the plain form renders an <a> instead, for tabs that are
- * really navigation — search.php's filter rail switches the results by post
- * type, which on WordPress is a URL, not a view-mode toggle. It carries
- * aria-current="page" rather than role="tab"/aria-selected: an <a href> is a
- * link, and mislabelling it as a tab promises keyboard behaviour a link does
- * not have (Port Brief a11y rule). Class strings are identical in both forms.
+ * Given a `href` EITHER form renders an <a> instead, for tabs that are really
+ * navigation — search.php's filter rail switches results by post type, and the
+ * Classes view rail switches between three separate pages. Both are URLs, not
+ * view-mode toggles. The link form carries aria-current="page" rather than
+ * role="tab"/aria-selected: an <a href> is a link, and mislabelling it as a tab
+ * promises keyboard behaviour a link does not have (Port Brief a11y rule).
+ * Class strings are identical in both forms.
  *
  * @param string $args['label']   Default 'Grid'.
  * @param bool   $args['active']
- * @param string $args['href']    Renders the plain form as a link. Ignored by 'rich'.
+ * @param string $args['href']    Renders as a link rather than a tab button.
  * @param string $args['variant'] Omit for the plain tab; 'rich' for view-rail's
  *                                dark two-line tab.
  * @param string $args['meta']    rich only — the second line.
@@ -78,33 +79,45 @@ $lp_label  = (string) ( $args['label'] ?? 'Grid' );
 $lp_active = ! empty( $args['active'] );
 
 $lp_state_class = $lp_active ? $lp_states['active'] : $lp_states['inactive'];
+$lp_href        = (string) ( $args['href'] ?? '' );
 
 if ( 'rich' === ( $args['variant'] ?? '' ) ) {
-	$lp_rich    = $lp_rich_states[ $lp_active ? 'active' : 'inactive' ];
-	$lp_meta    = (string) ( $args['meta'] ?? '' );
-	$lp_icon_id = (string) ( $args['icon_id'] ?? 'icon-squares-2x2' );
+	$lp_rich       = $lp_rich_states[ $lp_active ? 'active' : 'inactive' ];
+	$lp_meta       = (string) ( $args['meta'] ?? '' );
+	$lp_icon_id    = (string) ( $args['icon_id'] ?? 'icon-squares-2x2' );
+	$lp_rich_class = 'group relative flex-1 min-w-[160px] flex flex-col items-start gap-5 px-6 py-5 text-left transition-colors duration-150 border-r border-neutral-content/10 last:border-r-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 	?>
+	<?php if ( '' !== $lp_href ) : ?>
+	<a
+		href="<?php echo esc_url( $lp_href ); ?>"
+		<?php echo $lp_active ? 'aria-current="page"' : ''; ?>
+		data-tab-index="<?php echo esc_attr( (string) ( $args['index'] ?? 0 ) ); ?>"
+		class="<?php echo esc_attr( $lp_rich_class ); ?>"
+		data-component="view-tab"
+		data-variant="rich"
+	>
+	<?php else : ?>
 	<button
 		type="button"
 		role="tab"
 		aria-selected="<?php echo $lp_active ? 'true' : 'false'; ?>"
 		data-tab-index="<?php echo esc_attr( (string) ( $args['index'] ?? 0 ) ); ?>"
-		class="group relative flex-1 min-w-[160px] flex flex-col items-start gap-5 px-6 py-5 text-left transition-colors duration-150 border-r border-neutral-content/10 last:border-r-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary"
+		class="<?php echo esc_attr( $lp_rich_class ); ?>"
 		data-component="view-tab"
 		data-variant="rich"
 	>
+	<?php endif; ?>
 		<span class="<?php echo lp_classes( 'flex items-center gap-[11px]', $lp_rich['label'] ); ?>">
 			<?php lp_icon( $lp_icon_id, 'w-[14px] h-[14px] flex-none text-current' ); ?>
 			<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px]"><?php echo esc_html( $lp_label ); ?></span>
 		</span>
 		<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px]', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
 		<span class="<?php echo lp_classes( 'absolute inset-x-0 bottom-0 h-[3px]', $lp_rich['bar'] ); ?>" aria-hidden="true"></span>
-	</button>
+	<?php echo '' !== $lp_href ? '</a>' : '</button>'; ?>
 	<?php
 	return;
 }
 
-$lp_href      = (string) ( $args['href'] ?? '' );
 $lp_tab_class = lp_classes( 'tab h-auto rounded-none pt-[17px] px-0 pb-[15px] text-[11px] uppercase tracking-[1px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content', $lp_state_class );
 ?>
 <?php if ( '' !== $lp_href ) : ?>

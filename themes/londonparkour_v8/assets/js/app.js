@@ -1,6 +1,7 @@
 import '@tailwindplus/elements';
 
 import { initAllVideoDialogs } from './elements/DialogVideo.js';
+import { initAllFilterForms } from './elements/FilterForm.js';
 import { AppInitialiser } from './AppInitialiser.js';
 import { createDOMObserver } from './utils/createDOMObserver.js';
 import { initAll as initMotion } from './motion/index.js';
@@ -34,6 +35,16 @@ const MODULES = {
       return instances;
     },
     selector: null,
+    critical: false,
+    lazy: false,
+    timeout: 5000
+  },
+
+  // The filter grid is above the fold on every page that has one, so there is
+  // nothing to defer — and a filter that only wakes on scroll is a bug.
+  filterForms: {
+    init: () => initAllFilterForms(),
+    selector: 'form[data-filter-form]',
     critical: false,
     lazy: false,
     timeout: 5000
@@ -72,7 +83,7 @@ export async function initApp(options = {}) {
  * which re-ran after every story mount. On the site the DOM is server-rendered
  * once, so a single boot on DOMContentLoaded replaces it.
  */
-const boot = () => initApp({ modules: ['motion', 'videoDialogs'] });
+const boot = () => initApp({ modules: ['motion', 'videoDialogs', 'filterForms'] });
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', boot, { once: true });

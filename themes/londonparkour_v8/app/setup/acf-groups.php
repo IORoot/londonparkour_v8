@@ -63,6 +63,22 @@ return array(
 				'return_format' => 'id',
 				'filters'       => array( 'search' ),
 			),
+			/*
+			 * Mirrors `is_lead` on Coach and `is_flagship` on Location, for the
+			 * same reason: the Classes archive features one class above the
+			 * grid and then lists the rest, so the grid query has to know which
+			 * one is already on show or it appears twice. No ordering picks it
+			 * — the design's featured class is neither first nor newest — so it
+			 * has to be a flag. See PORT-FINDINGS §13.
+			 */
+			array(
+				'name'          => 'is_featured',
+				'label'         => __( 'Featured class', 'londonparkour_v8' ),
+				'type'          => 'true_false',
+				'ui'            => 1,
+				'default_value' => 0,
+				'instructions'  => __( 'Shown above the Classes grid, and left out of it.', 'londonparkour_v8' ),
+			),
 
 			lp_tab( __( 'Items', 'londonparkour_v8' ) ),
 			array(

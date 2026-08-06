@@ -101,3 +101,149 @@ function lp_pagination_args( ?WP_Query $lp_query = null, string $lp_noun = 'RESU
 		'count' => sprintf( 'SHOWING %02d–%02d OF %d %s', $lp_from, $lp_to, $lp_found, $lp_noun ),
 	);
 }
+
+/**
+ * The three Classes view-rail tabs, shared by Agenda, Listings and Map.
+ *
+ * Ported from ClassesHeaderCluster.js's `TABS`, whose own note says the three
+ * are identical on every page that has one and only `active` changes. The
+ * metas were static strings there (18 SESSIONS / 13 CLASS TYPES / 6 SITES);
+ * here they are counted, because on a real site they would otherwise be wrong
+ * the first time an editor adds a class.
+ *
+ * ponytail: the session count reads the `sessions` repeater per class, so it
+ * is one ACF call per published class — fine at a dozen. Denormalise it into
+ * a transient if the class list ever runs to hundreds.
+ *
+ * @param string $lp_active agenda|listings|map.
+ * @return array Tabs in view-rail.php's shape.
+ */
+function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
+	$lp_class_ids = get_posts(
+		array(
+			'post_type'      => 'lp_class',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
+
+	$lp_sessions = 0;
+	foreach ( $lp_class_ids as $lp_id ) {
+		$lp_rows      = function_exists( 'get_field' ) ? get_field( 'sessions', $lp_id ) : null;
+		$lp_sessions += is_array( $lp_rows ) ? count( $lp_rows ) : 0;
+	}
+
+	$lp_sites = (int) ( wp_count_posts( 'lp_location' )->publish ?? 0 );
+
+	return array(
+		array(
+			'label'   => 'AGENDA',
+			'meta'    => sprintf( '%d SESSIONS', $lp_sessions ),
+			'icon_id' => 'icon-calendar-days',
+			'href'    => home_url( '/classes/agenda' ),
+			'active'  => 'agenda' === $lp_active,
+		),
+		array(
+			'label'   => 'LISTINGS',
+			'meta'    => sprintf( '%d CLASS TYPES', count( $lp_class_ids ) ),
+			'icon_id' => 'icon-squares-2x2',
+			'href'    => (string) get_post_type_archive_link( 'lp_class' ),
+			'active'  => 'listings' === $lp_active,
+		),
+		array(
+			'label'   => 'MAP',
+			'meta'    => sprintf( '%d SITES', $lp_sites ),
+			'icon_id' => 'icon-map-pin',
+			'href'    => home_url( '/classes/map' ),
+			'active'  => 'map' === $lp_active,
+		),
+	);
+}
+
+/**
+ * The three Classes filter cells, in filter-grid.php's shape.
+ *
+ * Ported from ClassesHeaderCluster.js's `DEFAULT_FILTER_CELLS`. The keys and
+ * the placeholder are the design's own strings, including `All six sites` —
+ * which hardcodes the site count. It is correct for the six sites this site
+ * has; if a seventh is added, that string is the design's to change, not this
+ * file's to rewrite. Recorded in docs/PORT-FINDINGS.md.
+ *
+ * Options come from real records: CLASS TYPE from the `lp_level` taxonomy
+ * (the design's kickers — ALL LEVELS, LEVEL 2 · IMPROVER, 6–9 AGE — are level
+ * terms), SITE from published `lp_location` posts, which is what a class's
+ * `location` post_object field points at.
+ *
+ * Field names match app/setup/queries.php. Nothing here is a taxonomy query
+ * var: see that file for why the filter uses its own parameters.
+ *
+ * @param array $lp_current Current values keyed by field name.
+ * @return array
+ */
+function lp_class_filter_cells( array $lp_current = array() ): array {
+	$lp_levels = get_terms(
+		array(
+			'taxonomy'   => 'lp_level',
+			'hide_empty' => false,
+		)
+	);
+
+	$lp_level_options = array(
+		array(
+			'value' => '',
+			'label' => 'All classes',
+		),
+	);
+	foreach ( is_array( $lp_levels ) ? $lp_levels : array() as $lp_term ) {
+		$lp_level_options[] = array(
+			'value' => $lp_term->slug,
+			'label' => $lp_term->name,
+		);
+	}
+
+	$lp_site_options = array(
+		array(
+			'value' => '',
+			'label' => 'All six sites',
+		),
+	);
+	foreach ( get_posts(
+		array(
+			'post_type'      => 'lp_location',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		)
+	) as $lp_site ) {
+		$lp_site_options[] = array(
+			'value' => (string) $lp_site->ID,
+			'label' => get_the_title( $lp_site ),
+		);
+	}
+
+	return array(
+		array(
+			'type'        => 'search',
+			'key'         => 'SEARCH',
+			'name'        => 'class_search',
+			'placeholder' => 'Class, coach or site',
+			'value'       => (string) ( $lp_current['class_search'] ?? '' ),
+		),
+		array(
+			'type'    => 'select',
+			'key'     => 'CLASS TYPE',
+			'name'    => 'class_level',
+			'options' => $lp_level_options,
+			'value'   => (string) ( $lp_current['class_level'] ?? '' ),
+		),
+		array(
+			'type'    => 'select',
+			'key'     => 'SITE',
+			'name'    => 'class_site',
+			'options' => $lp_site_options,
+			'value'   => (string) ( $lp_current['class_site'] ?? '' ),
+		),
+	);
+}

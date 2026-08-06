@@ -503,3 +503,108 @@ array entry keeps the gate on and costs a line. The rule's purpose is to stop
 *speculative* variants; this one had its caller in the same commit. Note it is
 **not** the dark-band bordered block from `NotFound.js:123` that correction 2 is
 about — that shape still has exactly one caller and still should not be promoted.
+
+## 17. B4, part 1: the ClassesHeaderCluster promotion and what it forced
+
+`parts/components/classes-header-cluster.php` is the coordinated promotion the
+handoff reserved — three pages open with it, and it holds the three view tabs
+and three filter cells so they are defined once rather than three times. It
+owns no markup beyond a wrapper; it is four already-ported parts in order.
+
+It does **not** render nav. The source says the same, and says why: bundling
+nav made the masthead's `<h1>` fall outside `<main>` on two of the three pages.
+ClassesListings' own docblock records that it could not fix that from the
+directory it owned. Here the fix is free — each template calls `get_header()`
+and puts the cluster inside its own `<main>`.
+
+Three things the promotion forced, each with callers on the day:
+
+- **`view-tab.php`'s `rich` variant gained the `href` form** it already had for
+  the plain variant. The Classes view rail navigates between three separate
+  pages; the source exposes that as an `onTabSelect` callback precisely because
+  it has no opinion on routing, and on WordPress the answer is a URL.
+- **`view-rail.php` drops `role="tablist"` when its tabs are links.** Three
+  links to three pages are navigation. Keeping the role would promise arrow-key
+  behaviour that does not exist.
+- **Tab metas are counted, not fixed.** `18 SESSIONS` / `13 CLASS TYPES` /
+  `6 SITES` are literals in the source and would be wrong the first time an
+  editor added a class. `lp_classes_view_tabs()` counts them. It reads the
+  `sessions` repeater per class — marked `ponytail:` with the ceiling.
+
+## 18. The filter grid is a real form, and how the missing submit is handled
+
+The repo owner chose a GET form with a small auto-submit behaviour over a REST
+endpoint plus a client-side search library. The reasoning is worth keeping,
+because the question will come back:
+
+- All four CPTs register `'show_in_rest' => false` (`app/setup/cpt.php`),
+  deliberately — "Classic editor only". "Use the WP API" is therefore not a
+  wiring job but a reversal of that decision, which also re-opens the block
+  editor's REST surface.
+- The dataset is ~13 class types over three filter cells with no facet counts,
+  no ranking and no refinement UI. An InstantSearch-style library earns its keep
+  on the opposite shape; here most of the work would be custom widgets
+  suppressing what the library provides, plus an adapter for WP's response.
+- A GET form gives shareable, bookmarkable, crawlable URLs and works with JS
+  off — and it is the same mechanism ClassesAgenda's `?week=` will use.
+
+**If site-wide search ever outgrows `WP_Query`, that is the case for an index
+(Typesense/Meilisearch/Algolia) behind `search.php`** — and Classes can ride the
+same index later. A bespoke REST endpoint now would be thrown away.
+
+Mechanically: `filter-grid.php` gains an optional `action`, and with it wraps
+itself in `<form method="get">`. The design draws NO submit control, so two
+invisible things carry that job — a `sr-only` submit (the only mechanism with
+JS off, and reachable by keyboard and screen reader), and `data-filter-form`,
+which `assets/js/elements/FilterForm.js` reads to submit on a **select** change.
+Text inputs are not auto-submitted; that would reload the page mid-word.
+Without `action` the grid renders exactly as it did before.
+
+The parameters are the theme's own — `class_search`, `class_level`,
+`class_site` — not `s` and the `lp_level` taxonomy var. `?s=` on any URL makes
+`is_search()` true at parse_query time, so `/classes/?s=foo` would route to
+`search.php` and the Classes template would never run. `app/setup/queries.php`
+sets `s` from `pre_get_posts` instead, which filters without touching the
+conditional flags. No nonce: these are public read-only navigation parameters
+on published content, and a nonce on a shareable URL would break the sharing.
+
+## 19. ClassesListings: the featured class, and the one spec the model cannot carry
+
+**`is_featured` is new on lp_class**, mirroring `is_lead` on Coach and
+`is_flagship` on Location for the reason §13 records — the page shows one class
+above the grid and the rest below, so the grid query must know which is already
+on show. No ordering picks it; the design's featured class is neither first nor
+newest.
+
+It heroes the UNFILTERED page only. The design draws no filtered state, so this
+is a judgement call: the alternative leads a filtered page with a class that
+does not match what was asked for.
+
+**`SITES` does not fit the data model.** The design's featured strip reads
+PRICE `£15` / SITES `6` / DURATION `60 min` / RUNS `Tue + Thu`. Three come from
+real fields. `SITES` cannot: a class here has ONE `location` (an ACF
+post_object), so the honest count is 1, and 1 is what renders.
+
+Do not paper over this with a literal `6`. The fix is a `locations`
+relationship field in place of the single `location` — a data-model change for
+the repo owner to approve, not a port decision. There are two readings of the
+design's `6` (this class runs at six sites / the org has six sites) and
+resolving that is part of the same decision.
+
+Two smaller derivations, both from a field's own documented format:
+
+- **DURATION** is the first ` · ` segment of `subtitle`, whose ACF instructions
+  give exactly that format (`e.g. "60 min · all kit provided"`).
+- **RUNS** joins the session `date_label`s, so it reads `TODAY + THU` where the
+  design reads `Tue + Thu`. The field holds a board label, not a weekday.
+
+The seven seeded classes gained `excerpt` values **transcribed from the design**
+— `CLASS_CARDS`' per-card notes (`YV0EG/*`) and the featured lead note
+(`xWBih/CDivu`) in ClassesListings.js. None is authored. Without them the cards
+render note-less, which is not what the design shows.
+
+The featured photo's figure gains `relative` over the source's class string.
+The source draws an empty box because the Storybook has no media library; with
+a real image, media-photo's `fill` layout needs a positioned ancestor. Nothing
+else about the box changes, and with no thumbnail the bare source figure renders
+unaltered.
