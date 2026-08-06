@@ -28,8 +28,16 @@
  * across; wiring a click handler for the rendered tab is the consumer
  * template/JS's job, same as any other interactive element this theme emits.
  *
+ * Given a `href` the plain form renders an <a> instead, for tabs that are
+ * really navigation — search.php's filter rail switches the results by post
+ * type, which on WordPress is a URL, not a view-mode toggle. It carries
+ * aria-current="page" rather than role="tab"/aria-selected: an <a href> is a
+ * link, and mislabelling it as a tab promises keyboard behaviour a link does
+ * not have (Port Brief a11y rule). Class strings are identical in both forms.
+ *
  * @param string $args['label']   Default 'Grid'.
  * @param bool   $args['active']
+ * @param string $args['href']    Renders the plain form as a link. Ignored by 'rich'.
  * @param string $args['variant'] Omit for the plain tab; 'rich' for view-rail's
  *                                dark two-line tab.
  * @param string $args['meta']    rich only — the second line.
@@ -95,11 +103,23 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	<?php
 	return;
 }
+
+$lp_href      = (string) ( $args['href'] ?? '' );
+$lp_tab_class = lp_classes( 'tab h-auto rounded-none pt-[17px] px-0 pb-[15px] text-[11px] uppercase tracking-[1px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content', $lp_state_class );
 ?>
+<?php if ( '' !== $lp_href ) : ?>
+<a
+	href="<?php echo esc_url( $lp_href ); ?>"
+	<?php echo $lp_active ? 'aria-current="page"' : ''; ?>
+	class="<?php echo $lp_tab_class; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_classes() escapes. ?>"
+	data-component="view-tab"
+><?php echo esc_html( $lp_label ); ?></a>
+<?php else : ?>
 <button
 	type="button"
 	role="tab"
 	aria-selected="<?php echo $lp_active ? 'true' : 'false'; ?>"
-	class="<?php echo lp_classes( 'tab h-auto rounded-none pt-[17px] px-0 pb-[15px] text-[11px] uppercase tracking-[1px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content', $lp_state_class ); ?>"
+	class="<?php echo $lp_tab_class; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_classes() escapes. ?>"
 	data-component="view-tab"
 ><?php echo esc_html( $lp_label ); ?></button>
+<?php endif; ?>

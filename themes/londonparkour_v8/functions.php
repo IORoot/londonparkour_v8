@@ -32,6 +32,7 @@ $lp_includes = array(
 	'app/includes/html.php',
 	'app/includes/menus.php',
 	'app/includes/modules.php',
+	'app/includes/content.php',
 	// Setup.
 	'app/setup/theme.php',
 	'app/setup/editor.php',
