@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastudio.com/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(php -l:*)",
+      "Bash(bash bin/audit-reuse.sh)",
+      "Bash(bin/audit-reuse.sh)",
+      "Bash(bash themes/londonparkour_v8/bin/audit-reuse.sh)",
+
+      "Bash(bin/wp lp:*)",
+      "Bash(themes/londonparkour_v8/bin/wp lp:*)",
+      "Bash(bin/wp post list:*)",
+      "Bash(bin/wp term list:*)",
+      "Bash(bin/wp option get:*)",
+      "Bash(bin/wp media regenerate:*)",
+      "Bash(bin/bootstrap.sh)",
+      "Bash(themes/londonparkour_v8/bin/bootstrap.sh)",
+
+      "Bash(npm run build)",
+      "Bash(npm run verify)",
+      "Bash(npm install)",
+
+      "Bash(curl -s -o /dev/null -w:*)",
+      "Bash(curl -s http://localhost:8102/:*)",
+      "Bash(docker compose ps:*)",
+      "Bash(docker compose up -d)",
+      "Bash(docker compose logs:*)",
+
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git show:*)"
+    ],
+    "ask": [
+      "Bash(docker compose down:*)",
+      "Bash(bin/wp db:*)",
+      "Bash(bin/wp site empty:*)",
+      "Bash(bin/wp post delete:*)"
+    ]
+  }
+}
