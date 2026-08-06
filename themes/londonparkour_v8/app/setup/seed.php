@@ -506,6 +506,7 @@ function lp_seed_template_pages(): void {
 	$pages = array(
 		'legal'          => array( 'Legal', 'templates/legal.php' ),
 		'classes-agenda' => array( 'Classes — Agenda', 'templates/classes-agenda.php' ),
+		'classes-map'    => array( 'Classes — Map', 'templates/classes-map.php' ),
 	);
 
 	foreach ( $pages as $slug => $page ) {
