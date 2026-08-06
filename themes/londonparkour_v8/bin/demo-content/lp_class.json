@@ -209,9 +209,24 @@
           "sold_out": false
         }
       ],
+      "what_to_expect": [
+        {
+          "text": "Warm-up and mobility to get you moving safely."
+        },
+        {
+          "text": "Skill drills scaled to your level — never one-size-fits-all."
+        },
+        {
+          "text": "Supported progressions on real obstacles."
+        },
+        {
+          "text": "A cool-down and a plan for your next session."
+        }
+      ],
       "is_featured": false
     },
-    "excerpt": "Women and non-binary only. Same coaching, same ground, different room."
+    "excerpt": "Women and non-binary only. Same coaching, same ground, different room.",
+    "content": "An outdoor parkour class built for adults of all skill levels. Whether it's your first session or you've trained for years, you'll get a challenging, accessible workout that meets you where you are — coaching the fundamentals of jumping, landing, balancing and vaulting, then building toward flow on the streets and structures around the Southbank."
   },
   {
     "slug": "advanced-movement",
