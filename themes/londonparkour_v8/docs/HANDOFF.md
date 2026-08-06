@@ -1,10 +1,11 @@
 # Handoff — Storybook → WordPress port
 
-State: Phases 0–4 complete. Phase 5 has the site chrome, `front-page.php`,
-`404.php`, `page.php`, `templates/legal.php`, `home.php`, `single.php`,
-`search.php`, `archive.php`, `index.php`, `archive-lp_class.php` and
-`templates/classes-agenda.php` done — **seven page templates left**: ClassesMap,
-ClassDetail, TutorialsIndex, TutorialsSeries, TutorialDetail, Contact, DocsFaq
+State: Phases 0–4 complete. **B4 is closed** — Phase 5 has the site chrome,
+`front-page.php`, `404.php`, `page.php`, `templates/legal.php`, `home.php`,
+`single.php`, `search.php`, `archive.php`, `index.php`, `archive-lp_class.php`,
+`templates/classes-agenda.php`, `templates/classes-map.php` and
+`single-lp_class.php` done — **four page templates left**: TutorialsSeries,
+TutorialDetail (B5), Contact, DocsFaq (B6)
 (see "Phase 5b" and "The remaining batches"). Most of Phase 6 is done too,
 pulled forward: `wp lp seed`, `bin/README.md` and the theme `README.md` all
 exist, and `lp_seed_template_pages()` now seeds pages with `_wp_page_template`
@@ -265,7 +266,7 @@ style button_group — no separate label text field; the Link's own title IS the
 
 | Phase | Work |
 |---|---|
-| **5** | 8 page templates — see "Phase 5b" below. Chrome, `front-page.php`, `404.php`, `page.php`, `templates/legal.php`, `home.php`, `single.php`, `search.php`, `archive.php` and `index.php` are done |
+| **5** | **4 page templates left** (B5 ×2, B6 ×2) — see "Phase 5b" below. Chrome, `front-page.php`, `404.php`, `page.php`, `templates/legal.php`, `home.php`, `single.php`, `search.php`, `archive.php`, `index.php` and all four B4 pages are done |
 | **6** | **Mostly done.** `wp lp seed` (in `app/setup/seed.php`, not `bin/seed.php` — it needs WP bootstrapped), `bin/README.md` and `README.md` all written and run. It now also seeds native posts and both menus. Left: (a) **pages + their templates** — Legal, Contact, DocsFaq and the two Classes view pages each need a seeded page with `_wp_page_template` set, which is what makes a page template verifiable; (b) **homepage rows**, still deferred — the nine-row order is recorded in `front-page.php`'s docblock and seed can gain a `--homepage` flag without redesign |
 | **7** | Full verification list; consolidation pass |
 
@@ -351,9 +352,9 @@ source across the 14 page components. That is several sessions, not one. Read
 | BlogDetail | 314 | `single.php` | **done** — the worked example for native-post templates |
 | ClassesListings | 243 | `archive-lp_class.php` | **done** — the worked example for a filtered CPT archive |
 | ClassesAgenda | 306 (+122 `ClassesHeaderCluster.js`) | `templates/classes-agenda.php` | **done** — cluster is now `parts/components/classes-header-cluster.php` |
-| ClassesMap | 381 | page template | missing |
-| ClassDetail | 391 | `single-lp_class.php` | missing |
-| TutorialsIndex | 216 | `archive-lp_tutorial.php` | missing |
+| ClassesMap | 381 | `templates/classes-map.php` | **done** — pins project real lat/long, PORT-FINDINGS §23 |
+| ClassDetail | 391 | `single-lp_class.php` | **done** — the worked example for a single CPT template |
+| TutorialsIndex | 216 | `archive-lp_tutorial.php` | **done** — no new fields needed; PORT-FINDINGS §24 |
 | TutorialsSeries | 275 | `taxonomy-lp_series.php` | missing |
 | TutorialDetail | 384 | `single-lp_tutorial.php` | missing |
 | Contact | 452 | page template, Flexible Content | missing |
@@ -477,8 +478,8 @@ Storybook to start any of these.
 | Batch | Pages | Notes |
 |---|---|---|
 | ~~**B3**~~ | ~~`archive.php`, `search.php`, `index.php`~~ | **DONE.** `search.php` turned out to have a real source (§14) and is a full port. `archive.php` and `index.php` share `template-parts/content/archive-list.php`, which composes BlogIndex's Recent grid under a breadcrumb + masthead. Earned three things B4–B6 reuse: `parts/components/pagination.php`, `view-tab.php`'s link form, and `lp_post_card_args()` |
-| **B4** | ~~ClassesListings~~ and ~~ClassesAgenda~~ **done**; ClassesMap → page template, ClassDetail → `single-lp_class.php` still to do | **`ClassesHeaderCluster` is promoted** (`parts/components/classes-header-cluster.php`) — call it, do not rebuild it, and note it does NOT render nav. `ClassDetail` deliberately does not use it (no ViewRail/FilterGrid; only its docblock mentions it). Agenda is done: `?week=±n`, and it forced a `date` sub-field onto the sessions repeater (PORT-FINDINGS §20) because `date_label` is a board label, not a date. Map should call `lp_classes_page_url( 'classes-map' )` and add itself to `lp_seed_template_pages()`. Filtering pattern, `is_featured`, and the `SITES` data-model gap are PORT-FINDINGS §17–19 |
-| **B5** | TutorialsIndex → `archive-lp_tutorial.php`, TutorialsSeries → `taxonomy-lp_series.php`, TutorialDetail → `single-lp_tutorial.php` | Both index pages embed `Blocks/TrainInPerson`, which is already a WP block — call the block partial, do not re-port the section |
+| ~~**B4**~~ | ~~ClassesListings, ClassesAgenda, ClassesMap, ClassDetail~~ | **DONE — all four.** `ClassesHeaderCluster` is promoted (`parts/components/classes-header-cluster.php`) and `ClassDetail` deliberately does not use it (no ViewRail/FilterGrid). Agenda uses `?week=±n` and forced a `date` sub-field onto the sessions repeater (§20). ClassesMap projects real `latitude`/`longitude` into the placeholder rather than porting the source's invented x/y percentages, and seeds itself via `lp_seed_template_pages()`. `single-lp_class.php` is the worked example for a single-CPT template. Filtering pattern, `is_featured` and the `SITES` gap are §17–19; the two gaps left — no recurrence field, no audience field — are §23 and are the repo owner's call, not port decisions. |
+| **B5** | ~~TutorialsIndex~~ **done**; TutorialsSeries → `taxonomy-lp_series.php`, TutorialDetail → `single-lp_tutorial.php` left | Both index pages embed `Blocks/TrainInPerson`, which is already a WP block — call the block partial, do not re-port the section |
 | **B6** | Contact, DocsFaq → page templates | Largest, and last so earlier ports settle the patterns. **Repo owner chose Flexible Content**, so their bespoke sections become new blocks: enquiry form + reach panel, other-ways fact strip, FAQ group, section directory, passenger-enquiries strip |
 
 **`ClassesMap` needs no map library.** Greps for Leaflet, Mapbox and

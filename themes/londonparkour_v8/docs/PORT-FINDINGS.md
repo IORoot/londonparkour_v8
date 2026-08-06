@@ -683,3 +683,128 @@ Two small departures from the design's own label format:
 No element change was needed for the week controls: the source's prev/next
 chevrons are Button `variant="icon"`, and button.php already renders an `<a>`
 as soon as it is given a href.
+
+## 23. B4 closed: what ClassDetail and ClassesMap added, and the two gaps left
+
+Both remaining B4 pages are ported — `single-lp_class.php` and
+`templates/classes-map.php`. Four fields were added first, all additive and
+none ambiguous: `lp_location.{meeting_point,transport_rail,transport_bus}`
+(the three `site-panel.php` already took as args but had nowhere to store),
+`lp_class.what_to_expect` (a repeater, because ChecklistItem's numerals are
+meaningful order — the same reasoning §20 used for the sessions `date`), and
+`lp_coach.bio` (a different field from `quote`, which is the Coaches block's
+pull-quote in the coach's own voice).
+
+**`lp_location` already carried `latitude`/`longitude`.** ClassesMap therefore
+projects real coordinates into the placeholder rectangle rather than porting
+the source's six `x`/`y` percentages — which the source's own JSDoc admits are
+invented, because the `.pen` has no pixel-space contract to transcribe. A site
+added tomorrow lands in the right place with nobody editing a percentage.
+Verified against real geography, not by eye: Wembley Park computes to
+`left 8.00% / top 8.00%` (westernmost and northernmost), Stratford East to
+`left 92.00%` (easternmost), Peckham Rye to `top 92.00%` (southernmost).
+
+Two text fields, not ACF's `google_map` type: that needs a Google Maps JS API
+key on `acf/init`, which this project has never configured and which would put
+an external service and a billing account behind the admin screen. If a key is
+ever added, `google_map` is the upgrade and the projection is unaffected.
+
+### The two gaps, both data-model and neither closable by content
+
+**`lp_class` cannot express a recurrence.** ClassDetail's WHEN fact reads
+`Saturdays · 10:30–12:00` and ClassesMap's index meta reads
+`STRATFORD EAST · WEDNESDAYS 18:00 · WITH ANDY`. Both assert a weekly pattern
+and the first also asserts a time RANGE. The model has neither: `sessions`
+holds dated occurrences with a single `time`, and duration is buried inside the
+`subtitle` string (`"60 min · all kit provided"`). This is §19's `SITES` and
+§20's `date_label` a third time.
+
+Handled differently on the two pages, deliberately. ClassDetail **omits** the
+WHEN row — it is a labelled fact, and a labelled fact that is wrong is worse
+than an absent one. ClassesMap **names the next real session** instead
+(`PECKHAM RYE · MON 07:00 · WITH KIE PICCIO`), because that claims an
+occurrence rather than a pattern, and dropping the whole meta line would gut
+the index. Closing it needs a recurrence field (weekday + time range), which is
+the repo owner's decision.
+
+**There is no audience field.** ClassDetail's WHO fact reads `Adults (14+)`.
+Nothing stores it; the seeded classes carry audience only as prose inside
+`subtitle` (`"women and non-binary only"`, `"ages 5+ with an adult"`), so
+nothing can filter or display it structurally. Two readings — an age policy
+(`14+`) or an audience label (`Adults` / `Kids` / `Women's session`). The
+seeded set varies by audience rather than by a numeric gate, so the label
+reading looks right, but that is a recommendation and not a decision. The row
+is omitted rather than invented.
+
+Also recorded, not actioned: `lp_class` has no video field, so ClassDetail's
+"WATCH THE CLASS" control renders without a URL. `lp_tutorial` has `video_url`;
+mirroring it is the obvious shape, but a class's promo clip and a how-to
+tutorial are different assets and that is a modelling call, not a port one.
+
+### A defect the gates could not see
+
+`single-lp_class.php` first rendered its About group unconditionally while
+`WHAT TO EXPECT` beside it was guarded, so every class showed an
+"ABOUT THIS CLASS" label over nothing — no `lp_class` record seeds
+`post_content`. Every deterministic gate passed; only curling the page and
+reading it found this. §13's lesson holds: markup passing is not data flow
+passing. Both templates now guard every group whose label would otherwise
+render over an empty value, verified by draft-ing all six locations and
+re-fetching `/classes-map/` (200, zero pins, meeting-points section absent,
+no PHP notices).
+
+The About copy stays raw rather than `the_content`-filtered: the design puts it
+inside ONE styled `<p>`, and the filter would wrap it in `<p>` tags of its own.
+A class body that grows past one paragraph is the moment to drop the design's
+`<p>` and let the filter own the markup.
+
+### Class-string fidelity
+
+ClassesMap carried **10 of 10** source literals byte-for-byte. ClassDetail
+carried **20 of 22**; the two absent are the caption-chip position (the chip
+asserts a day and a running time with no backing data, so it was dropped) and
+`w-full h-full object-cover` (the Storybook's bare `<img>`, which PORT-BRIEF
+rule 3b replaces with `media-photo.php`).
+
+## 24. B5 part 1: TutorialsIndex, and the one thing the model cannot hold
+
+`archive-lp_tutorial.php` is ported and needed **no new ACF fields** — checked
+before dispatch, not discovered during. Everything the design's cards want
+already exists: `duration` is a field, the card note is the post EXCERPT, the
+`01 ·` sequence is `menu_order`, and the VAULTING → STEP-VAULT hierarchy is
+`lp_series`, which `app/setup/cpt.php:76` already registers
+`hierarchical => true`. Kicker reads the term's PARENT, meta reads the term.
+
+All three seeded `lp_series` terms are currently flat, so every card renders an
+empty kicker and `01 · VAULTS`. That is correct against the real data — the
+kicker appears the moment an editor nests a term under a category — and is
+recorded here so it is not later mistaken for a bug.
+
+**`RESUME 2:10` cannot be built.** Card 4 carries it in the design and it is
+per-user watch progress: this theme has no user model, no auth and no progress
+store. No card renders it. Unlike §23's two gaps, this is NOT a one-field fix —
+it implies accounts and a progress store, so it is a product decision, not a
+schema one. The sibling `NEW` flag IS derivable and is implemented, on a 30-day
+window from `get_post_time()` (the design carries no numeric value to match, so
+the window is a documented judgement call).
+
+**Counts are counted.** `840 videos`, `12 series`, `10 VIDEOS` and
+`Search 840 tutorials…` are literals in the source that would be wrong the first
+time an editor added a tutorial. All four are computed, per §17's precedent, and
+render as 3 against the seed. One documented departure: the masthead note's
+count renders as a digit where the source spells it out ("Eight hundred and
+forty"), because the value is now computed.
+
+**The tutorial filter mirrors the Classes filter rather than forking it.**
+`lp_filter_tutorial_archive()` + `lp_tutorial_filter_values()` in
+`app/setup/queries.php` take `tutorial_search` / `tutorial_category` /
+`tutorial_move` / `tutorial_sort` — theme-owned params, not `s` and not the
+public taxonomy var, for the reason §18 records. Category lists parent
+`lp_series` terms, Move lists children of the selected category, cascading on a
+normal reload with no new JS. Sanitisation is identical to the Classes path
+(`sanitize_text_field` + `wp_unslash`, `sanitize_title`).
+
+"03 The Board" is deliberately NOT a `BoardShell` — both the source's JSDoc and
+`BoardShell.js`'s own exclude this node. It is `meta-row` → `rule` → a
+`video-card` grid → a bare `page-onward` rail, and that inline rail is a
+different instance from the page-level one lower down.
