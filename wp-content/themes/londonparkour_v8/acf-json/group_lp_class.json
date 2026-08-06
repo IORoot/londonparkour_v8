@@ -56,6 +56,15 @@
             "key": "field_7fb232d1e03a7ac0"
         },
         {
+            "name": "is_featured",
+            "label": "Featured class",
+            "type": "true_false",
+            "ui": 1,
+            "default_value": 0,
+            "instructions": "Shown above the Classes grid, and left out of it.",
+            "key": "field_1d66919fedcdd7ad"
+        },
+        {
             "name": "tab_items",
             "label": "Items",
             "type": "tab",
@@ -72,9 +81,20 @@
             "instructions": "Each recurring time-slot of this class. These are the rows on the timetable boards.",
             "sub_fields": [
                 {
-                    "name": "date_label",
+                    "name": "date",
                     "label": "Date",
+                    "type": "date_picker",
+                    "display_format": "D j M Y",
+                    "return_format": "Y-m-d",
+                    "first_day": 1,
+                    "instructions": "The day this session runs. Drives the Agenda board.",
+                    "key": "field_b39932329ad1f143"
+                },
+                {
+                    "name": "date_label",
+                    "label": "Board label",
                     "type": "text",
+                    "instructions": "What the departure boards print, e.g. \"TODAY\". Not a date.",
                     "key": "field_eaedcbdcecbb6dfa"
                 },
                 {
@@ -99,6 +119,23 @@
                 }
             ],
             "key": "field_32a8e26b541cefbb"
+        },
+        {
+            "name": "what_to_expect",
+            "label": "What to expect",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add step",
+            "instructions": "The numbered checklist on the class page. Order is meaningful.",
+            "sub_fields": [
+                {
+                    "name": "text",
+                    "label": "Step",
+                    "type": "text",
+                    "key": "field_2eda05c923126aea"
+                }
+            ],
+            "key": "field_14bbdf7eb37f3425"
         },
         {
             "name": "tab_actions",

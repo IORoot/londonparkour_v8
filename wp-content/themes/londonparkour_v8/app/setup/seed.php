@@ -311,13 +311,47 @@ function lp_seed_posts( string $post_type, array $media ): array {
 			if ( isset( LP_SEED_REFS[ $name ] ) ) {
 				$value = lp_seed_ref( LP_SEED_REFS[ $name ], $value );
 			}
-			update_field( $name, $value, $id );
+			update_field( $name, lp_seed_weekdays( $value ), $id );
 		}
 
 		WP_CLI::log( "  + {$post_type} {$slug} (#{$id})" );
 	}
 
 	return $ids;
+}
+
+/**
+ * Expand `@MON`…`@SUN` weekday tokens in a seed value to real dates.
+ *
+ * A timetable has to sit in the week you are looking at, and the demo content
+ * is committed code that would otherwise name a fixed week and go stale the
+ * day after it was written. The token resolves against the week containing the
+ * seed run, so `bin/wp lp seed` always produces a board with sessions on it.
+ *
+ * Emits ACF's own `Ymd` storage format, so the `date` sub-field's
+ * `return_format` governs what `get_field()` hands back.
+ *
+ * Recurses, because sub-field values arrive inside repeater rows.
+ *
+ * @param mixed $value A seed field value.
+ * @return mixed The value with any weekday tokens replaced.
+ */
+function lp_seed_weekdays( $value ) {
+	if ( is_array( $value ) ) {
+		return array_map( 'lp_seed_weekdays', $value );
+	}
+
+	$days = array( 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN' );
+
+	if ( ! is_string( $value ) || ! preg_match( '/^@(' . implode( '|', $days ) . ')$/', $value, $match ) ) {
+		return $value;
+	}
+
+	// PHP's "this week" is ISO — Monday-start — including on a Sunday.
+	$monday = new DateTimeImmutable( 'monday this week' );
+	$offset = (int) array_search( $match[1], $days, true );
+
+	return $monday->modify( sprintf( '+%d days', $offset ) )->format( 'Ymd' );
 }
 
 /**
@@ -455,6 +489,69 @@ function lp_seed_page( array $media ): void {
  * Delete every seed-owned post and attachment.
  */
 /**
+ * Seed one page per page template, with `_wp_page_template` set.
+ *
+ * A page template is unverifiable without a page that uses it — `lp render`
+ * cannot reach one, and greps prove nothing (PORT-FINDINGS §13). This is the
+ * Phase 6 item docs/HANDOFF.md lists as "pages + their templates".
+ *
+ * Keyed by slug. The template key is what `_wp_page_template` stores and what
+ * an ACF `page_template` location rule must match: `templates/<file>.php`.
+ *
+ * The Classes pages are `classes-agenda`/`classes-map`, not `classes/agenda`
+ * — `/classes/` is the lp_class archive, so a child page there would collide.
+ * See lp_classes_page_url() in app/includes/content.php.
+ */
+function lp_seed_template_pages(): void {
+	$pages = array(
+		'legal'          => array( 'Legal', 'templates/legal.php' ),
+		'classes-agenda' => array( 'Classes — Agenda', 'templates/classes-agenda.php' ),
+		'classes-map'    => array( 'Classes — Map', 'templates/classes-map.php' ),
+	);
+
+	foreach ( $pages as $slug => $page ) {
+		list( $title, $template ) = $page;
+
+		if ( ! is_readable( get_theme_file_path( $template ) ) ) {
+			WP_CLI::warning( "No template file {$template} — skipping page '{$slug}'." );
+			continue;
+		}
+
+		$existing = lp_seed_find( 'page', $slug );
+
+		if ( $existing && ! lp_seed_is_ours( $existing ) ) {
+			WP_CLI::warning( "A page at '{$slug}' exists and was not created by seed — skipping it." );
+			continue;
+		}
+
+		$postarr = array(
+			'post_type'   => 'page',
+			'post_title'  => $title,
+			'post_name'   => $slug,
+			'post_status' => 'publish',
+		);
+
+		if ( $existing ) {
+			$postarr['ID'] = $existing;
+			$id            = wp_update_post( $postarr, true );
+		} else {
+			$id = wp_insert_post( $postarr, true );
+		}
+
+		if ( is_wp_error( $id ) ) {
+			WP_CLI::warning( "Could not write page '{$slug}': " . $id->get_error_message() );
+			continue;
+		}
+
+		$id = (int) $id;
+		update_post_meta( $id, LP_SEED_MARKER, 1 );
+		update_post_meta( $id, '_wp_page_template', $template );
+
+		WP_CLI::log( sprintf( '  + page %s (#%d) -> %s', $slug, $id, $template ) );
+	}
+}
+
+/**
  * Insert one level of menu items, then recurse into their children.
  *
  * @param int   $menu_id Menu term id.
@@ -590,6 +687,9 @@ WP_CLI::add_command(
 
 		WP_CLI::log( 'Menus' );
 		lp_seed_menus();
+
+		WP_CLI::log( 'Template pages' );
+		lp_seed_template_pages();
 
 		WP_CLI::log( 'Blocks QA page' );
 		lp_seed_page( $media );

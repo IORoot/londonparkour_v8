@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastudio.com/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(bash bin/audit-reuse.sh)",
+      "Bash(bin/audit-reuse.sh)",
+      "Bash(bash themes/londonparkour_v8/bin/audit-reuse.sh)",
+
+      "Bash(bin/wp lp acf:build)",
+      "Bash(bin/wp lp acf:build --check)",
+      "Bash(bin/wp lp seed)",
+      "Bash(bin/wp lp seed --fresh)",
+
+      "Bash(npm run build)",
+      "Bash(npm run verify)",
+
+      "Bash(docker compose ps)",
+      "Bash(docker compose up -d)",
+
+      "Bash(git status)",
+      "Bash(git status --short)"
+    ],
+    "ask": [
+      "Bash(docker compose down:*)",
+      "Bash(bin/wp db:*)",
+      "Bash(bin/wp site empty:*)",
+      "Bash(bin/wp post delete:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

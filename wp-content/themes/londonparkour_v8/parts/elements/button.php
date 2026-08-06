@@ -13,7 +13,7 @@
  *
  * @param string $args['label']            Visible text.
  * @param string $args['href']             Renders an anchor when set.
- * @param string $args['variant']          primary|inverse|ghost|destructive|icon|band.
+ * @param string $args['variant']          primary|inverse|ghost|destructive|icon|band|band_text.
  * @param bool   $args['disabled']
  * @param string $args['type']             button|submit, for the button form.
  * @param string $args['aria_label']       Required for variant=icon.
@@ -48,6 +48,15 @@ $lp_variants = array(
 	 * what this variant must not inherit.
 	 */
 	'band'        => 'flex items-center justify-between gap-[12px] w-full h-[60px] px-[22px] bg-primary text-primary-content hover:bg-neutral hover:text-primary transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary',
+	/*
+	 * The dark band's bare text control — SearchResults' query-bar `CLEAR ✕`
+	 * (`A1PesB`), a real <button type="reset"> inside the search form. It is a
+	 * button variant rather than a text-link variant because every text-link
+	 * variant renders an <a href> and a form reset has no href. `shrink-0` is
+	 * a call-site layout modifier, not part of the atom — pass it via
+	 * $args['class'], the same treatment text-link gives `whitespace-nowrap`.
+	 */
+	'band_text'   => 'font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content transition-colors duration-150',
 );
 
 $lp_variant  = $args['variant'] ?? 'primary';

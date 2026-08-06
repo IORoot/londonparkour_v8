@@ -69,6 +69,29 @@
             "label": "Longitude",
             "type": "text",
             "key": "field_ee1e9c1e7edf3963"
+        },
+        {
+            "name": "meeting_point",
+            "label": "Meeting point",
+            "type": "textarea",
+            "rows": 2,
+            "new_lines": "",
+            "instructions": "Where to stand, in one sentence. e.g. \"Outside Tube station exit 2, next to metal pillars and open area.\"",
+            "key": "field_75028e214a14e992"
+        },
+        {
+            "name": "transport_rail",
+            "label": "Transport — rail",
+            "type": "text",
+            "instructions": "e.g. \"Victoria Underground Line · Vauxhall (South Western Railway)\"",
+            "key": "field_fb89a8cc6ad2b071"
+        },
+        {
+            "name": "transport_bus",
+            "label": "Transport — bus",
+            "type": "text",
+            "instructions": "e.g. \"Buses — 2 · 36 · 87 · 88 · 156 · 185 · 196 · 344 · 436\"",
+            "key": "field_7f0343f0ddbe6a51"
         }
     ]
 }

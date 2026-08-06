@@ -1,45 +1,17 @@
 <?php
 /**
- * The template for displaying archive pages
+ * archive.php — category, tag, date and author archives.
  *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * No Storybook source; the body is template-parts/content/archive-list.php,
+ * shared with index.php. Read that file's docblock for what it composes and
+ * why. This template exists as its own file so an archive can diverge from
+ * the last-resort fallback later without index.php changing.
  *
  * @package londonparkour_v8
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
-?>
-
-	<section id="primary">
-		<main id="main">
-
-		<?php if ( have_posts() ) : ?>
-
-			<header class="page-header">
-				<?php the_archive_title( '<h1 class="page-title">', '</h1>' ); ?>
-			</header><!-- .page-header -->
-
-			<?php
-			// Start the Loop.
-			while ( have_posts() ) :
-				the_post();
-				get_template_part( 'template-parts/content/content', 'excerpt' );
-
-				// End the loop.
-			endwhile;
-
-			// Previous/next page navigation.
-			londonparkour_v8_the_posts_navigation();
-
-		else :
-
-			// If no content, include the "No posts found" template.
-			get_template_part( 'template-parts/content/content', 'none' );
-
-		endif;
-		?>
-		</main><!-- #main -->
-	</section><!-- #primary -->
-
-<?php
+get_template_part( 'template-parts/content/archive-list' );
 get_footer();

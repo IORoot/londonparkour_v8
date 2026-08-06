@@ -67,6 +67,15 @@
             "default_value": 0,
             "instructions": "Featured above the roster, and left out of it.",
             "key": "field_a54e506083a2b84e"
+        },
+        {
+            "name": "bio",
+            "label": "Bio",
+            "type": "textarea",
+            "rows": 3,
+            "new_lines": "",
+            "instructions": "One or two sentences, shown beside the coach on a class page.",
+            "key": "field_ba2a721223adfeb5"
         }
     ]
 }

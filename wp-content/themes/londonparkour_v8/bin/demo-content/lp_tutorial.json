@@ -4,6 +4,7 @@
     "title": "The Safety Vault",
     "thumbnail": "coach-kie.jpeg",
     "menu_order": 1,
+    "excerpt": "The base step vault. Both hands down, weight carried forward through the obstacle.",
     "terms": { "lp_series": ["vaults"], "lp_level": ["beginner"] },
     "fields": {
       "duration": "8:24",
@@ -16,6 +17,7 @@
     "title": "Landing Without Noise",
     "thumbnail": "coach-andy.jpeg",
     "menu_order": 2,
+    "excerpt": "Absorbing the drop rather than fighting it. Quiet feet, soft knees, every time.",
     "terms": { "lp_series": ["foundations"], "lp_level": ["beginner"] },
     "fields": {
       "duration": "6:11",
@@ -28,6 +30,7 @@
     "title": "Grip & Hang Strength",
     "thumbnail": "coach-kie.jpeg",
     "menu_order": 3,
+    "excerpt": "Dead hangs, active hangs, and the grip work that makes everything else possible.",
     "terms": { "lp_series": ["conditioning"], "lp_level": ["improver"] },
     "fields": {
       "duration": "12:03",
