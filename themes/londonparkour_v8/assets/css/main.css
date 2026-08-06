@@ -27,6 +27,7 @@
 @source "../../app/**/*.php";
 @source "../../template-parts/**/*.php";
 @source "../../inc/**/*.php";
+@source "../../templates/**/*.php";
 @source "../../*.php";
 @source "../js/**/*.js";
 

@@ -28,6 +28,7 @@ version: the database is disposable and never shared; demo content is code.
 | `parts/elements/` | One file per piece of HTML. The only way to emit markup. |
 | `parts/components/` | Composed pieces built from elements |
 | `parts/site/` | Nav and footer |
+| `templates/` | WP page templates — a `Template Name:` header, one level deep |
 | `bin/` | Tooling and demo content — see its README |
 | `docs/` | The port's contract, findings and history |
 
