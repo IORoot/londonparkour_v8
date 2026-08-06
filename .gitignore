@@ -1,0 +1,14 @@
+# This repo is `wp-content`-shaped. Only the things WordPress cannot regenerate
+# belong in it: our theme, and the plugins that are vendored rather than fetched.
+
+# WordPress ships these; `bin/bootstrap.sh` reinstalls what it needs.
+themes/twentytwenty*/
+plugins/akismet/
+plugins/hello.php
+
+# `bin/bootstrap.sh` installs Classic Editor from wp.org when it is absent,
+# so the checked-out copy is a build artefact, not source.
+plugins/classic-editor/
+
+.DS_Store
+*.log

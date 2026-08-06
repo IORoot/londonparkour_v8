@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# WP-CLI for this site. WP-CLI is not installed on the host — it runs in the
+# `cli` sidecar defined in docker-compose.yml.
+#
+# Usage:  bin/wp plugin list
+#         bin/wp lp acf:build
+#         bin/wp post list --post_type=lp_class
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+cd "$ROOT"
+
+# Start the sidecar on first use.
+if ! docker compose ps --status running --services 2>/dev/null | grep -qx cli; then
+	docker compose up -d cli >/dev/null 2>&1
+fi
+
+exec docker compose exec -T cli wp --url="${LP_SITE_URL:-http://localhost:8102}" "$@"

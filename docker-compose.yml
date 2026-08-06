@@ -22,10 +22,37 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: your_mysql_password
       WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
     volumes:
+      # WordPress core lives in a named volume so the wp-cli service below can
+      # see the same install. Without it, core sits in the container's own
+      # writable layer and `wp` has nothing to operate on.
+      - wp_core:/var/www/html
       - ./themes:/var/www/html/wp-content/themes
       - ./plugins:/var/www/html/wp-content/plugins
 
+  # WP-CLI sidecar, held open so commands run with `exec` rather than spawning
+  # a fresh container each time (an order of magnitude faster, and quiet):
+  #   docker compose exec -T cli wp plugin list
+  # bin/bootstrap.sh and bin/wp wrap this.
+  cli:
+    image: wordpress:cli
+    depends_on:
+      - db
+      - wordpress
+    user: "33:33"
+    entrypoint: ["tail", "-f", "/dev/null"]
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: your_mysql_password
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wp_core:/var/www/html
+      - ./themes:/var/www/html/wp-content/themes
+      - ./plugins:/var/www/html/wp-content/plugins
 
 volumes:
   db_data:
+  wp_core:

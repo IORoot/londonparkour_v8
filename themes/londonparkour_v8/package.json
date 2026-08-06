@@ -1,0 +1,24 @@
+{
+  "name": "londonparkour_v8",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "LondonParkour V8 WordPress theme — Concourse design system ported from the ldnpark2601 Storybook.",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "vite build",
+    "verify": "node bin/verify-build.js"
+  },
+  "dependencies": {
+    "@tailwindplus/elements": "^1.0.18",
+    "motion": "^12.23.15",
+    "swiper": "^12.0.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.1.13",
+    "daisyui": "^5.5.0",
+    "tailwindcss": "^4.1.13",
+    "vite": "^6.2.3"
+  }
+}

@@ -1,0 +1,6 @@
+
+@utility l-container {
+  @apply mx-auto w-full;
+  max-width: var(--grid-max-width, 93.00rem);
+  padding-inline: var(--grid-gutter-md, 1rem);
+}

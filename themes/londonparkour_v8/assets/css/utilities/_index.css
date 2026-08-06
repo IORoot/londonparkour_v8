@@ -1,0 +1,8 @@
+/* 
+ * Type 1: @layer utilities blocks
+ * These do NOT generate responsive variants
+ * Must be imported inside @layer utilities in main.css
+ */
+
+ @import "./grid-gap.css";
+ @import "./prose-module.css";

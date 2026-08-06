@@ -1,0 +1,14 @@
+{
+  "direction": "left",
+  "speed": 60,
+  "items": [
+    { "label": "NO EXPERIENCE NEEDED" },
+    { "label": "ALL AGES" },
+    { "label": "ALL BODIES" },
+    { "label": "INDOOR + OUTDOOR" },
+    { "label": "FIRST CLASS £15" },
+    { "label": "NO CONTRACT" },
+    { "label": "6 LONDON SITES" },
+    { "label": "COACH-LED" }
+  ]
+}

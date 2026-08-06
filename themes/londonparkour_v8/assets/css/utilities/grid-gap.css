@@ -1,0 +1,32 @@
+
+.gap-module-prose {
+    /* Match naming: x = inline/columns, y = block/rows */
+    row-gap: var(--grid-gutter-prose-y);
+    column-gap: var(--grid-gutter-prose-x);
+}
+
+.gap-module-sm {
+    row-gap: var(--grid-gutter-sm);
+    column-gap: var(--grid-gutter-sm);
+}
+
+.gap-module-sm-x  {
+    column-gap: var(--grid-gutter-sm);
+}
+
+.gap-module-sm-y {
+    row-gap: var(--grid-gutter-sm);
+}
+
+.gap-module-md {
+    row-gap: var(--grid-gutter-md);
+    column-gap: var(--grid-gutter-md);
+}
+
+.gap-module-md-x {
+    column-gap: var(--grid-gutter-md);
+}
+
+.gap-module-md-y {
+    row-gap: var(--grid-gutter-md);
+}

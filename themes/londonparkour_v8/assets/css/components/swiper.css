@@ -1,0 +1,9 @@
+:root {
+    --swiper-pagination-color: currentColor;
+    --swiper-pagination-bottom: auto;
+    --swiper-pagination-bullet-size: 0.5em;
+    --swiper-pagination-bullet-inactive-color: currentColor;
+    --swiper-pagination-bullet-inactive-opacity: 0.15;
+    --swiper-pagination-bullet-horizontal-gap: 0.25em;
+    --swiper-wrapper-transition-timing-function: cubic-bezier(0.625, 0.05, 0, 1);
+}

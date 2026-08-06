@@ -1,0 +1,15 @@
+/* Aspect Ratios for Stories */
+/* Common aspect ratios for images and videos */
+@theme static {
+--aspect-1-1: 1 / 1;      /* Square */
+--aspect-4-3: 4 / 3;      /* Traditional TV/computer monitors */
+--aspect-16-9: 16 / 9;    /* Widescreen video, HD video */
+--aspect-21-9: 21 / 9;    /* Ultrawide/cinematic */
+--aspect-3-2: 3 / 2;      /* Classic 35mm photography */
+--aspect-5-4: 5 / 4;      /* Early computer displays */
+--aspect-9-16: 9 / 16;    /* Vertical video (mobile) */
+--aspect-2-3: 2 / 3;      /* Portrait photography */
+--aspect-1-2: 1 / 2;      /* Tall banners */
+--aspect-4-5: 4 / 5;      /* Instagram portrait */
+--aspect-11-6: 11 / 6; 
+}

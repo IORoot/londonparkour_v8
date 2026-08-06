@@ -1,0 +1,28 @@
+/*
+ * LondonParkour "Concourse" — local @font-face declarations.
+ *
+ * Archivo (heading) and Inter (body/label) are Google Fonts, loaded by the
+ * @import at the top of main.css. Only the brand display face is local.
+ *
+ * ── Scope Trial ────────────────────────────────────────────────────────────
+ * TRIAL LICENCE. Fine for Storybook and internal review; it must be replaced
+ * with a licensed copy before this design system ships to any public site.
+ *
+ * Non-standard variable axes — do not assume the usual 100–900 range:
+ *   wght  60 – 100  (default 60)
+ *   wdth 400 – 600  (default 500)
+ *
+ * Because `wght` tops out at 100, any Tailwind weight utility (font-bold =
+ * 700, font-normal = 400) falls outside the axis and the browser clamps to
+ * 100 — silently rendering the heaviest cut. The `.font-display` rule below
+ * therefore pins the instance with font-variation-settings so display text
+ * always renders as designed regardless of stray weight classes.
+ */
+@font-face {
+  font-family: "Scope Trial";
+  src: url("../fonts/ScopeTrial-Variable.ttf") format("truetype-variations");
+  font-weight: 60 100;
+  font-stretch: 400% 600%;
+  font-style: normal;
+  font-display: swap;
+}

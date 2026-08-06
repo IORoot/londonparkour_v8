@@ -1,0 +1,24 @@
+{
+  "eyebrow": "02 — WHY WE DO IT",
+  "since": "SINCE 2015",
+  "statement": "We don't teach tricks. We teach people to trust what their body can already do.",
+  "quote": "Most people arrive convinced they're not the athletic type. Six weeks later they're vaulting a rail they used to walk around. That shift — from avoiding obstacles to reading them — is the whole point.",
+  "signature": "— Andy Pearson, Head Coach",
+  "principles": [
+    {
+      "icon_id": "glyph-understanding",
+      "label": "UNDERSTANDING FIRST",
+      "body": "We teach you to read an obstacle before you ever touch it. The movement is the easy part."
+    },
+    {
+      "icon_id": "glyph-challenge",
+      "label": "CHALLENGE BY CHOICE",
+      "body": "Nothing here is compulsory. You set the height, the gap and the risk — every single session."
+    },
+    {
+      "icon_id": "glyph-teamwork",
+      "label": "NOBODY TRAINS ALONE",
+      "body": "Every session is coached and capped at twelve, so the room learns at the pace of the room."
+    }
+  ]
+}

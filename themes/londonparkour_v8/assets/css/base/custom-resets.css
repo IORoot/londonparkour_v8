@@ -1,0 +1,71 @@
+:root {
+  /* Allow keywords in size interpolation */
+  interpolate-size: allow-keywords;
+}
+
+/* Page ground. base-100 is the ground; base-200 is a raised panel — in the
+ * light theme base-200 is white, so using it here would wash out the warm
+ * off-white ground the design specifies. */
+html:root,
+html[data-theme] {
+  background-color: var(--color-base-100, white);
+  color: var(--color-base-content, black);
+}
+
+/* Body only — never `html`.
+ *
+ * `--text-step-0` is `clamp(1rem, 0.9583rem + 0.1792vw, 1.125rem)`. Setting it
+ * on `html` redefines what `rem` means for the entire system, and because the
+ * clamp is itself rem-based it then compounds: html resolved against the
+ * initial 16px → 17.91px, and body re-resolved the same clamp against that new
+ * root → 19.75px. Every rem-based value inflated with it — Tailwind's whole
+ * spacing scale, daisyUI's component padding, and the fluid `--spacing-scale-*`
+ * clamps — roughly 7–12% larger than authored. Components written with literal
+ * pixels (`gap-[14px]`) were immune, which is why the drift showed up only
+ * where rem-based utilities and daisyUI defaults were used.
+ *
+ * Keeping `html` at the browser default leaves `rem` a stable 16px unit. */
+body {
+  font-size: var(--text-step-0);
+  font-family: var(--font-body);
+}
+
+html {
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  text-box: trim-both cap alphabetic;
+}
+
+/* No global `p` margin.
+ *
+ * There used to be `p { margin-top: var(--grid-gutter-sm) }` here — a 16px top
+ * margin on every paragraph in the system, re-added after Tailwind's preflight
+ * deliberately zeroed it. Preflight zeroes margins so that spacing utilities
+ * are the single source of truth; a global margin instead *stacks on top of*
+ * every `flex gap`, so a row authored as `flex flex-col gap-[5px]` rendered at
+ * 21px and a two-paragraph column drifted 32px taller than the design. Every
+ * component that uses `<p>` for body copy, notes, metas and answers was
+ * affected — 32 component files — which is why the drift read as system-wide
+ * rather than as one component's bug.
+ *
+ * Prose rhythm belongs to `@tailwindcss/typography`'s `.prose` (already a
+ * plugin here) or to explicit spacing utilities on the container. */
+
+/* Scope Trial pins its own variation instance.
+ * Its axes are non-standard (wght 60–100, wdth 400–600), so a stray Tailwind
+ * weight utility such as font-bold (700) falls outside the range and the
+ * browser clamps to the heaviest cut. Setting font-variation-settings here
+ * keeps display type at the designed instance; no Tailwind utility writes this
+ * property, so nothing conflicts. Override per-element when a different cut is
+ * genuinely wanted. */
+.font-display {
+  font-variation-settings: "wght" 60, "wdth" 500;
+}

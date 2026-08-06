@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "the-safety-vault",
+    "title": "The Safety Vault",
+    "thumbnail": "coach-kie.jpeg",
+    "menu_order": 1,
+    "terms": { "lp_series": ["vaults"], "lp_level": ["beginner"] },
+    "fields": {
+      "duration": "8:24",
+      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "coaches": ["kie-piccio"]
+    }
+  },
+  {
+    "slug": "landing-without-noise",
+    "title": "Landing Without Noise",
+    "thumbnail": "coach-andy.jpeg",
+    "menu_order": 2,
+    "terms": { "lp_series": ["foundations"], "lp_level": ["beginner"] },
+    "fields": {
+      "duration": "6:11",
+      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "coaches": ["andy-pearson"]
+    }
+  },
+  {
+    "slug": "grip-and-hang-strength",
+    "title": "Grip & Hang Strength",
+    "thumbnail": "coach-kie.jpeg",
+    "menu_order": 3,
+    "terms": { "lp_series": ["conditioning"], "lp_level": ["improver"] },
+    "fields": {
+      "duration": "12:03",
+      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "coaches": ["nirosh-ganeshalingam"]
+    }
+  }
+]

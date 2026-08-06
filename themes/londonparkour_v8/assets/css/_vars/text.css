@@ -1,0 +1,84 @@
+/* LondonParkour "Concourse" type scale — ported from london_parkour_V4.pen.
+ *
+ * Fluid Utopia clamps, but the MAX end is pinned to the design's own ramp
+ * rather than a pure geometric run, so every step lands on a real design token:
+ *
+ *   step -2  12px  label / caption      (Inter, uppercase, wide tracking)
+ *   step -1  14px  body-sm              (Inter)
+ *   step  0  18px  body-md              (Inter) — document base
+ *   step  1  24px  body-lg / display-xs
+ *   step  2  32px  display-sm
+ *   step  3  43px  display-md
+ *   step  4  57px  display-lg
+ *   step  5  76px  display-xl
+ *   step  6  96px  display-2xl
+ *   step  7 128px  hero headroom (Scope Trial, one per viewport)
+ *
+ * Min end is a 1.2 ratio off a 16px base at 372px; max end is the design at 1488px.
+ * @link https://utopia.fyi/type/calculator?c=372,16,1.2,1488,18,1.333,7,2
+ *
+ * Tracking follows the design: display tightens (negative), labels open up
+ * (positive) — Archivo runs -0.2/-0.4px at display sizes, Inter labels run
+ * +0.8/+1.1px at 10–12px.
+ */
+@theme static {
+/* Step -2: 11px → 12px — label / caption */
+--text-step--2: clamp(0.6875rem, 0.6667rem + 0.0896vw, 0.75rem);
+--text-step--2--line-height: 1.4;
+--text-step--2--letter-spacing: 0.06rem;
+--text-step--2--font-weight: 600;
+
+/* Step -1: 13.33px → 14px — body-sm */
+--text-step--1: clamp(0.8331rem, 0.8192rem + 0.06vw, 0.875rem);
+--text-step--1--line-height: 1.5;
+--text-step--1--letter-spacing: 0.0125rem;
+--text-step--1--font-weight: 400;
+
+/* Step 0: 16px → 18px — body-md (document base) */
+--text-step-0: clamp(1rem, 0.9583rem + 0.1792vw, 1.125rem);
+--text-step-0--line-height: 1.55;
+--text-step-0--letter-spacing: 0rem;
+--text-step-0--font-weight: 400;
+
+/* Step 1: 19.2px → 24px — body-lg / display-xs */
+--text-step-1: clamp(1.2rem, 1.1rem + 0.4301vw, 1.5rem);
+--text-step-1--line-height: 1.4;
+--text-step-1--letter-spacing: -0.0075rem;
+--text-step-1--font-weight: 400;
+
+/* Step 2: 23.04px → 32px — display-sm */
+--text-step-2: clamp(1.44rem, 1.2533rem + 0.8029vw, 2rem);
+--text-step-2--line-height: 1.25;
+--text-step-2--letter-spacing: -0.0125rem;
+--text-step-2--font-weight: 600;
+
+/* Step 3: 27.65px → 43px — display-md */
+--text-step-3: clamp(1.7281rem, 1.4083rem + 1.3754vw, 2.6875rem);
+--text-step-3--line-height: 1.15;
+--text-step-3--letter-spacing: -0.02rem;
+--text-step-3--font-weight: 600;
+
+/* Step 4: 33.18px → 57px — display-lg */
+--text-step-4: clamp(2.0738rem, 1.5775rem + 2.1344vw, 3.5625rem);
+--text-step-4--line-height: 1.08;
+--text-step-4--letter-spacing: -0.025rem;
+--text-step-4--font-weight: 600;
+
+/* Step 5: 39.81px → 76px — display-xl */
+--text-step-5: clamp(2.4881rem, 1.7342rem + 3.2428vw, 4.75rem);
+--text-step-5--line-height: 1.02;
+--text-step-5--letter-spacing: -0.03rem;
+--text-step-5--font-weight: 600;
+
+/* Step 6: 47.78px → 96px — display-2xl */
+--text-step-6: clamp(2.9863rem, 1.9817rem + 4.3208vw, 6rem);
+--text-step-6--line-height: 0.98;
+--text-step-6--letter-spacing: -0.035rem;
+--text-step-6--font-weight: 600;
+
+/* Step 7: 57.33px → 128px — hero headroom (Scope Trial) */
+--text-step-7: clamp(3.5831rem, 2.1108rem + 6.3324vw, 8rem);
+--text-step-7--line-height: 0.92;
+--text-step-7--letter-spacing: -0.04rem;
+--text-step-7--font-weight: 400;
+}

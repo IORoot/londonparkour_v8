@@ -1,0 +1,90 @@
+/* @layer theme, base, components, utilities; */
+
+/* LondonParkour "Concourse" fonts — Archivo (headings/UI) + Inter (body/labels).
+   The brand display face, Scope Trial, is local — see ./fonts.css.
+   Must stay above every other rule so the @import is valid. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400..700&family=Inter:wght@400..700&display=swap");
+
+/* `source(none)` disables automatic detection so nothing outside this theme is
+   scanned — the build runs inside wp-content, where auto-detection would walk
+   sibling themes and plugins. Every source is enumerated explicitly below. */
+@import "tailwindcss" source(none);
+
+/* Local licensed @font-face declarations (unlayered) */
+@import "./fonts.css";
+
+/*
+* SOURCE DIRECTIVES
+*/
+
+/* Configure content paths for Tailwind to scan.
+   Paths are relative to this file (assets/css/), so `../../` is the theme root.
+   Tailwind v4 text-scans these files: every class must appear as a complete
+   literal string. Never build a class name by PHP concatenation — use a lookup
+   array, as parts/elements/*.php do. */
+@source "../../blocks/**/*.php";
+@source "../../parts/**/*.php";
+@source "../../app/**/*.php";
+@source "../../template-parts/**/*.php";
+@source "../../inc/**/*.php";
+@source "../../*.php";
+@source "../js/**/*.js";
+
+/* 
+  * Safelist spacing utilities (for dynamic class construction) 
+  * If you modify the spacing variables, run `npm run generate-spacing-safelist` to regenerate
+*/
+@source "./safelist-spacing.txt";
+
+/*
+* PLUGIN DIRECTIVES
+*/
+/* Tailwind CSS plugins */
+@plugin "@tailwindcss/typography";
+
+/* DaisyUI plugin */
+@plugin "daisyui" {
+  themes: false;
+  root: ":root";
+  logs: false;
+}
+
+/*
+* THEME DIRECTIVES
+*/
+@import "./themes/_index.css";
+
+/*
+* THEME VARIABLES DIRECTIVES
+*/
+/* @theme static { */
+@import "./_vars/_index.css";
+
+/* }  */
+
+/*
+* BASE DIRECTIVES
+*/
+@layer base {
+  @import "./base/_index.css";
+}
+
+/*
+* COMPONENTS DIRECTIVES
+*/
+@layer components {
+  @import "./vendor/_index.css";
+  @import "./components/_index.css";
+}
+
+/*
+* UTILITIES DIRECTIVES
+* See _utilities/_examples.css for more information.
+*/
+/* Type 2 & 3: @utility blocks - imported directly to generate responsive variants */
+@import "./utilities/blocks/_index.css";
+
+/* Type 1: @layer utilities - imported inside layer (no responsive variants) */
+@layer utilities {
+  @import "./utilities/_index.css";
+}

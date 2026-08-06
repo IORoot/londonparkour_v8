@@ -1,0 +1,2330 @@
+{
+    "key": "group_lp_page_sections",
+    "title": "Page Sections",
+    "fields": [
+        {
+            "name": "page_sections",
+            "label": "Sections",
+            "type": "flexible_content",
+            "button_label": "Add section",
+            "layouts": {
+                "layout_564259d182c0c454": {
+                    "name": "classes",
+                    "label": "Classes",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_916a4ccdd7139440"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_0e7c4ab4a1e3e4d2"
+                        },
+                        {
+                            "name": "heading",
+                            "label": "Heading",
+                            "type": "text",
+                            "key": "field_c527f9a7eb1dec7d"
+                        },
+                        {
+                            "name": "note",
+                            "label": "Note",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_30a0d323ede29a98"
+                        },
+                        {
+                            "name": "board_title",
+                            "label": "Board title",
+                            "type": "text",
+                            "key": "field_9cc985e46ffebcfa"
+                        },
+                        {
+                            "name": "stamp",
+                            "label": "Stamp",
+                            "type": "text",
+                            "key": "field_0c9130aaa529e35f"
+                        },
+                        {
+                            "name": "foot_note",
+                            "label": "Foot note",
+                            "type": "text",
+                            "key": "field_2e8993fcac8e12cd"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_dec1f12fc2a1ddc8"
+                        },
+                        {
+                            "name": "source",
+                            "label": "Source",
+                            "type": "button_group",
+                            "instructions": "Where sessions come from.",
+                            "choices": {
+                                "latest": "Latest",
+                                "choose": "Choose",
+                                "manual": "Manual"
+                            },
+                            "default_value": "latest",
+                            "key": "field_f8d066ecefea4024"
+                        },
+                        {
+                            "name": "source_limit",
+                            "label": "How many",
+                            "type": "number",
+                            "default_value": 4,
+                            "min": 1,
+                            "max": 24,
+                            "key": "field_ad05a265444e8125",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_f8d066ecefea4024",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_terms",
+                            "label": "Filter by",
+                            "type": "taxonomy",
+                            "taxonomy": "lp_level",
+                            "field_type": "multi_select",
+                            "add_term": 0,
+                            "save_terms": 0,
+                            "load_terms": 0,
+                            "return_format": "id",
+                            "key": "field_5763f7aaf19fb95d",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_f8d066ecefea4024",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_items",
+                            "label": "Sessions",
+                            "type": "relationship",
+                            "post_type": [
+                                "lp_class"
+                            ],
+                            "return_format": "id",
+                            "filters": [
+                                "search"
+                            ],
+                            "key": "field_953b6cc5bec63f9c",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_f8d066ecefea4024",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_manual",
+                            "label": "Sessions",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add session",
+                            "max": 0,
+                            "sub_fields": [
+                                {
+                                    "name": "time",
+                                    "label": "Time",
+                                    "type": "text",
+                                    "key": "field_e197b17318cc52a4"
+                                },
+                                {
+                                    "name": "date_label",
+                                    "label": "Date label",
+                                    "type": "text",
+                                    "key": "field_f700aef39e7f47dc"
+                                },
+                                {
+                                    "name": "title",
+                                    "label": "Title",
+                                    "type": "text",
+                                    "key": "field_9c0b92c67f39858d"
+                                },
+                                {
+                                    "name": "subtitle",
+                                    "label": "Subtitle",
+                                    "type": "text",
+                                    "key": "field_c56bd776aa04dfc4"
+                                },
+                                {
+                                    "name": "location",
+                                    "label": "Location",
+                                    "type": "text",
+                                    "key": "field_63543eb7e870ead3"
+                                },
+                                {
+                                    "name": "level",
+                                    "label": "Level",
+                                    "type": "text",
+                                    "key": "field_3d3c8919edcd88f6"
+                                },
+                                {
+                                    "name": "spaces",
+                                    "label": "Spaces",
+                                    "type": "text",
+                                    "key": "field_2634db7739c23325"
+                                },
+                                {
+                                    "name": "price",
+                                    "label": "Price",
+                                    "type": "text",
+                                    "key": "field_ddb9a259a73016f3"
+                                },
+                                {
+                                    "name": "price_label",
+                                    "label": "Price label",
+                                    "type": "text",
+                                    "key": "field_5fd85e692ad876bb"
+                                },
+                                {
+                                    "name": "book_label",
+                                    "label": "Book label",
+                                    "type": "text",
+                                    "key": "field_bd0f416d3f530696"
+                                },
+                                {
+                                    "name": "sold_out",
+                                    "label": "Sold out",
+                                    "type": "true_false",
+                                    "key": "field_540afadf047fc927"
+                                }
+                            ],
+                            "key": "field_16b6813ddc091485",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_f8d066ecefea4024",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_1eb3db433b603d76"
+                        },
+                        {
+                            "name": "primary_action",
+                            "label": "Primary action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_d5a239e1edd7b7c8"
+                                }
+                            ],
+                            "key": "field_1bcf232508f77ef8"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_dec1b38c883750a7"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_dd0600e1090f40f9"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_71ca60dc6a1f5513"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_3dc5e0a5179dd9bc"
+                        }
+                    ],
+                    "key": "layout_564259d182c0c454"
+                },
+                "layout_f038b9c6c9128da9": {
+                    "name": "coaches",
+                    "label": "Coaches",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_64141d21bf580e02"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_d1d94a9e7bba8959"
+                        },
+                        {
+                            "name": "headline",
+                            "label": "Headline",
+                            "type": "text",
+                            "key": "field_c900177efeb3c1af"
+                        },
+                        {
+                            "name": "note",
+                            "label": "Note",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_6e1f18e3be60b6c9"
+                        },
+                        {
+                            "name": "intro_text",
+                            "label": "Standfirst",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": "",
+                            "key": "field_c601d1f14a37eab1"
+                        },
+                        {
+                            "name": "lead_coach",
+                            "label": "Lead coach",
+                            "type": "group",
+                            "sub_fields": [
+                                {
+                                    "name": "image",
+                                    "label": "Media",
+                                    "type": "image",
+                                    "return_format": "id",
+                                    "preview_size": "medium",
+                                    "library": "all",
+                                    "key": "field_d7d43298f6f2ef09"
+                                },
+                                {
+                                    "name": "image_alt",
+                                    "label": "Image alt",
+                                    "type": "text",
+                                    "key": "field_1cc1ffb9fffc8e2d"
+                                },
+                                {
+                                    "name": "name",
+                                    "label": "Name",
+                                    "type": "text",
+                                    "key": "field_e7e5c2fdeb6ddce6"
+                                },
+                                {
+                                    "name": "meta",
+                                    "label": "Meta",
+                                    "type": "text",
+                                    "instructions": "Short uppercase label above the heading.",
+                                    "key": "field_1d6b7fa3e9a63c5f"
+                                },
+                                {
+                                    "name": "quote",
+                                    "label": "Quote",
+                                    "type": "textarea",
+                                    "rows": 2,
+                                    "new_lines": "",
+                                    "key": "field_1302a5d14c67f099"
+                                }
+                            ],
+                            "key": "field_ee29127d22a1c305"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_9d5c36882bc689d6"
+                        },
+                        {
+                            "name": "source",
+                            "label": "Source",
+                            "type": "button_group",
+                            "instructions": "Where coaches come from.",
+                            "choices": {
+                                "latest": "Latest",
+                                "choose": "Choose",
+                                "manual": "Manual"
+                            },
+                            "default_value": "latest",
+                            "key": "field_9355ddd0d4108d58"
+                        },
+                        {
+                            "name": "source_limit",
+                            "label": "How many",
+                            "type": "number",
+                            "default_value": 4,
+                            "min": 1,
+                            "max": 24,
+                            "key": "field_11d628d21d47f37c",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_9355ddd0d4108d58",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_items",
+                            "label": "Coaches",
+                            "type": "relationship",
+                            "post_type": [
+                                "lp_coach"
+                            ],
+                            "return_format": "id",
+                            "filters": [
+                                "search"
+                            ],
+                            "key": "field_6e859823215468ab",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_9355ddd0d4108d58",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_manual",
+                            "label": "Coaches",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add coache",
+                            "max": 0,
+                            "sub_fields": [
+                                {
+                                    "name": "thumb",
+                                    "label": "Media",
+                                    "type": "image",
+                                    "return_format": "id",
+                                    "preview_size": "medium",
+                                    "library": "all",
+                                    "key": "field_74ace254424f8545"
+                                },
+                                {
+                                    "name": "thumb_alt",
+                                    "label": "Thumb alt",
+                                    "type": "text",
+                                    "key": "field_90edf2320fec9188"
+                                },
+                                {
+                                    "name": "name",
+                                    "label": "Name",
+                                    "type": "text",
+                                    "key": "field_317b7299d9ef404a"
+                                },
+                                {
+                                    "name": "specialty",
+                                    "label": "Specialty",
+                                    "type": "text",
+                                    "key": "field_4e1505ddd7cabe33"
+                                },
+                                {
+                                    "name": "location",
+                                    "label": "Location",
+                                    "type": "text",
+                                    "key": "field_35cf61b08899a798"
+                                }
+                            ],
+                            "key": "field_aac874a68f95f80a",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_9355ddd0d4108d58",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_0450badcf809842b"
+                        },
+                        {
+                            "name": "link_action",
+                            "label": "Link action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_c41a63fa7934f2d0"
+                                }
+                            ],
+                            "key": "field_ed7d9c65ec5986a6"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_f45deda3e3b2ca9e"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_030ee88f5a654237"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_9ac3b0da608bda36"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_a501bde448c5ee90"
+                        }
+                    ],
+                    "key": "layout_f038b9c6c9128da9"
+                },
+                "layout_c8df9530d1835b5a": {
+                    "name": "cta",
+                    "label": "CTA",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_cc9b0fa872369d35"
+                        },
+                        {
+                            "name": "kicker",
+                            "label": "Kicker",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_4e24c44853198ea9"
+                        },
+                        {
+                            "name": "coordinates",
+                            "label": "Coordinates",
+                            "type": "text",
+                            "key": "field_276a23092cb236db"
+                        },
+                        {
+                            "name": "headline",
+                            "label": "Headline",
+                            "type": "text",
+                            "key": "field_650332c897842204"
+                        },
+                        {
+                            "name": "subhead",
+                            "label": "Standfirst",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": "",
+                            "key": "field_40cda78bc84f0486"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_01e58749e5ce0bd2"
+                        },
+                        {
+                            "name": "source",
+                            "label": "Source",
+                            "type": "button_group",
+                            "instructions": "Where session come from.",
+                            "choices": {
+                                "latest": "Latest",
+                                "choose": "Choose",
+                                "manual": "Manual"
+                            },
+                            "default_value": "latest",
+                            "key": "field_cbdb45acf830b266"
+                        },
+                        {
+                            "name": "source_limit",
+                            "label": "How many",
+                            "type": "number",
+                            "default_value": 1,
+                            "min": 1,
+                            "max": 24,
+                            "key": "field_bfcf62f230b64a77",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_cbdb45acf830b266",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_items",
+                            "label": "Session",
+                            "type": "post_object",
+                            "post_type": [
+                                "lp_class"
+                            ],
+                            "return_format": "id",
+                            "filters": [
+                                "search"
+                            ],
+                            "key": "field_efbf1355ce6bb64f",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_cbdb45acf830b266",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_manual",
+                            "label": "Session",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add session",
+                            "max": 1,
+                            "sub_fields": [
+                                {
+                                    "name": "kicker",
+                                    "label": "Kicker",
+                                    "type": "text",
+                                    "instructions": "e.g. \"NEXT BEGINNERS SESSION\"",
+                                    "key": "field_52802722df050e2a"
+                                },
+                                {
+                                    "name": "time",
+                                    "label": "Time",
+                                    "type": "text",
+                                    "key": "field_9da021d8ed8fdc82"
+                                },
+                                {
+                                    "name": "location",
+                                    "label": "Location",
+                                    "type": "text",
+                                    "key": "field_ce3963979d332b74"
+                                },
+                                {
+                                    "name": "spaces_label",
+                                    "label": "Spaces label",
+                                    "type": "text",
+                                    "instructions": "Short uppercase label above the heading.",
+                                    "key": "field_4125037326c9437f"
+                                },
+                                {
+                                    "name": "spaces",
+                                    "label": "Spaces",
+                                    "type": "text",
+                                    "key": "field_9c92e768ec9d50b4"
+                                }
+                            ],
+                            "key": "field_eb602cc61acf07b9",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_cbdb45acf830b266",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_8690c250a96aecd0"
+                        },
+                        {
+                            "name": "primary_action",
+                            "label": "Primary action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_320e72e2611318a3"
+                                }
+                            ],
+                            "key": "field_b789d4c429cd1211"
+                        },
+                        {
+                            "name": "alt_action",
+                            "label": "Alternate action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_25416ff4bf2172a4"
+                                }
+                            ],
+                            "key": "field_94653246179050d8"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_84a2398923e19d3f"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_5da8a275c3e3ab37"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_719c633db0fc5d7b"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_916ee9aa27b6abab"
+                        }
+                    ],
+                    "key": "layout_c8df9530d1835b5a"
+                },
+                "layout_8a970004abf945ff": {
+                    "name": "hero",
+                    "label": "Hero",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_e6e0dec73f87890a"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_9df02f5840339e3c"
+                        },
+                        {
+                            "name": "headline",
+                            "label": "Headline",
+                            "type": "text",
+                            "key": "field_680ccea0bcaba281"
+                        },
+                        {
+                            "name": "lead",
+                            "label": "Standfirst",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": "",
+                            "key": "field_68fe2addaa246391"
+                        },
+                        {
+                            "name": "media",
+                            "label": "Media",
+                            "type": "image",
+                            "return_format": "id",
+                            "preview_size": "medium",
+                            "library": "all",
+                            "key": "field_88d916898c66d3e2"
+                        },
+                        {
+                            "name": "board_title",
+                            "label": "Board title",
+                            "type": "text",
+                            "key": "field_405b668317aa6a32"
+                        },
+                        {
+                            "name": "board_stamp",
+                            "label": "Board stamp",
+                            "type": "text",
+                            "key": "field_96af0763884b2b24"
+                        },
+                        {
+                            "name": "board_foot_label",
+                            "label": "Board foot label",
+                            "type": "text",
+                            "key": "field_8a94300956392799"
+                        },
+                        {
+                            "name": "board_foot_href",
+                            "label": "Board foot link",
+                            "type": "url",
+                            "key": "field_074dc29bed1bf097"
+                        },
+                        {
+                            "name": "board_foot_count",
+                            "label": "Board foot count",
+                            "type": "text",
+                            "key": "field_ad7ba0a8a9cdcb59"
+                        },
+                        {
+                            "name": "scroll_label",
+                            "label": "Scroll label",
+                            "type": "text",
+                            "key": "field_7c43fc8c29e45bb1"
+                        },
+                        {
+                            "name": "rating",
+                            "label": "Rating",
+                            "type": "text",
+                            "key": "field_6ba26ba41a6f3d88"
+                        },
+                        {
+                            "name": "trust",
+                            "label": "Trust marks",
+                            "type": "repeater",
+                            "layout": "table",
+                            "button_label": "Add trust mark",
+                            "sub_fields": [
+                                {
+                                    "name": "label",
+                                    "label": "Label",
+                                    "type": "text",
+                                    "key": "field_9f29687d2b544cd6"
+                                }
+                            ],
+                            "key": "field_964ccbea4c1ed680"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_214c29f99d57c20d"
+                        },
+                        {
+                            "name": "source",
+                            "label": "Source",
+                            "type": "button_group",
+                            "instructions": "Where sessions come from.",
+                            "choices": {
+                                "latest": "Latest",
+                                "choose": "Choose",
+                                "manual": "Manual"
+                            },
+                            "default_value": "latest",
+                            "key": "field_ef0bdb057c0586ca"
+                        },
+                        {
+                            "name": "source_limit",
+                            "label": "How many",
+                            "type": "number",
+                            "default_value": 4,
+                            "min": 1,
+                            "max": 24,
+                            "key": "field_74ff406040769a5c",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_ef0bdb057c0586ca",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_items",
+                            "label": "Sessions",
+                            "type": "relationship",
+                            "post_type": [
+                                "lp_class"
+                            ],
+                            "return_format": "id",
+                            "filters": [
+                                "search"
+                            ],
+                            "key": "field_9293665b5171ff80",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_ef0bdb057c0586ca",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_manual",
+                            "label": "Sessions",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add session",
+                            "max": 0,
+                            "sub_fields": [
+                                {
+                                    "name": "time",
+                                    "label": "Time",
+                                    "type": "text",
+                                    "key": "field_a55ff72e7d9a466a"
+                                },
+                                {
+                                    "name": "title",
+                                    "label": "Title",
+                                    "type": "text",
+                                    "key": "field_f83ec35eb6c555f3"
+                                },
+                                {
+                                    "name": "location",
+                                    "label": "Location",
+                                    "type": "text",
+                                    "key": "field_ce65656a18f31581"
+                                },
+                                {
+                                    "name": "spaces",
+                                    "label": "Spaces",
+                                    "type": "text",
+                                    "key": "field_40e66224a074906e"
+                                },
+                                {
+                                    "name": "sold_out",
+                                    "label": "Sold out",
+                                    "type": "true_false",
+                                    "key": "field_0cb2c1c96bcde790"
+                                }
+                            ],
+                            "key": "field_91e1781fa23098fc",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_ef0bdb057c0586ca",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_ae6e9d40e41a1786"
+                        },
+                        {
+                            "name": "primary_action",
+                            "label": "Primary action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_a358e9a98a6d44c6"
+                                }
+                            ],
+                            "key": "field_fc9fd43605eecdd0"
+                        },
+                        {
+                            "name": "secondary_action",
+                            "label": "Secondary action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_1ab8cb8384fc3f17"
+                                }
+                            ],
+                            "key": "field_33357bba39202060"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_17c48a9279cf96e1"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_fda8e5c17e56d543"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_abe0f4cf595c8e86"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_0912b7bfa01d1b5f"
+                        }
+                    ],
+                    "key": "layout_8a970004abf945ff"
+                },
+                "layout_8e19bb32e48c22e9": {
+                    "name": "locations",
+                    "label": "Locations",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_e07b7395ba5523e3"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_a663fe15527fa713"
+                        },
+                        {
+                            "name": "heading",
+                            "label": "Heading",
+                            "type": "text",
+                            "key": "field_561edcf2c469abd3"
+                        },
+                        {
+                            "name": "note",
+                            "label": "Note",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_13e054f11d46609c"
+                        },
+                        {
+                            "name": "flagship",
+                            "label": "Flagship site",
+                            "type": "group",
+                            "sub_fields": [
+                                {
+                                    "name": "tag",
+                                    "label": "Tag",
+                                    "type": "text",
+                                    "instructions": "e.g. \"FLAGSHIP INDOOR SITE\"",
+                                    "key": "field_7967c0bfc96b10f0"
+                                },
+                                {
+                                    "name": "name",
+                                    "label": "Name",
+                                    "type": "text",
+                                    "key": "field_55b194a3cdef2ba3"
+                                },
+                                {
+                                    "name": "meta",
+                                    "label": "Meta",
+                                    "type": "text",
+                                    "key": "field_ccb289d7dde18045"
+                                },
+                                {
+                                    "name": "image",
+                                    "label": "Media",
+                                    "type": "image",
+                                    "return_format": "id",
+                                    "preview_size": "medium",
+                                    "library": "all",
+                                    "key": "field_c477e415f3d4402d"
+                                },
+                                {
+                                    "name": "image_alt",
+                                    "label": "Image alt",
+                                    "type": "text",
+                                    "key": "field_6a47dd6781565080"
+                                },
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "key": "field_c6bcc224d95ac6e3"
+                                }
+                            ],
+                            "key": "field_2609d750272f79a9"
+                        },
+                        {
+                            "name": "clients_label",
+                            "label": "Clients label",
+                            "type": "text",
+                            "key": "field_50551b88b0860df2"
+                        },
+                        {
+                            "name": "clients",
+                            "label": "Clients",
+                            "type": "repeater",
+                            "layout": "table",
+                            "button_label": "Add client",
+                            "sub_fields": [
+                                {
+                                    "name": "label",
+                                    "label": "Label",
+                                    "type": "text",
+                                    "key": "field_9a84d63ff013d66d"
+                                }
+                            ],
+                            "key": "field_6ef25725b5761179"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_ef996c1cb945a757"
+                        },
+                        {
+                            "name": "source",
+                            "label": "Source",
+                            "type": "button_group",
+                            "instructions": "Where sites come from.",
+                            "choices": {
+                                "latest": "Latest",
+                                "choose": "Choose",
+                                "manual": "Manual"
+                            },
+                            "default_value": "latest",
+                            "key": "field_1baccb6b9b907f8b"
+                        },
+                        {
+                            "name": "source_limit",
+                            "label": "How many",
+                            "type": "number",
+                            "default_value": 4,
+                            "min": 1,
+                            "max": 24,
+                            "key": "field_bfd6b7f4534e27dd",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_1baccb6b9b907f8b",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_items",
+                            "label": "Sites",
+                            "type": "relationship",
+                            "post_type": [
+                                "lp_location"
+                            ],
+                            "return_format": "id",
+                            "filters": [
+                                "search"
+                            ],
+                            "key": "field_49a5b5e062c8a5dc",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_1baccb6b9b907f8b",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_manual",
+                            "label": "Sites",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add site",
+                            "max": 0,
+                            "sub_fields": [
+                                {
+                                    "name": "title",
+                                    "label": "Name",
+                                    "type": "text",
+                                    "key": "field_1eb36a721053efa1"
+                                },
+                                {
+                                    "name": "meta",
+                                    "label": "Meta",
+                                    "type": "text",
+                                    "key": "field_17f9bdf403a2265a"
+                                },
+                                {
+                                    "name": "type",
+                                    "label": "Type",
+                                    "type": "text",
+                                    "key": "field_ecee9e3a813181ac"
+                                }
+                            ],
+                            "key": "field_2a42e2ec863759f3",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_1baccb6b9b907f8b",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_7f66eabf848ceaa1"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_b023ccbfc7c83032"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_79900611e69c5946"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_84bc78d99b59a646"
+                        }
+                    ],
+                    "key": "layout_8e19bb32e48c22e9"
+                },
+                "layout_14a8789ee6d68dfb": {
+                    "name": "marquee",
+                    "label": "Marquee",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_423cff1ed61af725"
+                        },
+                        {
+                            "name": "direction",
+                            "label": "Direction",
+                            "type": "button_group",
+                            "choices": {
+                                "left": "Left",
+                                "right": "Right"
+                            },
+                            "default_value": "left",
+                            "key": "field_6e3db5a938d4670e"
+                        },
+                        {
+                            "name": "speed",
+                            "label": "Speed",
+                            "type": "number",
+                            "instructions": "Pixels per second. Default 60.",
+                            "default_value": 60,
+                            "min": 10,
+                            "max": 300,
+                            "key": "field_faf968ef22109210"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_08eaf4fa524fef17"
+                        },
+                        {
+                            "name": "items",
+                            "label": "Items",
+                            "type": "repeater",
+                            "layout": "table",
+                            "button_label": "Add item",
+                            "sub_fields": [
+                                {
+                                    "name": "label",
+                                    "label": "Label",
+                                    "type": "text",
+                                    "key": "field_9624b0987ab76382"
+                                }
+                            ],
+                            "key": "field_174ffb667d365f4a"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_e9672da10d684b6f"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_395864f17bbc2d84"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_0a7938305c5fb19d"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_9639bd612f26c732"
+                        }
+                    ],
+                    "key": "layout_14a8789ee6d68dfb"
+                },
+                "layout_27154780d28ec45f": {
+                    "name": "pricing",
+                    "label": "Pricing",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_6ebbd8055cf93a3d"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_35ca91ad03d7929a"
+                        },
+                        {
+                            "name": "heading",
+                            "label": "Heading",
+                            "type": "text",
+                            "key": "field_6bdb4dcbbbefa227"
+                        },
+                        {
+                            "name": "note",
+                            "label": "Note",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_8b94372f02f958e5"
+                        },
+                        {
+                            "name": "table_label",
+                            "label": "Table label",
+                            "type": "text",
+                            "key": "field_dd4cd414cb576023"
+                        },
+                        {
+                            "name": "axis_label",
+                            "label": "Axis label",
+                            "type": "text",
+                            "key": "field_eea544058f1370fc"
+                        },
+                        {
+                            "name": "notice",
+                            "label": "Notice",
+                            "type": "text",
+                            "key": "field_ed8d9d7fdc35248a"
+                        },
+                        {
+                            "name": "guarantee",
+                            "label": "Guarantee",
+                            "type": "group",
+                            "sub_fields": [
+                                {
+                                    "name": "kicker",
+                                    "label": "Kicker",
+                                    "type": "text",
+                                    "instructions": "Short uppercase label above the heading.",
+                                    "key": "field_3f800e25a8fcbd83"
+                                },
+                                {
+                                    "name": "copy",
+                                    "label": "Copy",
+                                    "type": "textarea",
+                                    "rows": 2,
+                                    "new_lines": "",
+                                    "key": "field_a7ab662649b62163"
+                                }
+                            ],
+                            "key": "field_70093e3065d1d540"
+                        },
+                        {
+                            "name": "sites_lead",
+                            "label": "Sites lead",
+                            "type": "text",
+                            "key": "field_df6a27f92d6b5e88"
+                        },
+                        {
+                            "name": "sites_list",
+                            "label": "Sites list",
+                            "type": "text",
+                            "key": "field_c3009b0b1081926d"
+                        },
+                        {
+                            "name": "kit_note",
+                            "label": "Kit note",
+                            "type": "text",
+                            "key": "field_60c77d51a144107f"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_c4197197224e2ab4"
+                        },
+                        {
+                            "name": "row_labels",
+                            "label": "Comparison rows",
+                            "type": "repeater",
+                            "layout": "table",
+                            "button_label": "Add row",
+                            "instructions": "The left rail. Each tier fills these rows in by key.",
+                            "sub_fields": [
+                                {
+                                    "name": "row_key",
+                                    "label": "Key",
+                                    "type": "text",
+                                    "instructions": "Lowercase, no spaces, e.g. \"booking_window\".",
+                                    "key": "field_aabbc4fd27487bf5"
+                                },
+                                {
+                                    "name": "label",
+                                    "label": "Label",
+                                    "type": "text",
+                                    "key": "field_312a0ff2f78a2327"
+                                }
+                            ],
+                            "key": "field_cf38afee59346c48"
+                        },
+                        {
+                            "name": "tiers",
+                            "label": "Tiers",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add tier",
+                            "sub_fields": [
+                                {
+                                    "name": "label",
+                                    "label": "Label",
+                                    "type": "text",
+                                    "key": "field_2dd99fdf5f38e88e"
+                                },
+                                {
+                                    "name": "badge",
+                                    "label": "Badge",
+                                    "type": "text",
+                                    "instructions": "e.g. \"MOST POPULAR\". Rendered after an em dash.",
+                                    "key": "field_df952fad4220242f"
+                                },
+                                {
+                                    "name": "price",
+                                    "label": "Price",
+                                    "type": "text",
+                                    "key": "field_1fc71a8e071efca1"
+                                },
+                                {
+                                    "name": "unit",
+                                    "label": "Unit",
+                                    "type": "text",
+                                    "key": "field_9ffdc197c7087eb7"
+                                },
+                                {
+                                    "name": "description",
+                                    "label": "Description",
+                                    "type": "textarea",
+                                    "rows": 2,
+                                    "new_lines": "",
+                                    "key": "field_c4605c9264571c36"
+                                },
+                                {
+                                    "name": "work_out_value",
+                                    "label": "Works out at",
+                                    "type": "text",
+                                    "key": "field_9aefa757f776c97b"
+                                },
+                                {
+                                    "name": "work_out_unit",
+                                    "label": "Works out unit",
+                                    "type": "text",
+                                    "key": "field_d2e72ccc55d9ed94"
+                                },
+                                {
+                                    "name": "highlight",
+                                    "label": "Highlight",
+                                    "type": "true_false",
+                                    "instructions": "Washes the column and makes its button solid.",
+                                    "key": "field_8929a05829e02768"
+                                },
+                                {
+                                    "name": "cta",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_d93de797e03a1198"
+                                },
+                                {
+                                    "name": "values",
+                                    "label": "Values",
+                                    "type": "repeater",
+                                    "layout": "table",
+                                    "button_label": "Add value",
+                                    "sub_fields": [
+                                        {
+                                            "name": "row_key",
+                                            "label": "Key",
+                                            "type": "text",
+                                            "instructions": "Must match a comparison row key.",
+                                            "key": "field_d9ec67e73e461aba"
+                                        },
+                                        {
+                                            "name": "value",
+                                            "label": "Value",
+                                            "type": "text",
+                                            "key": "field_001b44be10a8be6c"
+                                        }
+                                    ],
+                                    "key": "field_257906889f7e393e"
+                                }
+                            ],
+                            "key": "field_294db71cc025c09b"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_ea0e8c8fa4723c7d"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_80b6228b563b258f"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_8fba247a4778ebac"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_188e4bbfdad96a45"
+                        }
+                    ],
+                    "key": "layout_27154780d28ec45f"
+                },
+                "layout_ad9202faaa80ccd4": {
+                    "name": "private_coaching",
+                    "label": "Private coaching",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_4972884b1b8dfa76"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_62ebaa9b36a9977e"
+                        },
+                        {
+                            "name": "headline",
+                            "label": "Headline",
+                            "type": "text",
+                            "key": "field_3701ca630d682891"
+                        },
+                        {
+                            "name": "standfirst",
+                            "label": "Standfirst",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": "",
+                            "key": "field_a6ec40749731f746"
+                        },
+                        {
+                            "name": "media",
+                            "label": "Media",
+                            "type": "image",
+                            "return_format": "id",
+                            "preview_size": "medium",
+                            "library": "all",
+                            "key": "field_1f4e34788be241d9"
+                        },
+                        {
+                            "name": "media_alt",
+                            "label": "Media alt",
+                            "type": "text",
+                            "key": "field_30f151af13706cec"
+                        },
+                        {
+                            "name": "fare_label",
+                            "label": "Fare label",
+                            "type": "text",
+                            "key": "field_3d9f3697592f304c"
+                        },
+                        {
+                            "name": "amount",
+                            "label": "Amount",
+                            "type": "text",
+                            "key": "field_8f6f7677c90f3e32"
+                        },
+                        {
+                            "name": "unit",
+                            "label": "Unit",
+                            "type": "text",
+                            "key": "field_2ad980f220ac6197"
+                        },
+                        {
+                            "name": "reassure",
+                            "label": "Reassurance",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_70173de9405cc3d9"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_2ec83edae85a80e0"
+                        },
+                        {
+                            "name": "facts",
+                            "label": "Facts",
+                            "type": "repeater",
+                            "layout": "table",
+                            "button_label": "Add fact",
+                            "sub_fields": [
+                                {
+                                    "name": "label",
+                                    "label": "Label",
+                                    "type": "text",
+                                    "key": "field_c2d9d447a18672ef"
+                                },
+                                {
+                                    "name": "value",
+                                    "label": "Value",
+                                    "type": "text",
+                                    "key": "field_20259f1a10ef7d56"
+                                }
+                            ],
+                            "key": "field_fd41c6fc3810d357"
+                        },
+                        {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_53ad2833b7ef0d8e"
+                        },
+                        {
+                            "name": "primary_action",
+                            "label": "Primary action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_282e4afb0afa7f42"
+                                }
+                            ],
+                            "key": "field_f2d3cfcbcf723b43"
+                        },
+                        {
+                            "name": "secondary_action",
+                            "label": "Secondary action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_d31bd8fb00ccdc59"
+                                }
+                            ],
+                            "key": "field_de1d479231d49663"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_a483d418c394e98e"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_d8db492f02a3610d"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_3d2749951053c356"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_60dfff4b0fccfa51"
+                        }
+                    ],
+                    "key": "layout_ad9202faaa80ccd4"
+                },
+                "layout_145a069f08588f14": {
+                    "name": "statement",
+                    "label": "Statement",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_1c5e3a0d3c214ede"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_f85546a0c7efdf2d"
+                        },
+                        {
+                            "name": "since",
+                            "label": "Since",
+                            "type": "text",
+                            "key": "field_84c75623641c5373"
+                        },
+                        {
+                            "name": "statement",
+                            "label": "Statement",
+                            "type": "textarea",
+                            "rows": 3,
+                            "key": "field_235d5c10e02e0830"
+                        },
+                        {
+                            "name": "quote",
+                            "label": "Quote",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": "",
+                            "key": "field_cd569aec7c5bbc27"
+                        },
+                        {
+                            "name": "signature",
+                            "label": "Signature",
+                            "type": "text",
+                            "key": "field_0f0850de7a97440c"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_68252e62ec85b184"
+                        },
+                        {
+                            "name": "principles",
+                            "label": "Principles",
+                            "type": "repeater",
+                            "layout": "row",
+                            "button_label": "Add principle",
+                            "sub_fields": [
+                                {
+                                    "name": "icon_id",
+                                    "label": "Glyph",
+                                    "type": "text",
+                                    "instructions": "A brand glyph id, e.g. \"glyph-understanding\".",
+                                    "key": "field_86a589fe39270934"
+                                },
+                                {
+                                    "name": "label",
+                                    "label": "Label",
+                                    "type": "text",
+                                    "instructions": "Short uppercase label above the heading.",
+                                    "key": "field_414505112549ffe8"
+                                },
+                                {
+                                    "name": "body",
+                                    "label": "Body",
+                                    "type": "textarea",
+                                    "rows": 2,
+                                    "new_lines": "",
+                                    "key": "field_305aa59431980249"
+                                }
+                            ],
+                            "key": "field_eadb817e9e87c514"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_ad2671496c67a01b"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_cba4d4b48958e779"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_7e1d9c288e33418b"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_922ed137d7a36ce6"
+                        }
+                    ],
+                    "key": "layout_145a069f08588f14"
+                },
+                "layout_09e6c87f77d21c97": {
+                    "name": "train_in_person",
+                    "label": "Train In Person",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_fc0cfc975508ec4a"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_e4799ec16d5bb2ed"
+                        },
+                        {
+                            "name": "stamp",
+                            "label": "Stamp",
+                            "type": "text",
+                            "key": "field_0dab7f0b0a69cddf"
+                        },
+                        {
+                            "name": "note",
+                            "label": "Note",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_59218184ac006b8e"
+                        },
+                        {
+                            "name": "tab_items",
+                            "label": "Items",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_73bd1678c4f9901e"
+                        },
+                        {
+                            "name": "source",
+                            "label": "Source",
+                            "type": "button_group",
+                            "instructions": "Where sites come from.",
+                            "choices": {
+                                "latest": "Latest",
+                                "choose": "Choose",
+                                "manual": "Manual"
+                            },
+                            "default_value": "latest",
+                            "key": "field_77983dc744ccecb5"
+                        },
+                        {
+                            "name": "source_limit",
+                            "label": "How many",
+                            "type": "number",
+                            "default_value": 4,
+                            "min": 1,
+                            "max": 24,
+                            "key": "field_b06d5ada692358f8",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_77983dc744ccecb5",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_items",
+                            "label": "Sites",
+                            "type": "relationship",
+                            "post_type": [
+                                "lp_location"
+                            ],
+                            "return_format": "id",
+                            "filters": [
+                                "search"
+                            ],
+                            "key": "field_7afb32da00d558c3",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_77983dc744ccecb5",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "source_manual",
+                            "label": "Sites",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add site",
+                            "max": 0,
+                            "sub_fields": [
+                                {
+                                    "name": "tag",
+                                    "label": "Tag",
+                                    "type": "text",
+                                    "instructions": "e.g. \"FLAGSHIP INDOOR SITE\"",
+                                    "key": "field_b7fe8b63a2aad0a5"
+                                },
+                                {
+                                    "name": "title",
+                                    "label": "Name",
+                                    "type": "text",
+                                    "key": "field_9005770b5ea85ebc"
+                                },
+                                {
+                                    "name": "meta",
+                                    "label": "Meta",
+                                    "type": "text",
+                                    "key": "field_52063e9eb0f9cd00"
+                                }
+                            ],
+                            "key": "field_c6d694a20a2ab90b",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_77983dc744ccecb5",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_14d4bfa06593764d"
+                        },
+                        {
+                            "name": "primary_action",
+                            "label": "Primary action",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_48f0f00fe1a4b832"
+                                }
+                            ],
+                            "key": "field_95a1f83c8ba2bdca"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_aedae986c810c681"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_799e416ffdf88ed9"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_579f083be2d2e68e"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_a502cbcd47c185c5"
+                        }
+                    ],
+                    "key": "layout_09e6c87f77d21c97"
+                }
+            },
+            "key": "field_39772494d940a47d"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "top",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "custom_fields",
+        "discussion",
+        "comments"
+    ],
+    "active": true,
+    "description": "GENERATED by `wp lp acf:build` from blocks/*/fields.php — edits here are overwritten.",
+    "show_in_rest": 0
+}

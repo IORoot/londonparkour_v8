@@ -1,0 +1,23 @@
+{
+  "eyebrow": "06 — THE COACHES",
+  "headline": "Twelve people who started exactly where you are.",
+  "note": "ALL UKC LEVEL 2 · DBS CHECKED",
+  "intro_text": "Nine of our twelve coaches came up through our own beginner classes. They remember being the nervous one at the back, which is most of the qualification.",
+  "lead_coach": {
+    "image_alt": "Andy Pearson, head coach, in the training hall.",
+    "name": "Andy Pearson",
+    "meta": "HEAD COACH / 11 YRS",
+    "quote": "“The job isn't to make you brave. It's to break the thing you're scared of into six pieces small enough that you're not.”"
+  },
+  "source": "manual",
+  "source_manual": [
+    { "thumb_alt": "Kie Piccio", "name": "Kie Piccio", "specialty": "Precision & balance", "location": "PECKHAM" },
+    { "thumb_alt": "Leon Lawrence", "name": "Leon Lawrence", "specialty": "Kids & families", "location": "VAUXHALL" },
+    { "thumb_alt": "Nirosh Ganeshalingam", "name": "Nirosh Ganeshalingam", "specialty": "Strength & conditioning", "location": "SOUTHBANK" },
+    { "thumb_alt": "Sofia Reyes", "name": "Sofia Reyes", "specialty": "Women's sessions", "location": "VAUXHALL" },
+    { "thumb_alt": "Tomas Vrba", "name": "Tomas Vrba", "specialty": "Competition & film", "location": "ALL SITES" }
+  ],
+  "link_action": {
+    "link": { "title": "Meet all twelve →", "url": "/coaches/", "target": "" }
+  }
+}

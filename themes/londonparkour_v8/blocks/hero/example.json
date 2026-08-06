@@ -1,0 +1,30 @@
+{
+  "eyebrow": "PARKOUR CLASSES / LONDON / EST. 2015",
+  "headline": "Every wall is a door.",
+  "lead": "Parkour is the practice of getting where you want to go. We teach it across six London sites, to every age and every body. No experience needed.",
+  "board_title": "NEXT SESSIONS",
+  "board_stamp": "UPDATED 09:12 · THU 30 JUL",
+  "board_foot_label": "View full timetable",
+  "board_foot_href": "/timetable/",
+  "board_foot_count": "32 SESSIONS / WEEK",
+  "scroll_label": "↓ SCROLL",
+  "rating": "4.9 ★ (312)",
+  "trust": [
+    { "label": "2,400+ TRAINED" },
+    { "label": "11 YEARS" },
+    { "label": "6 LONDON SITES" }
+  ],
+  "source": "manual",
+  "source_manual": [
+    { "time": "18:30", "title": "Beginners Parkour", "location": "Vauxhall · Level 1", "spaces": "4 LEFT" },
+    { "time": "19:45", "title": "All Levels Open Gym", "location": "Stratford East · Open", "spaces": "2 LEFT" },
+    { "time": "FRI 07:00", "title": "Sunrise Session", "location": "Southbank · Open", "spaces": "9 SPACES" },
+    { "time": "SAT 10:00", "title": "Kids & Families", "location": "Peckham Rye · Ages 6–12", "spaces": "WAITLIST" }
+  ],
+  "primary_action": {
+    "link": { "title": "BOOK YOUR FIRST CLASS", "url": "/book/", "target": "" }
+  },
+  "secondary_action": {
+    "link": { "title": "Watch a session ↗", "url": "/watch/", "target": "" }
+  }
+}

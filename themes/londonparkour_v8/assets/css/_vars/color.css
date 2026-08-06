@@ -1,0 +1,18 @@
+@theme static {
+  /* Wipe Tailwind's stock palette so nothing can reach for bg-slate-700 and
+   * silently escape the design system. Every colour in this project comes from
+   * the active daisyUI theme (themes/parkour-*.css) as a semantic token:
+   * base-100/200/300, base-content, primary, accent, secondary, neutral,
+   * info, success, warning, error — plus their -content pairs.
+   *
+   * Deliberately NOT defined here:
+   *   muted  — the design's #8C8A81 / #8A897F is base-content at ~50% on each
+   *            ground, so it is `text-base-content/50`, not a token.
+   *   ink / paper — these are daisyUI's `neutral` / `neutral-content`, fixed
+   *            near-black in every theme so departure boards stay dark on the
+   *            light ground too.
+   * Brand and interface colours must live in a theme block, never in :root. */
+  --color-*: initial;
+  --color-white: #fff;
+  --color-black: #000;
+}

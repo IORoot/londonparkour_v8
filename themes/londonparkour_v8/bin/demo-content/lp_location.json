@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "vauxhall-the-arches",
+    "title": "Vauxhall — The Arches",
+    "thumbnail": "site-vauxhall.jpeg",
+    "menu_order": 1,
+    "fields": {
+      "tag": "FLAGSHIP INDOOR SITE",
+      "meta": "SW8 1SR · 4 MIN FROM VAUXHALL · OPEN 07:00–22:00",
+      "type": "INDOOR",
+      "is_flagship": true,
+      "latitude": "51.4861",
+      "longitude": "-0.1253"
+    }
+  },
+  {
+    "slug": "peckham-rye",
+    "title": "Peckham Rye",
+    "menu_order": 2,
+    "fields": {
+      "tag": "INDOOR SITE",
+      "meta": "SE15 3UA · Rye Lane · 6 min",
+      "type": "INDOOR",
+      "is_flagship": false,
+      "latitude": "51.4695",
+      "longitude": "-0.0699"
+    }
+  },
+  {
+    "slug": "southbank-undercroft",
+    "title": "Southbank Undercroft",
+    "thumbnail": "site-southbank.jpeg",
+    "menu_order": 3,
+    "fields": {
+      "tag": "OUTDOOR SITE",
+      "meta": "SE1 8XX · Waterloo · 8 min",
+      "type": "OUTDOOR",
+      "is_flagship": false,
+      "latitude": "51.5060",
+      "longitude": "-0.1160"
+    }
+  },
+  {
+    "slug": "stratford-east",
+    "title": "Stratford East",
+    "menu_order": 4,
+    "fields": {
+      "tag": "INDOOR SITE",
+      "meta": "E20 1EJ · Stratford · 5 min",
+      "type": "INDOOR",
+      "is_flagship": false,
+      "latitude": "51.5434",
+      "longitude": "-0.0086"
+    }
+  },
+  {
+    "slug": "hackney-marshes",
+    "title": "Hackney Marshes",
+    "menu_order": 5,
+    "fields": {
+      "tag": "OUTDOOR SITE",
+      "meta": "E9 5PF · Homerton · 10 min",
+      "type": "OUTDOOR",
+      "is_flagship": false,
+      "latitude": "51.5533",
+      "longitude": "-0.0342"
+    }
+  },
+  {
+    "slug": "wembley-park",
+    "title": "Wembley Park",
+    "menu_order": 6,
+    "fields": {
+      "tag": "OUTDOOR SITE",
+      "meta": "HA9 0FJ · Wembley Park · 7 min",
+      "type": "OUTDOOR",
+      "is_flagship": false,
+      "latitude": "51.5633",
+      "longitude": "-0.2795"
+    }
+  }
+]

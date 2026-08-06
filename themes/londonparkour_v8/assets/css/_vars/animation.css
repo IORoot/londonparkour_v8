@@ -1,0 +1,98 @@
+/**
+ * Animation CSS Variables
+ *
+ * Design tokens for animation system.
+ * Automatically respects prefers-reduced-motion.
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+     DURATIONS
+     ═══════════════════════════════════════════════════════════════ */
+  --anim-duration-instant: 0s;
+  --anim-duration-fast: 0.15s;
+  --anim-duration-normal: 0.3s;
+  --anim-duration-slow: 0.6s;
+  --anim-duration-slower: 1s;
+
+  /* ═══════════════════════════════════════════════════════════════
+     EASINGS (CSS cubic-bezier equivalents)
+     ═══════════════════════════════════════════════════════════════ */
+  --anim-ease-linear: linear;
+  --anim-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --anim-ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --anim-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --anim-ease-magnetic: cubic-bezier(0.23, 1, 0.32, 1);
+  --anim-ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* ═══════════════════════════════════════════════════════════════
+     DISTANCES (for transforms)
+     ═══════════════════════════════════════════════════════════════ */
+  --anim-distance-sm: 10px;
+  --anim-distance-md: 30px;
+  --anim-distance-lg: 60px;
+  --anim-distance-xl: 100px;
+
+  /* ═══════════════════════════════════════════════════════════════
+     STAGGER (delay between sequential items)
+     ═══════════════════════════════════════════════════════════════ */
+  --anim-stagger-fast: 0.05s;
+  --anim-stagger-normal: 0.1s;
+  --anim-stagger-slow: 0.15s;
+
+  /* ═══════════════════════════════════════════════════════════════
+     SCALES
+     ═══════════════════════════════════════════════════════════════ */
+  --anim-scale-sm: 0.95;
+  --anim-scale-md: 0.8;
+  --anim-scale-lg: 0.5;
+
+  /* ═══════════════════════════════════════════════════════════════
+     BLUR
+     ═══════════════════════════════════════════════════════════════ */
+  --anim-blur-sm: 5px;
+  --anim-blur-md: 10px;
+  --anim-blur-lg: 20px;
+
+  /* ═══════════════════════════════════════════════════════════════
+     ROTATION
+     ═══════════════════════════════════════════════════════════════ */
+  --anim-rotate-sm: 5deg;
+  --anim-rotate-md: 15deg;
+  --anim-rotate-lg: 45deg;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   Respects user preference for reduced motion
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    /* Set all durations to instant */
+    --anim-duration-fast: 0s;
+    --anim-duration-normal: 0s;
+    --anim-duration-slow: 0s;
+    --anim-duration-slower: 0s;
+
+    /* Remove all distances */
+    --anim-distance-sm: 0px;
+    --anim-distance-md: 0px;
+    --anim-distance-lg: 0px;
+    --anim-distance-xl: 0px;
+
+    /* Remove blur */
+    --anim-blur-sm: 0px;
+    --anim-blur-md: 0px;
+    --anim-blur-lg: 0px;
+
+    /* Remove rotation */
+    --anim-rotate-sm: 0deg;
+    --anim-rotate-md: 0deg;
+    --anim-rotate-lg: 0deg;
+
+    /* Set scales to 1 (no scale effect) */
+    --anim-scale-sm: 1;
+    --anim-scale-md: 1;
+    --anim-scale-lg: 1;
+  }
+}

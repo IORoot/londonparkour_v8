@@ -1,0 +1,137 @@
+/*
+ * Button — Concourse design system (london_parkour_V4.pen), Elements/Button.
+ *
+ * Everything daisyUI's `.btn`/`.btn-*` classes can't express for this system:
+ * the Concourse label voice (font-label, 12px/600/+1px tracking, uppercase),
+ * the 12px gap, the 15px/24px padding, the 42px icon square, and the hover
+ * inversion — the only hover behaviour anywhere in the system (spec rule 1).
+ * Everything else (fill/text colour at rest for primary/destructive, sharp
+ * `--radius-field: 0` corners, focus outline width/offset) comes free from
+ * daisyUI + the theme and is not repeated here.
+ *
+ * Scoped to `.btn[data-component="button"]` so nothing here leaks onto the
+ * unrelated legacy V3 daisyUI base-kit stories in this repo that also use
+ * bare `.btn` (Components/Button, Elements/Buttons/Button, Card, Navbar,
+ * Pagination, Alert, Table, Tooltip, ...) — those stay untouched per "delete
+ * nothing".
+ *
+ * Every rule below carries `!important`. That is not a specificity shortcut:
+ * daisyUI's own generated `.btn`/`.btn-*` rules compile into Tailwind's
+ * `utilities` layer (verified against this project's actual build output,
+ * storybook-static/assets/iframe-*.css — `.btn{...}` sits inside
+ * `@layer utilities`), and this file is imported from
+ * `src/assets/styles/main.css` inside `@layer components`. Cascade layers
+ * resolve by layer order before specificity, so `components` always loses to
+ * `utilities` for the same property, no matter how specific the selector is.
+ * `!important` is the standard, documented Tailwind v4 escape hatch for a
+ * lower-priority layer overriding a higher one — not a workaround for a
+ * mistake made here.
+ */
+
+.btn[data-component="button"] {
+  height: auto !important; /* daisyUI fixes height to --size; padding must drive it instead */
+  gap: 12px !important;
+  padding-inline: 24px !important;
+  padding-block: 15px;
+  font-family: var(--font-label);
+  font-size: 12px !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* icon: same colours as primary (shares .btn-primary), just a 42px square
+   with no label — daisyUI's own --size token resolves to 40px, not the
+   design's 42px, so it's set once here rather than reached for a token. */
+.btn[data-component="button"].btn-square {
+  width: 42px !important;
+  height: 42px !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+/* ghost: daisyUI's `.btn-outline` needs `--btn-color` to know what to
+   outline; without a colour modifier it has nothing to resolve. Set the
+   rest-state border/text directly instead of routing through the variable. */
+.btn[data-component="button"].btn-outline {
+  background-color: transparent !important;
+  color: var(--color-base-content) !important;
+  border-color: var(--color-base-content) !important;
+}
+
+/* inverse: daisyUI's `.btn-neutral` gives neutral-content text by default;
+   the design wants the signal colour as text on the dark fill instead. */
+.btn[data-component="button"].btn-neutral {
+  color: var(--color-primary) !important;
+}
+
+/* Hover — inversion, always. primary/ghost/icon converge on the fixed dark
+   band with the signal colour as text (bg-neutral is value-identical to
+   primary-content in every theme, so this doubles as "swap fill and text"
+   for primary/icon while reading semantically for ghost, which has no fill
+   of its own to swap). */
+.btn[data-component="button"].btn-primary:hover:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])),
+.btn[data-component="button"].btn-outline:hover:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])) {
+  background-color: var(--color-neutral) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-neutral) !important;
+}
+
+/* inverse: rest is already the dark band, so hover inverts to the light
+   neutral-content band instead, with a border so it still reads against the
+   page ground (which is close in value to neutral-content). */
+.btn[data-component="button"].btn-neutral:hover:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])) {
+  background-color: var(--color-neutral-content) !important;
+  color: var(--color-neutral) !important;
+  border-color: var(--color-neutral) !important;
+}
+
+/* destructive: literal fill<->text swap on the error pair itself. See
+   Button.js header / phase 6 report for why this replaces the old
+   color-mix-darkened hex — this is the reading consistent with rule 1. */
+.btn[data-component="button"].btn-error:hover:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])) {
+  background-color: var(--color-error-content) !important;
+  color: var(--color-error) !important;
+  border-color: var(--color-error) !important;
+}
+
+/* Disabled — dim the button's own rest colours via opacity rather than
+   daisyUI's default desaturating recolor, matching the design's flat opacity
+   treatment. One rule per fill family; ghost gets its own (border-base-300 /
+   base-content at 50% / a shallower opacity), since it has no fill to dim. */
+.btn[data-component="button"].btn-primary:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
+  opacity: 0.38 !important;
+  pointer-events: none !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-content) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.btn[data-component="button"].btn-neutral:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
+  opacity: 0.38 !important;
+  pointer-events: none !important;
+  background-color: var(--color-neutral) !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-neutral) !important;
+}
+
+.btn[data-component="button"].btn-error:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
+  opacity: 0.38 !important;
+  pointer-events: none !important;
+  background-color: var(--color-error) !important;
+  color: var(--color-error-content) !important;
+  border-color: var(--color-error) !important;
+}
+
+.btn[data-component="button"].btn-outline:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
+  opacity: 0.7 !important;
+  pointer-events: none !important;
+  background-color: transparent !important;
+  border-color: var(--color-base-300) !important;
+  color: color-mix(in oklab, var(--color-base-content) 50%, transparent) !important;
+}
+
+/* Focus ring — daisyUI already gives 2px width + 2px offset on `.btn`; only
+   the colour needs pinning to the signal colour for every variant. */
+.btn[data-component="button"]:focus-visible {
+  outline-color: var(--color-primary) !important;
+}

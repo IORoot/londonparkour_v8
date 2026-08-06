@@ -1,0 +1,23 @@
+@theme static {
+  /* ── LondonParkour "Concourse" type system (london_parkour_V4.pen) ──
+   *
+   * display → Scope Trial   the brand face. Hero statements only — the design
+   *                         specifies "one per viewport". Local variable font,
+   *                         declared in ../fonts.css.
+   * heading → Archivo       the workhorse: section heads, board rows, buttons,
+   *                         numerals. Weights 500/600, tight negative tracking.
+   * body    → Inter         running text and UI copy.
+   * label   → Inter         uppercase chrome at 10–12px with wide tracking —
+   *                         the departure-board metadata voice.
+   *
+   * NOTE: the design file names the label variable "font-mono", but nothing in
+   * the system is monospaced — it is Inter at small sizes with open tracking.
+   * The token is named for what it does, not what the design file calls it.
+   *
+   * Archivo + Inter load from Google Fonts (@import at the top of main.css).
+   */
+  --font-display: "Scope Trial", "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
+}

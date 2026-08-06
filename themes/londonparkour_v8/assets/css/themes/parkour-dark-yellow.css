@@ -1,0 +1,69 @@
+/* LondonParkour "Concourse" — dark ground, yellow signal. THE DEFAULT.
+ *
+ * Ported from london_parkour_V4.pen. Airport departure-board language:
+ * near-black ground, hairline rules, one signal colour spent on actions only.
+ * Sharp corners, flat, no depth or noise.
+ *
+ * The system is two grounds x two signals = four themes. Only the base tones,
+ * primary, accent, secondary, success and warning differ between them; see
+ * parkour-light-yellow.css for the light ground values.
+ *
+ * `neutral` is the fixed near-black band colour (design: play-ink/play-paper).
+ * It deliberately does NOT flip with the ground — departure boards stay dark
+ * in the light theme too. daisyUI defines neutral as exactly this: "always-dark,
+ * not-saturated parts of UI".
+ *
+ * There is no `muted` token: the design's #8A897F resolves to base-content at
+ * ~52% on this ground, so use `text-base-content/50`.
+ */
+@plugin "daisyui/theme" {
+  name: "parkour-dark-yellow";
+  default: true;
+  prefersdark: false;
+  color-scheme: "dark";
+
+  --color-base-100: #14140f;
+  --color-base-200: #1e1e18;
+  --color-base-300: #33332a;
+  --color-base-content: #f2f1e9;
+
+  --color-primary: #ffc400;
+  --color-primary-content: #141310;
+  /* accent = TEXT accent. On this dark ground it is identical to primary;
+   * the light themes diverge, where primary is unreadable as text. Components
+   * should use `text-accent` for accent words on `bg-base-*` so they stay
+   * correct when the ground flips. */
+  --color-accent: #ffc400;
+  --color-accent-content: #141310;
+
+  /* secondary = the RECESSED board surface: one step below `neutral`, the tone
+   * unlit departure-board rows rest on before they lift to `neutral` on hover.
+   * Fixed in all four themes like `neutral`, since the board stays dark on the
+   * light ground. It gets the `secondary` slot because daisyUI has no
+   * "darker than neutral" token and `secondary` was an unused duplicate of
+   * `neutral` — this replaces three `bg-[color-mix(...)]` arbitrary utilities,
+   * which daisyUI's theme rules disallow. */
+  --color-secondary: #0e0d0b;
+  --color-secondary-content: #f2f1e9;
+
+  --color-neutral: #141310;
+  --color-neutral-content: #f2f1e9;
+
+  --color-info: #2b4bf2;
+  --color-info-content: #f2f1e9;
+  --color-success: #74c089;
+  --color-success-content: #141310;
+  --color-warning: #e0b25c;
+  --color-warning-content: #141310;
+  --color-error: #e8402a;
+  --color-error-content: #f2f1e9;
+
+  --radius-selector: 0;
+  --radius-field: 0;
+  --radius-box: 0;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}

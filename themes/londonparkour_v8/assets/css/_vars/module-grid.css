@@ -1,0 +1,10 @@
+/* @link https://utopia.fyi/grid/calculator?c=364,16,1.2,1488,24,1.25,7,2,&s=0.75%7C0.5%7C0.25,1.5%7C2%7C3%7C4%7C5%7C6%7C7%7C8%7C9%7C10,xl-3xl%7Cxl-4xl%7Cxl-5xl%7Cxl-6xl%7C3xl-5xl%7C3xl-6xl&g=s,l,xl,12 */
+
+@theme static {
+--grid-max-width: 93.00rem;
+--grid-gutter-sm: clamp(0.875rem, 0.8283rem + 0.1996vw, 1rem);
+--grid-gutter-md: clamp(1rem, 0.3523rem + 2.847vw, 3rem);
+--grid-gutter-prose-x: var(--grid-gutter-md);
+--grid-gutter-prose-y: var(--grid-gutter-sm);
+--grid-columns: 12;
+}

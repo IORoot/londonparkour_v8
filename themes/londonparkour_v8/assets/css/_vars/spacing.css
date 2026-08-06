@@ -1,0 +1,95 @@
+/* 
+  * Safelist spacing utilities (for dynamic class construction) 
+  * If you modify the spacing variables, run `npm run generate-spacing-safelist` to regenerate
+*/
+/* @link https://utopia.fyi/space/calculator?c=372,16,1.2,1488,24,1.25,7,2,&s=0.75|0.5|0.25,1.5|2|3|4|5|6|7|8|9|10,xl-3xl|xl-4xl|xl-5xl|xl-6xl|3xl-5xl|3xl-6xl&g=xs,m,xl,12 */
+@theme static {
+/* spacing 3xs: 4px → 6px */
+--spacing-scale-3xs: clamp(0.25rem, 0.2083rem + 0.1792vw, 0.375rem);
+/* spacing 2xs: 8px → 12px */
+--spacing-scale-2xs: clamp(0.5rem, 0.4167rem + 0.3584vw, 0.75rem);
+/* spacing xs: 12px → 18px */
+--spacing-scale-xs: clamp(0.75rem, 0.625rem + 0.5376vw, 1.125rem);
+/* spacing s: 16px → 24px */
+--spacing-scale-s: clamp(1rem, 0.8333rem + 0.7168vw, 1.5rem);
+/* spacing m: 24px → 36px */
+--spacing-scale-m: clamp(1.5rem, 1.25rem + 1.0753vw, 2.25rem);
+/* spacing l: 32px → 48px */
+--spacing-scale-l: clamp(2rem, 1.6667rem + 1.4337vw, 3rem);
+/* spacing xl: 48px → 72px */
+--spacing-scale-xl: clamp(3rem, 2.5rem + 2.1505vw, 4.5rem);
+/* spacing 2xl: 64px → 96px */
+--spacing-scale-2xl: clamp(4rem, 3.3333rem + 2.8674vw, 6rem);
+/* spacing 3xl: 80px → 120px */
+--spacing-scale-3xl: clamp(5rem, 4.1667rem + 3.5842vw, 7.5rem);
+/* spacing 4xl: 96px → 144px */
+--spacing-scale-4xl: clamp(6rem, 5rem + 4.3011vw, 9rem);
+/* spacing 5xl: 112px → 168px */
+--spacing-scale-5xl: clamp(7rem, 5.8333rem + 5.0179vw, 10.5rem);
+/* spacing 6xl: 128px → 192px */
+--spacing-scale-6xl: clamp(8rem, 6.6667rem + 5.7348vw, 12rem);
+/* spacing 7xl: 144px → 216px */
+--spacing-scale-7xl: clamp(9rem, 7.5rem + 6.4516vw, 13.5rem);
+/* spacing 8xl: 160px → 240px */
+--spacing-scale-8xl: clamp(10rem, 8.3333rem + 7.1685vw, 15rem);
+
+/* One-up pairs */
+/* spacing 3xs-2xs: 4px → 12px */
+--spacing-scale-3xs-2xs: clamp(0.25rem, 0.0833rem + 0.7168vw, 0.75rem);
+/* spacing 2xs-xs: 8px → 18px */
+--spacing-scale-2xs-xs: clamp(0.5rem, 0.2917rem + 0.8961vw, 1.125rem);
+/* spacing xs-s: 12px → 24px */
+--spacing-scale-xs-s: clamp(0.75rem, 0.5rem + 1.0753vw, 1.5rem);
+/* spacing s-m: 16px → 36px */
+--spacing-scale-s-m: clamp(1rem, 0.5833rem + 1.7921vw, 2.25rem);
+/* spacing m-l: 24px → 48px */
+--spacing-scale-m-l: clamp(1.5rem, 1rem + 2.1505vw, 3rem);
+/* spacing l-xl: 32px → 72px */
+--spacing-scale-l-xl: clamp(2rem, 1.1667rem + 3.5842vw, 4.5rem);
+/* spacing xl-2xl: 48px → 96px */
+--spacing-scale-xl-2xl: clamp(3rem, 2rem + 4.3011vw, 6rem);
+/* spacing 2xl-3xl: 64px → 120px */
+--spacing-scale-2xl-3xl: clamp(4rem, 2.8333rem + 5.0179vw, 7.5rem);
+/* spacing 3xl-4xl: 80px → 144px */
+--spacing-scale-3xl-4xl: clamp(5rem, 3.6667rem + 5.7348vw, 9rem);
+/* spacing 4xl-5xl: 96px → 168px */
+--spacing-scale-4xl-5xl: clamp(6rem, 4.5rem + 6.4516vw, 10.5rem);
+/* spacing 5xl-6xl: 112px → 192px */
+--spacing-scale-5xl-6xl: clamp(7rem, 5.3333rem + 7.1685vw, 12rem);
+/* spacing 6xl-7xl: 128px → 216px */
+--spacing-scale-6xl-7xl: clamp(8rem, 6.1667rem + 7.8853vw, 13.5rem);
+/* spacing 7xl-8xl: 144px → 240px */
+--spacing-scale-7xl-8xl: clamp(9rem, 7rem + 8.6022vw, 15rem);
+
+/* Custom pairs */
+/* spacing xl-3xl: 48px → 120px */
+--spacing-scale-xl-3xl: clamp(3rem, 1.5rem + 6.4516vw, 7.5rem);
+/* spacing xl-4xl: 48px → 144px */
+--spacing-scale-xl-4xl: clamp(3rem, 1rem + 8.6022vw, 9rem);
+/* spacing xl-5xl: 48px → 168px */
+--spacing-scale-xl-5xl: clamp(3rem, 0.5rem + 10.7527vw, 10.5rem);
+/* spacing xl-6xl: 48px → 192px */
+--spacing-scale-xl-6xl: clamp(3rem, 0rem + 12.9032vw, 12rem);
+/* spacing 3xl-5xl: 80px → 168px */
+--spacing-scale-3xl-5xl: clamp(5rem, 3.1667rem + 7.8853vw, 10.5rem);
+/* spacing 3xl-6xl: 80px → 192px */
+--spacing-scale-3xl-6xl: clamp(5rem, 2.6667rem + 10.0358vw, 12rem);
+
+
+/* Module Spcaing semantic variables */
+/* Module spacing uses a two-tier naming system:
+ * - Base size (xs, s, m, l, xl, 2xl) represents the starting point
+ * - Modifier (1, 2, 3, 4) represents the scaling behavior
+ * This avoids confusion with the direct size pairs above */
+
+/* XL-based module spacing (starts at 48px) */
+--spacing-module-xl-1: var(--spacing-scale-xl-2xl);    /* 48px → 96px */
+--spacing-module-xl-2: var(--spacing-scale-xl-3xl);   /* 48px → 120px */
+--spacing-module-xl-3: var(--spacing-scale-xl-4xl);    /* 48px → 144px */
+--spacing-module-xl-4: var(--spacing-scale-xl-5xl); /* 48px → 168px */
+--spacing-module-xl-5: var(--spacing-scale-xl-6xl);     /* 48px → 192px */
+
+/* 3XL-based module spacing (starts at 80px) */
+--spacing-module-3xl-1: var(--spacing-scale-3xl-5xl);    /* 80px → 168px */
+--spacing-module-3xl-2: var(--spacing-scale-3xl-6xl);   /* 80px → 192px */
+}

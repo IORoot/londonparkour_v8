@@ -1,0 +1,14 @@
+/* LondonParkour "Concourse" themes (london_parkour_V4.pen).
+ *
+ * Two grounds x two signals = four complete daisyUI themes. The Storybook
+ * toolbar exposes them as two axes and composes the name:
+ *   data-theme = `parkour-{dark|light}-{yellow|green}`
+ *
+ * They are four full theme blocks rather than a ground pair plus an accent
+ * override because daisyUI requires theme variables to be declared inside
+ * `@plugin "daisyui/theme"` — never in custom selector blocks. The duplication
+ * is config, not logic. */
+@import "./parkour-dark-yellow.css";
+@import "./parkour-dark-green.css";
+@import "./parkour-light-yellow.css";
+@import "./parkour-light-green.css";

@@ -5,14 +5,24 @@ Theme Name: londonparkour.com V8
 Theme URI: https://londonparkour.com
 Author: IORoot
 Author URI: https://ioroot.com
-Description: Tailwind / DaisyUI / Storybook  version of LondonParkour Theme
-Requires at least: 7.0.2
-Tested up to: 5.6
+Description: Concourse design system for londonparkour.com — classic templates, ACF Flexible Content, Tailwind v4 + daisyUI, built with Vite. Ported from the ldnpark2601 Storybook.
+Requires at least: 6.4
+Tested up to: 6.8
 Requires PHP: 8.2
-Version: 1.0
+Version: 1.0.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: londonparkour_v8
-Tags: tailwind, daisyui, storybook, londonparkour
+Tags: tailwind, daisyui, acf, classic-editor, storybook, londonparkour
 
 */
+
+/*
+ * This file exists for the theme header only. WordPress requires it and reads
+ * the block above; it is NOT the site stylesheet.
+ *
+ * The real stylesheet is built by Vite from assets/css/main.css into
+ * assets/dist/, and enqueued by lp_enqueue_assets() in app/includes/html.php
+ * via the build manifest. Do not add rules here — add them to assets/css/ and
+ * rebuild with `npm run build`.
+ */

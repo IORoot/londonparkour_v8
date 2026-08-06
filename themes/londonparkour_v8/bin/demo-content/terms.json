@@ -1,0 +1,13 @@
+{
+  "lp_level": [
+    { "slug": "beginner", "name": "Level 1 · Beginner" },
+    { "slug": "improver", "name": "Level 2 · Improver" },
+    { "slug": "advanced", "name": "Level 3 · Advanced" },
+    { "slug": "all-levels", "name": "All levels" }
+  ],
+  "lp_series": [
+    { "slug": "foundations", "name": "Foundations" },
+    { "slug": "vaults", "name": "Vaults" },
+    { "slug": "conditioning", "name": "Conditioning" }
+  ]
+}

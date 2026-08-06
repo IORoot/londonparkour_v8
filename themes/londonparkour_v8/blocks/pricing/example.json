@@ -1,0 +1,75 @@
+{
+  "eyebrow": "08 — PRICING",
+  "heading": "No contract. Ever.",
+  "note": "One fare works at all six sites. Cancel from your phone in two taps — we won't make you ring anyone.",
+  "table_label": "THREE WAYS TO PAY",
+  "axis_label": "WHAT YOU GET",
+  "notice": "PRICES HELD UNTIL 1 APRIL 2027",
+  "guarantee": {
+    "kicker": "THE GUARANTEE",
+    "copy": "If your first session isn't for you, we refund it. Nobody has asked yet, but the offer stands."
+  },
+  "sites_lead": "EVERY FARE WORKS AT ALL SIX SITES",
+  "sites_list": "VAUXHALL · PECKHAM RYE · SOUTHBANK · STRATFORD EAST · HACKNEY MARSHES · WEMBLEY PARK",
+  "kit_note": "KIT LOANED FREE AT EVERY SESSION",
+  "row_labels": [
+    { "row_key": "commitment", "label": "COMMITMENT" },
+    { "row_key": "sessions", "label": "SESSIONS" },
+    { "row_key": "booking_window", "label": "BOOKING WINDOW" },
+    { "row_key": "coaching", "label": "PRIVATE COACHING" },
+    { "row_key": "extras", "label": "EXTRAS" }
+  ],
+  "tiers": [
+    {
+      "label": "DROP-IN",
+      "price": "£15",
+      "unit": "per session",
+      "description": "Turn up when it suits. No account, no commitment, no direct debit.",
+      "work_out_value": "£15.00",
+      "work_out_unit": "a session",
+      "cta": { "title": "BOOK A SESSION", "url": "/book/", "target": "" },
+      "values": [
+        { "row_key": "commitment", "value": "None" },
+        { "row_key": "sessions", "value": "One" },
+        { "row_key": "booking_window", "value": "14 days ahead" },
+        { "row_key": "coaching", "value": "£75 a session" },
+        { "row_key": "extras", "value": "—" }
+      ]
+    },
+    {
+      "label": "MONTHLY",
+      "badge": "MOST POPULAR",
+      "highlight": true,
+      "price": "£65",
+      "unit": "per month",
+      "description": "The one most people land on after their third or fourth class.",
+      "work_out_value": "£8.13",
+      "work_out_unit": "a session",
+      "cta": { "title": "START MONTHLY", "url": "/membership/monthly/", "target": "" },
+      "values": [
+        { "row_key": "commitment", "value": "Rolling — cancel any time" },
+        { "row_key": "sessions", "value": "Unlimited" },
+        { "row_key": "booking_window", "value": "30 days · priority" },
+        { "row_key": "coaching", "value": "£67.50 · 10% off" },
+        { "row_key": "extras", "value": "Pause any month" }
+      ]
+    },
+    {
+      "label": "ANNUAL",
+      "badge": "SAVE £130",
+      "price": "£650",
+      "unit": "per year",
+      "description": "Two months free, paid up front. For people who already know.",
+      "work_out_value": "£6.77",
+      "work_out_unit": "a session",
+      "cta": { "title": "GO ANNUAL", "url": "/membership/annual/", "target": "" },
+      "values": [
+        { "row_key": "commitment", "value": "12 months, paid up front" },
+        { "row_key": "sessions", "value": "Unlimited" },
+        { "row_key": "booking_window", "value": "30 days · priority" },
+        { "row_key": "coaching", "value": "£63.75 · 15% off" },
+        { "row_key": "extras", "value": "Two guest passes · kit to keep" }
+      ]
+    }
+  ]
+}

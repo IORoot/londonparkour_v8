@@ -1,0 +1,22 @@
+{
+  "kicker": "09 — START",
+  "coordinates": "N 51.5074° / W 0.1278°",
+  "headline": "Walk through the door.",
+  "subhead": "Beginners sessions run Tuesday and Thursday at 18:30 in Vauxhall. Fifteen pounds, kit included, and no prior experience of any kind.",
+  "source": "manual",
+  "source_manual": [
+    {
+      "kicker": "NEXT BEGINNERS SESSION",
+      "time": "Today, 18:30",
+      "location": "Vauxhall — The Arches, SW8 1SR",
+      "spaces_label": "SPACES LEFT",
+      "spaces": "4"
+    }
+  ],
+  "primary_action": {
+    "link": { "title": "BOOK YOUR FIRST CLASS", "url": "/book/", "target": "" }
+  },
+  "alt_action": {
+    "link": { "title": "Or send us a question ↗", "url": "/contact/", "target": "" }
+  }
+}

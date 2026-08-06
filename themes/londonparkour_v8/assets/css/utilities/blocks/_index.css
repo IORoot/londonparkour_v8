@@ -1,0 +1,7 @@
+/*
+ * Type 2 & 3: @utility blocks
+ * These generate responsive variants (sm:, md:, lg:, etc.)
+ * Must be imported directly in main.css (outside any layer)
+ */
+@import "./l-container.css";
+

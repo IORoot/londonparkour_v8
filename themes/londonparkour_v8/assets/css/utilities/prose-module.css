@@ -1,0 +1,186 @@
+@layer components {
+    .prose-module {
+      @apply prose;
+  
+      /* Vertical rhythm: based on spacing-scale variables for consistent rhythm */
+      /* text-step-0: 14px → 16px with line-height: 1.5 = 21px → 24px */
+      /* spacing-scale-s: 16px → 24px (matches text-step-0 line-height range) */
+      /* spacing-scale-m: 24px → 36px (1.5× base) */
+      /* spacing-scale-l: 32px → 48px (2× base) */
+      
+      --tw-prose-spacing: var(--spacing-scale-s);
+      
+      /* Paragraph margins - base rhythm (spacing-scale-s matches line-height) */
+      --tw-prose-paragraph-margin: var(--spacing-scale-s);
+      
+      /* Heading margins - top uses larger spacing-scale for more separation, bottom uses spacing-scale for rhythm */
+      /* h1: text-step-6 (41.8px → 61px) - large top and bottom spacing for separation */
+      --tw-prose-h1-margin-top: var(--spacing-scale-xl);
+      --tw-prose-h1-margin-bottom: var(--spacing-scale-l);
+      
+      /* h2: text-step-4 (29px → 39px) - large top, medium bottom spacing */
+      --tw-prose-h2-margin-top: var(--spacing-scale-l);
+      --tw-prose-h2-margin-bottom: var(--spacing-scale-m);
+      
+      /* h3: text-step-3 (24.2px → 31.25px) - medium top and bottom spacing */
+      --tw-prose-h3-margin-top: var(--spacing-scale-l);
+      --tw-prose-h3-margin-bottom: var(--spacing-scale-m);
+      
+      /* h4: text-step-2 (20.2px → 25px) - medium top, base bottom spacing */
+      --tw-prose-h4-margin-top: var(--spacing-scale-m);
+      --tw-prose-h4-margin-bottom: var(--spacing-scale-s);
+      
+      /* h5: text-step-1 (16.8px → 20px) - medium top, base bottom spacing */
+      --tw-prose-h5-margin-top: var(--spacing-scale-m);
+      --tw-prose-h5-margin-bottom: var(--spacing-scale-s);
+      
+      /* h6: text-step-0 (14px → 16px) - base top, smaller bottom spacing */
+      --tw-prose-h6-margin-top: var(--spacing-scale-s);
+      --tw-prose-h6-margin-bottom: var(--spacing-scale-xs);
+      
+      /* Generic heading defaults */
+      --tw-prose-headings-margin-top: var(--spacing-scale-l);
+      --tw-prose-headings-margin-bottom: var(--spacing-scale-m);
+      
+      /* List margins - consistent with paragraph spacing */
+      --tw-prose-list-margin: var(--spacing-scale-s);
+      --tw-prose-list-item-spacing: var(--spacing-scale-xs);
+      --tw-prose-ol-margin: var(--spacing-scale-s);
+      --tw-prose-ul-margin: var(--spacing-scale-s);
+      --tw-prose-li-margin: var(--spacing-scale-xs);
+      
+      /* Blockquote margins - top uses grid gutter, bottom uses spacing-scale */
+      --tw-prose-blockquote-margin-top: var(--grid-gutter-md);
+      --tw-prose-blockquote-margin-bottom: var(--spacing-scale-l);
+      
+      /* Table margins - top uses grid gutter, bottom uses spacing-scale */
+      --tw-prose-table-margin-top: var(--grid-gutter-md);
+      --tw-prose-table-margin-bottom: var(--spacing-scale-l);
+      --tw-prose-th-margin: var(--spacing-scale-xs);
+      --tw-prose-td-margin: var(--spacing-scale-xs);
+      
+      /* Code margins - top uses grid gutter, bottom uses spacing-scale */
+      --tw-prose-pre-margin-top: var(--grid-gutter-md);
+      --tw-prose-pre-margin-bottom: var(--spacing-scale-l);
+      --tw-prose-code-margin: var(--spacing-scale-xs);
+      
+      /* Figure and image margins - top uses grid gutter, bottom uses spacing-scale */
+      --tw-prose-figure-margin-top: var(--grid-gutter-md);
+      --tw-prose-figure-margin-bottom: var(--spacing-scale-l);
+      --tw-prose-figcaption-margin-top: var(--spacing-scale-xs);
+      --tw-prose-img-margin-top: var(--grid-gutter-md);
+      --tw-prose-img-margin-bottom: var(--spacing-scale-l);
+      
+      /* HR margins - top uses grid gutter, larger bottom for strong separation */
+      --tw-prose-hr-margin-top: var(--grid-gutter-md);
+      --tw-prose-hr-margin-bottom: var(--spacing-scale-xl);
+      
+      /* Link margins - inline, no margin needed */
+      --tw-prose-link-margin: 0;
+  
+      /* Base line-height for prose (will be overridden per element) */
+      line-height: 1.5;
+      
+      /* Override hardcoded margins and line-heights to use CSS variables */
+      & :where(h1):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        font-size: var(--text-step-6);
+        line-height: var(--text-step-6--line-height, 1);
+        margin-top: var(--tw-prose-h1-margin-top);
+        margin-bottom: var(--tw-prose-h1-margin-bottom);
+      }
+      
+      & :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        font-size: var(--text-step-4);
+        line-height: var(--text-step-4--line-height, 1);
+        margin-top: var(--tw-prose-h2-margin-top);
+        margin-bottom: var(--tw-prose-h2-margin-bottom);
+      }
+      
+      & :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        font-size: var(--text-step-3);
+        line-height: var(--text-step-3--line-height, 1);
+        margin-top: var(--tw-prose-h3-margin-top);
+        margin-bottom: var(--tw-prose-h3-margin-bottom);
+      }
+      
+      & :where(h4):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        font-size: var(--text-step-2);
+        line-height: var(--text-step-2--line-height, 1);
+        margin-top: var(--tw-prose-h4-margin-top);
+        margin-bottom: var(--tw-prose-h4-margin-bottom);
+      }
+      
+      & :where(h5):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        color: var(--tw-prose-headings);
+        font-size: var(--text-step-1);
+        font-weight: 600;
+        line-height: var(--text-step-1--line-height, 1);
+        margin-top: var(--tw-prose-h5-margin-top);
+        margin-bottom: var(--tw-prose-h5-margin-bottom);
+      }
+      
+      & :where(h6):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        color: var(--tw-prose-headings);
+        font-size: var(--text-step-0);
+        font-weight: 600;
+        line-height: var(--text-step-0--line-height, 1);
+        margin-top: var(--tw-prose-h6-margin-top);
+        margin-bottom: var(--tw-prose-h6-margin-bottom);
+      }
+      
+      & :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        font-size: var(--text-step-0);
+        line-height: var(--text-step-0--line-height, 1.5);
+        margin-top: var(--tw-prose-paragraph-margin);
+        margin-bottom: 0;
+      }
+      
+      /* First paragraph after heading has no top margin */
+      & :where(h1, h2, h3, h4, h5, h6) + :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: 0;
+      }
+      
+      & :where(ul, ol):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: var(--tw-prose-list-margin);
+        margin-bottom: var(--tw-prose-list-margin);
+      }
+      
+      & :where(li):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        font-size: var(--text-step-0);
+        line-height: var(--text-step-0--line-height, 1.5);
+        margin-top: var(--tw-prose-li-margin);
+        margin-bottom: var(--tw-prose-li-margin);
+      }
+      
+      & :where(blockquote):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: var(--tw-prose-blockquote-margin-top);
+        margin-bottom: var(--tw-prose-blockquote-margin-bottom);
+      }
+      
+      & :where(table):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: var(--tw-prose-table-margin-top);
+        margin-bottom: var(--tw-prose-table-margin-bottom);
+      }
+      
+      & :where(pre):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: var(--tw-prose-pre-margin-top);
+        margin-bottom: var(--tw-prose-pre-margin-bottom);
+      }
+      
+      & :where(figure):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: var(--tw-prose-figure-margin-top);
+        margin-bottom: var(--tw-prose-figure-margin-bottom);
+      }
+      
+      & :where(img):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: var(--tw-prose-img-margin-top);
+        margin-bottom: var(--tw-prose-img-margin-bottom);
+      }
+      
+      & :where(hr):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+        margin-top: var(--tw-prose-hr-margin-top);
+        margin-bottom: var(--tw-prose-hr-margin-bottom);
+      }
+    }
+  }
+  
