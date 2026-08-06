@@ -328,8 +328,8 @@ source across the 14 page components. That is several sessions, not one. Read
 | Homepage | 121 | `front-page.php` | **done** (composition only) |
 | NotFound | 316 | `404.php` | **done** |
 | Legal | 314 | `templates/legal.php` | **done** — the theme's first page template |
-| BlogIndex | 274 | `home.php` | missing |
-| BlogDetail | 314 | `single.php` | scaffold only |
+| BlogIndex | 274 | `home.php` | **done** |
+| BlogDetail | 314 | `single.php` | **done** — the worked example for native-post templates |
 | ClassesListings | 243 | `archive-lp_class.php` | missing |
 | ClassesAgenda | 306 (+122 `ClassesHeaderCluster.js`) | page template | missing |
 | ClassesMap | 381 | page template | missing |
@@ -396,9 +396,27 @@ Suggested order — cheapest first, and each one earns something the next reuses
    **Do not invent the missing hrefs.** The source's pager points at Privacy and
    Cookie policies that exist in neither the design nor the repo, and its own
    docblock says so twice. Labels port, hrefs do not.
-3. **`home.php` + `single.php`** (BlogIndex/BlogDetail) — native `post`, so no CPT
-   or ACF work; `components/blog-card.php` and `components/byline.php` are ported
-   and waiting.
+3. ~~**`home.php` + `single.php`**~~ — **DONE.** Native `post`, one ACF group
+   (`group_lp_post`) holding only what WordPress has no field for. **Two
+   precedents set here that the remaining templates should follow:**
+
+   - **Structured body, not `the_content()`.** BlogDetail's sticky TOC is keyed
+     to per-section ids, so the body is a repeater and the ids and TOC are
+     *derived* from it with `sanitize_title()` rather than stored twice. This
+     reproduced the source's four hand-written ids exactly. Legal made the same
+     call; expect TutorialDetail and DocsFaq to need it too.
+   - **Native data stays native.** Title, excerpt, date, featured image,
+     category and author name come from core functions. Only add an ACF field
+     where WordPress genuinely has no home for the value.
+
+   A crop gap to watch: the 1440×540 hero reuses `lp_wide_lg` (16:9) with
+   `object-cover`, because a lone orphan size yields an EMPTY srcset — adding
+   the ratio means adding a matched family of three widths. If Classes or
+   Tutorials want the same ratio, add the family then.
+
+   `bootstrap.sh` now drafts core's `hello-world` post: WordPress dates it at
+   install time, so it was always the newest post and took the index's featured
+   slot and the head of the prev/next chain.
 4. **The `lp_class` family**, then **`lp_tutorial`**. These carry the real query
    work and the `lp_level`/`lp_series` taxonomies.
 5. **Contact / DocsFaq** — Flexible Content page templates. Largest, and they may
