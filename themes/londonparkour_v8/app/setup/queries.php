@@ -93,3 +93,85 @@ function lp_class_filter_values(): array {
 	);
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 }
+
+/**
+ * Apply the Tutorials filter grid to the lp_tutorial archive's main query.
+ *
+ * Same rationale as lp_filter_class_archive() above: `tutorial_search`, not
+ * `s`, for the same is_search() reason. `tutorial_category`/`tutorial_move`,
+ * not the public `lp_series` taxonomy query var, so the two levels of that
+ * hierarchical taxonomy (category = parent term, move = child term — see
+ * archive-lp_tutorial.php's docblock) can be read independently. A move is
+ * the more specific filter and wins when both are present; a category alone
+ * rolls its children up via `include_children`. `tutorial_sort` switches
+ * between the board's own numbering (`menu_order`, the design's "Sequence")
+ * and publish date.
+ *
+ * @param WP_Query $lp_query The query being prepared.
+ */
+function lp_filter_tutorial_archive( WP_Query $lp_query ): void {
+	if ( is_admin() || ! $lp_query->is_main_query() || ! $lp_query->is_post_type_archive( 'lp_tutorial' ) ) {
+		return;
+	}
+
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- public read-only filter, see the file docblock.
+	$lp_search   = isset( $_GET['tutorial_search'] ) ? sanitize_text_field( wp_unslash( $_GET['tutorial_search'] ) ) : '';
+	$lp_category = isset( $_GET['tutorial_category'] ) ? sanitize_title( wp_unslash( $_GET['tutorial_category'] ) ) : '';
+	$lp_move     = isset( $_GET['tutorial_move'] ) ? sanitize_title( wp_unslash( $_GET['tutorial_move'] ) ) : '';
+	$lp_sort     = isset( $_GET['tutorial_sort'] ) ? sanitize_title( wp_unslash( $_GET['tutorial_sort'] ) ) : 'sequence';
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+	if ( '' !== $lp_search ) {
+		$lp_query->set( 's', $lp_search );
+	}
+
+	if ( '' !== $lp_move ) {
+		$lp_query->set(
+			'tax_query',
+			array(
+				array(
+					'taxonomy' => 'lp_series',
+					'field'    => 'slug',
+					'terms'    => $lp_move,
+				),
+			)
+		);
+	} elseif ( '' !== $lp_category ) {
+		$lp_query->set(
+			'tax_query',
+			array(
+				array(
+					'taxonomy'         => 'lp_series',
+					'field'            => 'slug',
+					'terms'            => $lp_category,
+					'include_children' => true,
+				),
+			)
+		);
+	}
+
+	if ( 'newest' === $lp_sort ) {
+		$lp_query->set( 'orderby', 'date' );
+		$lp_query->set( 'order', 'DESC' );
+	} else {
+		$lp_query->set( 'orderby', 'menu_order' );
+		$lp_query->set( 'order', 'ASC' );
+	}
+}
+add_action( 'pre_get_posts', 'lp_filter_tutorial_archive' );
+
+/**
+ * The Tutorials filter values currently in the URL, keyed by field name.
+ *
+ * @return array<string, string>
+ */
+function lp_tutorial_filter_values(): array {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- public read-only filter, see the file docblock.
+	return array(
+		'tutorial_search'   => isset( $_GET['tutorial_search'] ) ? sanitize_text_field( wp_unslash( $_GET['tutorial_search'] ) ) : '',
+		'tutorial_category' => isset( $_GET['tutorial_category'] ) ? sanitize_title( wp_unslash( $_GET['tutorial_category'] ) ) : '',
+		'tutorial_move'     => isset( $_GET['tutorial_move'] ) ? sanitize_title( wp_unslash( $_GET['tutorial_move'] ) ) : '',
+		'tutorial_sort'     => isset( $_GET['tutorial_sort'] ) ? sanitize_title( wp_unslash( $_GET['tutorial_sort'] ) ) : 'sequence',
+	);
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+}
