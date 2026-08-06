@@ -1,10 +1,19 @@
 # Handoff — Storybook → WordPress port
 
 State: Phases 0–4 complete. Phase 5 has the site chrome, `front-page.php`,
-`404.php` and `page.php` done, with 11 page templates left — see "Phase 5b".
-Most of Phase 6 is done too, pulled forward: `wp lp seed`, `bin/README.md` and
-the theme `README.md` all exist. Everything needed to continue is on disk; this
-document is the map.
+`404.php`, `page.php` and **`templates/legal.php`** done, with 10 page templates
+left — see "Phase 5b". Most of Phase 6 is done too, pulled forward: `wp lp seed`,
+`bin/README.md` and the theme `README.md` all exist. Everything needed to
+continue is on disk; this document is the map.
+
+**The work is now committed.** It was uncommitted for the whole port; there is
+now a baseline commit of phases 0–5a and one commit per piece of work after it.
+Read `git log` before starting — the commit messages carry the reasoning for
+every decision below, and several correct this document's older claims.
+
+**Read "Session 2 corrections" below before trusting §12, §8 or the button
+gap.** Three items this document and `PORT-FINDINGS.md` list as open were
+measured and found stale or wrong.
 
 **Look at the site before you write anything.** `page.php` now renders
 `page_sections`, and `bin/wp lp seed` builds `/blocks-qa/` — sixteen rows, every
@@ -17,6 +26,68 @@ run (PORT-FINDINGS §13); use it to eyeball any block while porting a template.
 The database is disposable and is never shared between developers — the content
 definition is code, in `bin/demo-content/`, `bin/demo-media/` and each block's
 `example.json`. `bin/README.md` is the contract; read it before touching content.
+
+## Session 2 corrections — read before acting on the older sections
+
+Five findings that change what is left to do. Each has a commit with the
+evidence; none is a guess.
+
+**1. PORT-FINDINGS §12 is mostly stale.** It says `forms/field.php` and
+`button.php` have no dark-band variant and that `button.php` "emits
+`type="button"` with no override, so it cannot produce a submit control at all."
+Against the code: `field.php:30` and `text-area.php:31` already carry
+`surface: page|board`, `fact-row.php:18` already has `page`, and `button.php`
+already reads `$args['type'] ?? 'button'`. Only the dark-band button shape was
+ever missing.
+
+**2. That last gap was deliberately NOT closed, and should not be.** A grep of
+the whole Storybook finds the dark-band bordered block at
+`src/stories/Pages/NotFound/NotFound.js:123` and **nowhere else**, and every
+`Button` variant the remaining pages ask for is `primary`, `inverse` or `icon` —
+all shipped. Contact's submit is `variant:'primary'` plus `type=submit`, which
+works today. Promoting a one-file shape is building ahead. `404.php` keeps its
+hand-built controls and `bin/audit-reuse.sh` exempts it from the `<button>` rule
+alone, exactly as it already exempts `parts/site/nav.php`. **A second caller is
+the moment it becomes a variant** — until then, do not add it.
+
+**3. The reuse audit now covers the theme root, `inc/` and `templates/`.** It
+did not before, which is how `404.php`'s hand-built controls passed unremarked;
+every page template you add from here is gated on raw `<button>`/`<svg>`/`<img>`,
+`btn` classes and built class names. Verified by injection. The root `*.php`
+glob expands at scan time, so new templates are covered without editing it.
+
+**4. The blog could not render at all.** `show_on_front` was `page` with
+`page_for_posts` left at `0`, so WordPress never reached `home.php` and `/blog/`
+404'd. `bin/bootstrap.sh` now creates a Blog page and sets `page_for_posts`.
+Menus were also empty — created and assigned but never filled — so both site
+partials had been silently falling back to their ported defaults and no template
+had ever exercised a real menu. `wp lp seed` now fills both menus and creates the
+four demo posts.
+
+**5. The Storybook's blog prose is truncated at source.** `BlogIndex`'s Version 7
+excerpt and every string in `BlogDetail`'s `DEFAULT_BODY` end in `…`. The design
+proves layout, not copy. Those strings are seeded verbatim so a visual diff
+matches. **Do not complete them** — inventing copy is the failure the Port Brief
+names, and real article text is a client dependency.
+
+Two things checked and deliberately left alone:
+
+- **`md:px-16` in `blocks/{cta,locations,pricing}`** is byte-identical to the
+  Storybook source, so rule 1 protects it despite the layout contract's
+  `lg:px-16`. It is a design-system inconsistency to report upstream, not a port
+  defect. `page.php` was WP-authored, so its `md:px-16` and `py-[64px]` were
+  fixed.
+- **`404.php`'s aside only looks like `aside-panel.php`.** Measured: different
+  ground (`bg-secondary` vs `bg-neutral`), different header and row border
+  opacities, different CTA hover (`hover:bg-primary/85` vs `hover:bg-neutral
+  hover:text-primary`). Routing it through the part would silently change the
+  design — the same trap §6, §8 and §10 each fell into.
+
+**§8 is closed.** `Hero` and `CTA` now pass `lp_field_source()`'s `taxonomy`
+option, so all three `lp_class` blocks expose one identical control. No resolver
+work was needed — `lp_resolve_source()` already reads `source_terms` generically
+via `lp_source_taxonomy_for()`. Proven against seeded records, not by field
+presence: `hero` filtered to the advanced term returns `Advanced Movement` alone.
 
 ## Read these first
 
@@ -175,8 +246,8 @@ style button_group — no separate label text field; the Link's own title IS the
 
 | Phase | Work |
 |---|---|
-| **5** | 11 page templates — see "Phase 5b" below. Chrome, `front-page.php`, `404.php` and `page.php` are done |
-| **6** | **Mostly done.** `wp lp seed` (in `app/setup/seed.php`, not `bin/seed.php` — it needs WP bootstrapped), `bin/README.md` and `README.md` all written and run. Left: homepage seeding, deliberately deferred — the nine-row order is still recorded in `front-page.php`'s docblock and seed can gain a `--homepage` flag without redesign |
+| **5** | 10 page templates — see "Phase 5b" below. Chrome, `front-page.php`, `404.php`, `page.php` and `templates/legal.php` are done |
+| **6** | **Mostly done.** `wp lp seed` (in `app/setup/seed.php`, not `bin/seed.php` — it needs WP bootstrapped), `bin/README.md` and `README.md` all written and run. It now also seeds native posts and both menus. Left: (a) **pages + their templates** — Legal, Contact, DocsFaq and the two Classes view pages each need a seeded page with `_wp_page_template` set, which is what makes a page template verifiable; (b) **homepage rows**, still deferred — the nine-row order is recorded in `front-page.php`'s docblock and seed can gain a `--homepage` flag without redesign |
 | **7** | Full verification list; consolidation pass |
 
 All ten blocks are done. Six take the CPT source control (Hero, Classes,
@@ -256,7 +327,7 @@ source across the 14 page components. That is several sessions, not one. Read
 |---|---|---|---|
 | Homepage | 121 | `front-page.php` | **done** (composition only) |
 | NotFound | 316 | `404.php` | **done** |
-| Legal | 314 | `page.php` | renders sections + prose; the Legal prose treatment is still to port |
+| Legal | 314 | `templates/legal.php` | **done** — the theme's first page template |
 | BlogIndex | 274 | `home.php` | missing |
 | BlogDetail | 314 | `single.php` | scaffold only |
 | ClassesListings | 243 | `archive-lp_class.php` | missing |
@@ -277,10 +348,17 @@ Suggested order — cheapest first, and each one earns something the next reuses
    chrome, one `<main>`, shared parts via `lp_part()`. It also surfaced the
    dark-band form gap now recorded in PORT-FINDINGS §12 — read that before
    starting Contact or DocsFaq.
-2. **Legal** — **analysed, not built.** `page.php` now renders `page_sections`
-   when a page has rows and `the_content` prose when it has any, so both a block
-   page and a prose page work off it. Legal needs more than that, and the shape
-   was worked out before the session ended. Start here:
+2. ~~**Legal**~~ — **DONE**, at `templates/legal.php`. It is the worked example
+   for every page template that needs its own ACF data: read it before Contact,
+   DocsFaq or the Classes pages. The analysis below is kept because it records
+   *why* the shape is what it is; everything in it was implemented as written.
+   The page-template machinery it needed now exists — `templates/` is created,
+   Tailwind scans it (`main.css` gained the `@source` glob), `bin/audit-reuse.sh`
+   gates it, and WordPress registers a `Template Name:` one level deep with the
+   key `templates/<file>.php`, which is what `_wp_page_template` stores and what
+   an ACF `page_template` location rule must match. All verified by probe.
+
+   Original analysis, implemented:
 
    **Legal does NOT belong on `page.php`.** It is
    breadcrumb → masthead → doc meta → body(index rail + clauses) → onward, and
@@ -332,6 +410,46 @@ rule 3a) rather than letting two templates each hand-roll it. `search.php`,
 `archive.php` and `index.php` have no Storybook page at all, so they are a
 judgement call: closest match is BlogIndex's list treatment.
 
+## The remaining batches, in order
+
+Sized from the sources. Everything each page imports is **already ported** — the
+dependency closure was re-checked and is closed, so nothing new comes from the
+Storybook to start any of these.
+
+| Batch | Pages | Notes |
+|---|---|---|
+| **B3** | `archive.php`, `search.php`, `index.php` | No Storybook source. Reuse the BlogIndex list treatment; `search-result-row.php` is ported and waiting for `search.php` |
+| **B4** | ClassesListings → `archive-lp_class.php`, ClassesAgenda + ClassesMap → page templates, ClassDetail → `single-lp_class.php` | Heaviest query work. **Promote `ClassesHeaderCluster` first** — three pages import it, so it is the coordinated promotion rule 3a reserves. `ClassDetail` deliberately does NOT use it (no ViewRail/FilterGrid; the source docblock confirms this against a height sum). `ClassesAgenda` has real prev/next week click handlers at `ClassesAgenda.js:193–194` — decide JS-only vs query arg |
+| **B5** | TutorialsIndex → `archive-lp_tutorial.php`, TutorialsSeries → `taxonomy-lp_series.php`, TutorialDetail → `single-lp_tutorial.php` | Both index pages embed `Blocks/TrainInPerson`, which is already a WP block — call the block partial, do not re-port the section |
+| **B6** | Contact, DocsFaq → page templates | Largest, and last so earlier ports settle the patterns. **Repo owner chose Flexible Content**, so their bespoke sections become new blocks: enquiry form + reach panel, other-ways fact strip, FAQ group, section directory, passenger-enquiries strip |
+
+**`ClassesMap` needs no map library.** Greps for Leaflet, Mapbox and
+`google.maps` across `src/stories/Pages` return nothing — it is `MapPin` +
+`SitePanel` + `ListRow` on a static ground, all ported. No Three.js, Swiper or
+DOMPurify on any page either.
+
+Two open items in `docs/phase7/contact-inventory.md` to resolve rather than
+invent when B6 lands: **Finding B**, a literal `#FFFFFF` fill on section `L5CYk`
+that matches no token (report it — the Port Brief forbids inventing a colour),
+and **Finding A**, the "02" section that does not exist on the page (do not
+renumber to close the gap).
+
+## How this was run, and why it worked
+
+The main loop is the coordinator and QA gate; a Sonnet subagent does each page
+port, handed `docs/PORT-BRIEF.md` verbatim. Keep that seam. What it caught:
+
+- Agents report shapes, they never promote them. Two agents each inventing a
+  different `classes-header-cluster` is worse than the duplication it replaces.
+- **Never accept an agent's "done" on its word.** Re-run the gates yourself and
+  render the page. On the Legal port the QA pass independently re-checked the
+  landmark count, every arbitrary y value against the source, that the shared
+  element edit was purely additive, and that no test rows were left in the
+  database — all of which held, but only because they were checked.
+- A template that only passes greps is unproven. `lp render` against an
+  `example.json` proves markup, not data flow (PORT-FINDINGS §13). Every
+  template needs a real page, seeded, curled, and its rendered output inspected.
+
 ## Phase 5 carried three compliance fixes forward (all now closed — §10)
 
 Phase 3 closed its own items from CONSOLIDATION.md. These are left, all in
@@ -350,7 +468,16 @@ new shared parts — report shapes instead).
 
 ## Not done deliberately
 
-- **No content seeded.** Per instruction. `bin/seed.php` is to be written and
-  documented but not executed.
-- **No commits.** Nothing has been committed; the working tree holds all work.
 - **Three.js and DOMPurify** are out of scope for this pass.
+- **The dark-band button variant** — see Session 2 correction 2. Not an
+  oversight; adding it needs a second caller first.
+- **`Forms/Select` has no `surface` axis.** No page in the remaining scope puts
+  a Select on a dark band (Contact uses `Field` ×3 + `TextArea`), so it would be
+  building ahead. Recorded, not actioned.
+- **`status.php`'s dot geometry** (§6) stays as it is. Three byte-exact
+  hand-rolled dots are correct under rule 1; re-opening a shipped element's
+  geometry to save nine lines is the wrong trade.
+
+Superseded: the old "no content seeded" and "no commits" entries. Both were
+instructions for session 1 and no longer hold — content seeds from
+`bin/demo-content/` and the work is committed.
