@@ -1,0 +1,37 @@
+{
+  "primary": [
+    { "label": "Classes", "url": "/classes", "classes": "has-panel" },
+    { "label": "Tutorials", "url": "/tutorials" },
+    { "label": "Docs", "url": "/docs" },
+    { "label": "Contact", "url": "/contact" }
+  ],
+  "footer": [
+    {
+      "label": "Practice",
+      "children": [
+        { "label": "Classes", "url": "/classes" },
+        { "label": "Private Tuition", "url": "/private-tuition" },
+        { "label": "Tutorials", "url": "/tutorials" },
+        { "label": "Timetable", "url": "/timetable" }
+      ]
+    },
+    {
+      "label": "Explore",
+      "children": [
+        { "label": "Community", "url": "/community" },
+        { "label": "Blog", "url": "/blog" },
+        { "label": "Class Maps", "url": "/classes/map" },
+        { "label": "Gift Cards", "url": "/gift-cards" }
+      ]
+    },
+    {
+      "label": "Studio",
+      "children": [
+        { "label": "About", "url": "/about" },
+        { "label": "Coaches", "url": "/coaches" },
+        { "label": "Docs", "url": "/docs" },
+        { "label": "Contact", "url": "/contact" }
+      ]
+    }
+  ]
+}

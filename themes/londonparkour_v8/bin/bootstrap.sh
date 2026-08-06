@@ -85,6 +85,19 @@ if [ -n "$HOME_ID" ]; then
 	echo "  front page = #$HOME_ID"
 fi
 
+# With a static front page and no posts page, WordPress has nowhere to show
+# the blog index — home.php is simply never reached. This page is structure
+# rather than content: it holds no copy, it only gives the archive a route.
+say "Posts page"
+if ! wp post list --post_type=page --name=blog --format=count 2>/dev/null | grep -q '^1$'; then
+	wp post create --post_type=page --post_title='Blog' --post_name=blog --post_status=publish
+fi
+BLOG_ID="$(wp post list --post_type=page --name=blog --field=ID --format=csv | head -1)"
+if [ -n "$BLOG_ID" ]; then
+	wp option update page_for_posts "$BLOG_ID"
+	echo "  posts page = #$BLOG_ID"
+fi
+
 say "Discourage search engines on local"
 wp option update blog_public 0
 

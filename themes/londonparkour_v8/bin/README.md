@@ -47,8 +47,19 @@ path, not a disaster — bootstrap and seed rebuild it in under a minute.
 |---|---|
 | `blocks/*/example.json` | a block's manual-mode content |
 | `blocks/*/example.media.json` | field dot-path → demo image filename |
-| `bin/demo-content/*.json` | CPT records and taxonomy terms |
+| `bin/demo-content/*.json` | CPT records, native `post` records, and taxonomy terms |
 | `bin/demo-media/*.jpeg` | the photographs, 2132×1200 |
+
+`post.json` is the native blog type rather than a CPT, so its records carry
+`date`, `excerpt` and `content` in the post row itself instead of in `fields`.
+All three are optional and any record may use them.
+
+**The Storybook's blog prose is truncated at source.** `BlogIndex`'s Version 7
+excerpt and every string in `BlogDetail`'s `DEFAULT_BODY` end in `…` — the
+design was built to prove layout, not to carry copy. Those strings are seeded
+exactly as the source has them, ellipsis included, so a visual diff against the
+Storybook matches. Do not "complete" them: inventing copy is the failure the
+Port Brief warns about, and real article text is a client dependency.
 
 **Anything you author in wp-admin that matters moves into these files, or it
 does not exist for the other developer.** That is the whole contract. If you
@@ -76,7 +87,7 @@ seed warns and skips. `--fresh` deletes only marked records.
 
 | File | What it does |
 |---|---|
-| `bootstrap.sh` | Idempotent install: core, theme, plugins, permalinks, menus, front page, field groups. Never touches content. |
+| `bootstrap.sh` | Idempotent install: core, theme, plugins, permalinks, menus, front page, posts page, field groups. Never touches content. |
 | `wp` | WP-CLI wrapper. WP-CLI is not on the host; it runs in the `cli` sidecar. Always use this, never bare `wp`. |
 | `audit-reuse.sh` | Fails the build on hand-rolled markup — a raw `<svg>`, a raw `<img>`, or a built class string. Verified by injection; trust it. |
 | `demo-content/` | CPT records and terms, read by `wp lp seed`. |

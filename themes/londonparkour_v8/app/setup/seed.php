@@ -262,6 +262,20 @@ function lp_seed_posts( string $post_type, array $media ): array {
 			'menu_order'  => (int) ( $record['menu_order'] ?? 0 ),
 		);
 
+		/*
+		 * Native posts carry their body, excerpt and date in the post row
+		 * rather than in ACF, which the CPTs do not — a class is all fields.
+		 * All three are optional, so this stays generic: any record may set
+		 * them and the CPT files that do not are unaffected. `date` is worth
+		 * seeding explicitly because a blog index orders by it and a byline
+		 * prints it, so leaving every post at "now" hides both.
+		 */
+		foreach ( array( 'content' => 'post_content', 'excerpt' => 'post_excerpt', 'date' => 'post_date' ) as $lp_key => $lp_field ) {
+			if ( isset( $record[ $lp_key ] ) ) {
+				$postarr[ $lp_field ] = (string) $record[ $lp_key ];
+			}
+		}
+
 		if ( $existing ) {
 			$postarr['ID'] = $existing;
 			$id            = wp_update_post( $postarr, true );
@@ -440,6 +454,91 @@ function lp_seed_page( array $media ): void {
 /**
  * Delete every seed-owned post and attachment.
  */
+/**
+ * Insert one level of menu items, then recurse into their children.
+ *
+ * @param int   $menu_id Menu term id.
+ * @param array $items   Records from menus.json.
+ * @param int   $parent  Parent menu item id, 0 at the top level.
+ * @return int Number of items written.
+ */
+function lp_seed_menu_items( int $menu_id, array $items, int $parent = 0 ): int {
+	$written  = 0;
+	$position = 0;
+
+	foreach ( $items as $item ) {
+		++$position;
+
+		/*
+		 * A footer column heading is a label with no destination. WordPress has
+		 * no "label only" item type, so it is a custom item with an empty url —
+		 * which is what lp_menu_columns() already reads as a heading.
+		 */
+		$url = (string) ( $item['url'] ?? '' );
+
+		$id = wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'     => (string) $item['label'],
+				'menu-item-url'       => '' === $url ? '' : home_url( $url ),
+				'menu-item-type'      => 'custom',
+				'menu-item-status'    => 'publish',
+				'menu-item-parent-id' => $parent,
+				'menu-item-position'  => $position,
+				// Core explodes this on spaces, so it must be a string.
+				'menu-item-classes'   => (string) ( $item['classes'] ?? '' ),
+			)
+		);
+
+		if ( is_wp_error( $id ) || ! $id ) {
+			WP_CLI::warning( "Could not write menu item '{$item['label']}'." );
+			continue;
+		}
+
+		$id = (int) $id;
+		update_post_meta( $id, LP_SEED_MARKER, 1 );
+		++$written;
+
+		if ( ! empty( $item['children'] ) ) {
+			$written += lp_seed_menu_items( $menu_id, (array) $item['children'], $id );
+		}
+	}
+
+	return $written;
+}
+
+/**
+ * Fill the registered nav menus from menus.json.
+ *
+ * bootstrap.sh creates the menus and assigns them to their locations; this
+ * fills them, because an assigned-but-empty menu makes both site partials fall
+ * back to their ported defaults and no template ever exercises a real menu.
+ */
+function lp_seed_menus(): void {
+	$locations = get_nav_menu_locations();
+
+	foreach ( lp_seed_read_json( 'bin/demo-content/menus.json' ) as $location => $items ) {
+		$menu = wp_get_nav_menu_object( $locations[ $location ] ?? 0 );
+
+		if ( ! $menu ) {
+			WP_CLI::warning( "No menu assigned to the '{$location}' location — run bin/bootstrap.sh." );
+			continue;
+		}
+
+		// Re-seeding replaces our own items and leaves hand-added ones alone,
+		// the same contract every other record type here follows.
+		foreach ( (array) wp_get_nav_menu_items( $menu->term_id ) as $existing ) {
+			if ( lp_seed_is_ours( (int) $existing->ID ) ) {
+				wp_delete_post( (int) $existing->ID, true );
+			}
+		}
+
+		$count = lp_seed_menu_items( (int) $menu->term_id, (array) $items );
+		WP_CLI::log( "  + {$location} menu, {$count} item(s)" );
+	}
+}
+
 function lp_seed_purge(): void {
 	$ids = get_posts(
 		array(
@@ -478,7 +577,9 @@ WP_CLI::add_command(
 		lp_seed_terms();
 
 		// Order matters: classes and coaches reference locations by slug.
-		foreach ( array( 'lp_location', 'lp_coach', 'lp_class', 'lp_tutorial' ) as $post_type ) {
+		// `post` is the native blog type, which home.php and single.php read;
+		// it references nothing, so its position here is not load-bearing.
+		foreach ( array( 'lp_location', 'lp_coach', 'lp_class', 'lp_tutorial', 'post' ) as $post_type ) {
 			if ( ! post_type_exists( $post_type ) ) {
 				WP_CLI::warning( "Post type {$post_type} is not registered — skipping." );
 				continue;
@@ -486,6 +587,9 @@ WP_CLI::add_command(
 			WP_CLI::log( $post_type );
 			lp_seed_posts( $post_type, $media );
 		}
+
+		WP_CLI::log( 'Menus' );
+		lp_seed_menus();
 
 		WP_CLI::log( 'Blocks QA page' );
 		lp_seed_page( $media );

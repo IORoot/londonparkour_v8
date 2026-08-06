@@ -9,5 +9,9 @@
     { "slug": "foundations", "name": "Foundations" },
     { "slug": "vaults", "name": "Vaults" },
     { "slug": "conditioning", "name": "Conditioning" }
+  ],
+  "category": [
+    { "slug": "project", "name": "Project" },
+    { "slug": "update", "name": "Update" }
   ]
 }
