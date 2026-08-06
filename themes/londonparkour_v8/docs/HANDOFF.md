@@ -89,6 +89,21 @@ work was needed — `lp_resolve_source()` already reads `source_terms` generical
 via `lp_source_taxonomy_for()`. Proven against seeded records, not by field
 presence: `hero` filtered to the advanced term returns `Advanced Movement` alone.
 
+## Session 3 correction — this document undercounted the pages
+
+**There are 15 designed pages, not 14, and `search.php` is a real port.** The
+Phase 5b table below was built from `src/stories/Pages/`, and
+`src/stories/Search/SearchResults/SearchResults.js` is the one designed page
+that lives outside it — 293 lines, `Lc4uQ` "Search (Concourse)" plus five
+section masters. B3's "no Storybook source" was right about `archive.php` and
+`index.php` and wrong about search. It is now ported. PORT-FINDINGS §14.
+
+**Enumerate B4–B6 from `src/stories/`, not `src/stories/Pages/`.** The same
+oversight would hide anything else filed by function rather than by kind.
+`src/stories/Components/Navigation/` (Breadcrumb, Dock, Link, Menu, Navbar,
+Pagination, Step, Tab) is the opposite case: Storybook scaffolding, not this
+design system. No page imports it. Do not port it.
+
 ## Read these first
 
 | File | What it owns |
@@ -246,7 +261,7 @@ style button_group — no separate label text field; the Link's own title IS the
 
 | Phase | Work |
 |---|---|
-| **5** | 10 page templates — see "Phase 5b" below. Chrome, `front-page.php`, `404.php`, `page.php` and `templates/legal.php` are done |
+| **5** | 8 page templates — see "Phase 5b" below. Chrome, `front-page.php`, `404.php`, `page.php`, `templates/legal.php`, `home.php`, `single.php`, `search.php`, `archive.php` and `index.php` are done |
 | **6** | **Mostly done.** `wp lp seed` (in `app/setup/seed.php`, not `bin/seed.php` — it needs WP bootstrapped), `bin/README.md` and `README.md` all written and run. It now also seeds native posts and both menus. Left: (a) **pages + their templates** — Legal, Contact, DocsFaq and the two Classes view pages each need a seeded page with `_wp_page_template` set, which is what makes a page template verifiable; (b) **homepage rows**, still deferred — the nine-row order is recorded in `front-page.php`'s docblock and seed can gain a `--homepage` flag without redesign |
 | **7** | Full verification list; consolidation pass |
 
@@ -339,7 +354,8 @@ source across the 14 page components. That is several sessions, not one. Read
 | TutorialDetail | 384 | `single-lp_tutorial.php` | missing |
 | Contact | 452 | page template, Flexible Content | missing |
 | DocsFaq | 375 | page template, Flexible Content | missing |
-| — | — | `search.php`, `archive.php`, `index.php` | scaffold only, no source page |
+| SearchResults | 293 | `search.php` | **done** — in `src/stories/Search/`, not `Pages/` |
+| — | — | `archive.php`, `index.php` | **done** — no source page; shared body |
 
 Suggested order — cheapest first, and each one earns something the next reuses:
 
@@ -422,6 +438,26 @@ Suggested order — cheapest first, and each one earns something the next reuses
 5. **Contact / DocsFaq** — Flexible Content page templates. Largest, and they may
    want new blocks; check against `blocks/` before writing markup.
 
+6. ~~**B3**~~ — **DONE.** Three things it left behind that B4–B6 should use
+   rather than rebuild:
+
+   - **`parts/components/pagination.php`** — the design system's ONLY pagination
+     shape, promoted from SearchResults' inline `l6bk8`. Build its args with
+     `lp_pagination_args()` (`app/includes/content.php`); pass a `noun` for the
+     count line. It renders every page number, deliberately — PORT-FINDINGS §16
+     has the ceiling and the upgrade path.
+   - **`elements/view-tab.php` takes an `href`** and then renders an `<a>` with
+     `aria-current="page"` instead of `<button role="tab">`. Any filter rail
+     that navigates (ClassesListings, TutorialsIndex) wants this form, not the
+     button. Class strings are identical.
+   - **`lp_post_card_args( WP_Post )`** projects a post into blog-card's shape.
+     `home.php` and `archive-list.php` both call it.
+
+   Also: `template-parts/content/` no longer holds the `_tw` scaffold parts —
+   `content{,-excerpt,-none,-page,-single}.php` were deleted when their last
+   callers were rewritten. `comments.php` is now unreferenced too (no template
+   calls `comments_template()`); left in place, not audited.
+
 Watch for: `ClassesHeaderCluster.js` is shared by the Classes pages — decide
 early whether it becomes `parts/components/` (coordinated promotion, PORT-BRIEF
 rule 3a) rather than letting two templates each hand-roll it. `search.php`,
@@ -436,7 +472,7 @@ Storybook to start any of these.
 
 | Batch | Pages | Notes |
 |---|---|---|
-| **B3** | `archive.php`, `search.php`, `index.php` | No Storybook source. Reuse the BlogIndex list treatment; `search-result-row.php` is ported and waiting for `search.php` |
+| ~~**B3**~~ | ~~`archive.php`, `search.php`, `index.php`~~ | **DONE.** `search.php` turned out to have a real source (§14) and is a full port. `archive.php` and `index.php` share `template-parts/content/archive-list.php`, which composes BlogIndex's Recent grid under a breadcrumb + masthead. Earned three things B4–B6 reuse: `parts/components/pagination.php`, `view-tab.php`'s link form, and `lp_post_card_args()` |
 | **B4** | ClassesListings → `archive-lp_class.php`, ClassesAgenda + ClassesMap → page templates, ClassDetail → `single-lp_class.php` | Heaviest query work. **Promote `ClassesHeaderCluster` first** — three pages import it, so it is the coordinated promotion rule 3a reserves. `ClassDetail` deliberately does NOT use it (no ViewRail/FilterGrid; the source docblock confirms this against a height sum). `ClassesAgenda` has real prev/next week click handlers at `ClassesAgenda.js:193–194` — decide JS-only vs query arg |
 | **B5** | TutorialsIndex → `archive-lp_tutorial.php`, TutorialsSeries → `taxonomy-lp_series.php`, TutorialDetail → `single-lp_tutorial.php` | Both index pages embed `Blocks/TrainInPerson`, which is already a WP block — call the block partial, do not re-port the section |
 | **B6** | Contact, DocsFaq → page templates | Largest, and last so earlier ports settle the patterns. **Repo owner chose Flexible Content**, so their bespoke sections become new blocks: enquiry form + reach panel, other-ways fact strip, FAQ group, section directory, passenger-enquiries strip |

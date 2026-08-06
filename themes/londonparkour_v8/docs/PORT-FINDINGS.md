@@ -399,3 +399,107 @@ Not bugs; do not "fix" them.
   cannot satisfy both; the demo data uses the Locations wording.
 - **Coaches roster faces repeat.** Six committed demo images cannot give five
   coaches a unique portrait.
+
+## 14. The Phase 5b page table was missing a page: `search.php` HAS a source
+
+`docs/HANDOFF.md` listed `search.php`, `archive.php` and `index.php` together as
+"no Storybook source, judgement call", and the B3 row said the same. That is
+wrong for one of the three.
+
+`src/stories/Search/SearchResults/SearchResults.js` is a fully designed 293-line
+page — `Lc4uQ` "Search (Concourse)" plus five section masters in `vWQRz`. It was
+missed because the Phase 5b table was built from `src/stories/Pages/`, and this
+page is the only one that lives outside that directory. **There are 15 designed
+pages, not 14.**
+
+Two knock-on corrections to claims the handoff made:
+
+- "Everything each page imports is already ported — the dependency closure was
+  re-checked and is closed" held only for the pages that were enumerated. It was
+  true for this one too, by luck: `SearchResultRow`, `BreadcrumbRail` and
+  `ViewTab` were all already here.
+- `src/stories/Components/Navigation/` (Breadcrumb, Dock, Link, Menu, Navbar,
+  Pagination, Step, Tab) is Storybook scaffolding, not this design system.
+  `SearchResults` imports none of it and hand-rolls its own pagination. Do not
+  port that directory.
+
+The lesson for B4–B6: enumerate from `src/stories/`, not `src/stories/Pages/`.
+
+## 15. Search: five departures from `SearchResults.js`, and why
+
+All five are in `search.php`'s own docblock; this records the reasoning once.
+
+1. **Filter tabs are links, not `ViewTab` buttons.** The source's `onClick` is a
+   Storybook callback that `view-tab.php`'s docblock already says does not come
+   across. A post-type filter on WordPress is a URL. `view-tab.php` gained an
+   `href` form — same class strings, `aria-current="page"` instead of
+   `role="tab"`/`aria-selected`, because an `<a href>` is a link and must not
+   claim tab semantics it cannot honour (Port Brief a11y rule). This mirrors
+   `button.php`'s existing `<a>` vs `<button>` split; it is not a new shape.
+
+2. **The SORT select is dropped.** A GET `<select>` with no submit control needs
+   JS this theme does not have, and the design draws no submit beside it.
+   Shipping it inert or inventing a submit are both worse than omitting it.
+   Build it when sorting is designed. **The `<select>` markup in the source is
+   NOT `forms/select.php`** — the source is `w-[200px] bg-transparent` with an
+   external `aria-labelledby` span; the part is `w-full`, daisyUI-chromed and
+   stacks its own `<label>`. Routing one through the other would silently change
+   the design. Recorded so nobody "fixes" it later.
+
+3. **`24 RESULTS · 0.04s` loses its timing.** WordPress exposes no search timing;
+   `timer_stop()` measures page generation. A wrong number is worse than a
+   missing one.
+
+4. **Two tabs the design predates.** The design has four kinds; this theme
+   registers six public post types, so coaches and locations are searchable and
+   would have appeared in results with no tab and no place in the ALL total.
+   Their labels are the registered CPT labels uppercased. The design's own four
+   words are used verbatim. Zero-count tabs are not rendered.
+
+5. **`CLEAR ✕` stays `<button type="reset">`, as drawn — and is semantically
+   wrong on WordPress.** On a submitted query a reset restores the submitted
+   value, so it clears the user's *edits*, not the search. Reported rather than
+   redesigned: the honest fixes are a link to an empty-query state (which the
+   design does not have) or JS (which this theme does not load for forms).
+
+**No zero-results state**, per the source's own explicit note. With no results
+the query bar reports `0 RESULTS` and the filter rail and results band are not
+rendered at all.
+
+Row content maps to the design's own vocabulary — `category` is its singular
+word per kind (`LESSON` for a tutorial, `ARTICLE` for a post), `meta` its plural
+section word (`BLOG` for posts) plus the one real detail that kind carries: a
+class's `price` field, a post's month. **The design's `TUTORIALS · FREE` is not
+reproduced** — no field backs it, and claiming a price is a claim.
+
+## 16. Pagination promoted; `button.php` gained `band_text`
+
+Two shared-element changes in B3, both with real callers on the day.
+
+**`parts/components/pagination.php`** is the source's inline `initPagination`
+(`l6bk8` wrapping `bWhir`), promoted because three templates need it — search
+plus the archive body that `archive.php` and `index.php` both include. It is the
+design system's only pagination shape. `data-component` is `pagination`, not the
+source's `search-pagination`; that is its one DOM departure.
+
+Two things the design does not specify, resolved without inventing a visual:
+
+- **No disabled prev/next.** On page one the previous slot renders as an empty
+  `<span>` so the `justify-between` row keeps its alignment. Nothing undesigned
+  is drawn.
+- **No ellipsis.** Every page number renders. Marked `ponytail:` in
+  `lp_pagination_args()` with the ceiling — window it when a real query runs past
+  ~10 pages *and* the design gains a truncated state to window it with.
+
+**`button.php` gained `band_text`** — the query bar's `CLEAR ✕` (`A1PesB`). It is
+a `button` variant rather than a `text-link` variant because every `text-link`
+variant renders an `<a href>` and a form reset has no href.
+
+This is the one place B3 departs from Session 2 correction 2's "a second caller
+is the moment it becomes a variant". The alternative was a third file-level
+exemption in `bin/audit-reuse.sh`, which would have switched the `<button>` rule
+off for the whole of `search.php` — a file being newly filled with markup. One
+array entry keeps the gate on and costs a line. The rule's purpose is to stop
+*speculative* variants; this one had its caller in the same commit. Note it is
+**not** the dark-band bordered block from `NotFound.js:123` that correction 2 is
+about — that shape still has exactly one caller and still should not be promoted.

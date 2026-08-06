@@ -107,25 +107,11 @@ $lp_recent_eyebrow = 'RECENT FILINGS';
 $lp_recent_heading = 'Three off the top.';
 $lp_recent_note    = 'Projects, press and the occasional note from the coaching fl…';
 
-/* -- Project a WP_Post into the flat shape components/blog-card.php reads. */
-$lp_project_post = static function ( WP_Post $lp_post ): array {
-	$lp_cats     = get_the_category( $lp_post->ID );
-	$lp_category = $lp_cats ? $lp_cats[0]->name : 'Project';
-	$lp_read     = function_exists( 'get_field' ) ? (string) get_field( 'read_time', $lp_post->ID ) : '';
-	$lp_author   = get_the_author_meta( 'display_name', (int) $lp_post->post_author );
-
-	return array(
-		'category'  => strtoupper( $lp_category ),
-		'read_time' => $lp_read ?: '3 MIN READ',
-		'title'     => get_the_title( $lp_post ),
-		'excerpt'   => get_the_excerpt( $lp_post ),
-		'author'    => $lp_author ?: 'Andy Pearson',
-		'date'      => get_the_date( 'M j, Y', $lp_post ),
-		'date_meta' => strtoupper( get_the_date( 'j M Y', $lp_post ) ),
-		'href'      => get_permalink( $lp_post ),
-		'image_id'  => get_post_thumbnail_id( $lp_post ) ?: 0,
-	);
-};
+/*
+ * The WP_Post → blog-card projection moved to lp_post_card_args() in
+ * app/includes/content.php when archive-list.php became its second caller.
+ * Behaviour is unchanged, including both source-default fallbacks.
+ */
 
 $lp_query_posts = array();
 while ( have_posts() ) {
@@ -136,11 +122,11 @@ while ( have_posts() ) {
 $lp_lead_post  = $lp_query_posts[0] ?? null;
 $lp_grid_posts = array_slice( $lp_query_posts, 1, 3 );
 
-$lp_lead = $lp_lead_post ? $lp_project_post( $lp_lead_post ) : $lp_default_lead;
+$lp_lead = $lp_lead_post ? lp_post_card_args( $lp_lead_post ) : $lp_default_lead;
 
 $lp_cards = array();
 foreach ( $lp_grid_posts as $lp_p ) {
-	$lp_cards[] = $lp_project_post( $lp_p );
+	$lp_cards[] = lp_post_card_args( $lp_p );
 }
 if ( ! $lp_cards ) {
 	$lp_cards = $lp_default_cards;
