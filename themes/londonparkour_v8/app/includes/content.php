@@ -103,6 +103,29 @@ function lp_pagination_args( ?WP_Query $lp_query = null, string $lp_noun = 'RESU
 }
 
 /**
+ * URL of one of the two Classes view PAGES, by slug.
+ *
+ * The source hrefs are `/classes/agenda` and `/classes/map`, but `/classes/` is
+ * the lp_class post-type archive, so a page cannot live under it without a
+ * parent page whose slug collides with that archive. The pages are therefore
+ * `classes-agenda` and `classes-map` at the top level. A URL is routing, not
+ * design — the source's hrefs are Storybook literals, not a signed-off `.pen`
+ * decision — so this is a departure worth recording rather than worth building
+ * rewrite rules for. See docs/PORT-FINDINGS.md §21.
+ *
+ * Falls back to the source's own path if the page has not been seeded yet, so
+ * the rail still points somewhere rather than at nothing.
+ *
+ * @param string $lp_slug Page slug.
+ * @return string
+ */
+function lp_classes_page_url( string $lp_slug ): string {
+	$lp_page = get_page_by_path( $lp_slug );
+
+	return $lp_page ? (string) get_permalink( $lp_page ) : home_url( '/' . str_replace( 'classes-', 'classes/', $lp_slug ) );
+}
+
+/**
  * The three Classes view-rail tabs, shared by Agenda, Listings and Map.
  *
  * Ported from ClassesHeaderCluster.js's `TABS`, whose own note says the three
@@ -141,7 +164,7 @@ function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
 			'label'   => 'AGENDA',
 			'meta'    => sprintf( '%d SESSIONS', $lp_sessions ),
 			'icon_id' => 'icon-calendar-days',
-			'href'    => home_url( '/classes/agenda' ),
+			'href'    => lp_classes_page_url( 'classes-agenda' ),
 			'active'  => 'agenda' === $lp_active,
 		),
 		array(
@@ -155,7 +178,7 @@ function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
 			'label'   => 'MAP',
 			'meta'    => sprintf( '%d SITES', $lp_sites ),
 			'icon_id' => 'icon-map-pin',
-			'href'    => home_url( '/classes/map' ),
+			'href'    => lp_classes_page_url( 'classes-map' ),
 			'active'  => 'map' === $lp_active,
 		),
 	);
@@ -245,5 +268,136 @@ function lp_class_filter_cells( array $lp_current = array() ): array {
 			'options' => $lp_site_options,
 			'value'   => (string) ( $lp_current['class_site'] ?? '' ),
 		),
+	);
+}
+
+/**
+ * A class's duration — the first ` · ` segment of its `subtitle`.
+ *
+ * That field's own ACF instructions give exactly this format
+ * (`e.g. "60 min · all kit provided"`), so the segment is the documented
+ * contract, not a guess at the copy. Returns '' when the field is empty.
+ *
+ * @param int $lp_id Class post id.
+ * @return string
+ */
+function lp_class_duration( int $lp_id ): string {
+	$lp_subtitle = function_exists( 'get_field' ) ? (string) get_field( 'subtitle', $lp_id ) : '';
+
+	return trim( explode( '·', $lp_subtitle )[0] );
+}
+
+/**
+ * Every session in one week, grouped by day, for the Agenda board.
+ *
+ * Sessions are rows of the `sessions` repeater on each class rather than posts
+ * of their own — see the note in app/setup/cpt.php — so there is no query that
+ * returns them. This walks published classes and keeps the rows whose `date`
+ * falls in the requested week.
+ *
+ * ponytail: one ACF read per published class per page view. Fine at a dozen
+ * classes; if the timetable ever runs to hundreds, sessions want to become
+ * their own post type with a real date query, which is the same change that
+ * would let the board paginate.
+ *
+ * The week runs Monday to Sunday. The design's own week label reads
+ * "13th – 20th July 2026", ending on the following Monday; this ends on the
+ * Sunday, because that is the week the board actually shows.
+ *
+ * @param int $lp_offset Weeks from the current one. Negative is the past.
+ * @return array start, end, week number, day groups and a session count.
+ */
+function lp_agenda_week( int $lp_offset = 0 ): array {
+	$lp_start = ( new DateTimeImmutable( 'monday this week' ) )->modify( sprintf( '%+d weeks', $lp_offset ) );
+	$lp_end   = $lp_start->modify( '+6 days' );
+
+	$lp_class_ids = get_posts(
+		array(
+			'post_type'      => 'lp_class',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
+
+	// Keyed by Y-m-d so the seven day buckets stay in calendar order.
+	$lp_days = array();
+	for ( $lp_i = 0; $lp_i < 7; $lp_i++ ) {
+		$lp_days[ $lp_start->modify( sprintf( '+%d days', $lp_i ) )->format( 'Y-m-d' ) ] = array();
+	}
+
+	$lp_count = 0;
+	foreach ( $lp_class_ids as $lp_id ) {
+		$lp_rows     = function_exists( 'get_field' ) ? get_field( 'sessions', $lp_id ) : null;
+		$lp_levels   = get_the_terms( $lp_id, 'lp_level' );
+		$lp_location = function_exists( 'get_field' ) ? (int) get_field( 'location', $lp_id ) : 0;
+		$lp_subtitle = function_exists( 'get_field' ) ? (string) get_field( 'subtitle', $lp_id ) : '';
+
+		foreach ( is_array( $lp_rows ) ? $lp_rows : array() as $lp_row ) {
+			$lp_date = (string) ( $lp_row['date'] ?? '' );
+
+			if ( ! isset( $lp_days[ $lp_date ] ) ) {
+				continue;
+			}
+
+			$lp_days[ $lp_date ][] = array(
+				'time'      => (string) ( $lp_row['time'] ?? '' ),
+				// BoardRow's own per-row date label is left blank: the day is
+				// already announced by the band above it, and repeating it is
+				// redundant. The source makes the same call.
+				'date_label' => '',
+				'title'     => get_the_title( $lp_id ),
+				'subtitle'  => $lp_subtitle,
+				'location'  => $lp_location ? get_the_title( $lp_location ) : '',
+				'level'     => is_array( $lp_levels ) && $lp_levels ? $lp_levels[0]->name : '',
+				'spaces'    => (string) ( $lp_row['spaces'] ?? '' ),
+				'sold_out'  => ! empty( $lp_row['sold_out'] ),
+				'href'      => (string) get_permalink( $lp_id ),
+				'class_id'  => (int) $lp_id,
+			);
+			++$lp_count;
+		}
+	}
+
+	$lp_groups = array();
+	foreach ( $lp_days as $lp_date => $lp_sessions ) {
+		usort( $lp_sessions, static fn( $lp_a, $lp_b ): int => strcmp( $lp_a['time'], $lp_b['time'] ) );
+		$lp_day = new DateTimeImmutable( $lp_date );
+
+		$lp_groups[] = array(
+			'iso'      => $lp_date,
+			'day'      => strtoupper( $lp_day->format( 'D' ) ),
+			'date'     => strtoupper( $lp_day->format( 'j F Y' ) ),
+			'sessions' => $lp_sessions,
+		);
+	}
+
+	return array(
+		'start'  => $lp_start,
+		'end'    => $lp_end,
+		'week'   => (int) $lp_start->format( 'W' ),
+		'days'   => $lp_groups,
+		'count'  => $lp_count,
+		'offset' => $lp_offset,
+	);
+}
+
+/**
+ * The design's week label: "Week 29 · 13th – 20th July 2026".
+ *
+ * @param array $lp_week A lp_agenda_week() result.
+ * @return string
+ */
+function lp_agenda_week_label( array $lp_week ): string {
+	// The design's example week sits inside one month, so it names the month
+	// once. A week that straddles two needs both, or "27th – 2nd August" reads
+	// as though the 27th were in August.
+	$lp_same_month = $lp_week['start']->format( 'F' ) === $lp_week['end']->format( 'F' );
+
+	return sprintf(
+		'Week %d · %s – %s',
+		$lp_week['week'],
+		$lp_week['start']->format( $lp_same_month ? 'jS' : 'jS F' ),
+		$lp_week['end']->format( 'jS F Y' )
 	);
 }

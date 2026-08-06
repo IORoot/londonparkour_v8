@@ -89,10 +89,27 @@ return array(
 				'button_label' => __( 'Add session', 'londonparkour_v8' ),
 				'instructions' => __( 'Each recurring time-slot of this class. These are the rows on the timetable boards.', 'londonparkour_v8' ),
 				'sub_fields'   => array(
+					/*
+					 * The real date this session runs. `date_label` beside it is
+					 * the BOARD label ("TODAY", "THU") the departure boards
+					 * print — a different thing, and not a date: it cannot be
+					 * compared to a week window, which is what the Agenda page
+					 * needs. See PORT-FINDINGS §20.
+					 */
 					array(
-						'name'  => 'date_label',
-						'label' => __( 'Date', 'londonparkour_v8' ),
-						'type'  => 'text',
+						'name'           => 'date',
+						'label'          => __( 'Date', 'londonparkour_v8' ),
+						'type'           => 'date_picker',
+						'display_format' => 'D j M Y',
+						'return_format'  => 'Y-m-d',
+						'first_day'      => 1,
+						'instructions'   => __( 'The day this session runs. Drives the Agenda board.', 'londonparkour_v8' ),
+					),
+					array(
+						'name'         => 'date_label',
+						'label'        => __( 'Board label', 'londonparkour_v8' ),
+						'type'         => 'text',
+						'instructions' => __( 'What the departure boards print, e.g. "TODAY". Not a date.', 'londonparkour_v8' ),
 					),
 					array(
 						'name'  => 'time',

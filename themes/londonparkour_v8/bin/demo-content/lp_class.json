@@ -25,10 +25,18 @@
       },
       "sessions": [
         {
-          "date_label": "TODAY",
+          "date": "@MON",
+          "date_label": "MON",
           "time": "07:00",
           "spaces": "FULL",
           "sold_out": true
+        },
+        {
+          "date": "@THU",
+          "date_label": "THU",
+          "time": "07:00",
+          "spaces": "5 LEFT",
+          "sold_out": false
         }
       ],
       "is_featured": false
@@ -61,7 +69,8 @@
       },
       "sessions": [
         {
-          "date_label": "TODAY",
+          "date": "@WED",
+          "date_label": "WED",
           "time": "10:00",
           "spaces": "2 LEFT",
           "sold_out": false
@@ -98,15 +107,17 @@
       },
       "sessions": [
         {
-          "date_label": "TODAY",
+          "date": "@TUE",
+          "date_label": "TUE",
           "time": "18:30",
           "spaces": "4 LEFT",
           "sold_out": false
         },
         {
+          "date": "@THU",
           "date_label": "THU",
           "time": "18:30",
-          "spaces": "8 LEFT",
+          "spaces": "9 LEFT",
           "sold_out": false
         }
       ],
@@ -140,9 +151,17 @@
       },
       "sessions": [
         {
-          "date_label": "TODAY",
+          "date": "@MON",
+          "date_label": "MON",
           "time": "19:45",
           "spaces": "11 LEFT",
+          "sold_out": false
+        },
+        {
+          "date": "@THU",
+          "date_label": "THU",
+          "time": "19:45",
+          "spaces": "14 LEFT",
           "sold_out": false
         }
       ],
@@ -176,6 +195,14 @@
       },
       "sessions": [
         {
+          "date": "@TUE",
+          "date_label": "TUE",
+          "time": "07:15",
+          "spaces": "6 LEFT",
+          "sold_out": false
+        },
+        {
+          "date": "@FRI",
           "date_label": "FRI",
           "time": "07:15",
           "spaces": "6 LEFT",
@@ -212,6 +239,14 @@
       },
       "sessions": [
         {
+          "date": "@TUE",
+          "date_label": "TUE",
+          "time": "12:00",
+          "spaces": "3 LEFT",
+          "sold_out": false
+        },
+        {
+          "date": "@FRI",
           "date_label": "FRI",
           "time": "12:00",
           "spaces": "3 LEFT",
@@ -248,6 +283,7 @@
       },
       "sessions": [
         {
+          "date": "@SAT",
           "date_label": "SAT",
           "time": "09:30",
           "spaces": "9 LEFT",

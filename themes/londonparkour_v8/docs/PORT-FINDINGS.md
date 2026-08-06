@@ -608,3 +608,78 @@ The source draws an empty box because the Storybook has no media library; with
 a real image, media-photo's `fill` layout needs a positioned ancestor. Nothing
 else about the box changes, and with no thumbnail the bare source figure renders
 unaltered.
+
+## 20. The sessions repeater had no date, so the Agenda was unbuildable
+
+ClassesAgenda is a dated week board — seven named days, 18 sessions, week
+controls reading "Week 29 · 13th – 20th July 2026". None of that was derivable.
+
+The `sessions` repeater carried `date_label`, `time`, `spaces`, `sold_out`.
+`date_label` is the BOARD label a departure row prints ("TODAY", "THU"), not a
+date, and every seeded session used one of those two strings. Nothing could be
+compared to a week window, and mapping "TODAY" onto a weekday would have been
+fabricating the timetable — the failure the Port Brief names.
+
+**Resolved by the repo owner: a `date` sub-field was added**, an ACF date
+picker returning `Y-m-d`. Both fields now exist with distinct jobs, and their
+ACF instructions say so, because the pair invites exactly the confusion that
+caused this. The other option weighed was a `weekday` recurrence field
+generating dates rather than storing them — truer to how a timetable works, and
+worth revisiting if per-week data entry becomes a chore.
+
+**Demo sessions are seeded with `@MON`…`@SUN` tokens.** `lp_seed_weekdays()`
+resolves them against the week of the seed run, so the board is never empty and
+committed demo content never names a week that has already passed. Twelve
+sessions are seeded — the rows of ClassesAgenda's own `WEEK` constant whose
+titles have a class record here; the other six name classes this site does not
+have.
+
+The knock-on: `date_label` values changed from `TODAY`/`THU` to weekday
+abbreviations, which the Hero, Classes and CTA boards also print. That is demo
+data, not design, and the blocks still render.
+
+## 21. Classes view pages live at `/classes-agenda`, not `/classes/agenda`
+
+`/classes/` is the lp_class post-type archive, so a page under it needs a parent
+page whose slug collides with that archive. The two view pages are therefore
+`classes-agenda` and `classes-map` at the top level.
+
+A URL is routing, not design — the source's `/classes/agenda` is a Storybook
+href literal, not a signed-off `.pen` decision — so this is recorded rather than
+worked around with rewrite rules, which would also have introduced a second URL
+resolving to the same page. `lp_classes_page_url()` resolves the hrefs from the
+seeded pages and falls back to the source's own path when a page is missing, so
+the view rail always points somewhere.
+
+`lp_seed_template_pages()` is new and closes half of the Phase 6 item HANDOFF
+lists as "pages + their templates" — it seeds Legal and Classes — Agenda with
+`_wp_page_template` set. Add Map, Contact and DocsFaq to its map as those land.
+A page template is unverifiable without a page that uses it; `lp render` cannot
+reach one and greps prove nothing (§13).
+
+## 22. What the Agenda computes rather than assumes
+
+Everything on the page except the design's own fixed copy is counted or read
+from the clock:
+
+- **`3 RUNNING NOW`** — a session is running when now sits between its start
+  (its `date` + `time`) and its end (start + the duration in the class's
+  `subtitle`). A row with no parseable duration is not counted rather than
+  assumed. The stamp is omitted entirely when nothing is running.
+- Week session count, per-day band counts, the board foot's site/day/session
+  tally, and the `LIVE · UPDATED` time.
+- Prev/next week labels are the neighbouring weeks' real labels, not the
+  design's fixed "Week 28"/"Week 30".
+
+Two small departures from the design's own label format:
+
+- The week runs **Monday to Sunday**. The design's "13th – 20th July 2026" ends
+  on the following Monday; this ends on the Sunday, because that is the week
+  the board actually shows.
+- A week straddling two months names both months. The design's example week
+  sits inside one, so it names the month once — which would render
+  "27th – 2nd August" and read as though the 27th were in August.
+
+No element change was needed for the week controls: the source's prev/next
+chevrons are Button `variant="icon"`, and button.php already renders an `<a>`
+as soon as it is given a href.

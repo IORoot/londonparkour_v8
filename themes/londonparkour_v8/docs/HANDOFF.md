@@ -346,7 +346,7 @@ source across the 14 page components. That is several sessions, not one. Read
 | BlogIndex | 274 | `home.php` | **done** |
 | BlogDetail | 314 | `single.php` | **done** — the worked example for native-post templates |
 | ClassesListings | 243 | `archive-lp_class.php` | **done** — the worked example for a filtered CPT archive |
-| ClassesAgenda | 306 (+122 `ClassesHeaderCluster.js`) | page template | missing |
+| ClassesAgenda | 306 (+122 `ClassesHeaderCluster.js`) | `templates/classes-agenda.php` | **done** — cluster is now `parts/components/classes-header-cluster.php` |
 | ClassesMap | 381 | page template | missing |
 | ClassDetail | 391 | `single-lp_class.php` | missing |
 | TutorialsIndex | 216 | `archive-lp_tutorial.php` | missing |
@@ -473,7 +473,7 @@ Storybook to start any of these.
 | Batch | Pages | Notes |
 |---|---|---|
 | ~~**B3**~~ | ~~`archive.php`, `search.php`, `index.php`~~ | **DONE.** `search.php` turned out to have a real source (§14) and is a full port. `archive.php` and `index.php` share `template-parts/content/archive-list.php`, which composes BlogIndex's Recent grid under a breadcrumb + masthead. Earned three things B4–B6 reuse: `parts/components/pagination.php`, `view-tab.php`'s link form, and `lp_post_card_args()` |
-| **B4** | ~~ClassesListings → `archive-lp_class.php`~~ **done**; ClassesAgenda + ClassesMap → page templates, ClassDetail → `single-lp_class.php` still to do | **`ClassesHeaderCluster` is promoted** (`parts/components/classes-header-cluster.php`) — call it, do not rebuild it, and note it does NOT render nav. `ClassDetail` deliberately does not use it (no ViewRail/FilterGrid; only its docblock mentions it). **Agenda's prev/next week is a `?week=` query arg** — repo owner's call; use the same GET-parameter shape `app/setup/queries.php` already sets up. Filtering pattern, `is_featured`, and the `SITES` data-model gap are PORT-FINDINGS §17–19 |
+| **B4** | ~~ClassesListings~~ and ~~ClassesAgenda~~ **done**; ClassesMap → page template, ClassDetail → `single-lp_class.php` still to do | **`ClassesHeaderCluster` is promoted** (`parts/components/classes-header-cluster.php`) — call it, do not rebuild it, and note it does NOT render nav. `ClassDetail` deliberately does not use it (no ViewRail/FilterGrid; only its docblock mentions it). Agenda is done: `?week=±n`, and it forced a `date` sub-field onto the sessions repeater (PORT-FINDINGS §20) because `date_label` is a board label, not a date. Map should call `lp_classes_page_url( 'classes-map' )` and add itself to `lp_seed_template_pages()`. Filtering pattern, `is_featured`, and the `SITES` data-model gap are PORT-FINDINGS §17–19 |
 | **B5** | TutorialsIndex → `archive-lp_tutorial.php`, TutorialsSeries → `taxonomy-lp_series.php`, TutorialDetail → `single-lp_tutorial.php` | Both index pages embed `Blocks/TrainInPerson`, which is already a WP block — call the block partial, do not re-port the section |
 | **B6** | Contact, DocsFaq → page templates | Largest, and last so earlier ports settle the patterns. **Repo owner chose Flexible Content**, so their bespoke sections become new blocks: enquiry form + reach panel, other-ways fact strip, FAQ group, section directory, passenger-enquiries strip |
 

@@ -81,9 +81,20 @@
             "instructions": "Each recurring time-slot of this class. These are the rows on the timetable boards.",
             "sub_fields": [
                 {
-                    "name": "date_label",
+                    "name": "date",
                     "label": "Date",
+                    "type": "date_picker",
+                    "display_format": "D j M Y",
+                    "return_format": "Y-m-d",
+                    "first_day": 1,
+                    "instructions": "The day this session runs. Drives the Agenda board.",
+                    "key": "field_b39932329ad1f143"
+                },
+                {
+                    "name": "date_label",
+                    "label": "Board label",
                     "type": "text",
+                    "instructions": "What the departure boards print, e.g. \"TODAY\". Not a date.",
                     "key": "field_eaedcbdcecbb6dfa"
                 },
                 {
