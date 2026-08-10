@@ -280,6 +280,55 @@ function lp_class_filter_cells( array $lp_current = array() ): array {
 }
 
 /**
+ * WHEN fact for an agenda card: "18:30 – 20:00" from start time + duration.
+ *
+ * @param string $lp_time     H:i.
+ * @param int    $lp_class_id Class post ID (for duration).
+ */
+function lp_agenda_when_label( string $lp_time, int $lp_class_id ): string {
+	if ( '' === $lp_time ) {
+		return '';
+	}
+
+	$lp_minutes = (int) filter_var( lp_class_duration( $lp_class_id ), FILTER_SANITIZE_NUMBER_INT );
+	if ( ! $lp_minutes ) {
+		return $lp_time;
+	}
+
+	$lp_start = DateTimeImmutable::createFromFormat( 'H:i', $lp_time );
+	if ( ! $lp_start ) {
+		return $lp_time;
+	}
+
+	return $lp_start->format( 'H:i' ) . ' – ' . $lp_start->modify( sprintf( '+%d minutes', $lp_minutes ) )->format( 'H:i' );
+}
+
+/**
+ * Attachment ID for a seeded demo-media filename (e.g. DSC01072.jpeg).
+ *
+ * @param string $lp_filename Basename under bin/demo-media/.
+ */
+function lp_demo_media_id( string $lp_filename ): int {
+	$lp_slug = sanitize_title( pathinfo( $lp_filename, PATHINFO_FILENAME ) );
+	if ( '' === $lp_slug ) {
+		return 0;
+	}
+
+	$lp_ids = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'name'           => $lp_slug,
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		)
+	);
+
+	return (int) ( $lp_ids[0] ?? 0 );
+}
+
+/**
  * Every session in one week, grouped by day, for the Agenda board.
  *
  * Sessions come from clasbpro via lp_class_sessions_between() — active classes
@@ -306,20 +355,32 @@ function lp_agenda_week( int $lp_offset = 0 ): array {
 			continue;
 		}
 
+		$lp_class_id = (int) ( $lp_row['id'] ?? 0 );
+		$lp_location = (string) ( $lp_row['location'] ?? '' );
+		$lp_level    = (string) ( $lp_row['level'] ?? '' );
+		$lp_time     = (string) ( $lp_row['time'] ?? '' );
+
 		$lp_days[ $lp_date ][] = array(
-			'time'       => (string) ( $lp_row['time'] ?? '' ),
+			'time'       => $lp_time,
 			// BoardRow's own per-row date label is left blank: the day is
 			// already announced by the band above it, and repeating it is
 			// redundant. The source makes the same call.
 			'date_label' => '',
 			'title'      => (string) ( $lp_row['title'] ?? '' ),
 			'subtitle'   => (string) ( $lp_row['subtitle'] ?? '' ),
-			'location'   => (string) ( $lp_row['location'] ?? '' ),
-			'level'      => (string) ( $lp_row['level'] ?? '' ),
+			'location'   => $lp_location,
+			'level'      => $lp_level,
 			'spaces'     => (string) ( $lp_row['spaces'] ?? '' ),
 			'sold_out'   => ! empty( $lp_row['sold_out'] ),
 			'href'       => (string) ( $lp_row['url'] ?? '' ),
-			'class_id'   => (int) ( $lp_row['id'] ?? 0 ),
+			'class_id'   => $lp_class_id,
+			// Cards board fields (O6Fhqs) — kept alongside the row shape.
+			'thumb'      => (int) ( $lp_row['thumb'] ?? 0 ),
+			'price'      => (string) ( $lp_row['price'] ?? '' ),
+			'coaches'    => (string) ( $lp_row['coaches'] ?? '' ),
+			'when'       => lp_agenda_when_label( $lp_time, $lp_class_id ),
+			'kicker'     => '' !== $lp_location ? strtoupper( $lp_location ) : strtoupper( $lp_level ),
+			'past'       => ! lp_class_session_is_future( $lp_row ),
 		);
 		++$lp_count;
 	}

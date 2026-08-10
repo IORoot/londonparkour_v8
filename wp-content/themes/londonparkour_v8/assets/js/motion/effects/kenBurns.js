@@ -104,6 +104,9 @@ export const kenBurnsEffect = {
       if (typeof result === 'function') stopDecode = result;
     };
 
+    const startIndex =
+      slides.length > 1 ? Math.floor(Math.random() * slides.length) : 0;
+
     slides.forEach((img, i) => {
       img.style.position = 'absolute';
       img.style.inset = '0';
@@ -111,20 +114,20 @@ export const kenBurnsEffect = {
       img.style.height = '100%';
       img.style.objectFit = 'cover';
       img.style.willChange = 'transform, opacity';
-      img.style.opacity = i === 0 ? '1' : '0';
-      img.style.zIndex = i === 0 ? '1' : '0';
+      img.style.opacity = i === startIndex ? '1' : '0';
+      img.style.zIndex = i === startIndex ? '1' : '0';
       const cfg = readCfg(img, defaults);
       img.style.transformOrigin = cfg.origin;
       img.style.transform = `scale(${zoomRange(cfg).from})`;
     });
 
     if (reduced) {
-      slides[0].style.transform = 'scale(1)';
-      slides[0].style.opacity = '1';
-      slides.slice(1).forEach((img) => {
-        img.style.opacity = '0';
+      slides.forEach((img, i) => {
+        img.style.opacity = i === startIndex ? '1' : '0';
+        img.style.zIndex = i === startIndex ? '1' : '0';
+        img.style.transform = i === startIndex ? 'scale(1)' : img.style.transform;
       });
-      syncCoords(slides[0]);
+      syncCoords(slides[startIndex]);
       return () => {
         if (typeof stopDecode === 'function') stopDecode();
       };
@@ -192,13 +195,13 @@ export const kenBurnsEffect = {
     };
 
     const run = async () => {
-      let i = 0;
+      let i = startIndex;
       let elapsedOnCurrent = 0;
 
-      slides[0].style.opacity = '1';
-      slides[0].style.zIndex = '1';
-      syncCoords(slides[0]);
-      startZoom(slides[0]);
+      slides[startIndex].style.opacity = '1';
+      slides[startIndex].style.zIndex = '1';
+      syncCoords(slides[startIndex]);
+      startZoom(slides[startIndex]);
 
       while (!stopped) {
         const img = slides[i];

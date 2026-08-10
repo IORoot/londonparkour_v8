@@ -280,7 +280,77 @@ function lp_class_upcoming_sessions( int $class_id, int $limit = 3 ): array {
 }
 
 /**
+ * Every occurrence date for a class inside [start, end] inclusive — including
+ * dates that have already passed. Clasbpro's next_weekday_occurrences() skips
+ * the past; the Agenda week board still needs those rows (greyed out).
+ *
+ * @param int               $class_id Post ID.
+ * @param DateTimeImmutable $start    Range start (date only matters).
+ * @param DateTimeImmutable $end      Range end inclusive.
+ * @return array<int,string> Y-m-d strings in order.
+ */
+function lp_class_dates_between( int $class_id, DateTimeImmutable $start, DateTimeImmutable $end ): array {
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( ! $raw || empty( $raw['start_time'] ) ) {
+		return array();
+	}
+
+	$tz      = wp_timezone();
+	$walk    = $start->setTimezone( $tz )->setTime( 0, 0 );
+	$last    = $end->setTimezone( $tz )->setTime( 0, 0 );
+	$skip    = (array) ( $raw['cancelled_dates'] ?? array() );
+	$dates   = array();
+	$one_off = ! empty( $raw['is_one_off_event'] );
+
+	$weekday_map = array(
+		'monday'    => 1,
+		'tuesday'   => 2,
+		'wednesday' => 3,
+		'thursday'  => 4,
+		'friday'    => 5,
+		'saturday'  => 6,
+		'sunday'    => 7,
+	);
+	$target = $weekday_map[ strtolower( (string) ( $raw['day_of_week'] ?? '' ) ) ] ?? 0;
+
+	if ( $one_off ) {
+		$run_start = (string) ( $raw['start_date'] ?? '' );
+		$run_end   = (string) ( $raw['end_date'] ?? $run_start );
+		if ( '' === $run_start ) {
+			return array();
+		}
+		if ( '' === $run_end ) {
+			$run_end = $run_start;
+		}
+	}
+
+	$max = 14;
+	while ( $walk <= $last && $max-- > 0 ) {
+		$ymd = $walk->format( 'Y-m-d' );
+
+		$matches = $one_off
+			? ( $ymd >= $run_start && $ymd <= $run_end )
+			: ( $target && (int) $walk->format( 'N' ) === $target );
+
+		if ( $matches
+			&& ! in_array( $ymd, $skip, true )
+			&& ( ! lp_clasbpro_ready() || \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::date_in_class_run_window( $raw, $ymd ) )
+		) {
+			$dates[] = $ymd;
+		}
+
+		$walk = $walk->modify( '+1 day' );
+	}
+
+	return $dates;
+}
+
+/**
  * Session rows whose date falls in [start, end] inclusive (Agenda).
+ *
+ * Includes past occurrences in the window so the week board can grey them out.
+ * Callers that only want future sessions must filter with
+ * lp_class_session_is_future().
  *
  * @param DateTimeImmutable $start Week start (Monday).
  * @param DateTimeImmutable $end   Week end (Sunday).
@@ -298,9 +368,7 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 		)
 	);
 
-	$start_s = $start->format( 'Y-m-d' );
-	$end_s   = $end->format( 'Y-m-d' );
-	$rows    = array();
+	$rows = array();
 
 	foreach ( $class_ids as $class_id ) {
 		$class_id = (int) $class_id;
@@ -308,16 +376,34 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 			continue;
 		}
 
-		// Enough horizon to cover a far week-offset agenda view.
-		foreach ( lp_class_upcoming_sessions( $class_id, 16 ) as $session ) {
-			$date = (string) ( $session['date'] ?? '' );
-			if ( $date < $start_s || $date > $end_s ) {
-				continue;
-			}
-			$rows[] = array_merge(
-				lp_class_board_fields( $class_id ),
-				$session
+		$raw = lp_clasbpro_raw( $class_id );
+		if ( ! $raw || empty( $raw['start_time'] ) ) {
+			continue;
+		}
+
+		$time = (string) $raw['start_time'];
+		if ( strlen( $time ) > 5 ) {
+			$time = substr( $time, 0, 5 );
+		}
+		$capacity = max( 0, (int) ( $raw['capacity'] ?? 0 ) );
+		$board    = lp_class_board_fields( $class_id );
+
+		foreach ( lp_class_dates_between( $class_id, $start, $end ) as $date ) {
+			$remaining = lp_clasbpro_ready()
+				? \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::seats_remaining( $raw, $date )
+				: $capacity;
+			$sold_out = $remaining <= 0;
+			$session  = array(
+				'date'       => $date,
+				'date_label' => lp_class_date_label( $date ),
+				'time'       => $time,
+				'spaces'     => lp_class_spaces_label( $remaining, $capacity ),
+				'sold_out'   => $sold_out,
+				'remaining'  => $remaining,
+				'capacity'   => $capacity,
+				'book_label' => $sold_out ? 'WAITLIST' : 'BOOK',
 			);
+			$rows[] = array_merge( $board, $session );
 		}
 	}
 

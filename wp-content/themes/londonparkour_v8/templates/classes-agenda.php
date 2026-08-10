@@ -3,44 +3,17 @@
  * Template Name: Classes — Agenda
  *
  * ClassesAgenda, ported from src/stories/Pages/ClassesAgenda/ClassesAgenda.js
- * (`z0TSK`). A page template rather than an archive: the board's unit is a
- * SESSION, and sessions are repeater rows on a class, not posts — so there is
- * no query for WordPress to route.
+ * (`GdUt4` + cards board `O6Fhqs`). A page template rather than an archive: the
+ * board's unit is a SESSION, and sessions come from clasbpro — so there is no
+ * query for WordPress to route.
  *
- * Section order: header cluster → week controls → board → week pagination →
- * onward. Nav/footer are get_header()/get_footer(). The source reparents its
- * nav node after mount to get it outside <main>; the promoted cluster does not
- * render nav at all, so that workaround does not come across.
- *
- * ── The data-model change this page required ───────────────────────────────
- *
- * The `sessions` repeater had no date. It had `date_label` — the board label
- * ("TODAY", "THU") the departure boards print — which cannot be compared to a
- * week window. A dated agenda was therefore unbuildable, and mapping "TODAY"
- * onto a weekday would have been fabricating the timetable. A `date` sub-field
- * was added, with the repo owner's decision, and both fields now co-exist with
- * distinct jobs. PORT-FINDINGS §20.
- *
- * Demo sessions are seeded with `@MON`…`@SUN` tokens that
- * app/setup/seed.php resolves against the week of the seed run, so the board is
- * never empty and the committed content never names a week that has passed.
+ * Section order: header cluster (media masthead, no filter) → week controls →
+ * cards board → week pagination → onward. Nav/footer are get_header()/get_footer().
  *
  * ── Week navigation ────────────────────────────────────────────────────────
  *
  * `?week=±n`, the repo owner's choice over a JS-only control: the URL reflects
- * what is on screen, it is shareable, and it works with JS off. The source's
- * prev/next chevrons are Button `variant="icon"`, which renders an <a> as soon
- * as it is given a href — no element change was needed.
- *
- * ── Live and counted values ────────────────────────────────────────────────
- *
- * `3 RUNNING NOW` is computed, not assumed: a session is running when now sits
- * between its start (date + time) and its end (start + the duration in the
- * class's `subtitle`, whose ACF instructions document that format). Everything
- * else on the page — the week's session count, the per-day counts, the board
- * foot's site/day/session tally, the LIVE stamp's time — is counted or read
- * from the clock. The only fixed copy is the design's own: the masthead, the
- * board's terms line, and the onward labels.
+ * what is on screen, it is shareable, and it works with JS off.
  *
  * @package londonparkour_v8
  */
@@ -50,10 +23,10 @@ defined( 'ABSPATH' ) || exit;
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public read-only navigation, see app/setup/queries.php.
 $lp_offset = isset( $_GET['week'] ) ? (int) $_GET['week'] : 0;
 
-$lp_week  = lp_agenda_week( $lp_offset );
-$lp_prev  = lp_agenda_week( $lp_offset - 1 );
-$lp_next  = lp_agenda_week( $lp_offset + 1 );
-$lp_url   = static fn( int $lp_n ): string => 0 === $lp_n ? (string) get_permalink() : add_query_arg( 'week', $lp_n, (string) get_permalink() );
+$lp_week = lp_agenda_week( $lp_offset );
+$lp_prev = lp_agenda_week( $lp_offset - 1 );
+$lp_next = lp_agenda_week( $lp_offset + 1 );
+$lp_url  = static fn( int $lp_n ): string => 0 === $lp_n ? (string) get_permalink() : add_query_arg( 'week', $lp_n, (string) get_permalink() );
 
 /*
  * Running now: start = date + time, end = start + the class's duration. A row
@@ -86,34 +59,9 @@ foreach ( $lp_week['days'] as $lp_day_group ) {
 	}
 }
 
-// Board rows: a day band, then that day's sessions, in board-shell's row shape.
-$lp_rows = array();
-foreach ( $lp_week['days'] as $lp_day_group ) {
-	$lp_total = count( $lp_day_group['sessions'] );
-
-	$lp_rows[] = array(
-		'part' => 'components/board-day-band',
-		'args' => array(
-			'day'   => $lp_day_group['day'],
-			'date'  => $lp_day_group['date'],
-			'count' => sprintf( _n( '%d SESSION', '%d SESSIONS', $lp_total, 'londonparkour_v8' ), $lp_total ),
-		),
-	);
-
-	foreach ( $lp_day_group['sessions'] as $lp_session ) {
-		$lp_href = (string) ( $lp_session['url'] ?? '' );
-		unset( $lp_session['class_id'] );
-		$lp_rows[] = array(
-			'part' => 'components/board-row',
-			'args' => array(
-				'variant' => 'default',
-				'href'    => $lp_href,
-			) + $lp_session,
-		);
-	}
-}
-
-$lp_sites = (int) ( wp_count_posts( 'lp_location' )->publish ?? 0 );
+$lp_sites      = (int) ( wp_count_posts( 'lp_location' )->publish ?? 0 );
+$lp_mast_media = lp_demo_media_id( 'DSC01072.jpeg' );
+$lp_mast_url   = $lp_mast_media ? '' : (string) get_theme_file_uri( 'bin/demo-media/DSC01072.jpeg' );
 
 get_header();
 ?>
@@ -123,7 +71,7 @@ get_header();
 	lp_part(
 		'components/classes-header-cluster',
 		array(
-			'crumbs'        => array(
+			'crumbs'      => array(
 				array(
 					'label' => 'HOME',
 					'href'  => home_url( '/' ),
@@ -134,16 +82,19 @@ get_header();
 				),
 				array( 'label' => 'AGENDA' ),
 			),
-			'action'        => array(
+			'action'      => array(
 				'label' => 'LISTINGS VIEW ↗',
 				'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
 			),
-			'masthead'      => array(
-				'title' => 'Departures, day by day.',
-				'note'  => 'Every session on the board for the week ahead. Coach-led, capped at twelve, £15 to drop in. Spaces update live — take the slot while it is there.',
+			'masthead'    => array(
+				'title'     => 'Departures, day by day.',
+				'note'      => 'Every session on the board for the week ahead. Coach-led, capped at twelve, £15 to drop in. Spaces update live — take the slot while it is there.',
+				'media_id'  => $lp_mast_media,
+				'media_url' => $lp_mast_url,
+				'media_alt' => '',
 			),
-			'active'        => 'agenda',
-			'filter_action' => (string) get_post_type_archive_link( lp_class_post_type() ),
+			'active'      => 'agenda',
+			'show_filter' => false,
 		)
 	);
 	?>
@@ -210,19 +161,162 @@ get_header();
 		</div>
 	</div>
 
-	<?php
-	lp_part(
-		'components/board-shell',
-		array(
-			'board_title' => sprintf( 'AGENDA — WEEK %d', $lp_week['week'] ),
-			'live_label'  => sprintf( 'LIVE · UPDATED %s', $lp_now->format( 'H:i' ) ),
-			'columns'     => array( 'TIME', 'SESSION', 'SITE', 'LEVEL', 'SPACES' ),
-			'rows'        => $lp_rows,
-			'foot_left'   => '£15 DROP-IN · ALL KIT PROVIDED · FREE TO CANCEL 12H BEFORE',
-			'foot_right'  => sprintf( '%d SITES · 7 DAYS · %d SESSIONS THIS WEEK', $lp_sites, $lp_week['count'] ),
-		)
-	);
+	<section class="w-full bg-neutral" data-component="agenda-cards-board">
+		<div class="px-6 lg:px-16 pt-scale-2xl pb-scale-2xl flex flex-col gap-3.5">
+			<div class="flex items-center justify-between gap-4 flex-wrap pb-[18px] border-b border-neutral-content/20">
+				<h2 class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-primary m-0"><?php echo esc_html( sprintf( 'AGENDA · WEEK %d', $lp_week['week'] ) ); ?></h2>
+				<span class="inline-flex items-center gap-[9px]">
+					<span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-hidden="true"></span>
+					<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/80"><?php echo esc_html( sprintf( 'UPDATED %s · %s', $lp_now->format( 'H:i' ), strtoupper( $lp_now->format( 'D j M' ) ) ) ); ?></span>
+				</span>
+			</div>
 
+			<div class="flex flex-col gap-0">
+				<?php
+				$lp_day_groups = array_values(
+					array_filter(
+						$lp_week['days'],
+						static fn( array $lp_g ): bool => ! empty( $lp_g['sessions'] )
+					)
+				);
+				$lp_day_total = count( $lp_day_groups );
+
+				/*
+				 * Featured = the globally next upcoming session (same source as
+				 * the hero board), not merely the first future row in this
+				 * week's list. A future/past week offset therefore shows no
+				 * yellow highlight unless that next session falls in-window.
+				 *
+				 * Named $lp_upcoming_* so we do not clobber $lp_next / $lp_prev
+				 * (the adjacent week payloads used by week pagination).
+				 */
+				$lp_upcoming     = lp_class_next_session();
+				$lp_upcoming_key = '';
+				$lp_upcoming_day = '';
+				if ( $lp_upcoming ) {
+					$lp_upcoming_key = sprintf(
+						'%s|%s|%d',
+						(string) ( $lp_upcoming['date'] ?? '' ),
+						(string) ( $lp_upcoming['time'] ?? '' ),
+						(int) ( $lp_upcoming['id'] ?? 0 )
+					);
+					foreach ( $lp_day_groups as $lp_g ) {
+						foreach ( $lp_g['sessions'] as $lp_s ) {
+							$lp_key = sprintf(
+								'%s|%s|%d',
+								(string) ( $lp_g['iso'] ?? '' ),
+								(string) ( $lp_s['time'] ?? '' ),
+								(int) ( $lp_s['class_id'] ?? 0 )
+							);
+							if ( $lp_key === $lp_upcoming_key ) {
+								$lp_upcoming_day = $lp_g['day'];
+								break 2;
+							}
+						}
+					}
+				}
+
+				foreach ( $lp_day_groups as $lp_day_index => $lp_day_group ) :
+					$lp_total = count( $lp_day_group['sessions'] );
+					?>
+					<div class="w-full flex items-center justify-between gap-3 pt-6 pb-4" data-component="agenda-day-header">
+						<div class="flex items-end gap-[14px] min-w-0">
+							<span class="font-heading text-[42px] font-semibold tracking-[-1px] uppercase text-neutral-content leading-none"><?php echo esc_html( $lp_day_group['day'] ); ?></span>
+							<span class="font-label text-[11px] font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[6px]"><?php echo esc_html( $lp_day_group['date'] ); ?></span>
+						</div>
+						<div class="flex items-center gap-3 shrink-0">
+							<span class="font-label text-[11px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( _n( '%d SESSION', '%d SESSIONS', $lp_total, 'londonparkour_v8' ), $lp_total ) ); ?></span>
+							<?php if ( $lp_upcoming_day === $lp_day_group['day'] ) : ?>
+								<span class="inline-flex items-center gap-1.5 bg-primary px-2.5 py-1">
+									<span class="w-[5px] h-[5px] rounded-full bg-primary-content" aria-hidden="true"></span>
+									<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-primary-content">NEXT UP</span>
+								</span>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div class="flex flex-col gap-0">
+						<?php
+						foreach ( $lp_day_group['sessions'] as $lp_session ) :
+							$lp_is_past = ! empty( $lp_session['past'] );
+							$lp_key     = sprintf(
+								'%s|%s|%d',
+								(string) ( $lp_day_group['iso'] ?? '' ),
+								(string) ( $lp_session['time'] ?? '' ),
+								(int) ( $lp_session['class_id'] ?? 0 )
+							);
+							$lp_is_next = ( '' !== $lp_upcoming_key && $lp_key === $lp_upcoming_key );
+							$lp_size    = $lp_is_next ? 'featured' : 'default';
+							$lp_kicker  = (string) ( $lp_session['kicker'] ?? '' );
+							if ( $lp_is_next && '' !== $lp_kicker && ! str_starts_with( $lp_kicker, 'NEXT UP' ) ) {
+								$lp_kicker = 'NEXT UP · ' . $lp_kicker;
+							}
+
+							$lp_facts = array(
+								array(
+									'key'   => 'WHEN',
+									'value' => (string) ( $lp_session['when'] ?? $lp_session['time'] ),
+								),
+								array(
+									'key'   => 'WHERE',
+									'value' => (string) ( $lp_session['location'] ?? '' ),
+								),
+								array(
+									'key'   => 'LEVEL',
+									'value' => (string) ( $lp_session['level'] ?? '' ),
+								),
+								array(
+									'key'   => 'COACH',
+									'value' => (string) ( $lp_session['coaches'] ?? '' ),
+								),
+							);
+
+							lp_part(
+								'components/agenda-card',
+								array(
+									'day'           => $lp_day_group['day'],
+									'time'          => (string) ( $lp_session['time'] ?? '' ),
+									'media_id'      => (int) ( $lp_session['thumb'] ?? 0 ),
+									'media_alt'     => '',
+									'glyph_icon_id' => 'glyph-flowing',
+									'kicker'        => $lp_kicker,
+									'title'         => (string) ( $lp_session['title'] ?? '' ),
+									'sub'           => (string) ( $lp_session['subtitle'] ?? '' ),
+									'facts'         => $lp_facts,
+									'fare'          => (string) ( $lp_session['price'] ?? '' ),
+									'spaces'        => (string) ( $lp_session['spaces'] ?? '' ),
+									'href'          => $lp_is_past ? '' : (string) ( $lp_session['href'] ?? '' ),
+									'size'          => $lp_size,
+									'past'          => $lp_is_past,
+								)
+							);
+						endforeach;
+						?>
+					</div>
+
+					<?php if ( $lp_day_index < $lp_day_total - 1 ) : ?>
+						<div class="w-full h-px bg-neutral-content/10 my-0" aria-hidden="true"></div>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</div>
+
+			<div class="flex items-baseline justify-between gap-4 flex-wrap pt-[19px] border-t border-neutral-content/15">
+				<?php
+				lp_part(
+					'elements/text-link',
+					array(
+						'label'   => 'VIEW THE FULL TIMETABLE →',
+						'href'    => (string) get_post_type_archive_link( lp_class_post_type() ),
+						'variant' => 'board',
+					)
+				);
+				?>
+				<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( '%d SITES · %d CLASSES A WEEK', $lp_sites, $lp_week['count'] ) ); ?></span>
+			</div>
+		</div>
+	</section>
+
+	<?php
 	lp_part(
 		'components/page-onward',
 		array(
