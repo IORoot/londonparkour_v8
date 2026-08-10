@@ -136,13 +136,13 @@ get_header();
 				),
 				array(
 					'label' => 'CLASSES',
-					'href'  => $lp_arch,
+					'href'  => lp_classes_page_url( 'classes' ),
 				),
 				array( 'label' => 'LISTINGS' ),
 			),
 			'action'        => array(
 				'label' => 'AGENDA VIEW ↗',
-				'href'  => home_url( '/classes/agenda' ),
+				'href'  => lp_classes_page_url( 'classes' ),
 			),
 			'masthead'      => array(
 				'title' => 'Every class we run.',
@@ -327,12 +327,12 @@ get_header();
 			'prev' => array(
 				'keyword' => '← AGENDA VIEW',
 				'label'   => 'This week, hour by hour',
-				'href'    => home_url( '/classes/agenda' ),
+				'href'    => lp_classes_page_url( 'classes' ),
 			),
 			'next' => array(
 				'keyword' => 'MAP VIEW →',
 				'label'   => 'Where we train across London',
-				'href'    => home_url( '/classes/map' ),
+				'href'    => lp_classes_page_url( 'classes-map' ),
 			),
 		)
 	);

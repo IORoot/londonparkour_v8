@@ -105,24 +105,24 @@ function lp_pagination_args( ?WP_Query $lp_query = null, string $lp_noun = 'RESU
 /**
  * URL of one of the two Classes view PAGES, by slug.
  *
- * The source hrefs are `/classes/agenda` and `/classes/map`, but `/classes/` is
- * the clasbpro_class post-type archive, so a page cannot live under it without
- * a parent page whose slug collides with that archive. The pages are therefore
- * `classes-agenda` and `classes-map` at the top level. A URL is routing, not
- * design — the source's hrefs are Storybook literals, not a signed-off `.pen`
- * decision — so this is a departure worth recording rather than worth building
- * rewrite rules for. See docs/PORT-FINDINGS.md §21.
+ * Agenda is the default Classes page at `/classes/`. Map is `/classes-map/`.
+ * Class singles stay at `/classes/{slug}`; the CPT listings archive is
+ * `/all-classes/` so it does not collide with Agenda. See docs/PORT-FINDINGS.md §21.
  *
- * Falls back to the source's own path if the page has not been seeded yet, so
- * the rail still points somewhere rather than at nothing.
+ * Falls back to a top-level path if the page has not been seeded yet, so the
+ * rail still points somewhere rather than at nothing.
  *
- * @param string $lp_slug Page slug.
+ * @param string $lp_slug Page slug (`classes` or `classes-map`).
  * @return string
  */
 function lp_classes_page_url( string $lp_slug ): string {
 	$lp_page = get_page_by_path( $lp_slug );
 
-	return $lp_page ? (string) get_permalink( $lp_page ) : home_url( '/' . str_replace( 'classes-', 'classes/', $lp_slug ) );
+	if ( $lp_page ) {
+		return (string) get_permalink( $lp_page );
+	}
+
+	return home_url( '/' . $lp_slug . '/' );
 }
 
 /**
@@ -246,7 +246,7 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 			'label'   => 'AGENDA',
 			'meta'    => sprintf( '%d SESSIONS', $lp_sessions ),
 			'icon_id' => 'icon-calendar-days',
-			'href'    => lp_classes_page_url( 'classes-agenda' ),
+			'href'    => lp_classes_page_url( 'classes' ),
 			'active'  => 'agenda' === $lp_active,
 		),
 		array(

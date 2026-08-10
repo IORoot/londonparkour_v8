@@ -66,12 +66,12 @@ $lp_rich_states = array(
 	'active'   => array(
 		'label' => 'text-primary',
 		'meta'  => 'text-neutral-content/80',
-		'bar'   => 'bg-primary',
+		'bar'   => 'h-[3px] bg-primary',
 	),
 	'inactive' => array(
 		'label' => 'text-neutral-content/65 group-hover:text-neutral-content/80',
 		'meta'  => 'text-neutral-content/50',
-		'bar'   => 'bg-transparent',
+		'bar'   => 'h-px bg-neutral-content/15',
 	),
 );
 
@@ -112,7 +112,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 			<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px]"><?php echo esc_html( $lp_label ); ?></span>
 		</span>
 		<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px]', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
-		<span class="<?php echo lp_classes( 'absolute inset-x-0 bottom-0 h-[3px]', $lp_rich['bar'] ); ?>" aria-hidden="true"></span>
+		<span class="<?php echo lp_classes( 'absolute inset-x-0 bottom-0', $lp_rich['bar'] ); ?>" aria-hidden="true"></span>
 	<?php echo '' !== $lp_href ? '</a>' : '</button>'; ?>
 	<?php
 	return;

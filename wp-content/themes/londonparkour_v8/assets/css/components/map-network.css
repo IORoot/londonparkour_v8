@@ -20,3 +20,20 @@
 		overflow: hidden;
 	}
 }
+
+/* Spot click — show the MapPin black box without Leaflet's default chrome. */
+.lp-spot-popup .leaflet-popup-content-wrapper {
+	background: transparent;
+	box-shadow: none;
+	border-radius: 0;
+	padding: 0;
+}
+
+.lp-spot-popup .leaflet-popup-content {
+	margin: 0;
+	line-height: 0;
+}
+
+.lp-spot-popup .leaflet-popup-tip-container {
+	display: none;
+}

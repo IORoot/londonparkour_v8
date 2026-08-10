@@ -52,7 +52,7 @@ const enableModifierWheelZoom = (map) => {
   return () => el.removeEventListener('wheel', onWheel);
 };
 
-const bindSidebarTabs = (network) => {
+const bindSidebarTabs = (network, { onChange = null } = {}) => {
   const tabs = [...network.querySelectorAll('[data-map-list-tab]')];
   if (!tabs.length) return () => {};
 
@@ -68,6 +68,7 @@ const bindSidebarTabs = (network) => {
       if (show) list.removeAttribute('hidden');
       else list.setAttribute('hidden', '');
     });
+    onChange?.(name);
   };
 
   const onClick = (event) => {
@@ -78,6 +79,29 @@ const bindSidebarTabs = (network) => {
 
   network.addEventListener('click', onClick);
   return () => network.removeEventListener('click', onClick);
+};
+
+const fitLayerBounds = (map, layer) => {
+  const layers = layer.getLayers();
+  if (!layers.length) {
+    map.setView([51.5074, -0.1278], 11);
+    return;
+  }
+  const group = L.featureGroup(layers);
+  map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 13 });
+};
+
+const showMarkerKind = (map, layers, kind) => {
+  const showClasses = kind === 'classes';
+  if (showClasses) {
+    if (!map.hasLayer(layers.classes)) map.addLayer(layers.classes);
+    if (map.hasLayer(layers.spots)) map.removeLayer(layers.spots);
+    fitLayerBounds(map, layers.classes);
+  } else {
+    if (!map.hasLayer(layers.spots)) map.addLayer(layers.spots);
+    if (map.hasLayer(layers.classes)) map.removeLayer(layers.classes);
+    fitLayerBounds(map, layers.spots);
+  }
 };
 
 const bindSiteListFlyTo = (map, mount) => {
@@ -167,10 +191,6 @@ export function initSiteNetworkMap(root = document) {
       });
       removeWheel = enableModifierWheelZoom(map);
       removeList = bindSiteListFlyTo(map, mount);
-      if (network) {
-        removeTabs = bindSidebarTabs(network);
-        removeHeight = bindSidebarHeight(network);
-      }
 
       L.tileLayer(TILE_URL, {
         attribution: TILE_ATTR,
@@ -178,7 +198,10 @@ export function initSiteNetworkMap(root = document) {
         subdomains: 'abcd',
       }).addTo(map);
 
-      const bounds = [];
+      const layers = {
+        classes: L.layerGroup(),
+        spots: L.layerGroup(),
+      };
 
       pins.forEach((pin) => {
         const lat = Number(pin.dataset.lat);
@@ -186,39 +209,62 @@ export function initSiteNetworkMap(root = document) {
         const siteId = pin.dataset.siteId || '';
         const kind = pin.dataset.kind || 'site';
         const streetview = pin.dataset.streetview || '';
+        const name = pin.dataset.name || siteId;
         if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
-        bounds.push([lat, lon]);
-        const html = pin.innerHTML.trim();
-        if (!html) return;
+        const isSpot = kind === 'spot';
+        const markerHtml = isSpot
+          ? (pin.querySelector('[data-spot-marker] [data-component="map-pin"]')?.outerHTML || '').trim()
+          : pin.innerHTML.trim();
+        if (!markerHtml) return;
 
         const icon = L.divIcon({
           className: 'lp-map-pin-icon !bg-transparent !border-0',
-          html,
-          iconSize: [168, 44],
-          iconAnchor: [14, 22],
+          html: markerHtml,
+          iconSize: isSpot ? [30, 30] : [168, 44],
+          iconAnchor: isSpot ? [15, 15] : [14, 22],
         });
 
         const marker = L.marker([lat, lon], {
           icon,
           keyboard: true,
-          title: pin.dataset.name || siteId,
-        }).addTo(map);
+          title: name,
+        });
+
+        if (isSpot) {
+          const popupHtml = (
+            pin.querySelector('template[data-spot-popup]')?.innerHTML || ''
+          ).trim();
+          if (popupHtml) {
+            marker.bindPopup(popupHtml, {
+              className: 'lp-spot-popup',
+              closeButton: false,
+              offset: [0, -10],
+              maxWidth: 280,
+            });
+          }
+          marker.on('click', () => {
+            marker.openPopup();
+            openStreetview(streetview);
+          });
+          layers.spots.addLayer(marker);
+          return;
+        }
 
         marker.on('click', () => {
-          if (kind === 'spot') {
-            openStreetview(streetview);
-            return;
-          }
           highlightSite(siteId);
         });
+        layers.classes.addLayer(marker);
       });
 
-      if (bounds.length) {
-        map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13 });
-      } else {
-        map.setView([51.5074, -0.1278], 11);
+      if (network) {
+        removeTabs = bindSidebarTabs(network, {
+          onChange: (tab) => showMarkerKind(map, layers, tab),
+        });
+        removeHeight = bindSidebarHeight(network);
       }
+
+      showMarkerKind(map, layers, 'classes');
 
       requestAnimationFrame(() => {
         map?.invalidateSize();

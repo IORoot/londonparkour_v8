@@ -65,6 +65,9 @@ $lp_sites_lbl = preg_replace_callback(
 
 $lp_map_places = array_merge( $lp_sites, $lp_spots );
 
+$lp_mast_media = lp_demo_media_id( 'DSC01072.jpeg' );
+$lp_mast_url   = $lp_mast_media ? '' : (string) get_theme_file_uri( 'bin/demo-media/DSC01072.jpeg' );
+
 get_header();
 ?>
 
@@ -80,19 +83,23 @@ get_header();
 				),
 				array(
 					'label' => 'CLASSES',
-					'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
+					'href'  => lp_classes_page_url( 'classes' ),
 				),
 				array( 'label' => 'LOCATION MAP' ),
 			),
 			'action'   => array(
 				'label' => 'ALL CLASSES ↗',
-				'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
+				'href'  => lp_classes_page_url( 'classes' ),
 			),
 			'masthead' => array(
-				'title' => 'Stride. Leap. Balance. Fly.',
-				'note'  => 'Find your class on the map, then scroll for meeting points and travel details. Every site is a ten-minute walk from a tube or overground station.',
+				'title'     => 'Stride. Leap. Balance. Fly.',
+				'note'      => 'Find your class on the map, then scroll for meeting points and travel details. Every site is a ten-minute walk from a tube or overground station.',
+				'media_id'  => $lp_mast_media,
+				'media_url' => $lp_mast_url,
+				'media_alt' => '',
 			),
-			'active'   => 'map',
+			'active'      => 'map',
+			'show_filter' => false,
 		)
 	);
 	?>
@@ -106,14 +113,14 @@ get_header();
 					'surface' => 'board',
 					'heading' => $lp_sites_lbl,
 					'note'    => sprintf(
-						/* translators: %d: number of weekly classes */
+						/* translators: %d: number of class locations */
 						_n(
-							'Pick a pin to see what runs there. %d weekly class across London, and nothing further than ten minutes from a station.',
-							'Pick a pin to see what runs there. %d weekly classes across London, and nothing further than ten minutes from a station.',
-							$lp_class_n,
+							'Pick a pin to see what runs there. %d location across London, and nothing further than ten minutes from a station.',
+							'Pick a pin to see what runs there. %d locations across London, and nothing further than ten minutes from a station.',
+							$lp_site_n,
 							'londonparkour_v8'
 						),
-						$lp_class_n
+						$lp_site_n
 					),
 				)
 			);
@@ -126,10 +133,10 @@ get_header();
 						type="button"
 						role="tab"
 						aria-selected="true"
-						data-map-list-tab="sites"
+						data-map-list-tab="classes"
 						class="flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b-2 border-accent bg-transparent cursor-pointer"
 					>
-						SITES · <?php echo esc_html( (string) $lp_site_n ); ?>
+						CLASSES · <?php echo esc_html( (string) $lp_site_n ); ?>
 					</button>
 					<button
 						type="button"
@@ -142,7 +149,7 @@ get_header();
 					</button>
 				</div>
 
-				<ul role="list" class="flex flex-col m-0 p-0 list-none" data-map-list="sites">
+				<ul role="list" class="flex flex-col m-0 p-0 list-none" data-map-list="classes">
 					<?php
 					foreach ( $lp_sites as $lp_i => $lp_site ) :
 						$lp_type  = (string) get_field( 'type', $lp_site->ID );
@@ -179,7 +186,7 @@ get_header();
 						</li>
 					<?php endforeach; ?>
 					<?php if ( ! $lp_sites ) : ?>
-						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/50">No class sites yet.</li>
+						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/50">No class locations yet.</li>
 					<?php endif; ?>
 				</ul>
 
@@ -226,7 +233,7 @@ get_header();
 						'components/meta-row',
 						array(
 							'surface' => 'page',
-							'left'    => 'SITE NETWORK',
+							'left'    => 'CLASS NETWORK',
 							'right'   => 'CLICK PIN FOR DETAILS ↗',
 						)
 					);
@@ -274,17 +281,45 @@ get_header();
 								data-lon="<?php echo esc_attr( $lp_lon ); ?>"
 								data-streetview="<?php echo esc_attr( $lp_sv ); ?>"
 							>
-								<?php
-								lp_part(
-									'components/map-pin',
-									array(
-										'variant'  => 'icon',
-										'name'     => get_the_title( $lp_place ),
-										'sub'      => $lp_sub,
-										'flagship' => $lp_is_spot,
-									)
-								);
-								?>
+								<?php if ( $lp_is_spot ) : ?>
+									<span data-spot-marker>
+										<?php
+										lp_part(
+											'components/map-pin',
+											array(
+												'variant'  => 'icon',
+												'name'     => get_the_title( $lp_place ),
+												'flagship' => true,
+												'label'    => false,
+											)
+										);
+										?>
+									</span>
+									<template data-spot-popup>
+										<?php
+										lp_part(
+											'components/map-pin',
+											array(
+												'variant'  => 'icon',
+												'name'     => get_the_title( $lp_place ),
+												'sub'      => $lp_sub,
+												'flagship' => true,
+											)
+										);
+										?>
+									</template>
+								<?php else : ?>
+									<?php
+									lp_part(
+										'components/map-pin',
+										array(
+											'variant' => 'icon',
+											'name'    => get_the_title( $lp_place ),
+											'sub'     => $lp_sub,
+										)
+									);
+									?>
+								<?php endif; ?>
 							</div>
 						<?php endforeach; ?>
 					</template>
@@ -296,7 +331,7 @@ get_header();
 						lp_part(
 							'elements/glyph-label',
 							array(
-								'label'   => 'SITE',
+								'label'   => 'CLASS',
 								'icon_id' => 'icon-map-pin',
 								'surface' => 'page',
 								'tone'    => 'ink',
@@ -328,7 +363,7 @@ get_header();
 						'surface' => 'page',
 						'eyebrow' => 'MEETING POINTS & TRAVEL',
 						'heading' => 'Where to stand when you arrive.',
-						'note'    => 'Coaches are on the meeting point ten minutes before the hour, holding a yellow flag.',
+						'note'    => 'Coaches are on the meeting point ten minutes before.',
 					)
 				);
 				?>
@@ -372,7 +407,7 @@ get_header();
 			'prev' => array(
 				'keyword' => '← AGENDA VIEW',
 				'label'   => 'Everything on this week, by day',
-				'href'    => lp_classes_page_url( 'classes-agenda' ),
+				'href'    => lp_classes_page_url( 'classes' ),
 			),
 			'next' => array(
 				'keyword' => 'BOOK A CLASS →',

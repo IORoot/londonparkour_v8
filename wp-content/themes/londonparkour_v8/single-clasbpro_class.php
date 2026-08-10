@@ -30,7 +30,7 @@ while ( have_posts() ) :
 	the_post();
 
 	$lp_post_id = get_the_ID();
-	$lp_arch    = (string) get_post_type_archive_link( lp_class_post_type() );
+	$lp_classes = lp_classes_page_url( 'classes' );
 
 	/*
 	 * Raw, not `the_content` filtered: the design puts the About copy inside
@@ -180,11 +180,11 @@ while ( have_posts() ) :
 	$lp_foot_href   = '';
 	$lp_foot_right  = '' !== $lp_price ? sprintf( '%s PER %s · FREE CANCELLATION UP TO 24 HOURS BEFORE', $lp_price, strtoupper( $lp_price_label ) ) : '';
 
-	// Onward — no /book/… href; listings is the honest next step.
+	// Onward — default Classes page is Agenda at /classes/.
 	$lp_onward_next = array(
 		'keyword' => 'ALL CLASSES →',
 		'label'   => $lp_location_title ? sprintf( 'More sessions near %s', $lp_location_title ) : 'Back to every class type',
-		'href'    => $lp_arch,
+		'href'    => $lp_classes,
 	);
 
 	$lp_image_id = lp_class_image_id( $lp_post_id );
@@ -202,13 +202,13 @@ while ( have_posts() ) :
 					),
 					array(
 						'label' => 'CLASSES',
-						'href'  => $lp_arch,
+						'href'  => $lp_classes,
 					),
 					array( 'label' => strtoupper( get_the_title( $lp_post_id ) ) ),
 				),
 				'action' => array(
 					'label' => 'ALL CLASSES ↗',
-					'href'  => $lp_arch,
+					'href'  => $lp_classes,
 				),
 			)
 		);
@@ -414,8 +414,8 @@ while ( have_posts() ) :
 			array(
 				'prev' => array(
 					'keyword' => '← ALL CLASSES',
-					'label'   => 'Back to the class listings',
-					'href'    => $lp_arch,
+					'label'   => 'Back to this week’s agenda',
+					'href'    => $lp_classes,
 				),
 				'next' => $lp_onward_next,
 			)

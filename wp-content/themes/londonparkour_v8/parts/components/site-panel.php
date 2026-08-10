@@ -67,7 +67,7 @@ $lp_count             = (string) ( $args['count'] ?? '3 CLASSES' );
 			<p class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></p>
 		</div>
 		<?php if ( '' !== $lp_streetview_href ) : ?>
-			<a href="<?php echo esc_url( $lp_streetview_href ); ?>" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent whitespace-nowrap"><?php echo esc_html( $lp_streetview_label ); ?></a>
+			<a href="<?php echo esc_url( $lp_streetview_href ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent whitespace-nowrap"><?php echo esc_html( $lp_streetview_label ); ?></a>
 		<?php endif; ?>
 	</div>
 	<div class="flex flex-wrap gap-[40px]">

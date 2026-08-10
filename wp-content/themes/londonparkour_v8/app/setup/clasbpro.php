@@ -2,8 +2,9 @@
 /**
  * Clasbpro integration — CPT surface, taxonomy attach, booking drawer shell.
  *
- * Clasbpro owns `clasbpro_class`. The theme makes it publicly queryable at
- * `/classes/`, attaches `lp_level`, and mounts the shared booking drawer.
+ * Clasbpro owns `clasbpro_class`. Singles live at `/classes/{slug}`; the
+ * listings archive is `/all-classes/` so `/classes/` can be the Agenda page.
+ * Attaches `lp_level` and mounts the shared booking drawer.
  *
  * @package londonparkour_v8
  */
@@ -32,7 +33,8 @@ function lp_clasbpro_class_args( array $args, string $post_type ): array {
 	$args['public']             = true;
 	$args['publicly_queryable'] = true;
 	$args['show_ui']            = true;
-	$args['has_archive']        = true;
+	// Archive slug must not be `classes` — that path is the Agenda page.
+	$args['has_archive']        = 'all-classes';
 	$args['rewrite']            = array(
 		'slug'       => 'classes',
 		'with_front' => false,
@@ -65,7 +67,7 @@ add_action( 'init', 'lp_clasbpro_register_level_taxonomy', 20 );
  * Flush rewrites once after the theme starts exposing clasbpro_class publicly.
  */
 function lp_clasbpro_maybe_flush_rewrites(): void {
-	$flag = 'lp_clasbpro_rewrite_v1';
+	$flag = 'lp_clasbpro_rewrite_v2';
 	if ( get_option( $flag ) ) {
 		return;
 	}

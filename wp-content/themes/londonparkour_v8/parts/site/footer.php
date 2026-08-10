@@ -87,7 +87,7 @@ $lp_default_columns = array(
 			),
 			array(
 				'label' => 'Class Maps',
-				'href'  => '/classes/map',
+				'href'  => '/classes-map',
 			),
 			array(
 				'label' => 'Gift Cards',

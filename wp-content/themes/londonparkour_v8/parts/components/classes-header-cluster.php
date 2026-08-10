@@ -36,8 +36,7 @@
  * @param array  $args['action']       breadcrumb-rail's right-hand action.
  * @param array  $args['masthead']     title, note, media_id — page-masthead's args.
  * @param string $args['active']       agenda|map. Default 'agenda'.
- * @param bool   $args['show_filter']  Default true. Agenda passes false — pen
- *                                     disables Filter Grid on GdUt4 (QvQ6x).
+ * @param bool   $args['show_filter']  Default true. Agenda and Map pass false.
  * @param array  $args['tabs']         Override the counted tabs entirely.
  * @param array  $args['cells']        Override the filter cells entirely.
  * @param string $args['filter_action'] Form target. Omit to render the grid inert.

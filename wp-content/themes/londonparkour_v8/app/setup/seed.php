@@ -601,17 +601,18 @@ function lp_seed_homepage( array $media ): void {
  * Keyed by slug. The template key is what `_wp_page_template` stores and what
  * an ACF `page_template` location rule must match: `templates/<file>.php`.
  *
- * The Classes pages are `classes-agenda`/`classes-map`, not `classes/agenda`
- * — `/classes/` is the clasbpro_class archive, so a child page there would collide.
- * See lp_classes_page_url() in app/includes/content.php.
+ * Agenda is the default Classes page at slug `classes` (template still
+ * `templates/classes-agenda.php`). Map is `classes-map`. The CPT listings
+ * archive lives at `/all-classes/` so it does not collide. See
+ * lp_classes_page_url() in app/includes/content.php.
  */
 function lp_seed_template_pages(): void {
 	$pages = array(
-		'legal'          => array( 'Legal', 'templates/legal.php' ),
-		'classes-agenda' => array( 'Classes — Agenda', 'templates/classes-agenda.php' ),
-		'classes-map'    => array( 'Classes — Map', 'templates/classes-map.php' ),
-		'contact'        => array( 'Contact', 'templates/contact.php' ),
-		'docs-faq'       => array( 'Docs — FAQ', 'templates/docs-faq.php' ),
+		'legal'       => array( 'Legal', 'templates/legal.php' ),
+		'classes'     => array( 'Classes', 'templates/classes-agenda.php' ),
+		'classes-map' => array( 'Classes — Map', 'templates/classes-map.php' ),
+		'contact'     => array( 'Contact', 'templates/contact.php' ),
+		'docs-faq'    => array( 'Docs — FAQ', 'templates/docs-faq.php' ),
 	);
 
 	$sections = array(
@@ -628,6 +629,11 @@ function lp_seed_template_pages(): void {
 		}
 
 		$existing = lp_seed_find( 'page', $slug );
+
+		// Migrate the pre-rename Agenda slug so re-seed does not leave a duplicate.
+		if ( ! $existing && 'classes' === $slug ) {
+			$existing = lp_seed_find( 'page', 'classes-agenda' );
+		}
 
 		if ( $existing && ! lp_seed_is_ours( $existing ) ) {
 			WP_CLI::warning( "A page at '{$slug}' exists and was not created by seed — skipping it." );

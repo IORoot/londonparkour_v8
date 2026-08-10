@@ -1,11 +1,12 @@
 <?php
 /**
- * Template Name: Classes — Agenda
+ * Template Name: Classes
  *
- * ClassesAgenda, ported from src/stories/Pages/ClassesAgenda/ClassesAgenda.js
- * (`GdUt4` + cards board `O6Fhqs`). A page template rather than an archive: the
- * board's unit is a SESSION, and sessions come from clasbpro — so there is no
- * query for WordPress to route.
+ * Default Classes page (Agenda). Ported from
+ * src/stories/Pages/ClassesAgenda/ClassesAgenda.js (`GdUt4` + cards board
+ * `O6Fhqs`). A page template rather than an archive: the board's unit is a
+ * SESSION, and sessions come from clasbpro — so there is no query for
+ * WordPress to route. Seeded at slug `classes` (`/classes/`).
  *
  * Section order: header cluster (media masthead, no filter) → week controls →
  * cards board → week pagination → onward. Nav/footer are get_header()/get_footer().
@@ -78,7 +79,7 @@ get_header();
 				),
 				array(
 					'label' => 'CLASSES',
-					'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
+					'href'  => lp_classes_page_url( 'classes' ),
 				),
 				array( 'label' => 'AGENDA' ),
 			),

@@ -49,7 +49,7 @@ if ( array_key_exists( 'media_alt', $args ) ) {
 }
 ?>
 <div
-	class="<?php echo lp_classes( 'relative bg-neutral border-b border-base-300', $lp_pad, 'px-6 lg:px-16 pb-16' ); ?>"
+	class="<?php echo lp_classes( 'relative bg-neutral border-b border-neutral-content/20', $lp_pad, 'px-6 lg:px-16 pb-16' ); ?>"
 	data-component="page-masthead"
 	data-media="<?php echo $lp_has_media ? 'true' : 'false'; ?>"
 >

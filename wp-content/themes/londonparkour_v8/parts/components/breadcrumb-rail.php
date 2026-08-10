@@ -31,7 +31,7 @@ $lp_action     = is_array( $args['action'] ?? null ) ? $args['action'] : array()
 $lp_aria_label = (string) ( $args['aria_label'] ?? 'Breadcrumb' );
 $lp_last       = count( $lp_crumbs ) - 1;
 ?>
-<nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center justify-between gap-4 bg-neutral border-b border-base-300 px-6 lg:px-16 py-4" data-component="breadcrumb-rail">
+<nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center justify-between gap-4 bg-neutral border-b border-neutral-content/20 px-6 lg:px-16 py-4" data-component="breadcrumb-rail">
 	<ol class="flex items-center font-label text-[10px] font-normal uppercase tracking-[1px] text-neutral-content/80 m-0 p-0 list-none">
 		<?php foreach ( $lp_crumbs as $lp_i => $lp_crumb ) : ?>
 			<li class="inline-flex items-center">

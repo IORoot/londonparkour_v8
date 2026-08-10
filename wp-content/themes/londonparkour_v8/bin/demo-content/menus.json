@@ -20,7 +20,7 @@
       "children": [
         { "label": "Community", "url": "/community" },
         { "label": "Blog", "url": "/blog" },
-        { "label": "Class Maps", "url": "/classes/map" },
+        { "label": "Class Maps", "url": "/classes-map" },
         { "label": "Gift Cards", "url": "/gift-cards" }
       ]
     },
