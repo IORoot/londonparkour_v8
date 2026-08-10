@@ -39,6 +39,9 @@ lp_part(
 		'brand'     => get_bloginfo( 'name' ),
 		'home_href' => home_url( '/' ),
 		'links'     => lp_menu_links( 'primary' ),
+		// Homepage Hero embeds Nav with a transparent fill over the photo
+		// (`T1cC4` / `DsXnG`). Other pages keep the opaque `bg-neutral` bar.
+		'over_hero' => is_front_page(),
 	)
 );
 ?>

@@ -86,6 +86,7 @@ $lp_eyebrow      = (string) ( $args['eyebrow'] ?? '01 — PARKOUR CLASSES / LOND
 $lp_headline     = (string) ( $args['headline'] ?? "the world is \nyour playground." );
 $lp_lead         = (string) ( $args['lead'] ?? 'Parkour is the practice of getting where you want to go. We teach it across three London sites, to every age and every body. No experience needed.' );
 $lp_coordinates  = (string) ( $args['coordinates'] ?? 'N 51.5074° / W 0.1278°' );
+$lp_coordinates_link = (string) ( $args['coordinates_link'] ?? '' );
 $lp_board_style  = (string) ( $args['board_style'] ?? 'featured' );
 $lp_board_ttl    = (string) ( $args['board_title'] ?? 'NEXT SESSIONS' );
 $lp_board_stmp   = (string) ( $args['board_stamp'] ?? 'UPDATED 09:12 · THU 30 JUL' );
@@ -174,36 +175,135 @@ if ( ! $lp_trust ) {
 
 $lp_media_id  = ! empty( $args['media'] ) ? (int) $args['media'] : 0;
 $lp_has_media = (bool) $lp_media_id;
+
+$lp_slides = array();
+foreach ( is_array( $args['media_slides'] ?? null ) ? $args['media_slides'] : array() as $lp_row ) {
+	if ( ! is_array( $lp_row ) ) {
+		continue;
+	}
+	$lp_slide_id = ! empty( $lp_row['image'] ) ? (int) $lp_row['image'] : 0;
+	if ( ! $lp_slide_id ) {
+		continue;
+	}
+	$lp_slides[] = $lp_row;
+}
+if ( ! $lp_slides && $lp_has_media ) {
+	$lp_slides[] = array(
+		'image'       => $lp_media_id,
+		'coordinates' => $lp_coordinates,
+		'link'        => $lp_coordinates_link,
+	);
+}
+
 $lp_spacing   = lp_section_spacing( $args );
+// Homepage: SiteNav is absolutely positioned over this band. Pad by the bar
+// height (60 mobile / 76 desktop) on top of the Hero Body spacer (88 / 132)
+// so claim/board keep their place — 148 / 208. Default on for the front page.
+$lp_under_nav = array_key_exists( 'under_nav', $args )
+	? ! empty( $args['under_nav'] )
+	: is_front_page();
+// Whole literals — Tailwind v4 scans source text. No negative margin: the
+// over-hero SiteNav is `absolute`, so this band starts at y=0 under it.
+$lp_shell = $lp_under_nav
+	? 'relative overflow-hidden bg-neutral min-h-[700px] lg:min-h-[940px]'
+	: 'relative overflow-hidden bg-neutral min-h-[640px] lg:min-h-[864px]';
+$lp_body = $lp_under_nav
+	? 'relative z-10 px-6 lg:px-16 pt-[148px] lg:pt-[208px] pb-scale-xl flex flex-col min-h-[700px] lg:min-h-[940px]'
+	: 'relative z-10 px-6 lg:px-16 pt-[88px] lg:pt-[132px] pb-scale-xl flex flex-col min-h-[640px] lg:min-h-[864px]';
+// Coords are absolute against the hero shell, so under-nav they need the bar
+// height added to the original top-6 / lg:top-10 offsets (24+60 / 40+76).
+$lp_coords_class = $lp_under_nav
+	? 'absolute top-[84px] right-6 lg:top-[116px] lg:right-16 font-label text-step--2 font-normal tracking-[0.6px] uppercase text-neutral-content/50 m-0 hover:text-primary transition-colors duration-150'
+	: 'absolute top-6 right-6 lg:top-10 lg:right-16 font-label text-step--2 font-normal tracking-[0.6px] uppercase text-neutral-content/50 m-0 hover:text-primary transition-colors duration-150';
 
 $lp_headline_html = nl2br( esc_html( $lp_headline ), false );
+$lp_headline_decode = esc_attr( str_replace( array( "\r\n", "\n", "\r" ), '\\n', $lp_headline ) );
+
+$lp_initial_coords = $lp_coordinates;
+$lp_initial_link   = $lp_coordinates_link;
+if ( $lp_slides ) {
+	$lp_first = $lp_slides[0];
+	$lp_fc    = (string) ( $lp_first['coordinates'] ?? '' );
+	if ( '' !== $lp_fc ) {
+		$lp_initial_coords = $lp_fc;
+	}
+	$lp_fl = (string) ( $lp_first['link'] ?? '' );
+	if ( '' !== $lp_fl ) {
+		$lp_initial_link = $lp_fl;
+	} elseif ( '' === $lp_initial_link ) {
+		$lp_initial_link = $lp_coordinates_link;
+	}
+}
+$lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 ?>
 <div
-	class="<?php echo lp_classes( 'relative overflow-hidden bg-neutral min-h-[640px] lg:min-h-[864px]', $lp_spacing ); ?>"
+	class="<?php echo lp_classes( $lp_shell, $lp_spacing ); ?>"
 	data-component="hero"
 	data-board-style="<?php echo esc_attr( $lp_board_style ); ?>"
+	data-under-nav="<?php echo $lp_under_nav ? 'true' : 'false'; ?>"
 	<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 >
-	<?php
-	if ( $lp_has_media ) {
-		$lp_photo = array(
-			'image_id' => $lp_media_id,
-			'scrim'    => 'hero',
-			'size'     => 'lp_wide_lg',
-			'sizes'    => '100vw',
-		);
-		if ( array_key_exists( 'media_alt', $args ) ) {
-			$lp_photo['alt'] = (string) $args['media_alt'];
-		}
-		lp_part( 'components/media-photo', $lp_photo );
-	} else {
-		?>
-		<div class="absolute inset-0 bg-neutral" aria-hidden="true"></div>
-		<?php
-	}
-	?>
+	<?php if ( $lp_slides ) : ?>
+		<?php // Ken Burns imgs get z-index from the effect — isolate so they stay behind scrim/grid/claim. ?>
+		<div class="absolute inset-0 z-0 isolate overflow-hidden" data-motion-ken-burns aria-hidden="true">
+			<?php
+			foreach ( $lp_slides as $lp_si => $lp_slide ) :
+				$lp_sid = (int) ( $lp_slide['image'] ?? 0 );
+				if ( ! $lp_sid ) {
+					continue;
+				}
+				$lp_kb_attrs = array();
+				if ( isset( $lp_slide['duration'] ) && '' !== $lp_slide['duration'] ) {
+					$lp_kb_attrs['data-kb-duration'] = (string) $lp_slide['duration'];
+				}
+				if ( isset( $lp_slide['fade'] ) && '' !== $lp_slide['fade'] ) {
+					$lp_kb_attrs['data-kb-fade'] = (string) $lp_slide['fade'];
+				}
+				if ( ! empty( $lp_slide['zoom'] ) ) {
+					$lp_kb_attrs['data-kb-zoom'] = (string) $lp_slide['zoom'];
+				}
+				if ( isset( $lp_slide['scale'] ) && '' !== $lp_slide['scale'] ) {
+					$lp_kb_attrs['data-kb-scale'] = (string) $lp_slide['scale'];
+				}
+				if ( ! empty( $lp_slide['origin'] ) ) {
+					$lp_kb_attrs['data-kb-origin'] = (string) $lp_slide['origin'];
+				}
+				$lp_slide_coords = (string) ( $lp_slide['coordinates'] ?? '' );
+				if ( '' === $lp_slide_coords ) {
+					$lp_slide_coords = $lp_coordinates;
+				}
+				if ( '' !== $lp_slide_coords ) {
+					$lp_kb_attrs['data-kb-coordinates'] = $lp_slide_coords;
+				}
+				$lp_slide_link = (string) ( $lp_slide['link'] ?? '' );
+				if ( '' === $lp_slide_link ) {
+					$lp_slide_link = $lp_coordinates_link;
+				}
+				if ( '' !== $lp_slide_link ) {
+					$lp_kb_attrs['data-kb-href'] = $lp_slide_link;
+				}
+				$lp_photo = array(
+					'image_id'      => $lp_sid,
+					'scrim'         => 'none',
+					'size'          => 'lp_wide_lg',
+					'sizes'         => '100vw',
+					'loading'       => 0 === $lp_si ? 'eager' : 'lazy',
+					'fetchpriority' => 0 === $lp_si ? 'high' : 'auto',
+					'attrs'         => $lp_kb_attrs,
+				);
+				if ( 0 === $lp_si && array_key_exists( 'media_alt', $args ) ) {
+					$lp_photo['alt'] = (string) $args['media_alt'];
+				}
+				lp_part( 'components/media-photo', $lp_photo );
+			endforeach;
+			?>
+		</div>
+		<div class="absolute inset-0 z-[1] bg-neutral/50" aria-hidden="true"></div>
+	<?php else : ?>
+		<div class="absolute inset-0 z-0 bg-neutral" aria-hidden="true"></div>
+	<?php endif; ?>
 
-	<div class="absolute inset-0 pointer-events-none opacity-[0.16]" aria-hidden="true" data-slot="grid">
+	<div class="absolute inset-0 z-[1] pointer-events-none opacity-[0.16]" aria-hidden="true" data-slot="grid">
 		<div class="absolute inset-0 flex">
 			<?php for ( $lp_i = 0; $lp_i < 13; $lp_i++ ) : ?>
 				<span class="flex-1 border-l border-neutral-content last:border-r"></span>
@@ -215,15 +315,33 @@ $lp_headline_html = nl2br( esc_html( $lp_headline ), false );
 		<div class="absolute left-0 right-0 top-[88%] h-px bg-neutral-content"></div>
 	</div>
 
-	<div class="relative px-6 lg:px-16 pt-[88px] lg:pt-[132px] pb-scale-xl flex flex-col min-h-[640px] lg:min-h-[864px]">
-		<?php if ( '' !== $lp_coordinates ) : ?>
-			<p class="absolute top-6 right-6 lg:top-10 lg:right-16 font-label text-step--2 font-normal tracking-[0.6px] uppercase text-neutral-content/50 m-0"><?php echo esc_html( $lp_coordinates ); ?></p>
+	<div class="<?php echo esc_attr( $lp_body ); ?>">
+		<?php if ( $lp_show_coords ) : ?>
+			<?php if ( '' !== $lp_initial_link ) : ?>
+				<a
+					class="<?php echo esc_attr( $lp_coords_class ); ?>"
+					data-kb-live-coords
+					data-motion-decode="<?php echo esc_attr( $lp_initial_coords ); ?>"
+					data-motion-decode-charset="gps"
+					href="<?php echo esc_url( $lp_initial_link ); ?>"
+					target="_blank"
+					rel="noopener noreferrer"
+				><?php echo esc_html( $lp_initial_coords ); ?></a>
+			<?php else : ?>
+				<a
+					class="<?php echo esc_attr( $lp_coords_class ); ?>"
+					data-kb-live-coords
+					data-motion-decode="<?php echo esc_attr( $lp_initial_coords ); ?>"
+					data-motion-decode-charset="gps"
+					aria-disabled="true"
+				><?php echo esc_html( $lp_initial_coords ); ?></a>
+			<?php endif; ?>
 		<?php endif; ?>
 
 		<div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-10 xl:gap-x-[72px] flex-1">
 			<div class="flex flex-col gap-6 lg:gap-8 xl:max-w-[664px]" data-slot="claim">
 				<p class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></p>
-				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.92] text-neutral-content m-0"><?php echo $lp_headline_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped then nl2br. ?></h1>
+				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.92] text-neutral-content m-0" data-motion-decode="<?php echo $lp_headline_decode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped via esc_attr above. ?>" data-motion-decode-charset="board"><?php echo $lp_headline_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped then nl2br. ?></h1>
 				<p class="font-body text-step--1 text-neutral-content/70 max-w-[470px] m-0"><?php echo esc_html( $lp_lead ); ?></p>
 				<div class="flex items-center gap-[28px] flex-wrap">
 					<?php

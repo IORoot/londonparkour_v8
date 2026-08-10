@@ -1,7 +1,7 @@
 <?php
 /**
- * SiteNav — the fixed dark bar: status rail, primary nav, Classes drop panel,
- * mobile bar and drawer.
+ * SiteNav — the fixed dark bar: primary nav, Classes drop panel, mobile bar
+ * and drawer.
  *
  * Ported from src/stories/Site/SiteNav/SiteNav.js.
  *
@@ -25,15 +25,11 @@
  *    the source mounts them. HANDOFF's "both SiteNav CTAs bypass button.php"
  *    was true of an older source; only the desktop one is inline now.
  *
- * 3. The status-rail dot stays hand-rolled at 6px — PORT-FINDINGS §6. It is not
- *    `elements/status.php`, whose dot is daisyUI `status-sm` (4px) with a
- *    different gap and label size.
- *
- * The leading nav glyph is rendered by THIS file, outside the mounted
- * `elements/nav-link.php`, exactly as the source does. nav-link's own
- * `icon_id` slot puts a 14px glyph INSIDE the anchor on `hover:`; this design
- * needs a 13px glyph OUTSIDE it, driven by the wrapper's `group-hover:`. Two
- * different shapes; passing `icon_id` here would be wrong.
+ * 3. The leading nav glyph is rendered by THIS file, outside the mounted
+ *    `elements/nav-link.php`, exactly as the source does. nav-link's own
+ *    `icon_id` slot puts a 14px glyph INSIDE the anchor on `hover:`; this design
+ *    needs a 13px glyph OUTSIDE it, driven by the wrapper's `group-hover:`. Two
+ *    different shapes; passing `icon_id` here would be wrong.
  *
  * The Classes item is a real `<button>`, not a nav-link: the Popover API's
  * `popovertarget` invoker only works on a button, and a link that silently
@@ -46,7 +42,7 @@
  * @param string $args['brand']
  * @param string $args['home_href']
  * @param string $args['variant']          default|condensed.
- * @param string $args['status_message']
+ * @param bool   $args['over_hero']        Transparent bar over homepage Hero.
  * @param string $args['find_site_label']
  * @param string $args['find_site_href']
  * @param array  $args['links']            Rows of label/href/active/has_panel.
@@ -77,10 +73,9 @@ $lp_logo_widths = array(
 );
 
 // The panel is a [popover] in the top layer, so its containing block for
-// `absolute` is the viewport — a fixed per-variant offset pins it under the
-// bar it belongs to (status rail + bar for default, just the bar for condensed).
+// `absolute` is the viewport — a fixed per-variant offset pins it under the bar.
 $lp_panel_positions = array(
-	'default'   => 'absolute top-[110px]',
+	'default'   => 'absolute top-[76px]',
 	'condensed' => 'absolute top-[58px]',
 );
 
@@ -208,7 +203,7 @@ $lp_default_panel = array(
 $lp_brand      = (string) ( $args['brand'] ?? 'London Parkour' );
 $lp_home_href  = (string) ( $args['home_href'] ?? '/' );
 $lp_variant    = isset( $lp_bar_heights[ $args['variant'] ?? '' ] ) ? (string) $args['variant'] : 'default';
-$lp_status     = (string) ( $args['status_message'] ?? '3 sessions running now · next departure 18:30 · Vauxhall' );
+$lp_over_hero  = ! empty( $args['over_hero'] );
 $lp_site_label = (string) ( $args['find_site_label'] ?? 'Find a site' );
 $lp_site_href  = (string) ( $args['find_site_href'] ?? '/classes/map' );
 $lp_cta_label  = (string) ( $args['cta_label'] ?? 'Find a class' );
@@ -238,6 +233,12 @@ $lp_is_condensed = 'condensed' === $lp_variant;
 $lp_bar_height   = $lp_bar_heights[ $lp_variant ];
 $lp_logo_width   = $lp_logo_widths[ $lp_variant ];
 $lp_panel_pos    = $lp_panel_positions[ $lp_variant ];
+// Whole literals — Tailwind v4 scans source text.
+// Homepage: absolute + transparent so the hero photo starts at y=0 under the
+// bar. Other pages keep the opaque in-flow band.
+$lp_header_ground = $lp_over_hero
+	? 'bg-transparent absolute inset-x-0 top-0 z-20'
+	: 'bg-neutral relative';
 
 // The first link flagged has_panel is the popover trigger; every other is a
 // plain nav-link.
@@ -249,19 +250,7 @@ foreach ( $lp_links as $lp_i => $lp_link ) {
 	}
 }
 ?>
-<header data-component="site-nav" data-variant="<?php echo esc_attr( $lp_variant ); ?>" class="bg-neutral relative">
-	<?php if ( ! $lp_is_condensed ) : ?>
-		<div class="hidden lg:flex items-center justify-between gap-4 border-b border-neutral-content/10 px-[64px] py-[11px]">
-			<span class="inline-flex items-center gap-[9px]">
-				<span class="w-[6px] h-[6px] rounded-full bg-primary flex-none" aria-hidden="true"></span>
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/70"><?php echo esc_html( $lp_status ); ?></span>
-			</span>
-			<a href="<?php echo esc_url( $lp_site_href ); ?>" class="<?php echo lp_classes( 'inline-flex items-center gap-[7px] font-label text-[11px] font-normal uppercase tracking-[0.9px] text-neutral-content hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
-				<?php lp_icon( 'icon-map-pin', 'w-[12px] h-[12px]' ); ?>
-				<?php echo esc_html( $lp_site_label ); ?>
-			</a>
-		</div>
-	<?php endif; ?>
+<header data-component="site-nav" data-variant="<?php echo esc_attr( $lp_variant ); ?>" data-over-hero="<?php echo $lp_over_hero ? 'true' : 'false'; ?>" class="<?php echo esc_attr( $lp_header_ground ); ?>">
 	<nav aria-label="Primary">
 		<div class="<?php echo lp_classes( 'hidden lg:flex items-stretch justify-between border-b border-neutral-content/10 pl-[64px]', $lp_bar_height ); ?>">
 			<a href="<?php echo esc_url( $lp_home_href ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="flex items-center text-neutral-content">

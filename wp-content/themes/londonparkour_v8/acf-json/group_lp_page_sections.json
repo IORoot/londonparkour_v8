@@ -1562,11 +1562,98 @@
                             "key": "field_88d916898c66d3e2"
                         },
                         {
+                            "name": "media_slides",
+                            "label": "Media slides (Ken Burns)",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add slide",
+                            "instructions": "Optional slideshow. When set, these replace the single Media image for the hero background. Leave empty to use Media alone (still Ken Burns zoom).",
+                            "sub_fields": [
+                                {
+                                    "name": "image",
+                                    "label": "Image",
+                                    "type": "image",
+                                    "return_format": "id",
+                                    "preview_size": "medium",
+                                    "required": 1,
+                                    "key": "field_8cd3bcda809dd8ff"
+                                },
+                                {
+                                    "name": "duration",
+                                    "label": "Duration (seconds)",
+                                    "type": "number",
+                                    "default_value": 8,
+                                    "step": 0.1,
+                                    "min": 1,
+                                    "key": "field_2de0710b36356d3a"
+                                },
+                                {
+                                    "name": "fade",
+                                    "label": "Fade (seconds)",
+                                    "type": "number",
+                                    "default_value": 1.2,
+                                    "step": 0.1,
+                                    "min": 0,
+                                    "key": "field_f4bb1a8253c4b279"
+                                },
+                                {
+                                    "name": "zoom",
+                                    "label": "Zoom",
+                                    "type": "button_group",
+                                    "choices": {
+                                        "in": "In",
+                                        "out": "Out"
+                                    },
+                                    "default_value": "in",
+                                    "key": "field_5a25771c50a0b4e5"
+                                },
+                                {
+                                    "name": "scale",
+                                    "label": "Scale",
+                                    "type": "number",
+                                    "default_value": 1.12,
+                                    "step": 0.01,
+                                    "min": 1,
+                                    "key": "field_76e21cc5a714b6b9"
+                                },
+                                {
+                                    "name": "origin",
+                                    "label": "Origin",
+                                    "type": "text",
+                                    "default_value": "50% 50%",
+                                    "instructions": "CSS transform-origin, e.g. \"30% 40%\".",
+                                    "key": "field_fcc225e9e55c929a"
+                                },
+                                {
+                                    "name": "coordinates",
+                                    "label": "Coordinates",
+                                    "type": "text",
+                                    "instructions": "Top-right stamp for this slide. Re-decodes when the slide becomes active. Falls back to the Hero Coordinates field if empty.",
+                                    "key": "field_c9561d73c0f32573"
+                                },
+                                {
+                                    "name": "link",
+                                    "label": "Coordinates link",
+                                    "type": "url",
+                                    "instructions": "Opens in a new tab when the coordinates stamp is clicked. Updates with each slide.",
+                                    "key": "field_ed991a5bef6d08a2"
+                                }
+                            ],
+                            "key": "field_e7928b5d0f4baebc"
+                        },
+                        {
                             "name": "coordinates",
                             "label": "Coordinates",
                             "type": "text",
-                            "instructions": "Top-right stamp, e.g. \"N 51.5074° / W 0.1278°\".",
+                            "instructions": "Fallback top-right stamp when a slide omits its own coordinates (e.g. \"N 51.5074° / W 0.1278°\").",
                             "key": "field_d8b8f378964742e3"
+                        },
+                        {
+                            "name": "coordinates_link",
+                            "label": "Coordinates link",
+                            "type": "url",
+                            "instructions": "Fallback map/link for the coordinates stamp when a slide omits its own link. Opens in a new tab.",
+                            "key": "field_19cf3ec3945f4ab4"
                         },
                         {
                             "name": "board_style",
