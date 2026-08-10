@@ -170,8 +170,15 @@ get_header();
 									strtoupper( $lp_type ),
 								)
 							);
+							$lp_lat = trim( (string) get_field( 'latitude', $lp_site->ID ) );
+							$lp_lon = trim( (string) get_field( 'longitude', $lp_site->ID ) );
 							?>
-							<li>
+							<li
+								data-site-flyto
+								data-site-id="<?php echo esc_attr( $lp_slug ); ?>"
+								data-lat="<?php echo esc_attr( $lp_lat ); ?>"
+								data-lon="<?php echo esc_attr( $lp_lon ); ?>"
+							>
 								<?php
 								lp_part(
 									'components/list-row',

@@ -1,6 +1,9 @@
 /**
- * SiteNetworkMap — Leaflet + Carto Dark Matter for Classes / Map.
+ * SiteNetworkMap — Leaflet + Carto Voyager for Classes / Map.
  * Reads pin templates from `[data-site-pin]` children inside a <template>.
+ *
+ * Wheel zoom only with ⌘/Ctrl (and trackpad pinch, which browsers send as
+ * Ctrl+wheel) so ordinary page scroll is not stolen.
  */
 
 import L from 'leaflet';
@@ -21,6 +24,44 @@ const highlightSite = (siteId) => {
   }, 1600);
 };
 
+const enableModifierWheelZoom = (map) => {
+  const el = map.getContainer();
+  // ⌘/Ctrl+scroll, and trackpad pinch (browsers send pinch as Ctrl+wheel).
+  // Plain scroll keeps paging the document.
+  const onWheel = (event) => {
+    if (!(event.metaKey || event.ctrlKey)) return;
+    event.preventDefault();
+    const delta = L.DomEvent.getWheelDelta(event);
+    const next = map._limitZoom(map.getZoom() + delta);
+    if (next === map.getZoom()) return;
+    const point = map.mouseEventToContainerPoint(event);
+    map.setZoomAround(map.containerPointToLatLng(point), next);
+  };
+  el.addEventListener('wheel', onWheel, { passive: false });
+  return () => el.removeEventListener('wheel', onWheel);
+};
+
+const bindSiteListFlyTo = (map, mount) => {
+  const network = mount.closest('[data-component="map-network"]') || mount.parentElement;
+  if (!network) return () => {};
+
+  const onClick = (event) => {
+    const item = event.target.closest('[data-site-flyto]');
+    if (!item || !network.contains(item)) return;
+
+    const lat = Number(item.dataset.lat);
+    const lon = Number(item.dataset.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+    event.preventDefault();
+    map.flyTo([lat, lon], Math.max(map.getZoom(), 15), { duration: 0.75 });
+    highlightSite(item.dataset.siteId || '');
+  };
+
+  network.addEventListener('click', onClick);
+  return () => network.removeEventListener('click', onClick);
+};
+
 export function initSiteNetworkMap(root = document) {
   const mounts = root.querySelectorAll('[data-component="site-network-map"]');
   const cleanups = [];
@@ -35,9 +76,20 @@ export function initSiteNetworkMap(root = document) {
 
     const pins = [...tpl.content.querySelectorAll('[data-site-pin]')];
     let map = null;
+    let removeWheel = null;
+    let removeList = null;
 
     try {
-      map = L.map(mapEl, { scrollWheelZoom: false });
+      map = L.map(mapEl, {
+        scrollWheelZoom: false,
+        touchZoom: true,
+        doubleClickZoom: true,
+        boxZoom: true,
+        dragging: true,
+      });
+      removeWheel = enableModifierWheelZoom(map);
+      removeList = bindSiteListFlyTo(map, mount);
+
       L.tileLayer(TILE_URL, {
         attribution: TILE_ATTR,
         maxZoom: 20,
@@ -85,6 +137,8 @@ export function initSiteNetworkMap(root = document) {
     }
 
     cleanups.push(() => {
+      removeList?.();
+      removeWheel?.();
       map?.remove();
       delete mount.dataset.lpMapReady;
     });
