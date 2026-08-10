@@ -46,6 +46,7 @@ $lp_includes = array(
 	// acf-groups.php is NOT listed — it returns an array and is required by acf-build.php.
 	'app/setup/acf-build.php',
 	'app/setup/seed.php',
+	'app/setup/import-spots.php',
 	// Admin hooks.
 	'hooks/initialise_hooks.php',
 	// Legacy _tw template helpers.

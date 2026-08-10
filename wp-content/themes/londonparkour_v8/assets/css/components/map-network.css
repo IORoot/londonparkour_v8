@@ -1,0 +1,22 @@
+/**
+ * Classes map — sidebar scrolls inside a panel matched to the map column.
+ * Desktop height is synced in SiteNetworkMap.js (ResizeObserver).
+ */
+
+[data-map-sidebar] {
+	max-height: min(70vh, 720px);
+}
+
+[data-map-sidebar] [data-map-list] {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+@media (min-width: 1024px) {
+	[data-map-sidebar] {
+		max-height: none;
+		overflow: hidden;
+	}
+}

@@ -106,6 +106,37 @@ const bindSiteListFlyTo = (map, mount) => {
   return () => network.removeEventListener('click', onClick);
 };
 
+/** Match sidebar height to the map column (head + stage + legend). */
+const syncSidebarHeight = (network) => {
+  const sidebar = network?.querySelector('[data-map-sidebar]');
+  const panel = network?.querySelector('[data-map-panel]');
+  if (!sidebar || !panel) return;
+
+  if (window.matchMedia('(min-width: 1024px)').matches) {
+    sidebar.style.height = `${panel.offsetHeight}px`;
+  } else {
+    sidebar.style.height = '';
+  }
+};
+
+const bindSidebarHeight = (network) => {
+  if (!network) return () => {};
+  const panel = network.querySelector('[data-map-panel]');
+  const sync = () => syncSidebarHeight(network);
+  sync();
+  requestAnimationFrame(sync);
+
+  const ro = panel && typeof ResizeObserver !== 'undefined' ? new ResizeObserver(sync) : null;
+  ro?.observe(panel);
+  window.addEventListener('resize', sync);
+  return () => {
+    ro?.disconnect();
+    window.removeEventListener('resize', sync);
+    const sidebar = network.querySelector('[data-map-sidebar]');
+    if (sidebar) sidebar.style.height = '';
+  };
+};
+
 export function initSiteNetworkMap(root = document) {
   const mounts = root.querySelectorAll('[data-component="site-network-map"]');
   const cleanups = [];
@@ -124,6 +155,7 @@ export function initSiteNetworkMap(root = document) {
     let removeWheel = null;
     let removeList = null;
     let removeTabs = null;
+    let removeHeight = null;
 
     try {
       map = L.map(mapEl, {
@@ -135,7 +167,10 @@ export function initSiteNetworkMap(root = document) {
       });
       removeWheel = enableModifierWheelZoom(map);
       removeList = bindSiteListFlyTo(map, mount);
-      if (network) removeTabs = bindSidebarTabs(network);
+      if (network) {
+        removeTabs = bindSidebarTabs(network);
+        removeHeight = bindSidebarHeight(network);
+      }
 
       L.tileLayer(TILE_URL, {
         attribution: TILE_ATTR,
@@ -185,13 +220,20 @@ export function initSiteNetworkMap(root = document) {
         map.setView([51.5074, -0.1278], 11);
       }
 
-      requestAnimationFrame(() => map?.invalidateSize());
-      window.setTimeout(() => map?.invalidateSize(), 200);
+      requestAnimationFrame(() => {
+        map?.invalidateSize();
+        if (network) syncSidebarHeight(network);
+      });
+      window.setTimeout(() => {
+        map?.invalidateSize();
+        if (network) syncSidebarHeight(network);
+      }, 200);
     } catch {
       return;
     }
 
     cleanups.push(() => {
+      removeHeight?.();
       removeTabs?.();
       removeList?.();
       removeWheel?.();

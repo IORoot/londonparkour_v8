@@ -119,9 +119,9 @@ get_header();
 			);
 			?>
 		</div>
-		<div class="flex flex-col lg:flex-row pb-scale-2xl px-6 lg:px-16">
-			<div class="w-full lg:w-[300px] xl:w-[340px] lg:shrink-0 flex flex-col bg-base-100 mb-0" data-map-sidebar>
-				<div class="flex border-b border-base-300" role="tablist" aria-label="Map places">
+		<div class="flex flex-col lg:flex-row lg:items-stretch pb-scale-2xl px-6 lg:px-16" data-map-stage>
+			<div class="w-full lg:w-[300px] xl:w-[340px] lg:shrink-0 flex flex-col bg-base-100 mb-0 overflow-hidden min-h-0" data-map-sidebar>
+				<div class="shrink-0 flex border-b border-base-300" role="tablist" aria-label="Map places">
 					<button
 						type="button"
 						role="tab"
@@ -219,7 +219,7 @@ get_header();
 				</ul>
 			</div>
 
-			<div class="w-full flex-1 min-w-0 flex flex-col bg-base-300 overflow-hidden">
+			<div class="w-full flex-1 min-w-0 flex flex-col bg-base-300 overflow-hidden min-h-0" data-map-panel>
 				<div class="px-[22px] py-3 bg-base-100">
 					<?php
 					lp_part(
