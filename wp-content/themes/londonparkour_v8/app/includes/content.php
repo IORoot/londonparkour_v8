@@ -128,19 +128,16 @@ function lp_classes_page_url( string $lp_slug ): string {
 /**
  * The three Classes view-rail tabs, shared by Agenda, Listings and Map.
  *
- * Ported from ClassesHeaderCluster.js's `TABS`, whose own note says the three
- * are identical on every page that has one and only `active` changes. The
- * metas were static strings there (18 SESSIONS / 13 CLASS TYPES / 6 SITES);
- * here they are counted, because on a real site they would otherwise be wrong
- * the first time an editor adds a class.
+ * Ported from ClassesHeaderCluster.js's `TABS`. Agenda and Map only —
+ * Listings is no longer a page. Metas are counted so they stay accurate when
+ * editors add classes.
  *
- * Session counts come from clasbpro via lp_class_upcoming_sessions(); class
- * types are deduped by title (one listing card per product name).
+ * Session counts come from clasbpro via lp_class_upcoming_sessions().
  *
- * @param string $lp_active agenda|listings|map.
+ * @param string $lp_active agenda|map.
  * @return array Tabs in view-rail.php's shape.
  */
-function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
+function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 	$lp_class_ids = get_posts(
 		lp_class_active_meta_query(
 			array(
@@ -153,19 +150,11 @@ function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
 	);
 
 	$lp_sessions = 0;
-	$lp_posts    = array();
 	foreach ( $lp_class_ids as $lp_id ) {
-		$lp_id         = (int) $lp_id;
-		$lp_sessions  += count( lp_class_upcoming_sessions( $lp_id, 16 ) );
-		$lp_post       = get_post( $lp_id );
-		if ( $lp_post instanceof WP_Post ) {
-			$lp_posts[] = $lp_post;
-		}
+		$lp_sessions += count( lp_class_upcoming_sessions( (int) $lp_id, 16 ) );
 	}
 
-	$lp_types = count( lp_class_dedupe_by_title( $lp_posts ) );
 	$lp_sites = (int) ( wp_count_posts( 'lp_location' )->publish ?? 0 );
-	$lp_arch  = (string) get_post_type_archive_link( lp_class_post_type() );
 
 	return array(
 		array(
@@ -174,13 +163,6 @@ function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
 			'icon_id' => 'icon-calendar-days',
 			'href'    => lp_classes_page_url( 'classes-agenda' ),
 			'active'  => 'agenda' === $lp_active,
-		),
-		array(
-			'label'   => 'LISTINGS',
-			'meta'    => sprintf( '%d CLASS TYPES', $lp_types ),
-			'icon_id' => 'icon-squares-2x2',
-			'href'    => $lp_arch,
-			'active'  => 'listings' === $lp_active,
 		),
 		array(
 			'label'   => 'MAP',

@@ -352,8 +352,8 @@ get_header();
 				'href'    => lp_classes_page_url( 'classes-agenda' ),
 			),
 			'next' => array(
-				'keyword' => 'LISTINGS →',
-				'label'   => 'Every class, filtered by level',
+				'keyword' => 'BOOK A CLASS →',
+				'label'   => 'Take the next open slot',
 				'href'    => (string) get_post_type_archive_link( lp_class_post_type() ),
 			),
 		)

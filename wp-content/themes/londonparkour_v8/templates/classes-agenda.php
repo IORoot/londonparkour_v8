@@ -83,8 +83,8 @@ get_header();
 				array( 'label' => 'AGENDA' ),
 			),
 			'action'      => array(
-				'label' => 'LISTINGS VIEW ↗',
-				'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
+				'label' => 'MAP VIEW ↗',
+				'href'  => lp_classes_page_url( 'classes-map' ),
 			),
 			'masthead'    => array(
 				'title'     => 'Departures, day by day.',

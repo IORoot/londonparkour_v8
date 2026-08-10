@@ -35,7 +35,7 @@
  * @param array  $args['crumbs']       breadcrumb-rail crumbs.
  * @param array  $args['action']       breadcrumb-rail's right-hand action.
  * @param array  $args['masthead']     title, note, media_id — page-masthead's args.
- * @param string $args['active']       agenda|listings|map. Default 'listings'.
+ * @param string $args['active']       agenda|map. Default 'agenda'.
  * @param bool   $args['show_filter']  Default true. Agenda passes false — pen
  *                                     disables Filter Grid on GdUt4 (QvQ6x).
  * @param array  $args['tabs']         Override the counted tabs entirely.
@@ -48,7 +48,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$lp_active      = (string) ( $args['active'] ?? 'listings' );
+$lp_active      = (string) ( $args['active'] ?? 'agenda' );
 $lp_masthead    = is_array( $args['masthead'] ?? null ) ? $args['masthead'] : array();
 $lp_tabs        = is_array( $args['tabs'] ?? null ) ? $args['tabs'] : lp_classes_view_tabs( $lp_active );
 $lp_values      = is_array( $args['filter_values'] ?? null ) ? $args['filter_values'] : array();

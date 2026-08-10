@@ -148,7 +148,7 @@ get_header();
 				'title' => 'Every class we run.',
 				'note'  => 'Filter by type, site, age or day. Every session is coach-led, capped at twelve, and fifteen pounds to drop in — no contract, ever.',
 			),
-			'active'        => 'listings',
+			'active'        => '',
 			'filter_action' => $lp_arch,
 			'filter_values' => lp_class_filter_values(),
 		)
