@@ -118,89 +118,11 @@ return array(
 				'label'         => __( 'Board style', 'londonparkour_v8' ),
 				'type'          => 'button_group',
 				'choices'       => array(
-					'featured' => __( 'Featured class', 'londonparkour_v8' ),
+					'next'     => __( 'Next class', 'londonparkour_v8' ),
 					'sessions' => __( 'Next sessions', 'londonparkour_v8' ),
 				),
-				'default_value' => 'featured',
-			),
-			array(
-				'name'           => 'featured_class',
-				'label'          => __( 'Featured class', 'londonparkour_v8' ),
-				'type'           => 'group',
-				'layout'         => 'block',
-				'lp_conditional' => array( array( array( 'field' => 'board_style', 'operator' => '==', 'value' => 'featured' ) ) ),
-				'sub_fields'     => array(
-					array(
-						'name'  => 'title',
-						'label' => __( 'Board title', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-					lp_field_stamp(
-						array(
-							'name'  => 'stamp',
-							'label' => __( 'Stamp', 'londonparkour_v8' ),
-						)
-					),
-					array(
-						'name'  => 'time',
-						'label' => __( 'Time', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-					array(
-						'name'  => 'when',
-						'label' => __( 'When', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-					array(
-						'name'  => 'name',
-						'label' => __( 'Class name', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-					array(
-						'name'  => 'meta',
-						'label' => __( 'Meta', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-					array(
-						'name'  => 'spaces',
-						'label' => __( 'Spaces', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-					array(
-						'name'         => 'facts',
-						'label'        => __( 'Facts', 'londonparkour_v8' ),
-						'type'         => 'repeater',
-						'layout'       => 'table',
-						'button_label' => __( 'Add fact', 'londonparkour_v8' ),
-						'sub_fields'   => array(
-							array(
-								'name'  => 'label',
-								'label' => __( 'Label', 'londonparkour_v8' ),
-								'type'  => 'text',
-							),
-							array(
-								'name'  => 'value',
-								'label' => __( 'Value', 'londonparkour_v8' ),
-								'type'  => 'text',
-							),
-						),
-					),
-					array(
-						'name'  => 'foot_label',
-						'label' => __( 'Foot label', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-					array(
-						'name'  => 'foot_href',
-						'label' => __( 'Foot link', 'londonparkour_v8' ),
-						'type'  => 'url',
-					),
-					array(
-						'name'  => 'foot_meta',
-						'label' => __( 'Foot meta', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-				),
+				'default_value' => 'next',
+				'instructions'  => __( 'Next class pulls the soonest upcoming clasbpro session automatically. Next sessions uses the Items source below.', 'londonparkour_v8' ),
 			),
 			array(
 				'name'           => 'board_title',

@@ -462,3 +462,161 @@ function lp_class_active_meta_query( array $args = array() ): array {
 
 	return $args;
 }
+
+/**
+ * True when a session's date+time is still in the future (site timezone).
+ *
+ * @param array $session Row with date (Y-m-d) and time (H:i).
+ */
+function lp_class_session_is_future( array $session ): bool {
+	$date = (string) ( $session['date'] ?? '' );
+	$time = (string) ( $session['time'] ?? '' );
+	if ( '' === $date || '' === $time ) {
+		return false;
+	}
+	if ( strlen( $time ) > 5 ) {
+		$time = substr( $time, 0, 5 );
+	}
+	$start = DateTimeImmutable::createFromFormat(
+		'Y-m-d H:i',
+		$date . ' ' . $time,
+		wp_timezone()
+	);
+	if ( ! $start ) {
+		return false;
+	}
+	return $start > current_datetime();
+}
+
+/**
+ * The chronologically next upcoming class session across all active classes.
+ *
+ * Once a class's start time has passed, it drops out and the following session
+ * becomes next. Returns board fields merged with the session row, or null.
+ *
+ * @param int $horizon_days How far ahead to search (inclusive of today).
+ * @return array<string,mixed>|null
+ */
+function lp_class_next_session( int $horizon_days = 28 ): ?array {
+	$now   = current_datetime();
+	$start = $now->setTime( 0, 0 );
+	$end   = $start->modify( '+' . max( 1, $horizon_days ) . ' days' );
+
+	foreach ( lp_class_sessions_between( $start, $end ) as $row ) {
+		if ( lp_class_session_is_future( $row ) ) {
+			return $row;
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Live "UPDATED HH:MM · DDD D MON" stamp for hero / board headers.
+ */
+function lp_hero_board_stamp( ?DateTimeInterface $at = null ): string {
+	$dt = $at
+		? DateTimeImmutable::createFromInterface( $at )->setTimezone( wp_timezone() )
+		: current_datetime();
+	return sprintf(
+		'UPDATED %s · %s',
+		$dt->format( 'H:i' ),
+		strtoupper( $dt->format( 'D j M' ) )
+	);
+}
+
+/**
+ * Project a clasbpro session row into the Hero next-class board shape.
+ *
+ * @param array<string,mixed>|null $session From lp_class_next_session(); looked up if null.
+ * @return array<string,mixed> Empty array when nothing is upcoming.
+ */
+function lp_hero_next_class_board( ?array $session = null ): array {
+	if ( null === $session ) {
+		$session = lp_class_next_session();
+	}
+	if ( ! $session ) {
+		return array();
+	}
+
+	$class_id = (int) ( $session['id'] ?? 0 );
+	$time     = (string) ( $session['time'] ?? '' );
+	$date     = (string) ( $session['date'] ?? '' );
+	$day      = (string) ( $session['date_label'] ?? '' );
+	$duration = $class_id ? lp_class_duration( $class_id ) : '';
+	$duration_ui = $duration
+		? strtoupper( str_replace( ' min', ' MIN', $duration ) )
+		: '';
+	$when = implode( ' · ', array_filter( array( $day, $duration_ui ) ) );
+
+	$meta_bits = array_filter(
+		array(
+			(string) ( $session['location'] ?? '' ),
+			(string) ( $session['level'] ?? '' ),
+			$class_id && (string) ( $session['coaches'] ?? '' )
+				? 'Coach ' . (string) $session['coaches']
+				: '',
+		)
+	);
+
+	$date_ui = '';
+	if ( '' !== $date ) {
+		$dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $date, wp_timezone() );
+		if ( $dt ) {
+			$date_ui = strtoupper( $dt->format( 'D j M' ) );
+		}
+	}
+
+	$location = (string) ( $session['location'] ?? '' );
+	$level    = (string) ( $session['level'] ?? '' );
+	$price    = (string) ( $session['price'] ?? '' );
+	if ( '' === $price && $class_id ) {
+		$price = lp_class_price_display( $class_id );
+	}
+
+	$spaces = (string) ( $session['spaces'] ?? '' );
+	// Hero pen uses sentence case ("4 left"); clasbpro labels are UPPER.
+	$spaces_ui = '' !== $spaces ? strtolower( $spaces ) : '';
+
+	$facts = array();
+	if ( '' !== $duration ) {
+		$facts[] = array(
+			'label' => 'DURATION',
+			'value' => $duration,
+		);
+	}
+	if ( '' !== $level ) {
+		$facts[] = array(
+			'label' => 'LEVEL',
+			'value' => $level,
+		);
+	}
+	if ( '' !== $price ) {
+		$facts[] = array(
+			'label' => 'PRICE',
+			'value' => $price,
+		);
+	}
+	if ( '' !== $location ) {
+		$facts[] = array(
+			'label' => 'LOCATION',
+			'value' => $location,
+		);
+	}
+
+	return array(
+		'title'      => 'NEXT CLASS',
+		'stamp'      => lp_hero_board_stamp(),
+		'time'       => $time,
+		'when'       => $when,
+		'name'       => (string) ( $session['title'] ?? '' ),
+		'meta'       => implode( ' · ', $meta_bits ),
+		'spaces'     => $spaces_ui,
+		'facts'      => $facts,
+		'foot_label' => 'Reserve a place',
+		'foot_meta'  => trim( sprintf( 'NEXT · %s %s', $time, $date_ui ) ),
+		'class_id'   => $class_id,
+		'date'       => $date,
+		'sold_out'   => ! empty( $session['sold_out'] ),
+	);
+}

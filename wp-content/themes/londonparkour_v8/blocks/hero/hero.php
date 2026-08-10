@@ -1,52 +1,18 @@
 <?php
 /**
- * Hero — page-opening claim with Swiss grid, coordinates, and Featured Class
+ * Hero — page-opening claim with Swiss grid, coordinates, and Next Class
  * board (Homepage default) or Next Sessions board (master alternate).
  *
  * Ported from src/stories/Blocks/Hero/Hero.js (`T1cC4` / homepage `NolKj`).
  *
- * Default board_style is `featured` — the multi-row sessions board exists on
- * the master but is disabled on the homepage instance. Scrim is
- * media-photo `hero` → `bg-neutral/50` to match `#14131080`.
- *
- * The featured board is Hero-only furniture (no shared part yet); report if a
- * second caller appears (PORT-BRIEF 3a).
+ * Default board_style is `next` — the soonest upcoming clasbpro session
+ * (past start times drop out automatically). The multi-row sessions board
+ * remains the master alternate. Scrim is media-photo `hero` → `bg-neutral/50`.
  *
  * @package londonparkour_v8
  */
 
 defined( 'ABSPATH' ) || exit;
-
-$lp_default_featured = array(
-	'title'      => 'FEATURED CLASS',
-	'stamp'      => 'UPDATED 09:12 · THU 30 JUL',
-	'time'       => '18:30',
-	'when'       => 'THU · 90 MIN',
-	'name'       => 'Beginners Parkour',
-	'meta'       => 'Vauxhall Pleasure Gardens · Level 1 · Coach Adem',
-	'spaces'     => '4 left',
-	'facts'      => array(
-		array(
-			'label' => 'DURATION',
-			'value' => '90 min',
-		),
-		array(
-			'label' => 'LEVEL',
-			'value' => 'L1 · Beginner',
-		),
-		array(
-			'label' => 'PRICE',
-			'value' => '£15',
-		),
-		array(
-			'label' => 'KIT',
-			'value' => 'Trainers only',
-		),
-	),
-	'foot_label' => 'Reserve a place',
-	'foot_href'  => '#',
-	'foot_meta'  => 'NEXT · 18:30 THU 30 JUL',
-);
 
 $lp_default_sessions = array(
 	array(
@@ -87,7 +53,7 @@ $lp_headline     = (string) ( $args['headline'] ?? "the world is \nyour playgrou
 $lp_lead         = (string) ( $args['lead'] ?? 'Parkour is the practice of getting where you want to go. We teach it across three London sites, to every age and every body. No experience needed.' );
 $lp_coordinates  = (string) ( $args['coordinates'] ?? 'N 51.5074° / W 0.1278°' );
 $lp_coordinates_link = (string) ( $args['coordinates_link'] ?? '' );
-$lp_board_style  = (string) ( $args['board_style'] ?? 'featured' );
+$lp_board_style  = (string) ( $args['board_style'] ?? 'next' );
 $lp_board_ttl    = (string) ( $args['board_title'] ?? 'NEXT SESSIONS' );
 $lp_board_stmp   = (string) ( $args['board_stamp'] ?? 'UPDATED 09:12 · THU 30 JUL' );
 $lp_foot_label   = (string) ( $args['board_foot_label'] ?? 'View full timetable' );
@@ -96,8 +62,12 @@ $lp_foot_count   = (string) ( $args['board_foot_count'] ?? '32 SESSIONS / WEEK' 
 $lp_scroll       = (string) ( $args['scroll_label'] ?? '↓ SCROLL' );
 $lp_rating       = (string) ( $args['rating'] ?? '4.9 ★ (312)' );
 
-if ( ! in_array( $lp_board_style, array( 'featured', 'sessions' ), true ) ) {
-	$lp_board_style = 'featured';
+// Legacy ACF value from before next-class rename.
+if ( 'featured' === $lp_board_style ) {
+	$lp_board_style = 'next';
+}
+if ( ! in_array( $lp_board_style, array( 'next', 'sessions' ), true ) ) {
+	$lp_board_style = 'next';
 }
 
 $lp_primary   = lp_action( $args['primary_action'] ?? null );
@@ -111,19 +81,9 @@ if ( ! $lp_primary ) {
 	);
 }
 
-$lp_featured = is_array( $args['featured_class'] ?? null ) ? $args['featured_class'] : array();
-if ( '' === (string) ( $lp_featured['name'] ?? '' ) ) {
-	// Backward compat: older seeds/examples used `featured`.
-	$lp_legacy = is_array( $args['featured'] ?? null ) ? $args['featured'] : array();
-	$lp_featured = '' !== (string) ( $lp_legacy['name'] ?? '' ) ? $lp_legacy : array();
-}
-if ( '' === (string) ( $lp_featured['name'] ?? '' ) ) {
-	$lp_featured = $lp_default_featured;
-} else {
-	$lp_featured = array_merge( $lp_default_featured, $lp_featured );
-	if ( empty( $lp_featured['facts'] ) || ! is_array( $lp_featured['facts'] ) ) {
-		$lp_featured['facts'] = $lp_default_featured['facts'];
-	}
+$lp_next = array();
+if ( 'next' === $lp_board_style ) {
+	$lp_next = lp_hero_next_class_board();
 }
 
 $lp_sessions = array();
@@ -368,45 +328,59 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 				</div>
 			</div>
 
-			<?php if ( 'featured' === $lp_board_style ) : ?>
-				<div class="w-full xl:w-[576px] xl:shrink-0 bg-secondary/95" data-slot="featured-board">
+			<?php if ( 'next' === $lp_board_style && $lp_next && '' !== (string) ( $lp_next['name'] ?? '' ) ) : ?>
+				<div class="w-full xl:w-[576px] xl:shrink-0 bg-secondary/95" data-slot="next-class-board">
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10">
-						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary"><?php echo esc_html( (string) $lp_featured['title'] ); ?></span>
-						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( (string) $lp_featured['stamp'] ); ?></span>
+						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary"><?php echo esc_html( (string) $lp_next['title'] ); ?></span>
+						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( (string) $lp_next['stamp'] ); ?></span>
 					</div>
 					<div class="flex items-start gap-4 px-5 py-5">
 						<div class="shrink-0 flex flex-col gap-1 min-w-[64px]">
-							<span class="font-heading text-[19px] font-semibold leading-none tracking-[-0.4px] text-neutral-content"><?php echo esc_html( (string) $lp_featured['time'] ); ?></span>
-							<span class="font-label text-[10px] font-normal tracking-[0.6px] uppercase text-neutral-content/50"><?php echo esc_html( (string) $lp_featured['when'] ); ?></span>
+							<span class="font-heading text-[19px] font-semibold leading-none tracking-[-0.4px] text-neutral-content"><?php echo esc_html( (string) $lp_next['time'] ); ?></span>
+							<span class="font-label text-[10px] font-normal tracking-[0.6px] uppercase text-neutral-content/50"><?php echo esc_html( (string) $lp_next['when'] ); ?></span>
 						</div>
 						<div class="flex-1 min-w-0 flex flex-col gap-1.5">
-							<span class="font-heading text-[22px] font-semibold leading-none tracking-[-0.4px] text-neutral-content"><?php echo esc_html( (string) $lp_featured['name'] ); ?></span>
-							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/50 truncate"><?php echo esc_html( (string) $lp_featured['meta'] ); ?></span>
+							<span class="font-heading text-[22px] font-semibold leading-none tracking-[-0.4px] text-neutral-content"><?php echo esc_html( (string) $lp_next['name'] ); ?></span>
+							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/50 truncate"><?php echo esc_html( (string) $lp_next['meta'] ); ?></span>
 						</div>
-						<span class="shrink-0 font-label text-[11px] font-semibold tracking-[0.6px] uppercase text-primary"><?php echo esc_html( (string) $lp_featured['spaces'] ); ?></span>
+						<span class="shrink-0 font-label text-[11px] font-semibold tracking-[0.6px] uppercase text-primary"><?php echo esc_html( (string) $lp_next['spaces'] ); ?></span>
 					</div>
-					<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 pb-5 border-b border-neutral-content/10">
-						<?php foreach ( (array) $lp_featured['facts'] as $lp_fact ) : ?>
-							<div class="flex flex-col gap-1.5 min-w-0 pr-3">
-								<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
-								<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-neutral-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
-							</div>
-						<?php endforeach; ?>
-					</div>
+					<?php if ( ! empty( $lp_next['facts'] ) && is_array( $lp_next['facts'] ) ) : ?>
+						<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 pb-5 border-b border-neutral-content/10">
+							<?php foreach ( $lp_next['facts'] as $lp_fact ) : ?>
+								<div class="flex flex-col gap-1.5 min-w-0 pr-3">
+									<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+									<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-neutral-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px]">
 						<?php
-						$lp_feat_foot = (string) ( $lp_featured['foot_href'] ?? '' );
-						$lp_feat_lab  = (string) ( $lp_featured['foot_label'] ?? '' );
-						if ( '' !== $lp_feat_foot && '#' !== $lp_feat_foot ) :
+						$lp_next_id   = (int) ( $lp_next['class_id'] ?? 0 );
+						$lp_next_date = (string) ( $lp_next['date'] ?? '' );
+						$lp_next_lab  = (string) ( $lp_next['foot_label'] ?? 'Reserve a place' );
+						if ( $lp_next_id ) :
+							$lp_book = lp_class_book_button_args( $lp_next_id, $lp_next_date, $lp_next_lab );
+							$lp_book_attrs = '';
+							foreach ( (array) ( $lp_book['data_attrs'] ?? array() ) as $lp_bk => $lp_bv ) {
+								$lp_book_attrs .= sprintf( ' %s="%s"', esc_attr( (string) $lp_bk ), esc_attr( (string) $lp_bv ) );
+							}
 							?>
-							<a href="<?php echo esc_url( $lp_feat_foot ); ?>" class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80 hover:text-primary transition-colors duration-150"><?php echo esc_html( $lp_feat_lab ); ?></a>
+							<button
+								type="button"
+								class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80 hover:text-primary transition-colors duration-150"
+								command="<?php echo esc_attr( (string) ( $lp_book['command'] ?? 'show-modal' ) ); ?>"
+								commandfor="<?php echo esc_attr( (string) ( $lp_book['command_for'] ?? 'lp-booking-drawer' ) ); ?>"
+								<?php echo $lp_book_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above. ?>
+							><?php echo esc_html( $lp_next_lab ); ?></button>
 						<?php else : ?>
-							<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80"><?php echo esc_html( $lp_feat_lab ); ?></span>
+							<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80"><?php echo esc_html( $lp_next_lab ); ?></span>
 						<?php endif; ?>
-						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( (string) ( $lp_featured['foot_meta'] ?? '' ) ); ?></span>
+						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
 					</div>
 				</div>
-			<?php else : ?>
+			<?php elseif ( 'sessions' === $lp_board_style ) : ?>
 				<div class="w-full xl:w-[576px] xl:shrink-0 bg-secondary/95" data-slot="board">
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10">
 						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary"><?php echo esc_html( $lp_board_ttl ); ?></span>

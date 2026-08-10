@@ -3,25 +3,7 @@
   "headline": "the world is \nyour playground.",
   "lead": "Parkour is the practice of getting where you want to go. We teach it across three London sites, to every age and every body. No experience needed.",
   "coordinates": "N 51.5074° / W 0.1278°",
-  "board_style": "featured",
-  "featured_class": {
-    "title": "FEATURED CLASS",
-    "stamp": "UPDATED 09:12 · THU 30 JUL",
-    "time": "18:30",
-    "when": "THU · 90 MIN",
-    "name": "Beginners Parkour",
-    "meta": "Vauxhall Pleasure Gardens · Level 1 · Coach Adem",
-    "spaces": "4 left",
-    "facts": [
-      { "label": "DURATION", "value": "90 min" },
-      { "label": "LEVEL", "value": "L1 · Beginner" },
-      { "label": "PRICE", "value": "£15" },
-      { "label": "KIT", "value": "Trainers only" }
-    ],
-    "foot_label": "Reserve a place",
-    "foot_href": "/book/",
-    "foot_meta": "NEXT · 18:30 THU 30 JUL"
-  },
+  "board_style": "next",
   "scroll_label": "↓ SCROLL",
   "rating": "4.9 ★ (312)",
   "trust": [
@@ -29,13 +11,8 @@
     { "label": "11 YEARS" },
     { "label": "6 LONDON SITES" }
   ],
-  "source": "manual",
-  "source_manual": [
-    { "time": "18:30", "day": "TODAY", "title": "Beginners Parkour", "location": "Vauxhall · Level 1", "spaces": "4 left" },
-    { "time": "19:45", "day": "TODAY", "title": "All Levels Open Gym", "location": "Stratford East · Open", "spaces": "2 left" },
-    { "time": "07:00", "day": "FRI", "title": "Sunrise Session", "location": "Southbank · Open", "spaces": "9 spaces" },
-    { "time": "10:00", "day": "SAT", "title": "Kids & Families", "location": "Peckham Rye · Ages 6–12", "spaces": "Waitlist", "sold_out": true }
-  ],
+  "source": "latest",
+  "source_limit": 8,
   "primary_action": {
     "link": { "title": "BOOK YOUR FIRST CLASS — £15", "url": "/book/", "target": "" }
   },

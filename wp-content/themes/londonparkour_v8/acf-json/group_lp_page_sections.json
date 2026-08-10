@@ -1660,111 +1660,12 @@
                             "label": "Board style",
                             "type": "button_group",
                             "choices": {
-                                "featured": "Featured class",
+                                "next": "Next class",
                                 "sessions": "Next sessions"
                             },
-                            "default_value": "featured",
+                            "default_value": "next",
+                            "instructions": "Next class pulls the soonest upcoming clasbpro session automatically. Next sessions uses the Items source below.",
                             "key": "field_432361e6cccff929"
-                        },
-                        {
-                            "name": "featured_class",
-                            "label": "Featured class",
-                            "type": "group",
-                            "layout": "block",
-                            "sub_fields": [
-                                {
-                                    "name": "title",
-                                    "label": "Board title",
-                                    "type": "text",
-                                    "key": "field_dbcaa8b996c66782"
-                                },
-                                {
-                                    "name": "stamp",
-                                    "label": "Stamp",
-                                    "type": "text",
-                                    "key": "field_e47ff6118a830ab3"
-                                },
-                                {
-                                    "name": "time",
-                                    "label": "Time",
-                                    "type": "text",
-                                    "key": "field_202c1c7546919991"
-                                },
-                                {
-                                    "name": "when",
-                                    "label": "When",
-                                    "type": "text",
-                                    "key": "field_49701c0ec13a57a8"
-                                },
-                                {
-                                    "name": "name",
-                                    "label": "Class name",
-                                    "type": "text",
-                                    "key": "field_2ea4f7336a5c8a90"
-                                },
-                                {
-                                    "name": "meta",
-                                    "label": "Meta",
-                                    "type": "text",
-                                    "key": "field_1122d6af5a782199"
-                                },
-                                {
-                                    "name": "spaces",
-                                    "label": "Spaces",
-                                    "type": "text",
-                                    "key": "field_de3b746f603a8ec4"
-                                },
-                                {
-                                    "name": "facts",
-                                    "label": "Facts",
-                                    "type": "repeater",
-                                    "layout": "table",
-                                    "button_label": "Add fact",
-                                    "sub_fields": [
-                                        {
-                                            "name": "label",
-                                            "label": "Label",
-                                            "type": "text",
-                                            "key": "field_25a63ed80b4ff5ff"
-                                        },
-                                        {
-                                            "name": "value",
-                                            "label": "Value",
-                                            "type": "text",
-                                            "key": "field_4b3ff4a9fa9ed545"
-                                        }
-                                    ],
-                                    "key": "field_bb769bdb28862a20"
-                                },
-                                {
-                                    "name": "foot_label",
-                                    "label": "Foot label",
-                                    "type": "text",
-                                    "key": "field_c1817837c02fbd1b"
-                                },
-                                {
-                                    "name": "foot_href",
-                                    "label": "Foot link",
-                                    "type": "url",
-                                    "key": "field_6b3d3ca2f49a51bc"
-                                },
-                                {
-                                    "name": "foot_meta",
-                                    "label": "Foot meta",
-                                    "type": "text",
-                                    "key": "field_8e611b6e6aa53e84"
-                                }
-                            ],
-                            "key": "field_e1eec40ea1f76612",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_432361e6cccff929",
-                                        "operator": "==",
-                                        "value": "featured"
-                                    }
-                                ]
-                            ]
                         },
                         {
                             "name": "board_title",
