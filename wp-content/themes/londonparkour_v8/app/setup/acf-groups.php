@@ -124,7 +124,7 @@ return array(
 				array(
 					'name'         => 'tag',
 					'label'        => __( 'Tag', 'londonparkour_v8' ),
-					'instructions' => __( 'e.g. "FLAGSHIP INDOOR SITE"', 'londonparkour_v8' ),
+					'instructions' => __( 'e.g. "INDOOR SITE"', 'londonparkour_v8' ),
 				)
 			),
 			array(
@@ -143,21 +143,12 @@ return array(
 				),
 				'default_value' => 'INDOOR',
 			),
-			array(
-				'name'          => 'is_flagship',
-				'label'         => __( 'Flagship site', 'londonparkour_v8' ),
-				'type'          => 'true_false',
-				'ui'            => 1,
-				'default_value' => 0,
-			),
 			/*
 			 * Plain text, not ACF's `google_map` field: that type needs a
 			 * Google Maps JS API key registered on `acf/init`, which this
 			 * project has never configured and which would put an external
 			 * service and a billing account behind the admin screen. Two text
-			 * fields need neither. ClassesMap projects them into its
-			 * placeholder rectangle; if a key is ever added, `google_map` is
-			 * the upgrade and the projection is unaffected.
+			 * fields need neither. ClassesMap feeds them to Leaflet.
 			 */
 			array(
 				'name'  => 'latitude',
@@ -169,11 +160,16 @@ return array(
 				'label' => __( 'Longitude', 'londonparkour_v8' ),
 				'type'  => 'text',
 			),
+			array(
+				'name'         => 'streetview',
+				'label'        => __( 'Street View URL', 'londonparkour_v8' ),
+				'type'         => 'url',
+				'instructions' => __( 'Optional. Paste a Google Street View (or other) URL. If empty, the map page falls back to a Maps link at the coordinates above.', 'londonparkour_v8' ),
+			),
 			/*
 			 * The three SitePanel fields ClassesMap's Meeting Points grid
 			 * needs. `site-panel.php` already takes all three as args; only
-			 * the storage was missing. Every value is transcribed from the
-			 * .pen (ClassesMap.js's SITE_PANELS, Phase 8 note), not authored.
+			 * the storage was missing.
 			 *
 			 * `meta` beside them is NOT `code`: it carries an opening-hours
 			 * segment SitePanel's code line does not print.

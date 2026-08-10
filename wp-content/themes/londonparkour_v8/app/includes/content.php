@@ -177,11 +177,9 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 /**
  * The three Classes filter cells, in filter-grid.php's shape.
  *
- * Ported from ClassesHeaderCluster.js's `DEFAULT_FILTER_CELLS`. The keys and
- * the placeholder are the design's own strings, including `All six sites` —
- * which hardcodes the site count. It is correct for the six sites this site
- * has; if a seventh is added, that string is the design's to change, not this
- * file's to rewrite. Recorded in docs/PORT-FINDINGS.md.
+ * Ported from ClassesHeaderCluster.js's `DEFAULT_FILTER_CELLS`. SITE's empty
+ * option label counts published `lp_location` posts so it stays accurate when
+ * sites are added or removed (the pen's "All six sites" string is not fixed).
  *
  * Options come from real records: CLASS TYPE from the `lp_level` taxonomy
  * (the design's kickers — ALL LEVELS, LEVEL 2 · IMPROVER, 6–9 AGE — are level
@@ -215,13 +213,7 @@ function lp_class_filter_cells( array $lp_current = array() ): array {
 		);
 	}
 
-	$lp_site_options = array(
-		array(
-			'value' => '',
-			'label' => 'All six sites',
-		),
-	);
-	foreach ( get_posts(
+	$lp_sites = get_posts(
 		array(
 			'post_type'      => 'lp_location',
 			'post_status'    => 'publish',
@@ -229,7 +221,20 @@ function lp_class_filter_cells( array $lp_current = array() ): array {
 			'orderby'        => 'title',
 			'order'          => 'ASC',
 		)
-	) as $lp_site ) {
+	);
+
+	$lp_site_n = count( $lp_sites );
+	$lp_site_options = array(
+		array(
+			'value' => '',
+			'label' => sprintf(
+				/* translators: %d: number of published training sites */
+				_n( 'All %d site', 'All %d sites', $lp_site_n, 'londonparkour_v8' ),
+				$lp_site_n
+			),
+		),
+	);
+	foreach ( $lp_sites as $lp_site ) {
 		$lp_site_options[] = array(
 			'value' => (string) $lp_site->ID,
 			'label' => get_the_title( $lp_site ),

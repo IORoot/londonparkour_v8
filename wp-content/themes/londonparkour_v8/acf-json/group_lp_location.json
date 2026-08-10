@@ -29,7 +29,7 @@
             "name": "tag",
             "label": "Tag",
             "type": "text",
-            "instructions": "e.g. \"FLAGSHIP INDOOR SITE\"",
+            "instructions": "e.g. \"INDOOR SITE\"",
             "key": "field_8a993ec34c507db8"
         },
         {
@@ -51,14 +51,6 @@
             "key": "field_b4ec320b72756488"
         },
         {
-            "name": "is_flagship",
-            "label": "Flagship site",
-            "type": "true_false",
-            "ui": 1,
-            "default_value": 0,
-            "key": "field_54b5cee6d70e7747"
-        },
-        {
             "name": "latitude",
             "label": "Latitude",
             "type": "text",
@@ -69,6 +61,13 @@
             "label": "Longitude",
             "type": "text",
             "key": "field_ee1e9c1e7edf3963"
+        },
+        {
+            "name": "streetview",
+            "label": "Street View URL",
+            "type": "url",
+            "instructions": "Optional. Paste a Google Street View (or other) URL. If empty, the map page falls back to a Maps link at the coordinates above.",
+            "key": "field_5fd5a9e59f2aaae7"
         },
         {
             "name": "meeting_point",

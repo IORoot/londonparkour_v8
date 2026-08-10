@@ -55,6 +55,30 @@ function lp_asset_url( string $logical_path ): string {
  */
 function lp_enqueue_assets(): void {
 	wp_enqueue_style( 'londonparkour', lp_asset_url( 'assets/css/main.css' ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+
+	/*
+	 * Vite emits CSS imported by the JS entry (e.g. Leaflet) as a sibling
+	 * file listed on the manifest entry's `css` array. main.css alone does
+	 * not include it — enqueue those sheets or the map tiles render blank.
+	 */
+	$lp_manifest_path = get_theme_file_path( 'assets/dist/.vite/manifest.json' );
+	if ( is_readable( $lp_manifest_path ) ) {
+		$lp_manifest = json_decode( (string) file_get_contents( $lp_manifest_path ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$lp_app_css  = is_array( $lp_manifest['assets/js/app.js']['css'] ?? null )
+			? $lp_manifest['assets/js/app.js']['css']
+			: array();
+		foreach ( $lp_app_css as $lp_i => $lp_css_file ) {
+			$lp_disk = get_theme_file_path( 'assets/dist/' . $lp_css_file );
+			$lp_bust = is_readable( $lp_disk ) ? '?v=' . substr( md5( (string) filemtime( $lp_disk ) ), 0, 8 ) : '';
+			wp_enqueue_style(
+				'londonparkour-app-' . (string) $lp_i,
+				get_theme_file_uri( 'assets/dist/' . $lp_css_file ) . $lp_bust,
+				array( 'londonparkour' ),
+				null // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			);
+		}
+	}
+
 	wp_enqueue_script( 'londonparkour', lp_asset_url( 'assets/js/app.js' ), array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

@@ -105,7 +105,7 @@ $lp_sites = array_map(
 			'href'  => (string) ( $item['url'] ?? '' ),
 		);
 	},
-	lp_resolve_source( $args, 'lp_location', array( 'exclude_flag' => 'is_flagship' ) )
+	lp_resolve_source( $args, 'lp_location' )
 );
 
 if ( ! $lp_sites ) {
