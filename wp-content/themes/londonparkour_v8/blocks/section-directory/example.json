@@ -1,0 +1,25 @@
+{
+  "rows": [
+    {
+      "index": "SECTION A",
+      "title": "Classes",
+      "meta": "05 questions · running, lateness, weather, refunds",
+      "icon": "icon-academic-cap",
+      "href": "#classes"
+    },
+    {
+      "index": "SECTION B",
+      "title": "Private Sessions",
+      "meta": "03 questions · pricing, parties, what you get",
+      "icon": "icon-user-group",
+      "href": "#private-sessions"
+    },
+    {
+      "index": "SECTION C",
+      "title": "Gift Cards",
+      "meta": "02 questions · buying, redeeming, expiry",
+      "icon": "icon-tag",
+      "href": "#gift-cards"
+    }
+  ]
+}

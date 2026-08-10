@@ -2,10 +2,13 @@
 /**
  * Coaches — field definition.
  *
- * Takes the source control for the roster. The lead coach is its own group:
- * it is a different projection of the same entity (portrait + pull quote, not
- * a thumbnail row), so forcing it through the list would mean one shape trying
- * to serve two.
+ * Two layouts (`grid` | `lead`), matching Storybook Blocks/Coaches:
+ *   - grid — Homepage V8 four-up bio cards
+ *   - lead — head-coach profile + roster list
+ *
+ * The lead coach is its own group (portrait + pull quote), not a list row.
+ * Manual source rows carry the union of both projections; each layout reads
+ * the fields it needs.
  *
  * @package londonparkour_v8
  */
@@ -19,20 +22,60 @@ return array(
 
 		array(
 			lp_tab( __( 'Content', 'londonparkour_v8' ) ),
+			array(
+				'name'          => 'layout',
+				'label'         => __( 'Layout', 'londonparkour_v8' ),
+				'type'          => 'button_group',
+				'choices'       => array(
+					'grid' => __( 'Grid', 'londonparkour_v8' ),
+					'lead' => __( 'Lead', 'londonparkour_v8' ),
+				),
+				'default_value' => 'grid',
+			),
 			lp_field_eyebrow(),
+			array(
+				'name'           => 'meta',
+				'label'          => __( 'Meta', 'londonparkour_v8' ),
+				'type'           => 'text',
+				'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'grid' ) ) ),
+			),
 			lp_field_heading(
 				array(
 					'name'  => 'headline',
 					'label' => __( 'Headline', 'londonparkour_v8' ),
+					'type'  => 'textarea',
+					'rows'  => 2,
 				)
 			),
-			lp_field_note(),
-			lp_field_standfirst( array( 'name' => 'intro_text' ) ),
+			lp_field_standfirst(
+				array(
+					'name'           => 'lead',
+					'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'grid' ) ) ),
+				)
+			),
 			array(
-				'name'       => 'lead_coach',
-				'label'      => __( 'Lead coach', 'londonparkour_v8' ),
-				'type'       => 'group',
-				'sub_fields' => array(
+				'name'           => 'footnote',
+				'label'          => __( 'Footnote', 'londonparkour_v8' ),
+				'type'           => 'text',
+				'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'grid' ) ) ),
+			),
+			lp_field_note(
+				array(
+					'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'lead' ) ) ),
+				)
+			),
+			lp_field_standfirst(
+				array(
+					'name'           => 'intro_text',
+					'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'lead' ) ) ),
+				)
+			),
+			array(
+				'name'           => 'lead_coach',
+				'label'          => __( 'Lead coach', 'londonparkour_v8' ),
+				'type'           => 'group',
+				'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'lead' ) ) ),
+				'sub_fields'     => array(
 					lp_field_media( array( 'name' => 'image' ) ),
 					array(
 						'name'  => 'image_alt',
@@ -66,15 +109,38 @@ return array(
 			'lp_coach',
 			__( 'Coaches', 'londonparkour_v8' ),
 			array(
-				lp_field_media( array( 'name' => 'thumb' ) ),
 				array(
-					'name'  => 'thumb_alt',
-					'label' => __( 'Thumb alt', 'londonparkour_v8' ),
+					'name'  => 'index',
+					'label' => __( 'Index', 'londonparkour_v8' ),
+					'type'  => 'text',
+				),
+				array(
+					'name'  => 'tag',
+					'label' => __( 'Tag', 'londonparkour_v8' ),
 					'type'  => 'text',
 				),
 				array(
 					'name'  => 'name',
 					'label' => __( 'Name', 'londonparkour_v8' ),
+					'type'  => 'text',
+				),
+				array(
+					'name'  => 'role',
+					'label' => __( 'Role', 'londonparkour_v8' ),
+					'type'  => 'text',
+				),
+				array(
+					'name'      => 'bio',
+					'label'     => __( 'Bio', 'londonparkour_v8' ),
+					'type'      => 'textarea',
+					'rows'      => 3,
+					'new_lines' => '',
+				),
+				lp_field_media( array( 'name' => 'photo' ) ),
+				lp_field_media( array( 'name' => 'thumb' ) ),
+				array(
+					'name'  => 'thumb_alt',
+					'label' => __( 'Thumb alt', 'londonparkour_v8' ),
 					'type'  => 'text',
 				),
 				array(

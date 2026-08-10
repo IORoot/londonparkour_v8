@@ -22,6 +22,9 @@
  * @param string $args['target']
  * @param string $args['command']          @tailwindplus/elements dialog trigger.
  * @param string $args['command_for']
+ * @param array  $args['data_attrs']       Extra HTML attributes (key => value),
+ *                                         typically data-* and command attrs for
+ *                                         the booking drawer.
  *
  * @package londonparkour_v8
  */
@@ -99,6 +102,20 @@ if ( '' !== $lp_name ) {
 foreach ( array( 'command', 'command_for' ) as $lp_pass ) {
 	if ( ! empty( $args[ $lp_pass ] ) ) {
 		$lp_attrs[ str_replace( '_', '', $lp_pass ) ] = $args[ $lp_pass ];
+	}
+}
+
+if ( ! empty( $args['data_attrs'] ) && is_array( $args['data_attrs'] ) ) {
+	foreach ( $args['data_attrs'] as $lp_dk => $lp_dv ) {
+		$lp_dk = (string) $lp_dk;
+		if ( '' === $lp_dk ) {
+			continue;
+		}
+		// Normalise command_for → commandfor for the HTML attribute.
+		if ( 'command_for' === $lp_dk ) {
+			$lp_dk = 'commandfor';
+		}
+		$lp_attrs[ $lp_dk ] = (string) $lp_dv;
 	}
 }
 

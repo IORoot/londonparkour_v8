@@ -1,0 +1,20 @@
+{
+  "title": "Send us a message",
+  "lead": "Tell us what you're training for and we'll point you in the right direction.",
+  "note": "We reply within 1 working day.",
+  "success_message": "Thanks — your message is on its way. We usually reply within one working day.",
+  "error_message": "Something went wrong sending your message. Please try again or email us direct.",
+  "reach": {
+    "title": "REACH US NOW",
+    "spots_left": "OPEN",
+    "rows": [
+      { "label": "PHONE", "value": "+44 20 7946 0958" },
+      { "label": "EMAIL", "value": "hello@londonparkour.com" },
+      { "label": "STUDIO", "value": "24 Britannia Walk, N1" },
+      { "label": "HOURS", "value": "Mon–Fri 07:00–21:00" }
+    ],
+    "cta_label": "CALL THE STUDIO",
+    "cta_href": "tel:+442079460958",
+    "note": "Phone lines Mon–Sat, 9am–6pm. Outside those hours, email is fastest."
+  }
+}

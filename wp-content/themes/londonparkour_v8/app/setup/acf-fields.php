@@ -280,7 +280,7 @@ function lp_spacing_choices(): array {
  * Always three options, always in this order, always named `source`. A block
  * never branches on this itself — it calls lp_resolve_source().
  *
- * @param string $post_type       CPT to pull from, e.g. 'lp_class'.
+ * @param string $post_type       CPT to pull from, e.g. 'clasbpro_class'.
  * @param string $label           Human label for the list, e.g. 'Sessions'.
  * @param array  $manual_subfields Fields for a hand-typed row.
  * @param array  $opts            'multiple' => bool (default true), 'taxonomy' => string|null.
@@ -362,6 +362,164 @@ function lp_field_source( string $post_type, string $label, array $manual_subfie
 }
 
 /**
+ * Source control for a taxonomy term list (e.g. lp_series on the Tutorials block).
+ *
+ * Same three-way Latest / Choose / Manual language as lp_field_source(), but
+ * Choose is a taxonomy multi-select and Latest runs get_terms(). Field names
+ * match the CPT source control so seed twins and editor muscle-memory transfer.
+ *
+ * @param string $taxonomy         Taxonomy name, e.g. 'lp_series'.
+ * @param string $label            Human label for the list, e.g. 'Series'.
+ * @param array  $manual_subfields Fields for a hand-typed row.
+ * @param array  $opts             'multiple' => bool (default true).
+ * @return array Fields to splice into a layout.
+ */
+function lp_field_term_source( string $taxonomy, string $label, array $manual_subfields, array $opts = array() ): array {
+	$multiple = $opts['multiple'] ?? true;
+
+	return array(
+		array(
+			'name'          => 'source',
+			'label'         => __( 'Source', 'londonparkour_v8' ),
+			'type'          => 'button_group',
+			'instructions'  => sprintf(
+				/* translators: %s: the list name, e.g. "Series". */
+				__( 'Where %s come from.', 'londonparkour_v8' ),
+				strtolower( $label )
+			),
+			'choices'       => array(
+				'latest' => __( 'Latest', 'londonparkour_v8' ),
+				'choose' => __( 'Choose', 'londonparkour_v8' ),
+				'manual' => __( 'Manual', 'londonparkour_v8' ),
+			),
+			'default_value' => 'latest',
+		),
+		array(
+			'name'           => 'source_limit',
+			'label'          => __( 'How many', 'londonparkour_v8' ),
+			'type'           => 'number',
+			'default_value'  => $multiple ? 4 : 1,
+			'min'            => 1,
+			'max'            => 24,
+			'lp_conditional' => array( array( array( 'field' => 'source', 'operator' => '==', 'value' => 'latest' ) ) ),
+		),
+		array(
+			'name'           => 'source_items',
+			'label'          => $label,
+			'type'           => 'taxonomy',
+			'taxonomy'       => $taxonomy,
+			'field_type'     => $multiple ? 'multi_select' : 'select',
+			'add_term'       => 0,
+			'save_terms'     => 0,
+			'load_terms'     => 0,
+			'return_format'  => 'id',
+			'lp_conditional' => array( array( array( 'field' => 'source', 'operator' => '==', 'value' => 'choose' ) ) ),
+		),
+		array(
+			'name'           => 'source_manual',
+			'label'          => $label,
+			'type'           => 'repeater',
+			'layout'         => 'block',
+			'button_label'   => sprintf(
+				/* translators: %s: singular item name. */
+				__( 'Add %s', 'londonparkour_v8' ),
+				strtolower( rtrim( $label, 's' ) )
+			),
+			'max'            => $multiple ? 0 : 1,
+			'sub_fields'     => $manual_subfields,
+			'lp_conditional' => array( array( array( 'field' => 'source', 'operator' => '==', 'value' => 'manual' ) ) ),
+		),
+	);
+}
+
+/**
+ * Resolve a term source control to a flat list of items.
+ *
+ * Every item is a flat associative array. Terms contribute their ACF fields
+ * plus `id`, `title`, `url` and `poster` (image field); manual rows contribute
+ * their subfields with `id` null. A block projects either shape the same way.
+ *
+ * @param array  $args     The block's field values (the whole $args array).
+ * @param string $taxonomy Taxonomy to query when source is 'latest' or 'choose'.
+ * @param array  $opts     'exclude' => term ID (or list) already featured above.
+ * @return array<int, array>
+ */
+function lp_resolve_term_source( array $args, string $taxonomy, array $opts = array() ): array {
+	$source = $args['source'] ?? 'latest';
+
+	if ( 'manual' === $source ) {
+		$rows = $args['source_manual'] ?? array();
+		if ( ! is_array( $rows ) ) {
+			return array();
+		}
+		return array_map(
+			static function ( $row ) {
+				$row = is_array( $row ) ? $row : array();
+				$row['id'] = null;
+				return $row;
+			},
+			$rows
+		);
+	}
+
+	$exclude = array_filter( array_map( 'intval', (array) ( $opts['exclude'] ?? array() ) ) );
+
+	if ( 'choose' === $source ) {
+		$ids = array_filter( array_map( 'intval', (array) ( $args['source_items'] ?? array() ) ) );
+	} else {
+		$limit = max( 1, (int) ( $args['source_limit'] ?? 4 ) );
+		// Fetch a few extras so excluding a featured term still fills the shelf.
+		$fetched = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+				'number'     => $limit + count( $exclude ),
+				'orderby'    => 'term_id',
+				'order'      => 'ASC',
+			)
+		);
+		$ids = is_wp_error( $fetched ) ? array() : wp_list_pluck( $fetched, 'term_id' );
+	}
+
+	$items = array();
+
+	foreach ( $ids as $id ) {
+		$id = (int) $id;
+		if ( ! $id || in_array( $id, $exclude, true ) ) {
+			continue;
+		}
+
+		$term = get_term( $id, $taxonomy );
+		if ( ! $term || is_wp_error( $term ) ) {
+			continue;
+		}
+
+		$fields = function_exists( 'get_fields' ) ? get_fields( 'term_' . $id ) : array();
+		$fields = is_array( $fields ) ? $fields : array();
+
+		$link = get_term_link( $term );
+		$url  = is_wp_error( $link ) ? '' : (string) $link;
+
+		$items[] = array_merge(
+			$fields,
+			array(
+				'id'     => $id,
+				'title'  => $term->name,
+				'url'    => $url,
+				'poster' => isset( $fields['poster'] ) ? (int) $fields['poster'] : null,
+			)
+		);
+
+		$limit = max( 1, (int) ( $args['source_limit'] ?? 4 ) );
+		if ( count( $items ) >= $limit ) {
+			break;
+		}
+	}
+
+	return $items;
+}
+
+/**
  * Resolve a block's source control to a flat list of items.
  *
  * Blocks call this and then project the result into their own shape — the same
@@ -372,12 +530,12 @@ function lp_field_source( string $post_type, string $label, array $manual_subfie
  * plus `id`, `title`, `url` and `thumb`; manual rows contribute their subfields
  * with `id` null. A block reads $item['time'], $item['title'] either way.
  *
- * With `'expand' => 'sessions'`, each lp_class record is expanded into one item
- * per row of its `sessions` repeater — the class's own fields merged with that
- * session's, session values winning. `source_limit` then counts SESSIONS, not
+ * With `'expand' => 'sessions'`, each clasbpro_class record is expanded into
+ * one item per upcoming session from lp_class_upcoming_sessions() — board
+ * fields (subtitle, price, location, coaches) merged with that session's
+ * values, session values winning. `source_limit` then counts SESSIONS, not
  * classes, because the boards that ask for this show one row per time-slot and
- * have a fixed slot count. cpt.php names this function as the seam for exactly
- * this: a session is a time-slot of a class, not a fifth post type.
+ * have a fixed slot count.
  *
  * @param array  $args      The block's field values (the whole $args array).
  * @param string $post_type CPT to query when source is 'latest' or 'choose'.
@@ -461,6 +619,11 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 			);
 		}
 
+		// Latest class boards must not surface inactive clasbpro classes.
+		if ( lp_class_post_type() === $post_type && function_exists( 'lp_class_active_meta_query' ) ) {
+			$query_args = lp_class_active_meta_query( $query_args );
+		}
+
 		$ids = get_posts( $query_args );
 	}
 
@@ -469,6 +632,22 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 	foreach ( $ids as $id ) {
 		$id = (int) $id;
 		if ( ! $id ) {
+			continue;
+		}
+
+		// Choose/latest: drop inactive classes even when meta_query was skipped.
+		if ( lp_class_post_type() === $post_type && function_exists( 'lp_class_is_active' ) && ! lp_class_is_active( $id ) ) {
+			continue;
+		}
+
+		if ( lp_class_post_type() === $post_type && function_exists( 'lp_class_board_fields' ) ) {
+			$fields = lp_class_board_fields( $id );
+			$extra  = function_exists( 'get_fields' ) ? get_fields( $id ) : array();
+			$extra  = is_array( $extra ) ? $extra : array();
+			$extra  = lp_flatten_references( $extra, $post_type );
+
+			// Board helpers own the projection keys; theme ACF fills the rest.
+			$items[] = array_merge( $extra, $fields );
 			continue;
 		}
 
@@ -505,9 +684,10 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 /**
  * Expand class records into one item per session.
  *
- * A class with two sessions becomes two rows carrying the same title, price and
- * location. A class with none contributes nothing — an unscheduled class is not
- * a time-slot and does not belong on a timetable.
+ * Clasbpro classes expand via lp_class_upcoming_sessions(); manual rows (or any
+ * item that already carries a `sessions` array) keep the embedded-row path.
+ * A class with none contributes nothing — an unscheduled class is not a
+ * time-slot and does not belong on a timetable.
  *
  * @param array<int,array> $items Resolved class records.
  * @param int              $limit How many SESSIONS to return.
@@ -517,6 +697,38 @@ function lp_expand_sessions( array $items, int $limit ): array {
 	$rows = array();
 
 	foreach ( $items as $item ) {
+		$id = (int) ( $item['id'] ?? 0 );
+
+		if ( $id && function_exists( 'lp_class_upcoming_sessions' ) ) {
+			$remaining = $limit - count( $rows );
+			if ( $remaining <= 0 ) {
+				return $rows;
+			}
+
+			/*
+			 * One next occurrence per clasbpro post. Asking for `$remaining`
+			 * filled the Hero/Classes boards with seven Sundays of the same
+			 * class before any other type appeared — each post is already one
+			 * weekly slot, so the board wants breadth across posts, not depth
+			 * into one recurrence.
+			 */
+			$board    = function_exists( 'lp_class_board_fields' ) ? lp_class_board_fields( $id ) : array();
+			$sessions = lp_class_upcoming_sessions( $id, 1 );
+
+			foreach ( $sessions as $session ) {
+				if ( ! is_array( $session ) ) {
+					continue;
+				}
+
+				$rows[] = array_merge( $item, $board, $session );
+
+				if ( count( $rows ) >= $limit ) {
+					return $rows;
+				}
+			}
+			continue;
+		}
+
 		$sessions = $item['sessions'] ?? array();
 
 		if ( ! is_array( $sessions ) || ! $sessions ) {
@@ -549,8 +761,8 @@ function lp_expand_sessions( array $items, int $limit ): array {
  */
 function lp_source_taxonomy_for( string $post_type ): ?string {
 	$map = array(
-		'lp_class'    => 'lp_level',
-		'lp_tutorial' => 'lp_level',
+		'clasbpro_class' => 'lp_level',
+		'lp_tutorial'    => 'lp_level',
 	);
 
 	return $map[ $post_type ] ?? null;
@@ -573,9 +785,12 @@ function lp_source_taxonomy_for( string $post_type ): ?string {
  */
 function lp_source_reference_fields( string $post_type ): array {
 	$map = array(
-		'lp_class'    => array( 'location' => 'title', 'coaches' => 'titles' ),
-		'lp_coach'    => array( 'location' => 'title' ),
-		'lp_tutorial' => array( 'coaches' => 'titles' ),
+		'clasbpro_class' => array(
+			'acf_location' => 'title',
+			'acf_coaches'  => 'titles',
+		),
+		'lp_coach'       => array( 'location' => 'title' ),
+		'lp_tutorial'    => array( 'coaches' => 'titles' ),
 	);
 
 	return $map[ $post_type ] ?? array();

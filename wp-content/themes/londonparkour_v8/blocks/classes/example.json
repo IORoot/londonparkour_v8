@@ -1,19 +1,19 @@
 {
-  "eyebrow": "03 — BOOK A SESSION",
-  "heading": "This week. Book a seat.",
-  "note": "Coach-led, capped at 12, all kit provided. If your first session isn't for you we refund it — no questions.",
+  "eyebrow": "02 — BOOK A SESSION",
+  "heading": "Coming up. Book a place.",
+  "note": "Coach-led, no kit needed — just trainers and water. Book while the place is still open.",
   "board_title": "LIVE TIMETABLE",
   "stamp": "UPDATED 09:12 · THU 30 JUL",
   "foot_note": "6 SITES · 7 DAYS · 40+ SESSIONS A WEEK",
   "source": "manual",
   "source_manual": [
-    { "time": "07:00", "date_label": "TODAY", "title": "Sunrise Session", "subtitle": "60 min · outdoor, rain or shine", "location": "Peckham Rye", "level": "Level 2 · Improver", "spaces": "FULL", "price": "£15", "price_label": "DROP-IN", "book_label": "WAITLIST", "sold_out": true },
-    { "time": "10:00", "date_label": "TODAY", "title": "Kids Parkour 5–11", "subtitle": "45 min · parents welcome to watch", "location": "Hackney Marshes", "level": "All levels", "spaces": "2 LEFT", "price": "£12", "price_label": "PER CHILD", "book_label": "BOOK" },
-    { "time": "18:30", "date_label": "TODAY", "title": "Beginners Parkour", "subtitle": "60 min · all kit provided", "location": "Vauxhall", "level": "Level 1 · Beginner", "spaces": "4 LEFT", "price": "£15", "price_label": "DROP-IN", "book_label": "BOOK" },
-    { "time": "19:45", "date_label": "TODAY", "title": "Open Gym", "subtitle": "90 min · unstructured, coach on floor", "location": "Stratford East", "level": "All levels", "spaces": "11 LEFT", "price": "£8", "price_label": "DROP-IN", "book_label": "BOOK" },
-    { "time": "07:15", "date_label": "FRI", "title": "Women's Session", "subtitle": "60 min · women and non-binary only", "location": "Southbank", "level": "All levels", "spaces": "6 LEFT", "price": "£15", "price_label": "DROP-IN", "book_label": "BOOK" },
-    { "time": "12:00", "date_label": "FRI", "title": "Advanced Movement", "subtitle": "75 min · by coach invitation", "location": "Vauxhall", "level": "Level 3 · Advanced", "spaces": "3 LEFT", "price": "£15", "price_label": "DROP-IN", "book_label": "BOOK" },
-    { "time": "09:30", "date_label": "SAT", "title": "Family Session", "subtitle": "60 min · ages 5+ with an adult", "location": "Wembley Park", "level": "All levels", "spaces": "9 LEFT", "price": "£24", "price_label": "2 PEOPLE", "book_label": "BOOK" }
+    { "thumb_alt": "", "glyph_icon_id": "icon-sun", "time": "07:00", "date_label": "TODAY", "title": "Sunrise Session", "subtitle": "60 min · outdoor, rain or shine", "location": "Peckham Rye", "level": "Level 2 · Improver", "price": "£15", "price_label": "DROP-IN", "book_label": "WAITLIST", "sold_out": true },
+    { "thumb_alt": "", "glyph_icon_id": "icon-user-group", "time": "10:00", "date_label": "TODAY", "title": "Kids Parkour 5–11", "subtitle": "45 min · parents welcome to watch", "location": "Hackney Marshes", "level": "All levels", "price": "£12", "price_label": "PER CHILD", "book_label": "BOOK" },
+    { "thumb_alt": "", "glyph_icon_id": "icon-academic-cap", "time": "18:30", "date_label": "TODAY", "title": "Beginners Parkour", "subtitle": "60 min · all kit provided", "location": "Vauxhall", "level": "Level 1 · Beginner", "price": "£15", "price_label": "DROP-IN", "book_label": "BOOK" },
+    { "thumb_alt": "", "glyph_icon_id": "icon-building-library", "time": "19:45", "date_label": "TODAY", "title": "Open Gym", "subtitle": "90 min · unstructured, coach on floor", "location": "Stratford East", "level": "All levels", "price": "£8", "price_label": "DROP-IN", "book_label": "BOOK" },
+    { "thumb_alt": "", "glyph_icon_id": "icon-heart", "time": "07:15", "date_label": "FRI", "title": "Women's Session", "subtitle": "60 min · women and non-binary only", "location": "Southbank", "level": "All levels", "price": "£15", "price_label": "DROP-IN", "book_label": "BOOK" },
+    { "thumb_alt": "", "glyph_icon_id": "icon-bolt", "time": "12:00", "date_label": "FRI", "title": "Advanced Movement", "subtitle": "75 min · by coach invitation", "location": "Vauxhall", "level": "Level 3 · Advanced", "price": "£15", "price_label": "DROP-IN", "book_label": "BOOK" },
+    { "thumb_alt": "", "glyph_icon_id": "icon-home", "time": "09:30", "date_label": "SAT", "title": "Family Session", "subtitle": "60 min · ages 5+ with an adult", "location": "Wembley Park", "level": "All levels", "price": "£24", "price_label": "2 PEOPLE", "book_label": "BOOK" }
   ],
   "primary_action": {
     "link": { "title": "VIEW THE FULL TIMETABLE →", "url": "/timetable/", "target": "" }

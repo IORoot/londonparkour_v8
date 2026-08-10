@@ -31,23 +31,30 @@
             "type": "button_group",
             "instructions": "The page background family.",
             "choices": {
-                "dark": "Dark",
-                "light": "Light"
+                "light": "Light",
+                "dark": "Dark"
             },
-            "default_value": "dark",
+            "default_value": "light",
             "key": "field_c3bf15d1ede17ecd"
         },
         {
             "name": "theme_signal",
             "label": "Signal",
             "type": "button_group",
-            "instructions": "The single accent colour.",
+            "instructions": "Yellow keeps Marquee/CTA/Private Coaching yellow. Light ground makes Pricing white and Clients/Locations the accent band.",
             "choices": {
                 "yellow": "Yellow",
                 "green": "Green"
             },
             "default_value": "yellow",
             "key": "field_8bd53f15fe2bac02"
+        },
+        {
+            "name": "contact_email",
+            "label": "Contact email",
+            "type": "email",
+            "instructions": "Enquiry form recipient. Falls back to the WordPress admin email when empty.",
+            "key": "field_35d385c220b75830"
         }
     ]
 }

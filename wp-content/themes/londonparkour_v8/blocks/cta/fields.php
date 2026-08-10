@@ -34,6 +34,8 @@ return array(
 				array(
 					'name'  => 'headline',
 					'label' => __( 'Headline', 'londonparkour_v8' ),
+					'type'  => 'textarea',
+					'rows'  => 2,
 				)
 			),
 			lp_field_standfirst( array( 'name' => 'subhead' ) ),
@@ -42,7 +44,7 @@ return array(
 		),
 
 		lp_field_source(
-			'lp_class',
+			'clasbpro_class',
 			__( 'Session', 'londonparkour_v8' ),
 			array(
 				lp_field_eyebrow(

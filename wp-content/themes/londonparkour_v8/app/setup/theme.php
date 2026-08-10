@@ -106,7 +106,11 @@ function lp_content_class( string $extra = '' ): string {
  * @return string e.g. 'parkour-dark-yellow'
  */
 function lp_theme_name(): string {
-	$ground = 'dark';
+	// Match Storybook light ground so page comps read correctly: Pricing
+	// `bg-base-200` is white, Clients/Locations `bg-accent` is the light
+	// amber/olive band — not dark-theme signal yellow. Signal stays yellow
+	// so Marquee / CTA / Private Coaching `bg-primary` remain yellow.
+	$ground = 'light';
 	$signal = 'yellow';
 
 	if ( function_exists( 'get_field' ) ) {
@@ -115,7 +119,7 @@ function lp_theme_name(): string {
 	}
 
 	// Whitelist — this value lands in an HTML attribute and picks a CSS block.
-	$ground = in_array( $ground, array( 'dark', 'light' ), true ) ? $ground : 'dark';
+	$ground = in_array( $ground, array( 'dark', 'light' ), true ) ? $ground : 'light';
 	$signal = in_array( $signal, array( 'yellow', 'green' ), true ) ? $signal : 'yellow';
 
 	return "parkour-{$ground}-{$signal}";

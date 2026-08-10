@@ -1,0 +1,18 @@
+{
+  "kicker": "PASSENGER ENQUIRIES",
+  "live_label": "OPEN NOW",
+  "note": "Coaches are on the floor during sessions, so email gets a faster answer than the phone.",
+  "facts": [
+    { "label": "EMAIL", "value": "hello@londonparkour.com" },
+    { "label": "PHONE", "value": "020 3488 3854" },
+    { "label": "REPLY TIME", "value": "One working day" },
+    { "label": "IN PERSON", "value": "Vauxhall, Tue & Thu" }
+  ],
+  "cta": {
+    "link": {
+      "title": "SEND US A MESSAGE",
+      "url": "/contact",
+      "target": ""
+    }
+  }
+}

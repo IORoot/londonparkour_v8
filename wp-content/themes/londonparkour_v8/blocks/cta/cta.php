@@ -34,7 +34,7 @@ $lp_primary = lp_action( $args['primary_action'] ?? null );
 $lp_alt     = lp_action( $args['alt_action'] ?? null );
 
 // One session, not a list — the same query layer, read for its first row.
-$lp_rows    = lp_resolve_source( $args, 'lp_class', array( 'expand' => 'sessions' ) );
+$lp_rows    = lp_resolve_source( $args, lp_class_post_type(), array( 'expand' => 'sessions' ) );
 $lp_row     = is_array( $lp_rows[0] ?? null ) ? $lp_rows[0] : array();
 $lp_session = array(
 	'kicker'       => (string) ( $lp_row['kicker'] ?? 'NEXT BEGINNERS SESSION' ),

@@ -430,7 +430,7 @@ get_header();
 			'next' => array(
 				'keyword' => 'BOOK A CLASS →',
 				'label'   => 'Put it into practice',
-				'href'    => (string) get_post_type_archive_link( 'lp_class' ),
+				'href'    => (string) get_post_type_archive_link( lp_class_post_type() ),
 			),
 		)
 	);

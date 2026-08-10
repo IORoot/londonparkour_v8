@@ -2,11 +2,9 @@
 /**
  * Custom post types and taxonomies.
  *
- * These are the business entities the design-system blocks read from. A class
- * is the entity ("Beginners Parkour"); a session is a recurring time-slot of
- * it, held as an ACF repeater on the class rather than a fifth post type. If
- * bookings ever need their own records, lp_resolve_source() in acf-fields.php
- * is the seam to change — not the blocks.
+ * Classes are clasbpro_class (plugin CPT) — see app/setup/clasbpro.php. Theme-
+ * owned CPTs below are coaches, locations, tutorials. Session expansion for
+ * boards lives in app/includes/clasbpro.php.
  *
  * @package londonparkour_v8
  */
@@ -20,14 +18,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function lp_post_types(): array {
 	return array(
-		'lp_class'    => array(
-			'singular' => __( 'Class', 'londonparkour_v8' ),
-			'plural'   => __( 'Classes', 'londonparkour_v8' ),
-			'slug'     => 'classes',
-			'icon'     => 'dashicons-calendar-alt',
-			'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes' ),
-			'taxes'    => array( 'lp_level' ),
-		),
 		'lp_coach'    => array(
 			'singular' => __( 'Coach', 'londonparkour_v8' ),
 			'plural'   => __( 'Coaches', 'londonparkour_v8' ),
@@ -67,7 +57,7 @@ function lp_taxonomies(): array {
 			'plural'       => __( 'Levels', 'londonparkour_v8' ),
 			'slug'         => 'level',
 			'hierarchical' => true,
-			'post_types'   => array( 'lp_class', 'lp_tutorial' ),
+			'post_types'   => array( 'clasbpro_class', 'lp_tutorial' ),
 		),
 		'lp_series' => array(
 			'singular'     => __( 'Series', 'londonparkour_v8' ),

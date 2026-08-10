@@ -11,14 +11,12 @@
  * here because bin/seed.php (Phase 6) has to reproduce it and it is otherwise
  * only derivable by reading the .pen frame sequence again:
  *
- *   hero → marquee → statement → classes → private_coaching → coaches →
- *   locations → pricing → cta
+ *   hero → marquee → classes → pricing → private_coaching → statement →
+ *   tutorials → clients → testimonials → locations → coaches → cta
  *
  * Nav and footer are NOT rows — they are get_header()/get_footer(), which is
  * also what keeps them outside <main>, the landmark contract the Storybook page
- * states explicitly. The source's frame numbering skips "06"; that is not a
- * missing section, the eyebrow numbering simply runs one behind throughout.
- * GiftCardUpsell belongs to a different page and is not in this sequence.
+ * states explicitly. GiftCardUpsell is out of scope for this composition.
  *
  * @package londonparkour_v8
  */

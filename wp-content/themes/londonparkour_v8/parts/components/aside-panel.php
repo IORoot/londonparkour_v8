@@ -22,6 +22,7 @@
  * @param string $args['href']        Renders the CTA as an <a>.
  * @param string $args['command']     @tailwindplus/elements dialog trigger.
  * @param string $args['command_for']
+ * @param array  $args['data_attrs']  Passed through to elements/button.php.
  * @param string $args['note']        Optional foot note.
  * @param string $args['surface']     board|page. Default 'board'.
  *
@@ -105,6 +106,7 @@ $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours befo
 			'trailing_icon_id' => $args['cta_icon_id'] ?? 'icon-arrow-right',
 			'command'          => $args['command'] ?? '',
 			'command_for'      => $args['command_for'] ?? '',
+			'data_attrs'       => is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array(),
 		)
 	);
 	?>

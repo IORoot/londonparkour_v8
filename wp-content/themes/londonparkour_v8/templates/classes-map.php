@@ -29,7 +29,7 @@
  * ── What is derived rather than copied ─────────────────────────────────────
  *
  * The source's CLASS_INDEX, PINS and SITE_PANELS are literal arrays. Here all
- * three read the database: the index is published lp_class posts, the pins and
+ * three read the database: the index is published clasbpro_class posts, the pins and
  * panels are published lp_location posts, and each site's class count is
  * counted. The design's own numbers would go stale the first time an editor
  * added a class — the same call PORT-FINDINGS §17 made for the view-rail tab
@@ -42,12 +42,11 @@
  * ── The one gap, recorded rather than papered over ─────────────────────────
  *
  * The source's index meta reads `STRATFORD EAST · WEDNESDAYS 18:00 · WITH
- * ANDY` — a weekly RECURRENCE. The model has no recurrence: `sessions` holds
- * dated occurrences (`date`, `date_label`, `time`). So the meta names the next
- * real session ("MON 07:15") instead of claiming a weekly pattern. Same class
- * of gap as §19's SITES and §20's date_label, and the same call
- * single-lp_class.php made for its WHEN fact. Closing it needs a recurrence
- * field, which is the repo owner's decision, not a port decision.
+ * ANDY` — a weekly RECURRENCE. Clasbpro still exposes dated occurrences rather
+ * than a human recurrence string, so the meta names the next real session
+ * ("MON 07:15") instead of claiming a weekly pattern. Same class of gap as
+ * §19's SITES and §20's date_label. Closing it needs a recurrence field, which
+ * is the repo owner's decision, not a port decision.
  *
  * @package londonparkour_v8
  */
@@ -65,14 +64,18 @@ $lp_sites = get_posts(
 );
 
 $lp_classes = get_posts(
-	array(
-		'post_type'      => 'lp_class',
-		'post_status'    => 'publish',
-		'posts_per_page' => 24,
-		'orderby'        => 'menu_order title',
-		'order'          => 'ASC',
+	lp_class_active_meta_query(
+		array(
+			'post_type'      => lp_class_post_type(),
+			'post_status'    => 'publish',
+			'posts_per_page' => 24,
+			'orderby'        => 'menu_order title',
+			'order'          => 'ASC',
+		)
 	)
 );
+
+$lp_classes = lp_class_dedupe_by_title( $lp_classes );
 
 /*
  * One pass over the classes, keyed by location id — so the per-site counts
@@ -81,7 +84,7 @@ $lp_classes = get_posts(
 $lp_count_by_site = array();
 
 foreach ( $lp_classes as $lp_class ) {
-	$lp_site_id = (int) get_field( 'location', $lp_class->ID );
+	$lp_site_id = lp_class_location_id( (int) $lp_class->ID );
 
 	if ( $lp_site_id ) {
 		$lp_count_by_site[ $lp_site_id ] = ( $lp_count_by_site[ $lp_site_id ] ?? 0 ) + 1;
@@ -145,13 +148,13 @@ get_header();
 				),
 				array(
 					'label' => 'CLASSES',
-					'href'  => (string) get_post_type_archive_link( 'lp_class' ),
+					'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
 				),
 				array( 'label' => 'LOCATION MAP' ),
 			),
 			'action'   => array(
 				'label' => 'ALL CLASSES ↗',
-				'href'  => (string) get_post_type_archive_link( 'lp_class' ),
+				'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
 			),
 			'masthead' => array(
 				'title' => 'Stride. Leap. Balance. Fly.',
@@ -179,36 +182,21 @@ get_header();
 					<ul role="list" class="flex-1 min-w-0 flex flex-col m-0 p-0 list-none">
 						<?php
 						foreach ( $lp_classes as $lp_i => $lp_class ) :
-							$lp_site_id  = (int) get_field( 'location', $lp_class->ID );
+							$lp_class_id = (int) $lp_class->ID;
+							$lp_site_id  = lp_class_location_id( $lp_class_id );
 							$lp_coach_id = 0;
-							$lp_coaches  = get_field( 'coaches', $lp_class->ID );
+							$lp_coaches  = lp_class_coach_ids( $lp_class_id );
 
-							if ( is_array( $lp_coaches ) && $lp_coaches ) {
+							if ( $lp_coaches ) {
 								$lp_coach_id = (int) $lp_coaches[0];
 							}
 
 							/*
 							 * The next dated session, not a recurrence — see the
-							 * docblock. Rows are seeded in date order but an
-							 * editor's need not be, so this scans rather than
-							 * trusting [0].
+							 * docblock.
 							 */
-							$lp_next     = null;
-							$lp_sessions = get_field( 'sessions', $lp_class->ID );
-
-							if ( is_array( $lp_sessions ) ) {
-								foreach ( $lp_sessions as $lp_session ) {
-									$lp_when = (string) ( $lp_session['date'] ?? '' );
-
-									if ( '' === $lp_when ) {
-										continue;
-									}
-
-									if ( null === $lp_next || $lp_when < $lp_next['date'] ) {
-										$lp_next = $lp_session;
-									}
-								}
-							}
+							$lp_sessions = lp_class_upcoming_sessions( $lp_class_id, 1 );
+							$lp_next     = $lp_sessions[0] ?? null;
 
 							$lp_meta = array_filter(
 								array(
@@ -366,7 +354,7 @@ get_header();
 			'next' => array(
 				'keyword' => 'LISTINGS →',
 				'label'   => 'Every class, filtered by level',
-				'href'    => (string) get_post_type_archive_link( 'lp_class' ),
+				'href'    => (string) get_post_type_archive_link( lp_class_post_type() ),
 			),
 		)
 	);

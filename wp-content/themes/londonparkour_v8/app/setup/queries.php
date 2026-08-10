@@ -16,7 +16,7 @@
  * - `class_level`, not the public `lp_level` taxonomy query var. Mixing a
  *   taxonomy var into a post-type-archive URL muddies which archive the query
  *   is, and the three cells behave identically this way.
- * - `class_site` is a post id, because a class's `location` is an ACF
+ * - `class_site` is a post id, because a class's `acf_location` is an ACF
  *   post_object pointing at an `lp_location` — not a taxonomy term.
  *
  * No nonce: these are public, read-only navigation parameters on published
@@ -29,12 +29,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Apply the Classes filter grid to the lp_class archive's main query.
+ * Apply the Classes filter grid to the clasbpro_class archive's main query.
  *
  * @param WP_Query $lp_query The query being prepared.
  */
 function lp_filter_class_archive( WP_Query $lp_query ): void {
-	if ( is_admin() || ! $lp_query->is_main_query() || ! $lp_query->is_post_type_archive( 'lp_class' ) ) {
+	if ( is_admin() || ! $lp_query->is_main_query() || ! $lp_query->is_post_type_archive( lp_class_post_type() ) ) {
 		return;
 	}
 
@@ -61,16 +61,40 @@ function lp_filter_class_archive( WP_Query $lp_query ): void {
 		);
 	}
 
+	$lp_meta = array();
+
 	if ( $lp_site ) {
+		$lp_meta[] = array(
+			'key'   => 'acf_location',
+			'value' => $lp_site,
+		);
+	}
+
+	// Inactive clasbpro classes stay out of the public archive.
+	$lp_active = array(
+		'relation' => 'OR',
+		array(
+			'key'     => 'class_active',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => 'class_active',
+			'value'   => '0',
+			'compare' => '!=',
+		),
+	);
+
+	if ( $lp_meta ) {
 		$lp_query->set(
 			'meta_query',
-			array(
-				array(
-					'key'   => 'location',
-					'value' => $lp_site,
-				),
+			array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'relation' => 'AND',
+				$lp_meta,
+				$lp_active,
 			)
 		);
+	} else {
+		$lp_query->set( 'meta_query', $lp_active ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 	}
 }
 add_action( 'pre_get_posts', 'lp_filter_class_archive' );

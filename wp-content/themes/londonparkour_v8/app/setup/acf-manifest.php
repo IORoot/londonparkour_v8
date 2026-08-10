@@ -40,7 +40,6 @@ function lp_acf_generated_field_group_keys(): array {
  */
 function lp_acf_generated_post_type_keys(): array {
 	return array(
-		'post_type_lp0101class',
 		'post_type_lp0102coach',
 		'post_type_lp0103location',
 		'post_type_lp0104tutorial',
@@ -67,6 +66,7 @@ function lp_acf_generated_taxonomy_keys(): array {
 function lp_acf_preserved_json_manifest(): array {
 	return array(
 		'field_groups' => array(
+			'group_lp_class',
 			'group_6195097cc6251',
 			'group_6721ddb5b7f7a',
 			'group_6728969e00be0',

@@ -80,7 +80,7 @@ $lp_q = get_search_query();
  * public types — see departure 4 above.
  */
 $lp_types = array(
-	'lp_class'    => array(
+	'clasbpro_class'    => array(
 		'tab'  => 'CLASSES',
 		'row'  => 'CLASS',
 		'meta' => 'CLASSES',
@@ -173,8 +173,8 @@ $lp_row_meta = static function ( WP_Post $lp_post ) use ( $lp_types ): string {
 		return $lp_word . ' · ' . strtoupper( get_the_date( 'M Y', $lp_post ) );
 	}
 
-	if ( 'lp_class' === $lp_post->post_type && function_exists( 'get_field' ) ) {
-		$lp_price = (string) get_field( 'price', $lp_post->ID );
+	if ( lp_class_post_type() === $lp_post->post_type && function_exists( 'lp_class_price_display' ) ) {
+		$lp_price = lp_class_price_display( (int) $lp_post->ID );
 		if ( '' !== $lp_price ) {
 			return $lp_word . ' · ' . $lp_price;
 		}

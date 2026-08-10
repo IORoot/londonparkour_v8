@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function lp_acf_post_type_keys(): array {
 	return array(
-		'lp_class'    => 'post_type_lp0101class',
 		'lp_coach'    => 'post_type_lp0102coach',
 		'lp_location' => 'post_type_lp0103location',
 		'lp_tutorial' => 'post_type_lp0104tutorial',

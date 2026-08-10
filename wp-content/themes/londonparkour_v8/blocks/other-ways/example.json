@@ -1,0 +1,30 @@
+{
+  "meta_left": "OTHER WAYS TO REACH US",
+  "meta_right": "MON–SAT · 09:00–18:00",
+  "columns": [
+    {
+      "icon_id": "icon-map-pin",
+      "label": "STUDIO ADDRESS",
+      "value": "24 Britannia Walk\nHoxton, London N1 7JR",
+      "link_label": "STREETVIEW ↗",
+      "link_href": "#"
+    },
+    {
+      "icon_id": "icon-phone",
+      "label": "PHONE",
+      "value": "+44 20 7946 0958",
+      "note": "MON–SAT, 9AM–6PM"
+    },
+    {
+      "icon_id": "icon-envelope",
+      "label": "EMAIL",
+      "value": "hello@londonparkour.com",
+      "note": "REPLIES WITHIN 24H"
+    },
+    {
+      "icon_id": "icon-clock",
+      "label": "OPENING HOURS",
+      "value": "Mon–Fri — 07:00 to 21:00\nSat–Sun — 09:00 to 18:00"
+    }
+  ]
+}

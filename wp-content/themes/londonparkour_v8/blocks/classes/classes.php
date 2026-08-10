@@ -1,6 +1,6 @@
 <?php
 /**
- * Classes — "03 — BOOK A SESSION": the departure-board booking section.
+ * Classes — "02 — BOOK A SESSION": the departure-board booking section.
  *
  * Ported from src/stories/Blocks/Classes/Classes.js.
  *
@@ -13,14 +13,22 @@
  * themes those two resolve to the same hex. The stamp is elements/status.php
  * with `surface => 'board'` for the same reason.
  *
- * COLUMN_HEAD stays a hardcoded array (the plan is explicit that it is not a
- * field): it carries layout classes as well as labels, and it is hand-coupled
- * to board-row.php's own column geometry, which that part does not export.
- * If board-row's widths or breakpoints change, update these too:
+ * V3 board anatomy (`bhjl3`): THUMB → TIME → GLYPH → SESSION → SITE (150) →
+ * LEVEL (146) → FARE → BOOK. There is no Spaces column — rows pass
+ * `show_spaces => false`. COLUMN_HEAD stays a hardcoded array (layout classes
+ * as well as labels), hand-coupled to board-row.php's own column geometry:
+ *   THUMB  sm:w-14 (56)
  *   TIME   sm:w-[92px]
- *   SITE   sm:w-[196px], hidden below md
- *   LEVEL  sm:w-[150px], hidden below lg
- *   SPACES sm:min-w-[70px]
+ *   GLYPH  sm:w-7 (28)
+ *   SITE   md:w-[150px], hidden below md
+ *   LEVEL  lg:w-[146px], hidden below lg
+ *   FARE   sm:w-[76px]
+ *   BOOK   w-[84px]
+ *
+ * Day splits (pen `Vc2hk`): consecutive rows sharing a `date_label` are grouped
+ * under `components/board-day-band` — the slim agenda-style divider, not the
+ * large card-agenda day headers. When bands render, the per-row `date_label`
+ * under TIME is cleared.
  *
  * @param string $args['eyebrow']
  * @param string $args['heading']
@@ -37,97 +45,112 @@ defined( 'ABSPATH' ) || exit;
 
 $lp_default_sessions = array(
 	array(
-		'time'        => '07:00',
-		'date_label'  => 'TODAY',
-		'title'       => 'Sunrise Session',
-		'subtitle'    => '60 min · outdoor, rain or shine',
-		'location'    => 'Peckham Rye',
-		'level'       => 'Level 2 · Improver',
-		'spaces'      => 'FULL',
-		'price'       => '£15',
-		'price_label' => 'DROP-IN',
-		'book_label'  => 'WAITLIST',
-		'sold_out'    => true,
+		'time'          => '07:00',
+		'date_label'    => 'TODAY',
+		'day_date'      => '30 JULY 2026',
+		'title'         => 'Sunrise Session',
+		'subtitle'      => '60 min · outdoor, rain or shine',
+		'location'      => 'Peckham Rye',
+		'level'         => 'Level 2 · Improver',
+		'price'         => '£15',
+		'price_label'   => 'DROP-IN',
+		'book_label'    => 'WAITLIST',
+		'sold_out'      => true,
+		'glyph_icon_id' => 'icon-sun',
 	),
 	array(
-		'time'        => '10:00',
-		'date_label'  => 'TODAY',
-		'title'       => 'Kids Parkour 5–11',
-		'subtitle'    => '45 min · parents welcome to watch',
-		'location'    => 'Hackney Marshes',
-		'level'       => 'All levels',
-		'spaces'      => '2 LEFT',
-		'price'       => '£12',
-		'price_label' => 'PER CHILD',
-		'book_label'  => 'BOOK',
+		'time'          => '10:00',
+		'date_label'    => 'TODAY',
+		'day_date'      => '30 JULY 2026',
+		'title'         => 'Kids Parkour 5–11',
+		'subtitle'      => '45 min · parents welcome to watch',
+		'location'      => 'Hackney Marshes',
+		'level'         => 'All levels',
+		'price'         => '£12',
+		'price_label'   => 'PER CHILD',
+		'book_label'    => 'BOOK',
+		'glyph_icon_id' => 'icon-user-group',
 	),
 	array(
-		'time'        => '18:30',
-		'date_label'  => 'TODAY',
-		'title'       => 'Beginners Parkour',
-		'subtitle'    => '60 min · all kit provided',
-		'location'    => 'Vauxhall',
-		'level'       => 'Level 1 · Beginner',
-		'spaces'      => '4 LEFT',
-		'price'       => '£15',
-		'price_label' => 'DROP-IN',
-		'book_label'  => 'BOOK',
+		'time'          => '18:30',
+		'date_label'    => 'TODAY',
+		'day_date'      => '30 JULY 2026',
+		'title'         => 'Beginners Parkour',
+		'subtitle'      => '60 min · all kit provided',
+		'location'      => 'Vauxhall',
+		'level'         => 'Level 1 · Beginner',
+		'price'         => '£15',
+		'price_label'   => 'DROP-IN',
+		'book_label'    => 'BOOK',
+		'glyph_icon_id' => 'icon-academic-cap',
 	),
 	array(
-		'time'        => '19:45',
-		'date_label'  => 'TODAY',
-		'title'       => 'Open Gym',
-		'subtitle'    => '90 min · unstructured, coach on floor',
-		'location'    => 'Stratford East',
-		'level'       => 'All levels',
-		'spaces'      => '11 LEFT',
-		'price'       => '£8',
-		'price_label' => 'DROP-IN',
-		'book_label'  => 'BOOK',
+		'time'          => '19:45',
+		'date_label'    => 'TODAY',
+		'day_date'      => '30 JULY 2026',
+		'title'         => 'Open Gym',
+		'subtitle'      => '90 min · unstructured, coach on floor',
+		'location'      => 'Stratford East',
+		'level'         => 'All levels',
+		'price'         => '£8',
+		'price_label'   => 'DROP-IN',
+		'book_label'    => 'BOOK',
+		'glyph_icon_id' => 'icon-building-library',
 	),
 	array(
-		'time'        => '07:15',
-		'date_label'  => 'FRI',
-		'title'       => "Women's Session",
-		'subtitle'    => '60 min · women and non-binary only',
-		'location'    => 'Southbank',
-		'level'       => 'All levels',
-		'spaces'      => '6 LEFT',
-		'price'       => '£15',
-		'price_label' => 'DROP-IN',
-		'book_label'  => 'BOOK',
+		'time'          => '07:15',
+		'date_label'    => 'FRI',
+		'day_date'      => '31 JULY 2026',
+		'title'         => "Women's Session",
+		'subtitle'      => '60 min · women and non-binary only',
+		'location'      => 'Southbank',
+		'level'         => 'All levels',
+		'price'         => '£15',
+		'price_label'   => 'DROP-IN',
+		'book_label'    => 'BOOK',
+		'glyph_icon_id' => 'icon-heart',
 	),
 	array(
-		'time'        => '12:00',
-		'date_label'  => 'FRI',
-		'title'       => 'Advanced Movement',
-		'subtitle'    => '75 min · by coach invitation',
-		'location'    => 'Vauxhall',
-		'level'       => 'Level 3 · Advanced',
-		'spaces'      => '3 LEFT',
-		'price'       => '£15',
-		'price_label' => 'DROP-IN',
-		'book_label'  => 'BOOK',
+		'time'          => '12:00',
+		'date_label'    => 'FRI',
+		'day_date'      => '31 JULY 2026',
+		'title'         => 'Advanced Movement',
+		'subtitle'      => '75 min · by coach invitation',
+		'location'      => 'Vauxhall',
+		'level'         => 'Level 3 · Advanced',
+		'price'         => '£15',
+		'price_label'   => 'DROP-IN',
+		'book_label'    => 'BOOK',
+		'glyph_icon_id' => 'icon-bolt',
 	),
 	array(
-		'time'        => '09:30',
-		'date_label'  => 'SAT',
-		'title'       => 'Family Session',
-		'subtitle'    => '60 min · ages 5+ with an adult',
-		'location'    => 'Wembley Park',
-		'level'       => 'All levels',
-		'spaces'      => '9 LEFT',
-		'price'       => '£24',
-		'price_label' => '2 PEOPLE',
-		'book_label'  => 'BOOK',
+		'time'          => '09:30',
+		'date_label'    => 'SAT',
+		'day_date'      => '1 AUGUST 2026',
+		'title'         => 'Family Session',
+		'subtitle'      => '60 min · ages 5+ with an adult',
+		'location'      => 'Wembley Park',
+		'level'         => 'All levels',
+		'price'         => '£24',
+		'price_label'   => '2 PEOPLE',
+		'book_label'    => 'BOOK',
+		'glyph_icon_id' => 'icon-home',
 	),
 );
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_column_head = array(
 	array(
+		'label' => '',
+		'class' => 'hidden sm:block w-14 shrink-0',
+	),
+	array(
 		'label' => 'TIME',
 		'class' => 'w-[92px] shrink-0',
+	),
+	array(
+		'label' => '',
+		'class' => 'hidden sm:block w-7 shrink-0',
 	),
 	array(
 		'label' => 'SESSION',
@@ -135,25 +158,21 @@ $lp_column_head = array(
 	),
 	array(
 		'label' => 'SITE',
-		'class' => 'hidden md:block md:w-[196px] shrink-0',
+		'class' => 'hidden md:block md:w-[150px] shrink-0',
 	),
 	array(
 		'label' => 'LEVEL',
-		'class' => 'hidden lg:block lg:w-[150px] shrink-0',
+		'class' => 'hidden lg:block lg:w-[146px] shrink-0',
 	),
 	array(
 		'label' => 'FARE',
 		'class' => 'hidden sm:block w-[76px] shrink-0 text-right',
 	),
-	array(
-		'label' => 'SPACES',
-		'class' => 'w-[70px] shrink-0 text-right',
-	),
 );
 
-$lp_eyebrow   = (string) ( $args['eyebrow'] ?? '03 — BOOK A SESSION' );
-$lp_heading   = (string) ( $args['heading'] ?? 'This week. Book a seat.' );
-$lp_note      = (string) ( $args['note'] ?? "Coach-led, capped at 12, all kit provided. If your first session isn't for you we refund it — no questions." );
+$lp_eyebrow   = (string) ( $args['eyebrow'] ?? '02 — BOOK A SESSION' );
+$lp_heading   = (string) ( $args['heading'] ?? 'Coming up. Book a place.' );
+$lp_note      = (string) ( $args['note'] ?? 'Coach-led, no kit needed — just trainers and water. Book while the place is still open.' );
 $lp_board_ttl = (string) ( $args['board_title'] ?? 'LIVE TIMETABLE' );
 $lp_stamp     = (string) ( $args['stamp'] ?? 'UPDATED 09:12 · THU 30 JUL' );
 $lp_foot_note = (string) ( $args['foot_note'] ?? '6 SITES · 7 DAYS · 40+ SESSIONS A WEEK' );
@@ -164,39 +183,97 @@ $lp_foot = lp_action( $args['primary_action'] ?? null ) ?? array(
 	'href'  => '#',
 );
 
-// One query layer; the projection is this block's own. A class record gives
-// eleven fields here — the Hero board reads four of the same names.
+// One query layer; the projection is this block's own. CPT records contribute
+// `thumb` from the featured image via lp_resolve_source; manual rows may set
+// thumb / glyph_icon_id directly. Spaces stay in the source data but are not
+// shown — the V3 Classes board has no Spaces column.
 $lp_sessions = array_map(
 	static function ( array $item ): array {
+		$lp_ymd = (string) ( $item['date'] ?? '' );
+		$lp_day_date = (string) ( $item['day_date'] ?? '' );
+		if ( '' === $lp_day_date && '' !== $lp_ymd ) {
+			$lp_dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $lp_ymd );
+			if ( $lp_dt ) {
+				$lp_day_date = strtoupper( $lp_dt->format( 'j F Y' ) );
+			}
+		}
+
 		return array(
-			'variant'     => 'sell',
-			'time'        => (string) ( $item['time'] ?? '' ),
-			'date_label'  => (string) ( $item['date_label'] ?? '' ),
-			'title'       => (string) ( $item['title'] ?? '' ),
-			'subtitle'    => (string) ( $item['subtitle'] ?? '' ),
-			'location'    => (string) ( $item['location'] ?? '' ),
-			'level'       => (string) ( $item['level'] ?? '' ),
-			'spaces'      => (string) ( $item['spaces'] ?? '' ),
-			'price'       => (string) ( $item['price'] ?? '' ),
-			'price_label' => (string) ( $item['price_label'] ?? '' ),
+			'variant'          => 'sell',
+			'show_spaces'      => false,
+			'time'             => (string) ( $item['time'] ?? '' ),
+			'date_label'       => (string) ( $item['date_label'] ?? '' ),
+			'day_date'         => $lp_day_date,
+			'title'            => (string) ( $item['title'] ?? '' ),
+			'subtitle'         => (string) ( $item['subtitle'] ?? '' ),
+			'location'         => (string) ( $item['location'] ?? '' ),
+			'level'            => (string) ( $item['level'] ?? '' ),
+			'price'            => (string) ( $item['price'] ?? '' ),
+			'price_label'      => (string) ( $item['price_label'] ?? '' ),
 			// A class record has no book_label — it is derivable, and a field an
 			// editor has to keep in step with `sold_out` is a field that drifts.
 			// The source's own defaults follow exactly this rule.
-			'book_label'  => (string) ( $item['book_label'] ?? ( empty( $item['sold_out'] ) ? 'BOOK' : 'WAITLIST' ) ),
-			'sold_out'    => ! empty( $item['sold_out'] ),
-			'book_href'   => (string) ( $item['url'] ?? '' ),
+			'book_label'       => (string) ( $item['book_label'] ?? ( empty( $item['sold_out'] ) ? 'BOOK' : 'WAITLIST' ) ),
+			'sold_out'         => ! empty( $item['sold_out'] ),
+			'book_class_id'    => ! empty( $item['id'] ) ? (int) $item['id'] : 0,
+			'book_preset_date' => $lp_ymd,
+			'thumb'            => ! empty( $item['thumb'] ) ? (int) $item['thumb'] : 0,
+			'thumb_alt'        => (string) ( $item['thumb_alt'] ?? '' ),
+			'glyph_icon_id'    => (string) ( $item['glyph_icon_id'] ?? '' ),
 		);
 	},
-	lp_resolve_source( $args, 'lp_class', array( 'expand' => 'sessions' ) )
+	lp_resolve_source( $args, lp_class_post_type(), array( 'expand' => 'sessions' ) )
 );
 
 if ( ! $lp_sessions ) {
 	$lp_sessions = array_map(
 		static function ( array $row ): array {
-			$row['variant'] = 'sell';
+			$row['variant']     = 'sell';
+			$row['show_spaces'] = false;
 			return $row;
 		},
 		$lp_default_sessions
+	);
+}
+
+// Live clasbpro expand returns one row per class in query order — re-sort by
+// occurrence so consecutive date_label runs form real day bands.
+$lp_has_ymd = false;
+foreach ( $lp_sessions as $lp_session ) {
+	if ( ! empty( $lp_session['book_preset_date'] ) ) {
+		$lp_has_ymd = true;
+		break;
+	}
+}
+if ( $lp_has_ymd ) {
+	usort(
+		$lp_sessions,
+		static function ( array $lp_a, array $lp_b ): int {
+			return strcmp(
+				( $lp_a['book_preset_date'] ?? '' ) . ( $lp_a['time'] ?? '' ),
+				( $lp_b['book_preset_date'] ?? '' ) . ( $lp_b['time'] ?? '' )
+			);
+		}
+	);
+}
+
+// Consecutive runs of the same date_label → BoardDayBand + rows (pen Vc2hk).
+$lp_day_groups     = array();
+$lp_show_day_bands = false;
+foreach ( $lp_sessions as $lp_session ) {
+	$lp_day = (string) ( $lp_session['date_label'] ?? '' );
+	if ( '' !== $lp_day ) {
+		$lp_show_day_bands = true;
+	}
+	$lp_last = $lp_day_groups ? $lp_day_groups[ count( $lp_day_groups ) - 1 ] : null;
+	if ( $lp_last && $lp_last['day'] === $lp_day ) {
+		$lp_day_groups[ count( $lp_day_groups ) - 1 ]['sessions'][] = $lp_session;
+		continue;
+	}
+	$lp_day_groups[] = array(
+		'day'      => $lp_day,
+		'date'     => (string) ( $lp_session['day_date'] ?? '' ),
+		'sessions' => array( $lp_session ),
 	);
 }
 
@@ -234,8 +311,29 @@ $lp_spacing = lp_section_spacing( $args );
 		</div>
 
 		<div data-slot="rows">
-			<?php foreach ( $lp_sessions as $lp_session ) : ?>
-				<?php lp_part( 'components/board-row', $lp_session ); ?>
+			<?php foreach ( $lp_day_groups as $lp_group ) : ?>
+				<?php if ( $lp_show_day_bands && '' !== $lp_group['day'] ) : ?>
+					<?php
+					$lp_count = count( $lp_group['sessions'] );
+					lp_part(
+						'components/board-day-band',
+						array(
+							'day'   => $lp_group['day'],
+							'date'  => $lp_group['date'],
+							'count' => $lp_count . ' SESSION' . ( 1 === $lp_count ? '' : 'S' ),
+							'level' => 4,
+						)
+					);
+					?>
+				<?php endif; ?>
+				<?php foreach ( $lp_group['sessions'] as $lp_session ) : ?>
+					<?php
+					if ( $lp_show_day_bands ) {
+						$lp_session['date_label'] = '';
+					}
+					lp_part( 'components/board-row', $lp_session );
+					?>
+				<?php endforeach; ?>
 			<?php endforeach; ?>
 		</div>
 

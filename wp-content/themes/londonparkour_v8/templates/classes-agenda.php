@@ -101,10 +101,14 @@ foreach ( $lp_week['days'] as $lp_day_group ) {
 	);
 
 	foreach ( $lp_day_group['sessions'] as $lp_session ) {
+		$lp_href = (string) ( $lp_session['url'] ?? '' );
 		unset( $lp_session['class_id'] );
 		$lp_rows[] = array(
 			'part' => 'components/board-row',
-			'args' => array( 'variant' => 'default' ) + $lp_session,
+			'args' => array(
+				'variant' => 'default',
+				'href'    => $lp_href,
+			) + $lp_session,
 		);
 	}
 }
@@ -126,20 +130,20 @@ get_header();
 				),
 				array(
 					'label' => 'CLASSES',
-					'href'  => (string) get_post_type_archive_link( 'lp_class' ),
+					'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
 				),
 				array( 'label' => 'AGENDA' ),
 			),
 			'action'        => array(
 				'label' => 'LISTINGS VIEW ↗',
-				'href'  => (string) get_post_type_archive_link( 'lp_class' ),
+				'href'  => (string) get_post_type_archive_link( lp_class_post_type() ),
 			),
 			'masthead'      => array(
 				'title' => 'Departures, day by day.',
 				'note'  => 'Every session on the board for the week ahead. Coach-led, capped at twelve, £15 to drop in. Spaces update live — take the slot while it is there.',
 			),
 			'active'        => 'agenda',
-			'filter_action' => (string) get_post_type_archive_link( 'lp_class' ),
+			'filter_action' => (string) get_post_type_archive_link( lp_class_post_type() ),
 		)
 	);
 	?>
@@ -247,7 +251,7 @@ get_header();
 			'next' => array(
 				'keyword' => 'BOOK A CLASS →',
 				'label'   => 'Take the next open slot',
-				'href'    => (string) get_post_type_archive_link( 'lp_class' ),
+				'href'    => (string) get_post_type_archive_link( lp_class_post_type() ),
 			),
 		)
 	);

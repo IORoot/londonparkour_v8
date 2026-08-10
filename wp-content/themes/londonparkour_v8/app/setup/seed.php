@@ -2,15 +2,9 @@
 /**
  * Demo content seeding — `wp lp seed`.
  *
- * The database is disposable; the content definition is code. This command
- * composes bin/demo-content/*.json, bin/demo-media/*.jpeg and each block's
- * example.json into a working site, and is the only supported way to get one.
- * There is no SQL dump: `docker compose down -v` followed by bootstrap.sh and
- * this command IS the recovery path. See bin/README.md.
- *
- * SAFETY. Every post and attachment this command creates carries `_lp_seed`
- * post meta. Nothing without that marker is ever updated or deleted, so a page
- * an editor wrote by hand cannot be touched however its slug collides.
+ * Seeds tutorials, blog posts, menus, template pages, and Flexible Content
+ * fixtures. Does NOT create, update, or delete `lp_location`, `lp_coach`, or
+ * `clasbpro_class` — those are editor-owned. Never mass-wipe clasbpro classes.
  *
  * @package londonparkour_v8
  */
@@ -29,11 +23,12 @@ const LP_SEED_MARKER = '_lp_seed';
  *
  * Kept beside the seeder rather than derived from ACF: it is demo-content
  * knowledge, not field knowledge, and ACF cannot tell us what a JSON string
- * was meant to mean.
+ * was meant to mean. Location/coach/class CPTs are not seeded — do not add
+ * refs that invent those records.
  */
 const LP_SEED_REFS = array(
-	'location' => 'lp_location',
-	'coaches'  => 'lp_coach',
+	// Tutorials may still name coaches by slug when those posts already exist.
+	'coaches' => 'lp_coach',
 );
 
 /**
@@ -52,6 +47,26 @@ const LP_SEED_CPT_ROWS = array(
 	'locations'       => 5,
 	'train-in-person' => 3,
 	'cta'             => 1,
+	'tutorials'       => 4,
+);
+
+/**
+ * Homepage Flexible Content order — Storybook Homepage V8 (`Homepage.js`).
+ * Front-page.php records the same sequence; seed writes it every run.
+ */
+const LP_SEED_HOMEPAGE_ORDER = array(
+	'hero',
+	'marquee',
+	'classes',
+	'pricing',
+	'private-coaching',
+	'statement',
+	'tutorials',
+	'clients',
+	'testimonials',
+	'locations',
+	'coaches',
+	'cta',
 );
 
 /**
@@ -177,7 +192,7 @@ function lp_seed_media(): array {
 }
 
 /**
- * Create the demo taxonomy terms.
+ * Create the demo taxonomy terms (and refresh term meta on re-seed).
  */
 function lp_seed_terms(): void {
 	foreach ( lp_seed_read_json( 'bin/demo-content/terms.json' ) as $taxonomy => $terms ) {
@@ -187,11 +202,29 @@ function lp_seed_terms(): void {
 		}
 
 		foreach ( $terms as $term ) {
-			if ( term_exists( $term['slug'], $taxonomy ) ) {
+			$existing = term_exists( $term['slug'], $taxonomy );
+			$term_id  = 0;
+
+			if ( $existing ) {
+				$term_id = (int) ( is_array( $existing ) ? $existing['term_id'] : $existing );
+			} else {
+				$result = wp_insert_term( $term['name'], $taxonomy, array( 'slug' => $term['slug'] ) );
+				if ( is_wp_error( $result ) ) {
+					WP_CLI::warning( "Could not create {$taxonomy}/{$term['slug']}: " . $result->get_error_message() );
+					continue;
+				}
+				$term_id = (int) $result['term_id'];
+				WP_CLI::log( "  + term {$taxonomy}/{$term['slug']}" );
+			}
+
+			$fields = $term['fields'] ?? null;
+			if ( ! is_array( $fields ) || ! $term_id ) {
 				continue;
 			}
-			wp_insert_term( $term['name'], $taxonomy, array( 'slug' => $term['slug'] ) );
-			WP_CLI::log( "  + term {$taxonomy}/{$term['slug']}" );
+
+			foreach ( $fields as $name => $value ) {
+				update_field( (string) $name, $value, 'term_' . $term_id );
+			}
 		}
 	}
 }
@@ -486,8 +519,78 @@ function lp_seed_page( array $media ): void {
 }
 
 /**
- * Delete every seed-owned post and attachment.
+ * Load one block's example.json (and optional example.media.json) as an FC row.
+ *
+ * @param string            $slug  Folder slug under blocks/.
+ * @param array<string,int> $media Filename => attachment ID.
+ * @return array|null
  */
+function lp_seed_block_row( string $slug, array $media ): ?array {
+	$dir     = get_theme_file_path( 'blocks/' . $slug );
+	$layout  = str_replace( '-', '_', $slug );
+	$example = $dir . '/example.json';
+
+	if ( ! is_readable( $example ) ) {
+		WP_CLI::warning( "blocks/{$slug} has no example.json — skipping homepage row." );
+		return null;
+	}
+
+	$data = json_decode( (string) file_get_contents( $example ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+	if ( ! is_array( $data ) ) {
+		WP_CLI::warning( "blocks/{$slug}/example.json is not valid JSON — skipping homepage row." );
+		return null;
+	}
+
+	$map_file = $dir . '/example.media.json';
+	if ( is_readable( $map_file ) ) {
+		$map = json_decode( (string) file_get_contents( $map_file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		foreach ( (array) $map as $path => $file ) {
+			if ( isset( $media[ $file ] ) ) {
+				lp_seed_set_path( $data, (string) $path, $media[ $file ] );
+			}
+		}
+	}
+
+	return array_merge( array( 'acf_fc_layout' => $layout ), $data );
+}
+
+/**
+ * Seed the front page with the Homepage V8 Flexible Content stack.
+ *
+ * @param array<string,int> $media Filename => attachment ID.
+ */
+function lp_seed_homepage( array $media ): void {
+	$front_id = (int) get_option( 'page_on_front' );
+
+	if ( ! $front_id ) {
+		$front_id = lp_seed_find( 'page', 'home' );
+	}
+
+	if ( ! $front_id ) {
+		WP_CLI::warning( 'No front page found — run bin/bootstrap.sh before seeding homepage rows.' );
+		return;
+	}
+
+	$rows = array();
+	foreach ( LP_SEED_HOMEPAGE_ORDER as $slug ) {
+		$row = lp_seed_block_row( $slug, $media );
+		if ( ! $row ) {
+			continue;
+		}
+		// Homepage boards should hit real clasbpro rows so BOOK opens the drawer.
+		if ( isset( LP_SEED_CPT_ROWS[ $slug ] ) ) {
+			unset( $row['source_manual'] );
+			$row['source']       = 'latest';
+			$row['source_limit'] = LP_SEED_CPT_ROWS[ $slug ];
+		}
+		$rows[] = $row;
+	}
+
+	update_field( 'page_sections', $rows, $front_id );
+	WP_CLI::log( sprintf( '  + homepage (#%d) with %d row(s)', $front_id, count( $rows ) ) );
+}
+
 /**
  * Seed one page per page template, with `_wp_page_template` set.
  *
@@ -499,7 +602,7 @@ function lp_seed_page( array $media ): void {
  * an ACF `page_template` location rule must match: `templates/<file>.php`.
  *
  * The Classes pages are `classes-agenda`/`classes-map`, not `classes/agenda`
- * — `/classes/` is the lp_class archive, so a child page there would collide.
+ * — `/classes/` is the clasbpro_class archive, so a child page there would collide.
  * See lp_classes_page_url() in app/includes/content.php.
  */
 function lp_seed_template_pages(): void {
@@ -507,6 +610,13 @@ function lp_seed_template_pages(): void {
 		'legal'          => array( 'Legal', 'templates/legal.php' ),
 		'classes-agenda' => array( 'Classes — Agenda', 'templates/classes-agenda.php' ),
 		'classes-map'    => array( 'Classes — Map', 'templates/classes-map.php' ),
+		'contact'        => array( 'Contact', 'templates/contact.php' ),
+		'docs-faq'       => array( 'Docs — FAQ', 'templates/docs-faq.php' ),
+	);
+
+	$sections = array(
+		'contact'  => array( 'enquiries', 'other-ways', 'faq' ),
+		'docs-faq' => array( 'section-directory', 'faq:groups', 'passenger-enquiries' ),
 	);
 
 	foreach ( $pages as $slug => $page ) {
@@ -547,7 +657,36 @@ function lp_seed_template_pages(): void {
 		update_post_meta( $id, LP_SEED_MARKER, 1 );
 		update_post_meta( $id, '_wp_page_template', $template );
 
-		WP_CLI::log( sprintf( '  + page %s (#%d) -> %s', $slug, $id, $template ) );
+		if ( isset( $sections[ $slug ] ) ) {
+			$rows = array();
+			foreach ( $sections[ $slug ] as $spec ) {
+				$parts = explode( ':', $spec );
+				$block = $parts[0];
+				$variant = $parts[1] ?? '';
+				$example = 'groups' === $variant
+					? get_theme_file_path( "blocks/{$block}/example.groups.json" )
+					: get_theme_file_path( "blocks/{$block}/example.json" );
+
+				if ( ! is_readable( $example ) ) {
+					WP_CLI::warning( "Missing {$example} for page '{$slug}'." );
+					continue;
+				}
+
+				$data = json_decode( (string) file_get_contents( $example ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				if ( ! is_array( $data ) ) {
+					continue;
+				}
+
+				$rows[] = array_merge(
+					array( 'acf_fc_layout' => str_replace( '-', '_', $block ) ),
+					$data
+				);
+			}
+			update_field( 'page_sections', $rows, $id );
+			WP_CLI::log( sprintf( '  + page %s (#%d) -> %s (%d sections)', $slug, $id, $template, count( $rows ) ) );
+		} else {
+			WP_CLI::log( sprintf( '  + page %s (#%d) -> %s', $slug, $id, $template ) );
+		}
 	}
 }
 
@@ -648,11 +787,22 @@ function lp_seed_purge(): void {
 		)
 	);
 
+	$removed = 0;
 	foreach ( $ids as $id ) {
-		wp_delete_post( (int) $id, true );
+		$id = (int) $id;
+		/*
+		 * Never purge locations, coaches, or clasbpro classes — even if an
+		 * older seed run tagged them. Those CPTs are editor-owned.
+		 */
+		$type = get_post_type( $id );
+		if ( in_array( $type, array( 'lp_location', 'lp_coach', 'clasbpro_class' ), true ) ) {
+			continue;
+		}
+		wp_delete_post( $id, true );
+		++$removed;
 	}
 
-	WP_CLI::log( sprintf( '  - removed %d seeded record(s)', count( $ids ) ) );
+	WP_CLI::log( sprintf( '  - removed %d seeded record(s)', $removed ) );
 }
 
 WP_CLI::add_command(
@@ -667,16 +817,25 @@ WP_CLI::add_command(
 			lp_seed_purge();
 		}
 
+		WP_CLI::log( 'Site settings' );
+		// Light ground + yellow signal: Pricing white, Clients/Locations accent
+		// band, Marquee/CTA/Private Coaching stay yellow (not lime).
+		update_field( 'theme_ground', 'light', 'option' );
+		update_field( 'theme_signal', 'yellow', 'option' );
+		WP_CLI::log( '  + theme = parkour-light-yellow' );
+
 		WP_CLI::log( 'Media' );
 		$media = lp_seed_media();
 
 		WP_CLI::log( 'Terms' );
 		lp_seed_terms();
 
-		// Order matters: classes and coaches reference locations by slug.
-		// `post` is the native blog type, which home.php and single.php read;
-		// it references nothing, so its position here is not load-bearing.
-		foreach ( array( 'lp_location', 'lp_coach', 'lp_class', 'lp_tutorial', 'post' ) as $post_type ) {
+		/*
+		 * Do NOT seed lp_location, lp_coach, or clasbpro_class — those are
+		 * editor-owned. A prior wipe of clasbpro_class destroyed real classes;
+		 * never mass-delete or re-create them from demo JSON.
+		 */
+		foreach ( array( 'lp_tutorial', 'post' ) as $post_type ) {
 			if ( ! post_type_exists( $post_type ) ) {
 				WP_CLI::warning( "Post type {$post_type} is not registered — skipping." );
 				continue;
@@ -691,13 +850,16 @@ WP_CLI::add_command(
 		WP_CLI::log( 'Template pages' );
 		lp_seed_template_pages();
 
+		WP_CLI::log( 'Homepage' );
+		lp_seed_homepage( $media );
+
 		WP_CLI::log( 'Blocks QA page' );
 		lp_seed_page( $media );
 
 		WP_CLI::success( 'Seeded.' );
 	},
 	array(
-		'shortdesc' => 'Seed demo content for QA. Idempotent; --fresh purges first.',
+		'shortdesc' => 'Seed non-class demo content for QA. Never creates or deletes locations, coaches, or clasbpro classes.',
 		'synopsis'  => array(
 			array(
 				'type'        => 'flag',

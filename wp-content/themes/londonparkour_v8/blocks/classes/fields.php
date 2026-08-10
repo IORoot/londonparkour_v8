@@ -2,9 +2,10 @@
 /**
  * Classes — field definition.
  *
- * Takes the source control for the board. A manual row carries the eleven
- * fields components/board-row.php reads; a class record supplies the same
- * names, so both branches project identically.
+ * Takes the source control for the board. A manual row carries the fields
+ * components/board-row.php reads for the V3 Classes sell board (thumb + glyph,
+ * no Spaces column); a class record supplies the same names where it can
+ * (`thumb` from the featured image via lp_resolve_source).
  *
  * @package londonparkour_v8
  */
@@ -37,9 +38,21 @@ return array(
 		),
 
 		lp_field_source(
-			'lp_class',
+			'clasbpro_class',
 			__( 'Sessions', 'londonparkour_v8' ),
 			array(
+				lp_field_media( array( 'name' => 'thumb' ) ),
+				array(
+					'name'  => 'thumb_alt',
+					'label' => __( 'Thumb alt', 'londonparkour_v8' ),
+					'type'  => 'text',
+				),
+				array(
+					'name'         => 'glyph_icon_id',
+					'label'        => __( 'Glyph icon', 'londonparkour_v8' ),
+					'type'         => 'text',
+					'instructions' => __( 'An icon id, e.g. "icon-sun".', 'londonparkour_v8' ),
+				),
 				array(
 					'name'  => 'time',
 					'label' => __( 'Time', 'londonparkour_v8' ),
@@ -68,11 +81,6 @@ return array(
 				array(
 					'name'  => 'level',
 					'label' => __( 'Level', 'londonparkour_v8' ),
-					'type'  => 'text',
-				),
-				array(
-					'name'  => 'spaces',
-					'label' => __( 'Spaces', 'londonparkour_v8' ),
 					'type'  => 'text',
 				),
 				array(

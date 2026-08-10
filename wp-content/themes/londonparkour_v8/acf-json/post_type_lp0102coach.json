@@ -14,35 +14,17 @@
         "singular_name": "Coach",
         "menu_name": "Coaches",
         "all_items": "All Coaches",
-        "edit_item": "Edit Coach",
-        "view_item": "View Coach",
-        "view_items": "",
         "add_new_item": "Add New Coach",
-        "add_new": "",
+        "edit_item": "Edit Coach",
         "new_item": "New Coach",
-        "parent_item_colon": "",
+        "view_item": "View Coach",
         "search_items": "Search Coaches",
         "not_found": "No coaches found",
         "not_found_in_trash": "No coaches found in Trash",
-        "archives": "",
-        "attributes": "",
         "featured_image": "",
         "set_featured_image": "",
         "remove_featured_image": "",
-        "use_featured_image": "",
-        "insert_into_item": "",
-        "uploaded_to_this_item": "",
-        "filter_items_list": "",
-        "filter_by_date": "",
-        "items_list_navigation": "",
-        "items_list": "",
-        "item_published": "",
-        "item_published_privately": "",
-        "item_reverted_to_draft": "",
-        "item_scheduled": "",
-        "item_updated": "",
-        "item_link": "",
-        "item_link_description": ""
+        "use_featured_image": ""
     },
     "description": "",
     "public": true,
@@ -56,9 +38,9 @@
     "show_in_nav_menus": true,
     "show_in_rest": false,
     "rest_base": "",
-    "rest_namespace": "wp\/v2",
+    "rest_namespace": "wp/v2",
     "rest_controller_class": "WP_REST_Posts_Controller",
-    "menu_position": 300,
+    "menu_position": "",
     "menu_icon": {
         "type": "dashicons",
         "value": "dashicons-groups"
@@ -72,7 +54,7 @@
         "thumbnail",
         "page-attributes"
     ],
-    "taxonomies": "",
+    "taxonomies": [],
     "has_archive": true,
     "has_archive_slug": "",
     "rewrite": {
@@ -88,5 +70,5 @@
     "delete_with_user": false,
     "register_meta_box_cb": "",
     "enter_title_here": "",
-    "modified": 1786086243
+    "modified": 1786263763
 }

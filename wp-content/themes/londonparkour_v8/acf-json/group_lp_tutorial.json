@@ -50,6 +50,109 @@
                 "search"
             ],
             "key": "field_832074a48abcc2c8"
+        },
+        {
+            "name": "body",
+            "label": "Body",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add paragraph",
+            "instructions": "Video Details columns — index + text.",
+            "sub_fields": [
+                {
+                    "name": "index",
+                    "label": "Index",
+                    "type": "text",
+                    "key": "field_9b077dc09d1ae488"
+                },
+                {
+                    "name": "text",
+                    "label": "Text",
+                    "type": "textarea",
+                    "rows": 5,
+                    "key": "field_891c1236f060be3b"
+                }
+            ],
+            "key": "field_2b011b961354ac1b"
+        },
+        {
+            "name": "key_takeaways",
+            "label": "Key takeaways",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add takeaway",
+            "sub_fields": [
+                {
+                    "name": "text",
+                    "label": "Text",
+                    "type": "text",
+                    "key": "field_1cafa79321d96dbd"
+                }
+            ],
+            "key": "field_00aae7288a16bc5a"
+        },
+        {
+            "name": "closing_text",
+            "label": "Closing text",
+            "type": "textarea",
+            "rows": 3,
+            "key": "field_0c335e3b07989de6"
+        },
+        {
+            "name": "closing_ai_note",
+            "label": "Closing AI note",
+            "type": "text",
+            "key": "field_1ede9eee8a0cdec2"
+        },
+        {
+            "name": "demonstrations",
+            "label": "Demonstrations",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Add demonstration",
+            "sub_fields": [
+                {
+                    "name": "kicker",
+                    "label": "Kicker",
+                    "type": "text",
+                    "key": "field_bb207d7f6053a32f"
+                },
+                {
+                    "name": "title",
+                    "label": "Title",
+                    "type": "text",
+                    "key": "field_a7f40e9e07e34b5d"
+                },
+                {
+                    "name": "duration",
+                    "label": "Duration",
+                    "type": "text",
+                    "key": "field_e6dc7710de5b9ef0"
+                },
+                {
+                    "name": "note",
+                    "label": "Note",
+                    "type": "textarea",
+                    "rows": 2,
+                    "key": "field_82feb8a75140a6ee"
+                },
+                {
+                    "name": "foot_label",
+                    "label": "Foot label",
+                    "type": "text",
+                    "key": "field_26d7ec403a8f5ae7"
+                },
+                {
+                    "name": "image",
+                    "label": "Media",
+                    "type": "image",
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "key": "field_7af13ea6b0d22aa5"
+                }
+            ],
+            "key": "field_3171e7d485d46508"
         }
     ]
 }

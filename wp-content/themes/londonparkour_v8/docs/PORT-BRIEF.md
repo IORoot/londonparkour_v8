@@ -4,9 +4,11 @@ Hand this to every porting agent verbatim.
 
 ## What you are doing
 
-Porting a component from the `ldnpark2601` Storybook
-(`/Users/wearebold/Sites/Storybook/ldnpark2601`) into this WordPress theme
-(`/Users/wearebold/Sites/WordPress/londonparkour_v8/themes/londonparkour_v8`).
+Porting a component from the `londonparkour_v8_storybook_v2` Storybook
+(`/Users/andypearson/Sites/londonparkour_v8_storybook_v2`) into this WordPress theme
+(`wp-content/themes/londonparkour_v8`).
+
+This supersedes the earlier `ldnpark2601` path referenced in older commits.
 
 Source components are vanilla JS objects that write a template literal to
 `innerHTML`. They become **PHP partials that take `$args`**. The JS is a
@@ -164,9 +166,10 @@ Prefix local variables `$lp_` — partials share scope with their caller.
   **Content → Items → Actions → Settings**.
 - Never set `'key'` — `wp lp acf:build` derives keys from the field path.
 - Cross-field references use `'lp_conditional'` naming a **sibling field name**.
-- Any list of business entities uses `lp_field_source()` and resolves via
-  `lp_resolve_source( $args, 'lp_class' )`. Project the result locally — do not
-  try to make one shape fit every block.
+- Any list of business entities uses `lp_field_source()` (CPTs) or
+  `lp_field_term_source()` (taxonomies) and resolves via
+  `lp_resolve_source()` / `lp_resolve_term_source()`. Project the result
+  locally — do not try to make one shape fit every block.
 
 ## Verify before you report done
 

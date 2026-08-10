@@ -2,6 +2,7 @@ import '@tailwindplus/elements';
 
 import { initAllVideoDialogs } from './elements/DialogVideo.js';
 import { initAllFilterForms } from './elements/FilterForm.js';
+import { initBookingDrawer } from './elements/BookingDrawer.js';
 import { AppInitialiser } from './AppInitialiser.js';
 import { createDOMObserver } from './utils/createDOMObserver.js';
 import { initAll as initMotion } from './motion/index.js';
@@ -48,6 +49,14 @@ const MODULES = {
     critical: false,
     lazy: false,
     timeout: 5000
+  },
+
+  bookingDrawer: {
+    init: () => initBookingDrawer(),
+    selector: '[data-lp-book], #lp-booking-drawer',
+    critical: false,
+    lazy: false,
+    timeout: 5000
   }
 };
 
@@ -83,7 +92,7 @@ export async function initApp(options = {}) {
  * which re-ran after every story mount. On the site the DOM is server-rendered
  * once, so a single boot on DOMContentLoaded replaces it.
  */
-const boot = () => initApp({ modules: ['motion', 'videoDialogs', 'filterForms'] });
+const boot = () => initApp({ modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer'] });
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', boot, { once: true });

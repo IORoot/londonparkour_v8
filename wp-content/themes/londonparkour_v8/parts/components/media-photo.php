@@ -69,7 +69,7 @@ defined( 'ABSPATH' ) || exit;
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_scrims = array(
 	'masthead'           => 'absolute inset-0 bg-gradient-to-b from-neutral/95 to-neutral/62',
-	'hero'               => 'absolute inset-0 bg-neutral/90',
+	'hero'               => 'absolute inset-0 bg-neutral/50',
 	'video_full'         => 'absolute inset-0 bg-neutral/65',
 	'video_stage'        => 'absolute inset-0 bg-secondary/45',
 	'locations_flagship' => 'absolute inset-0 bg-neutral/35',

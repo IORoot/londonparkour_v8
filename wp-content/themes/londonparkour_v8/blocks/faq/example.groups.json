@@ -1,0 +1,69 @@
+{
+  "mode": "groups",
+  "groups": [
+    {
+      "id": "classes",
+      "label": "A — CLASSES",
+      "entries": "05 ENTRIES",
+      "icon": "icon-academic-cap",
+      "items": [
+        {
+          "question": "Is class running?",
+          "answer": "The classes page is the source of truth on whether a class is running. If it's not on the page, or a 'cancelled' banner is on the image, the class isn't running — so please check before you travel. We try to contact everyone who's paid and booked if there's a last-minute cancellation, but mistakes happen: the class page is always the first thing to change."
+        },
+        {
+          "question": "I've booked a class, where do I go?",
+          "answer": "See the details on the class map on the map page."
+        },
+        {
+          "question": "I'm going to be late, what should I do?",
+          "answer": "Come anyway. Every session warms up for the first ten minutes, so slipping in late is normal — find the coach, say hello, and they'll fold you into whatever the group is doing. More than twenty minutes behind, message us so we know not to hold the spot."
+        },
+        {
+          "question": "Do you still run class when it's raining?",
+          "answer": "Yes. Outdoor sessions run in rain — we change the surfaces we use and keep the grip work low. We only stand a session down for ice, lightning or high wind. If we do, the classes page changes first and everyone booked gets a message."
+        },
+        {
+          "question": "Class was cancelled, what happens to my booking?",
+          "answer": "Your credit goes straight back onto your account, usually within the hour, and it spends on any session at any of the six sites. If you'd rather have the money back, reply to the cancellation email and we'll refund the card you paid with."
+        }
+      ]
+    },
+    {
+      "id": "private-sessions",
+      "label": "B — PRIVATE SESSIONS",
+      "entries": "03 ENTRIES",
+      "icon": "icon-user-group",
+      "items": [
+        {
+          "question": "How much are private sessions?",
+          "answer": "Private tuition starts at £70 for one hour, one-to-one, with a Level 2 coach. Two people sharing pay £45 each, and groups of three to six work out cheaper again. Sessions run at any of our six sites, or somewhere you choose inside London."
+        },
+        {
+          "question": "Can I book a party?",
+          "answer": "We do parties. Up to fifteen children with two coaches, ninety minutes, all kit and mats provided. Most are booked at Vauxhall or Wembley Park because they're indoors — tell us the date and the age range and we'll come back with a plan."
+        },
+        {
+          "question": "What do we do in a private session?",
+          "answer": "Whatever you need. Most people come to work one specific thing — a vault they can't commit to, landing mechanics, or confidence at height. The coach builds the hour around that, and you leave with two or three things to drill on your own."
+        }
+      ]
+    },
+    {
+      "id": "gift-cards",
+      "label": "C — GIFT CARDS",
+      "entries": "02 ENTRIES",
+      "icon": "icon-tag",
+      "items": [
+        {
+          "question": "I want to book something for a present, how can I do that?",
+          "answer": "A gift card is the easy answer: choose any amount and it arrives in your inbox as a code to print or forward. It spends on classes, courses and private sessions, and it doesn't expire."
+        },
+        {
+          "question": "How do I use my gift card code?",
+          "answer": "Enter the code at checkout when you book any session and the balance comes off the total. Anything left over stays on the code for next time — you don't have to spend it in one go."
+        }
+      ]
+    }
+  ]
+}

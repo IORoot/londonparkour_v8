@@ -106,8 +106,8 @@ function lp_pagination_args( ?WP_Query $lp_query = null, string $lp_noun = 'RESU
  * URL of one of the two Classes view PAGES, by slug.
  *
  * The source hrefs are `/classes/agenda` and `/classes/map`, but `/classes/` is
- * the lp_class post-type archive, so a page cannot live under it without a
- * parent page whose slug collides with that archive. The pages are therefore
+ * the clasbpro_class post-type archive, so a page cannot live under it without
+ * a parent page whose slug collides with that archive. The pages are therefore
  * `classes-agenda` and `classes-map` at the top level. A URL is routing, not
  * design — the source's hrefs are Storybook literals, not a signed-off `.pen`
  * decision — so this is a departure worth recording rather than worth building
@@ -134,30 +134,38 @@ function lp_classes_page_url( string $lp_slug ): string {
  * here they are counted, because on a real site they would otherwise be wrong
  * the first time an editor adds a class.
  *
- * ponytail: the session count reads the `sessions` repeater per class, so it
- * is one ACF call per published class — fine at a dozen. Denormalise it into
- * a transient if the class list ever runs to hundreds.
+ * Session counts come from clasbpro via lp_class_upcoming_sessions(); class
+ * types are deduped by title (one listing card per product name).
  *
  * @param string $lp_active agenda|listings|map.
  * @return array Tabs in view-rail.php's shape.
  */
 function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
 	$lp_class_ids = get_posts(
-		array(
-			'post_type'      => 'lp_class',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+		lp_class_active_meta_query(
+			array(
+				'post_type'      => lp_class_post_type(),
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
 		)
 	);
 
 	$lp_sessions = 0;
+	$lp_posts    = array();
 	foreach ( $lp_class_ids as $lp_id ) {
-		$lp_rows      = function_exists( 'get_field' ) ? get_field( 'sessions', $lp_id ) : null;
-		$lp_sessions += is_array( $lp_rows ) ? count( $lp_rows ) : 0;
+		$lp_id         = (int) $lp_id;
+		$lp_sessions  += count( lp_class_upcoming_sessions( $lp_id, 16 ) );
+		$lp_post       = get_post( $lp_id );
+		if ( $lp_post instanceof WP_Post ) {
+			$lp_posts[] = $lp_post;
+		}
 	}
 
+	$lp_types = count( lp_class_dedupe_by_title( $lp_posts ) );
 	$lp_sites = (int) ( wp_count_posts( 'lp_location' )->publish ?? 0 );
+	$lp_arch  = (string) get_post_type_archive_link( lp_class_post_type() );
 
 	return array(
 		array(
@@ -169,9 +177,9 @@ function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
 		),
 		array(
 			'label'   => 'LISTINGS',
-			'meta'    => sprintf( '%d CLASS TYPES', count( $lp_class_ids ) ),
+			'meta'    => sprintf( '%d CLASS TYPES', $lp_types ),
 			'icon_id' => 'icon-squares-2x2',
-			'href'    => (string) get_post_type_archive_link( 'lp_class' ),
+			'href'    => $lp_arch,
 			'active'  => 'listings' === $lp_active,
 		),
 		array(
@@ -196,7 +204,7 @@ function lp_classes_view_tabs( string $lp_active = 'listings' ): array {
  * Options come from real records: CLASS TYPE from the `lp_level` taxonomy
  * (the design's kickers — ALL LEVELS, LEVEL 2 · IMPROVER, 6–9 AGE — are level
  * terms), SITE from published `lp_location` posts, which is what a class's
- * `location` post_object field points at.
+ * `acf_location` post_object field points at.
  *
  * Field names match app/setup/queries.php. Nothing here is a taxonomy query
  * var: see that file for why the filter uses its own parameters.
@@ -272,37 +280,10 @@ function lp_class_filter_cells( array $lp_current = array() ): array {
 }
 
 /**
- * A class's duration — the first ` · ` segment of its `subtitle`.
- *
- * That field's own ACF instructions give exactly this format
- * (`e.g. "60 min · all kit provided"`), so the segment is the documented
- * contract, not a guess at the copy. Returns '' when the field is empty.
- *
- * @param int $lp_id Class post id.
- * @return string
- */
-function lp_class_duration( int $lp_id ): string {
-	$lp_subtitle = function_exists( 'get_field' ) ? (string) get_field( 'subtitle', $lp_id ) : '';
-
-	return trim( explode( '·', $lp_subtitle )[0] );
-}
-
-/**
  * Every session in one week, grouped by day, for the Agenda board.
  *
- * Sessions are rows of the `sessions` repeater on each class rather than posts
- * of their own — see the note in app/setup/cpt.php — so there is no query that
- * returns them. This walks published classes and keeps the rows whose `date`
- * falls in the requested week.
- *
- * ponytail: one ACF read per published class per page view. Fine at a dozen
- * classes; if the timetable ever runs to hundreds, sessions want to become
- * their own post type with a real date query, which is the same change that
- * would let the board paginate.
- *
- * The week runs Monday to Sunday. The design's own week label reads
- * "13th – 20th July 2026", ending on the following Monday; this ends on the
- * Sunday, because that is the week the board actually shows.
+ * Sessions come from clasbpro via lp_class_sessions_between() — active classes
+ * only, dated occurrences in the requested Monday–Sunday window.
  *
  * @param int $lp_offset Weeks from the current one. Negative is the past.
  * @return array start, end, week number, day groups and a session count.
@@ -311,15 +292,6 @@ function lp_agenda_week( int $lp_offset = 0 ): array {
 	$lp_start = ( new DateTimeImmutable( 'monday this week' ) )->modify( sprintf( '%+d weeks', $lp_offset ) );
 	$lp_end   = $lp_start->modify( '+6 days' );
 
-	$lp_class_ids = get_posts(
-		array(
-			'post_type'      => 'lp_class',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-		)
-	);
-
 	// Keyed by Y-m-d so the seven day buckets stay in calendar order.
 	$lp_days = array();
 	for ( $lp_i = 0; $lp_i < 7; $lp_i++ ) {
@@ -327,36 +299,29 @@ function lp_agenda_week( int $lp_offset = 0 ): array {
 	}
 
 	$lp_count = 0;
-	foreach ( $lp_class_ids as $lp_id ) {
-		$lp_rows     = function_exists( 'get_field' ) ? get_field( 'sessions', $lp_id ) : null;
-		$lp_levels   = get_the_terms( $lp_id, 'lp_level' );
-		$lp_location = function_exists( 'get_field' ) ? (int) get_field( 'location', $lp_id ) : 0;
-		$lp_subtitle = function_exists( 'get_field' ) ? (string) get_field( 'subtitle', $lp_id ) : '';
+	foreach ( lp_class_sessions_between( $lp_start, $lp_end ) as $lp_row ) {
+		$lp_date = (string) ( $lp_row['date'] ?? '' );
 
-		foreach ( is_array( $lp_rows ) ? $lp_rows : array() as $lp_row ) {
-			$lp_date = (string) ( $lp_row['date'] ?? '' );
-
-			if ( ! isset( $lp_days[ $lp_date ] ) ) {
-				continue;
-			}
-
-			$lp_days[ $lp_date ][] = array(
-				'time'      => (string) ( $lp_row['time'] ?? '' ),
-				// BoardRow's own per-row date label is left blank: the day is
-				// already announced by the band above it, and repeating it is
-				// redundant. The source makes the same call.
-				'date_label' => '',
-				'title'     => get_the_title( $lp_id ),
-				'subtitle'  => $lp_subtitle,
-				'location'  => $lp_location ? get_the_title( $lp_location ) : '',
-				'level'     => is_array( $lp_levels ) && $lp_levels ? $lp_levels[0]->name : '',
-				'spaces'    => (string) ( $lp_row['spaces'] ?? '' ),
-				'sold_out'  => ! empty( $lp_row['sold_out'] ),
-				'href'      => (string) get_permalink( $lp_id ),
-				'class_id'  => (int) $lp_id,
-			);
-			++$lp_count;
+		if ( ! isset( $lp_days[ $lp_date ] ) ) {
+			continue;
 		}
+
+		$lp_days[ $lp_date ][] = array(
+			'time'       => (string) ( $lp_row['time'] ?? '' ),
+			// BoardRow's own per-row date label is left blank: the day is
+			// already announced by the band above it, and repeating it is
+			// redundant. The source makes the same call.
+			'date_label' => '',
+			'title'      => (string) ( $lp_row['title'] ?? '' ),
+			'subtitle'   => (string) ( $lp_row['subtitle'] ?? '' ),
+			'location'   => (string) ( $lp_row['location'] ?? '' ),
+			'level'      => (string) ( $lp_row['level'] ?? '' ),
+			'spaces'     => (string) ( $lp_row['spaces'] ?? '' ),
+			'sold_out'   => ! empty( $lp_row['sold_out'] ),
+			'href'       => (string) ( $lp_row['url'] ?? '' ),
+			'class_id'   => (int) ( $lp_row['id'] ?? 0 ),
+		);
+		++$lp_count;
 	}
 
 	$lp_groups = array();

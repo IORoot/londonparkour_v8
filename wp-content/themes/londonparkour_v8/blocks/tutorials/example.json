@@ -1,0 +1,48 @@
+{
+  "eyebrow": "06 — TUTORIALS",
+  "meta": "8 SERIES · 48 EPISODES",
+  "kicker": "NOW STREAMING",
+  "title": "Series worth watching.",
+  "note": "Taught progressions you can follow at home — then bring to class. Open a line and work the episodes in order.",
+  "featured": {
+    "tag": "START HERE",
+    "series": "SERIES 01 · BEGINNER",
+    "title": "Step Vault Basics",
+    "logline": "The cleanest way over a wall. Eight episodes that turn a messy hop into a sharp, repeatable vault.",
+    "meta": "8 EPISODES · 34 MIN · LEON LAWRENCE",
+    "cta_label": "WATCH SERIES",
+    "href": "/tutorials/step-vault-basics",
+    "poster_alt": "Step Vault Basics series poster"
+  },
+  "shelf_label": "MORE ON THE BOARD",
+  "shelf_cta": {
+    "link": { "title": "BROWSE ALL SERIES →", "url": "/tutorials", "target": "" }
+  },
+  "source": "manual",
+  "source_manual": [
+    {
+      "tag": "POPULAR",
+      "title": "Momentum Progressions",
+      "episodes": "6 EPS",
+      "href": "/tutorials/momentum"
+    },
+    {
+      "tag": "LEVEL UP",
+      "title": "High Wall Variants",
+      "episodes": "4 EPS",
+      "href": "/tutorials/high-wall"
+    },
+    {
+      "tag": "TECHNIQUE",
+      "title": "Precision Deep Dive",
+      "episodes": "7 EPS",
+      "href": "/tutorials/precision"
+    },
+    {
+      "tag": "ADVANCED",
+      "title": "Flow Combinations",
+      "episodes": "9 EPS",
+      "href": "/tutorials/flow"
+    }
+  ]
+}

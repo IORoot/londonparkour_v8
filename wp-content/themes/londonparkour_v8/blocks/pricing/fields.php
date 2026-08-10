@@ -2,9 +2,10 @@
 /**
  * Pricing — field definition.
  *
- * Repeater-only: two lists, the left rail (`row_labels`) and the columns
- * (`tiers`). Each tier's `values` repeater is keyed by `row_key` so the cells
- * follow the rail when it is reordered.
+ * Storybook props (`Pricing.js`): coupon-sale rail (`kicker` / `subkicker` /
+ * `axis`), comparison rows, and pack tiers. Repeater-only: two lists, the left
+ * rail (`row_labels`) and the columns (`tiers`). Each tier's `values` repeater
+ * is keyed by `row_key` so the cells follow the rail when it is reordered.
  *
  * The tier CTA is a plain Link field, not the action group: its button style
  * is derived from `highlight` rather than being a second control that has to
@@ -26,14 +27,22 @@ return array(
 			lp_field_heading(),
 			lp_field_note(),
 			array(
-				'name'  => 'table_label',
-				'label' => __( 'Table label', 'londonparkour_v8' ),
-				'type'  => 'text',
+				'name'         => 'kicker',
+				'label'        => __( 'Kicker', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'Left-rail head, e.g. "COUPON SALE".', 'londonparkour_v8' ),
 			),
 			array(
-				'name'  => 'axis_label',
-				'label' => __( 'Axis label', 'londonparkour_v8' ),
-				'type'  => 'text',
+				'name'         => 'subkicker',
+				'label'        => __( 'Subkicker', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'Left-rail second line under the kicker, e.g. "WHAT YOU GET".', 'londonparkour_v8' ),
+			),
+			array(
+				'name'         => 'axis',
+				'label'        => __( 'Axis', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'First comparison rail row, e.g. "PRICE PER CLASS".', 'londonparkour_v8' ),
 			),
 			lp_field_stamp(
 				array(
@@ -43,7 +52,7 @@ return array(
 			),
 			array(
 				'name'       => 'guarantee',
-				'label'      => __( 'Guarantee', 'londonparkour_v8' ),
+				'label'      => __( 'How it works', 'londonparkour_v8' ),
 				'type'       => 'group',
 				'sub_fields' => array(
 					lp_field_eyebrow(
@@ -83,13 +92,13 @@ return array(
 				'type'         => 'repeater',
 				'layout'       => 'table',
 				'button_label' => __( 'Add row', 'londonparkour_v8' ),
-				'instructions' => __( 'The left rail. Each tier fills these rows in by key.', 'londonparkour_v8' ),
+				'instructions' => __( 'The left rail under the axis. Defaults: sessions, saving.', 'londonparkour_v8' ),
 				'sub_fields'   => array(
 					array(
 						'name'         => 'row_key',
 						'label'        => __( 'Key', 'londonparkour_v8' ),
 						'type'         => 'text',
-						'instructions' => __( 'Lowercase, no spaces, e.g. "booking_window".', 'londonparkour_v8' ),
+						'instructions' => __( 'Lowercase, no spaces, e.g. "sessions" or "saving".', 'londonparkour_v8' ),
 					),
 					array(
 						'name'  => 'label',
@@ -104,6 +113,7 @@ return array(
 				'type'         => 'repeater',
 				'layout'       => 'block',
 				'button_label' => __( 'Add tier', 'londonparkour_v8' ),
+				'instructions' => __( 'Coupon packs: DROP-IN / 5-PACK / 10-PACK.', 'londonparkour_v8' ),
 				'sub_fields'   => array(
 					array(
 						'name'  => 'label',
@@ -114,7 +124,7 @@ return array(
 						array(
 							'name'         => 'badge',
 							'label'        => __( 'Badge', 'londonparkour_v8' ),
-							'instructions' => __( 'e.g. "MOST POPULAR". Rendered after an em dash.', 'londonparkour_v8' ),
+							'instructions' => __( 'e.g. "MOST POPULAR" or "BEST VALUE". Rendered after an em dash.', 'londonparkour_v8' ),
 						)
 					),
 					array(
@@ -134,13 +144,14 @@ return array(
 						)
 					),
 					array(
-						'name'  => 'work_out_value',
-						'label' => __( 'Works out at', 'londonparkour_v8' ),
-						'type'  => 'text',
+						'name'         => 'work_out_value',
+						'label'        => __( 'Price per class', 'londonparkour_v8' ),
+						'type'         => 'text',
+						'instructions' => __( 'The worked-out rate on the axis row, e.g. "£13.00".', 'londonparkour_v8' ),
 					),
 					array(
 						'name'  => 'work_out_unit',
-						'label' => __( 'Works out unit', 'londonparkour_v8' ),
+						'label' => __( 'Price per class unit', 'londonparkour_v8' ),
 						'type'  => 'text',
 					),
 					array(

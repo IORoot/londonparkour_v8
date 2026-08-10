@@ -1,74 +1,63 @@
 {
-  "eyebrow": "08 — PRICING",
+  "eyebrow": "03 — COUPON SALE",
   "heading": "No contract. Ever.",
-  "note": "One fare works at all six sites. Cancel from your phone in two taps — we won't make you ring anyone.",
-  "table_label": "THREE WAYS TO PAY",
-  "axis_label": "WHAT YOU GET",
+  "note": "Coupons work at Vauxhall, Old Street and Kilburn Park. Buy once, book when you want.",
+  "kicker": "COUPON SALE",
+  "subkicker": "WHAT YOU GET",
+  "axis": "PRICE PER CLASS",
   "notice": "PRICES HELD UNTIL 1 APRIL 2027",
   "guarantee": {
-    "kicker": "THE GUARANTEE",
-    "copy": "If your first session isn't for you, we refund it. Nobody has asked yet, but the offer stands."
+    "kicker": "HOW IT WORKS",
+    "copy": "Buy a coupon, book any class at Vauxhall, Old Street or Kilburn Park. No membership required."
   },
-  "sites_lead": "EVERY FARE WORKS AT ALL SIX SITES",
-  "sites_list": "VAUXHALL · PECKHAM RYE · SOUTHBANK · STRATFORD EAST · HACKNEY MARSHES · WEMBLEY PARK",
-  "kit_note": "KIT LOANED FREE AT EVERY SESSION",
+  "sites_lead": "EVERY COUPON WORKS AT ALL THREE SITES",
+  "sites_list": "VAUXHALL · OLD STREET · KILBURN PARK",
+  "kit_note": "JUST TRAINERS — NO SPECIALIST KIT NEEDED",
   "row_labels": [
-    { "row_key": "commitment", "label": "COMMITMENT" },
     { "row_key": "sessions", "label": "SESSIONS" },
-    { "row_key": "booking_window", "label": "BOOKING WINDOW" },
-    { "row_key": "coaching", "label": "PRIVATE COACHING" },
-    { "row_key": "extras", "label": "EXTRAS" }
+    { "row_key": "saving", "label": "SAVING" }
   ],
   "tiers": [
     {
       "label": "DROP-IN",
       "price": "£15",
       "unit": "per session",
-      "description": "Turn up when it suits. No account, no commitment, no direct debit.",
+      "description": "Turn up when it suits. One session, paid at the door — no pack required.",
       "work_out_value": "£15.00",
-      "work_out_unit": "a session",
-      "cta": { "title": "BOOK A SESSION", "url": "/book/", "target": "" },
+      "work_out_unit": "a class",
+      "cta": { "title": "BOOK A SESSION", "url": "#", "target": "" },
       "values": [
-        { "row_key": "commitment", "value": "None" },
         { "row_key": "sessions", "value": "One" },
-        { "row_key": "booking_window", "value": "14 days ahead" },
-        { "row_key": "coaching", "value": "£75 a session" },
-        { "row_key": "extras", "value": "—" }
+        { "row_key": "saving", "value": "—" }
       ]
     },
     {
-      "label": "MONTHLY",
+      "label": "5-PACK",
       "badge": "MOST POPULAR",
       "highlight": true,
       "price": "£65",
-      "unit": "per month",
-      "description": "The one most people land on after their third or fourth class.",
-      "work_out_value": "£8.13",
-      "work_out_unit": "a session",
-      "cta": { "title": "START MONTHLY", "url": "/membership/monthly/", "target": "" },
+      "unit": "for 5 classes",
+      "description": "Five classes, bought once. Use them when you want — no membership.",
+      "work_out_value": "£13.00",
+      "work_out_unit": "a class",
+      "cta": { "title": "BUY 5 CLASSES", "url": "#", "target": "" },
       "values": [
-        { "row_key": "commitment", "value": "Rolling — cancel any time" },
-        { "row_key": "sessions", "value": "Unlimited" },
-        { "row_key": "booking_window", "value": "30 days · priority" },
-        { "row_key": "coaching", "value": "£67.50 · 10% off" },
-        { "row_key": "extras", "value": "Pause any month" }
+        { "row_key": "sessions", "value": "5 classes" },
+        { "row_key": "saving", "value": "13% vs drop-in" }
       ]
     },
     {
-      "label": "ANNUAL",
-      "badge": "SAVE £130",
-      "price": "£650",
-      "unit": "per year",
-      "description": "Two months free, paid up front. For people who already know.",
-      "work_out_value": "£6.77",
-      "work_out_unit": "a session",
-      "cta": { "title": "GO ANNUAL", "url": "/membership/annual/", "target": "" },
+      "label": "10-PACK",
+      "badge": "BEST VALUE",
+      "price": "£120",
+      "unit": "for 10 classes",
+      "description": "Ten classes at the best rate we offer. Buy once, book when you want.",
+      "work_out_value": "£12.00",
+      "work_out_unit": "a class",
+      "cta": { "title": "BUY 10 CLASSES", "url": "#", "target": "" },
       "values": [
-        { "row_key": "commitment", "value": "12 months, paid up front" },
-        { "row_key": "sessions", "value": "Unlimited" },
-        { "row_key": "booking_window", "value": "30 days · priority" },
-        { "row_key": "coaching", "value": "£63.75 · 15% off" },
-        { "row_key": "extras", "value": "Two guest passes · kit to keep" }
+        { "row_key": "sessions", "value": "10 classes" },
+        { "row_key": "saving", "value": "20% vs drop-in" }
       ]
     }
   ]

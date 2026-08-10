@@ -1,23 +1,42 @@
 {
-  "eyebrow": "06 — THE COACHES",
-  "headline": "Twelve people who started exactly where you are.",
-  "note": "ALL UKC LEVEL 2 · DBS CHECKED",
-  "intro_text": "Nine of our twelve coaches came up through our own beginner classes. They remember being the nervous one at the back, which is most of the qualification.",
-  "lead_coach": {
-    "image_alt": "Andy Pearson, head coach, in the training hall.",
-    "name": "Andy Pearson",
-    "meta": "HEAD COACH / 11 YRS",
-    "quote": "“The job isn't to make you brave. It's to break the thing you're scared of into six pieces small enough that you're not.”"
-  },
+  "layout": "grid",
+  "eyebrow": "09 — COACHES / THE TEAM",
+  "meta": "(04)",
+  "headline": "The people who teach the practice.",
+  "lead": "London-based coaches with decades of experience — teaching across the city since 2005.",
+  "footnote": "LONDON-BASED COACHES — TEACHING ACROSS THE CITY SINCE 2005",
   "source": "manual",
   "source_manual": [
-    { "thumb_alt": "Kie Piccio", "name": "Kie Piccio", "specialty": "Precision & balance", "location": "PECKHAM" },
-    { "thumb_alt": "Leon Lawrence", "name": "Leon Lawrence", "specialty": "Kids & families", "location": "VAUXHALL" },
-    { "thumb_alt": "Nirosh Ganeshalingam", "name": "Nirosh Ganeshalingam", "specialty": "Strength & conditioning", "location": "SOUTHBANK" },
-    { "thumb_alt": "Sofia Reyes", "name": "Sofia Reyes", "specialty": "Women's sessions", "location": "VAUXHALL" },
-    { "thumb_alt": "Tomas Vrba", "name": "Tomas Vrba", "specialty": "Competition & film", "location": "ALL SITES" }
+    {
+      "index": "01",
+      "tag": "TRAINING SINCE 2005",
+      "name": "Andy Pearson",
+      "role": "DIRECTOR, OWNER & COACH",
+      "bio": "On London's streets since 2005 — helped develop ParkourUK and has coached weekly as a senior coach for nearly two decades."
+    },
+    {
+      "index": "02",
+      "tag": "TRAINING SINCE 2017",
+      "name": "Kie Piccio",
+      "role": "VAUXHALL YOUTH COACH",
+      "bio": "A former competitive swimmer who coaches adults and brings a creative, playful style to children's classes."
+    },
+    {
+      "index": "03",
+      "tag": "TRAINING SINCE 2007",
+      "name": "Leon Lawrence",
+      "role": "ARCHWAY ADULT COACH",
+      "bio": "Renowned London coach and certified PT — grounded in strength, confidence and practical movement."
+    },
+    {
+      "index": "04",
+      "tag": "TRAINING SINCE 2007",
+      "name": "Mesh Ganeshlaingam",
+      "role": "PARKOUR COACH · UCL",
+      "bio": "Blends a dance background into his parkour for a unique flow, with a holistic mind-body focus."
+    }
   ],
   "link_action": {
-    "link": { "title": "Meet all twelve →", "url": "/coaches/", "target": "" }
+    "link": { "title": "TRAIN WITH US →", "url": "/classes", "target": "" }
   }
 }

@@ -26,10 +26,12 @@
   --color-primary: #ffc400;
   --color-primary-content: #141310;
 
-  /* accent = TEXT. Ground-adaptive: the dark amber the design already uses in
-   * the CTA node, so an accent-coloured word works on the light ground.
-   * Use `text-accent` for accent text on `bg-base-*`, never `text-primary`. */
-  --color-accent: #6b5400;
+  /* accent = fourth ground + text on page. Olive `#45523E` is the pen fill for
+   * Clients / Locations (`bg-accent`) and the readable accent word on cream.
+   * Primary stays signal yellow for Marquee / CTA / Private Coaching fills.
+   * (Amber `#6B5400` was the old light-yellow accent — it made those section
+   * grounds read as dark yellow, which is wrong against the pen.) */
+  --color-accent: #45523e;
   --color-accent-content: #f2f1e9;
 
   /* secondary = the RECESSED board surface: one step below `neutral`, the tone
