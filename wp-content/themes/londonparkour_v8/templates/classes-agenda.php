@@ -59,7 +59,7 @@ foreach ( $lp_week['days'] as $lp_day_group ) {
 	}
 }
 
-$lp_sites      = (int) ( wp_count_posts( 'lp_location' )->publish ?? 0 );
+$lp_sites      = count( lp_locations_by_kind( 'site' ) );
 $lp_mast_media = lp_demo_media_id( 'DSC01072.jpeg' );
 $lp_mast_url   = $lp_mast_media ? '' : (string) get_theme_file_uri( 'bin/demo-media/DSC01072.jpeg' );
 

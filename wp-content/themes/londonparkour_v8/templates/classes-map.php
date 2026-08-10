@@ -2,24 +2,17 @@
 /**
  * Template Name: Classes — Map
  *
- * ClassesMap — Storybook `ClassesMap.js`. Sites come from published
- * `lp_location` posts (real lat/lon). The Network map is Leaflet + Carto
- * Dark Matter (`assets/js/elements/SiteNetworkMap.js`).
+ * Class sites and map-only training spots from `lp_location`. The Network map
+ * is Leaflet + Carto Voyager (`assets/js/elements/SiteNetworkMap.js`).
+ * Meeting Points lists sites only.
  *
  * @package londonparkour_v8
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$lp_sites = get_posts(
-	array(
-		'post_type'      => 'lp_location',
-		'post_status'    => 'publish',
-		'posts_per_page' => 24,
-		'orderby'        => 'menu_order title',
-		'order'          => 'ASC',
-	)
-);
+$lp_sites = lp_locations_by_kind( 'site' );
+$lp_spots = lp_locations_by_kind( 'spot' );
 
 $lp_classes = get_posts(
 	lp_class_active_meta_query(
@@ -46,13 +39,13 @@ foreach ( $lp_classes as $lp_class ) {
 }
 
 $lp_site_n    = count( $lp_sites );
+$lp_spot_n    = count( $lp_spots );
 $lp_class_n   = count( $lp_classes );
 $lp_sites_lbl = sprintf(
 	/* translators: %d: number of training sites */
 	_n( '%d site. One network.', '%d sites. One network.', $lp_site_n, 'londonparkour_v8' ),
 	$lp_site_n
 );
-// SectionHead expects title case like the Storybook string.
 $lp_sites_lbl = preg_replace_callback(
 	'/^\d+/',
 	static function ( $m ) {
@@ -70,24 +63,7 @@ $lp_sites_lbl = preg_replace_callback(
 	$lp_sites_lbl
 );
 
-$lp_streetview = static function ( int $lp_id ): string {
-	$lp_custom = (string) get_field( 'streetview', $lp_id );
-	if ( '' !== trim( $lp_custom ) ) {
-		return $lp_custom;
-	}
-
-	$lp_lat = trim( (string) get_field( 'latitude', $lp_id ) );
-	$lp_lon = trim( (string) get_field( 'longitude', $lp_id ) );
-	if ( '' === $lp_lat || '' === $lp_lon ) {
-		return '';
-	}
-
-	return sprintf(
-		'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=%s,%s',
-		rawurlencode( $lp_lat ),
-		rawurlencode( $lp_lon )
-	);
-};
+$lp_map_places = array_merge( $lp_sites, $lp_spots );
 
 get_header();
 ?>
@@ -144,57 +120,103 @@ get_header();
 			?>
 		</div>
 		<div class="flex flex-col lg:flex-row pb-scale-2xl px-6 lg:px-16">
-			<div class="w-full lg:w-[300px] xl:w-[340px] lg:shrink-0 flex flex-col bg-base-100 mb-0">
-				<div class="px-[22px] py-[15px]">
-					<?php
-					lp_part(
-						'components/meta-row',
-						array(
-							'surface' => 'page',
-							'left'    => 'SITES',
-							'right'   => (string) $lp_site_n,
-						)
-					);
-					?>
+			<div class="w-full lg:w-[300px] xl:w-[340px] lg:shrink-0 flex flex-col bg-base-100 mb-0" data-map-sidebar>
+				<div class="flex border-b border-base-300" role="tablist" aria-label="Map places">
+					<button
+						type="button"
+						role="tab"
+						aria-selected="true"
+						data-map-list-tab="sites"
+						class="flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b-2 border-accent bg-transparent cursor-pointer"
+					>
+						SITES · <?php echo esc_html( (string) $lp_site_n ); ?>
+					</button>
+					<button
+						type="button"
+						role="tab"
+						aria-selected="false"
+						data-map-list-tab="spots"
+						class="flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/50 border-b-2 border-transparent bg-transparent cursor-pointer"
+					>
+						SPOTS · <?php echo esc_html( (string) $lp_spot_n ); ?>
+					</button>
 				</div>
-				<?php if ( $lp_sites ) : ?>
-					<ul role="list" class="flex flex-col m-0 p-0 list-none">
-						<?php
-						foreach ( $lp_sites as $lp_i => $lp_site ) :
-							$lp_type  = (string) get_field( 'type', $lp_site->ID );
-							$lp_count = (int) ( $lp_count_by_site[ $lp_site->ID ] ?? 0 );
-							$lp_slug  = $lp_site->post_name ? $lp_site->post_name : (string) $lp_site->ID;
-							$lp_meta  = array_filter(
+
+				<ul role="list" class="flex flex-col m-0 p-0 list-none" data-map-list="sites">
+					<?php
+					foreach ( $lp_sites as $lp_i => $lp_site ) :
+						$lp_type  = (string) get_field( 'type', $lp_site->ID );
+						$lp_count = (int) ( $lp_count_by_site[ $lp_site->ID ] ?? 0 );
+						$lp_slug  = $lp_site->post_name ? $lp_site->post_name : (string) $lp_site->ID;
+						$lp_meta  = array_filter(
+							array(
+								$lp_count ? sprintf( _n( '%d CLASS', '%d CLASSES', $lp_count, 'londonparkour_v8' ), $lp_count ) : '',
+								strtoupper( $lp_type ),
+							)
+						);
+						$lp_lat = trim( (string) get_field( 'latitude', $lp_site->ID ) );
+						$lp_lon = trim( (string) get_field( 'longitude', $lp_site->ID ) );
+						?>
+						<li
+							data-site-flyto
+							data-kind="site"
+							data-site-id="<?php echo esc_attr( $lp_slug ); ?>"
+							data-lat="<?php echo esc_attr( $lp_lat ); ?>"
+							data-lon="<?php echo esc_attr( $lp_lon ); ?>"
+						>
+							<?php
+							lp_part(
+								'components/list-row',
 								array(
-									$lp_count ? sprintf( _n( '%d CLASS', '%d CLASSES', $lp_count, 'londonparkour_v8' ), $lp_count ) : '',
-									strtoupper( $lp_type ),
+									'surface' => 'page',
+									'index'   => str_pad( (string) ( (int) $lp_i + 1 ), 2, '0', STR_PAD_LEFT ),
+									'title'   => get_the_title( $lp_site ),
+									'meta'    => implode( ' · ', $lp_meta ),
+									'href'    => '#site-' . $lp_slug,
 								)
 							);
-							$lp_lat = trim( (string) get_field( 'latitude', $lp_site->ID ) );
-							$lp_lon = trim( (string) get_field( 'longitude', $lp_site->ID ) );
 							?>
-							<li
-								data-site-flyto
-								data-site-id="<?php echo esc_attr( $lp_slug ); ?>"
-								data-lat="<?php echo esc_attr( $lp_lat ); ?>"
-								data-lon="<?php echo esc_attr( $lp_lon ); ?>"
-							>
-								<?php
-								lp_part(
-									'components/list-row',
-									array(
-										'surface' => 'page',
-										'index'   => str_pad( (string) ( (int) $lp_i + 1 ), 2, '0', STR_PAD_LEFT ),
-										'title'   => get_the_title( $lp_site ),
-										'meta'    => implode( ' · ', $lp_meta ),
-										'href'    => '#site-' . $lp_slug,
-									)
-								);
-								?>
-							</li>
-						<?php endforeach; ?>
-					</ul>
-				<?php endif; ?>
+						</li>
+					<?php endforeach; ?>
+					<?php if ( ! $lp_sites ) : ?>
+						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/50">No class sites yet.</li>
+					<?php endif; ?>
+				</ul>
+
+				<ul role="list" class="flex flex-col m-0 p-0 list-none hidden" data-map-list="spots" hidden>
+					<?php
+					foreach ( $lp_spots as $lp_i => $lp_spot ) :
+						$lp_slug = $lp_spot->post_name ? $lp_spot->post_name : (string) $lp_spot->ID;
+						$lp_lat  = trim( (string) get_field( 'latitude', $lp_spot->ID ) );
+						$lp_lon  = trim( (string) get_field( 'longitude', $lp_spot->ID ) );
+						$lp_sv   = lp_location_streetview_url( (int) $lp_spot->ID );
+						?>
+						<li
+							data-site-flyto
+							data-kind="spot"
+							data-site-id="<?php echo esc_attr( $lp_slug ); ?>"
+							data-lat="<?php echo esc_attr( $lp_lat ); ?>"
+							data-lon="<?php echo esc_attr( $lp_lon ); ?>"
+							data-streetview="<?php echo esc_attr( $lp_sv ); ?>"
+						>
+							<?php
+							lp_part(
+								'components/list-row',
+								array(
+									'surface' => 'page',
+									'index'   => str_pad( (string) ( (int) $lp_i + 1 ), 2, '0', STR_PAD_LEFT ),
+									'title'   => get_the_title( $lp_spot ),
+									'meta'    => 'TRAINING SPOT',
+									'href'    => $lp_sv ? $lp_sv : '#',
+								)
+							);
+							?>
+						</li>
+					<?php endforeach; ?>
+					<?php if ( ! $lp_spots ) : ?>
+						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/50">No training spots yet.</li>
+					<?php endif; ?>
+				</ul>
 			</div>
 
 			<div class="w-full flex-1 min-w-0 flex flex-col bg-base-300 overflow-hidden">
@@ -215,37 +237,51 @@ get_header();
 					<div class="absolute inset-0 z-0" data-mount="leaflet"></div>
 					<template data-site-pins>
 						<?php
-						foreach ( $lp_sites as $lp_site ) :
-							$lp_lat = trim( (string) get_field( 'latitude', $lp_site->ID ) );
-							$lp_lon = trim( (string) get_field( 'longitude', $lp_site->ID ) );
+						foreach ( $lp_map_places as $lp_place ) :
+							$lp_lat = trim( (string) get_field( 'latitude', $lp_place->ID ) );
+							$lp_lon = trim( (string) get_field( 'longitude', $lp_place->ID ) );
 							if ( '' === $lp_lat || '' === $lp_lon ) {
 								continue;
 							}
 
-							$lp_type  = (string) get_field( 'type', $lp_site->ID );
-							$lp_count = (int) ( $lp_count_by_site[ $lp_site->ID ] ?? 0 );
-							$lp_sub   = array_filter(
-								array(
-									$lp_count ? sprintf( _n( '%d CLASS', '%d CLASSES', $lp_count, 'londonparkour_v8' ), $lp_count ) : '',
-									strtoupper( $lp_type ),
-								)
-							);
-							$lp_slug  = $lp_site->post_name ? $lp_site->post_name : (string) $lp_site->ID;
+							$lp_kind  = lp_location_kind( (int) $lp_place->ID );
+							$lp_slug  = $lp_place->post_name ? $lp_place->post_name : (string) $lp_place->ID;
+							$lp_sv    = lp_location_streetview_url( (int) $lp_place->ID );
+							$lp_is_spot = 'spot' === $lp_kind;
+
+							if ( $lp_is_spot ) {
+								$lp_sub = 'TRAINING SPOT';
+							} else {
+								$lp_type  = (string) get_field( 'type', $lp_place->ID );
+								$lp_count = (int) ( $lp_count_by_site[ $lp_place->ID ] ?? 0 );
+								$lp_sub   = implode(
+									' · ',
+									array_filter(
+										array(
+											$lp_count ? sprintf( _n( '%d CLASS', '%d CLASSES', $lp_count, 'londonparkour_v8' ), $lp_count ) : '',
+											strtoupper( $lp_type ),
+										)
+									)
+								);
+							}
 							?>
 							<div
 								data-site-pin
+								data-kind="<?php echo esc_attr( $lp_kind ); ?>"
 								data-site-id="<?php echo esc_attr( $lp_slug ); ?>"
-								data-name="<?php echo esc_attr( get_the_title( $lp_site ) ); ?>"
+								data-name="<?php echo esc_attr( get_the_title( $lp_place ) ); ?>"
 								data-lat="<?php echo esc_attr( $lp_lat ); ?>"
 								data-lon="<?php echo esc_attr( $lp_lon ); ?>"
+								data-streetview="<?php echo esc_attr( $lp_sv ); ?>"
 							>
 								<?php
 								lp_part(
 									'components/map-pin',
 									array(
-										'variant' => 'icon',
-										'name'    => get_the_title( $lp_site ),
-										'sub'     => implode( ' · ', $lp_sub ),
+										'variant'  => 'icon',
+										'name'     => get_the_title( $lp_place ),
+										'sub'      => $lp_sub,
+										'flagship' => $lp_is_spot,
 									)
 								);
 								?>
@@ -264,6 +300,15 @@ get_header();
 								'icon_id' => 'icon-map-pin',
 								'surface' => 'page',
 								'tone'    => 'ink',
+							)
+						);
+						lp_part(
+							'elements/glyph-label',
+							array(
+								'label'   => 'SPOT',
+								'icon_id' => 'icon-map-pin',
+								'surface' => 'page',
+								'tone'    => 'signal',
 							)
 						);
 						?>
@@ -294,7 +339,7 @@ get_header();
 						$lp_tag   = (string) get_field( 'tag', $lp_site->ID );
 						$lp_count = (int) ( $lp_count_by_site[ $lp_site->ID ] ?? 0 );
 						$lp_slug  = $lp_site->post_name ? $lp_site->post_name : (string) $lp_site->ID;
-						$lp_sv    = $lp_streetview( (int) $lp_site->ID );
+						$lp_sv    = lp_location_streetview_url( (int) $lp_site->ID );
 						?>
 						<div id="site-<?php echo esc_attr( $lp_slug ); ?>">
 							<?php

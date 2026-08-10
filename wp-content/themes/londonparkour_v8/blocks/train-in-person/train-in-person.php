@@ -46,7 +46,7 @@ $lp_sites = array_map(
 			'detail' => (string) ( $item['meta'] ?? '' ),
 		);
 	},
-	lp_resolve_source( $args, 'lp_location' )
+	lp_resolve_source( $args, 'lp_location', array( 'require_kind' => 'site' ) )
 );
 
 $lp_spacing = lp_section_spacing( $args );

@@ -105,7 +105,7 @@ $lp_sites = array_map(
 			'href'  => (string) ( $item['url'] ?? '' ),
 		);
 	},
-	lp_resolve_source( $args, 'lp_location' )
+	lp_resolve_source( $args, 'lp_location', array( 'require_kind' => 'site' ) )
 );
 
 if ( ! $lp_sites ) {

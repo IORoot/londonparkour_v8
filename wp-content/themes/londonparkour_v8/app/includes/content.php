@@ -126,13 +126,98 @@ function lp_classes_page_url( string $lp_slug ): string {
 }
 
 /**
- * The three Classes view-rail tabs, shared by Agenda, Listings and Map.
+ * Whether a location post is a class site or a map-only training spot.
+ * Missing/unknown values default to site so existing records stay class sites.
  *
- * Ported from ClassesHeaderCluster.js's `TABS`. Agenda and Map only —
- * Listings is no longer a page. Metas are counted so they stay accurate when
- * editors add classes.
+ * @param int $lp_id Location post ID.
+ * @return string site|spot
+ */
+function lp_location_kind( int $lp_id ): string {
+	$lp_kind = (string) get_field( 'location_kind', $lp_id );
+	return 'spot' === $lp_kind ? 'spot' : 'site';
+}
+
+/**
+ * Published lp_location posts filtered by kind.
+ *
+ * @param string $lp_kind site|spot.
+ * @return WP_Post[]
+ */
+function lp_locations_by_kind( string $lp_kind = 'site' ): array {
+	$lp_kind  = 'spot' === $lp_kind ? 'spot' : 'site';
+	$lp_posts = get_posts(
+		array(
+			'post_type'      => 'lp_location',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'menu_order title',
+			'order'          => 'ASC',
+		)
+	);
+
+	return array_values(
+		array_filter(
+			$lp_posts,
+			static function ( WP_Post $lp_post ) use ( $lp_kind ): bool {
+				return lp_location_kind( (int) $lp_post->ID ) === $lp_kind;
+			}
+		)
+	);
+}
+
+/**
+ * Street View / maps exit URL for a location.
+ *
+ * @param int $lp_id Location post ID.
+ * @return string
+ */
+function lp_location_streetview_url( int $lp_id ): string {
+	$lp_custom = (string) get_field( 'streetview', $lp_id );
+	if ( '' !== trim( $lp_custom ) ) {
+		return $lp_custom;
+	}
+
+	$lp_lat = (string) get_field( 'latitude', $lp_id );
+	$lp_lon = (string) get_field( 'longitude', $lp_id );
+	if ( '' === $lp_lat || '' === $lp_lon ) {
+		return '';
+	}
+
+	return sprintf(
+		'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=%s,%s',
+		rawurlencode( $lp_lat ),
+		rawurlencode( $lp_lon )
+	);
+}
+
+/**
+ * Keep class/coach location pickers on sites — spots are map-only.
+ *
+ * @param array $lp_args WP_Query args for ACF post_object.
+ * @return array
+ */
+function lp_acf_location_post_object_sites_only( array $lp_args ): array {
+	$lp_sites = lp_locations_by_kind( 'site' );
+	$lp_ids   = array_map(
+		static function ( WP_Post $lp_post ): int {
+			return (int) $lp_post->ID;
+		},
+		$lp_sites
+	);
+
+	// Empty post__in returns every post; force a no-match when there are no sites.
+	$lp_args['post__in'] = $lp_ids ? $lp_ids : array( 0 );
+	return $lp_args;
+}
+
+add_filter( 'acf/fields/post_object/query/name=acf_location', 'lp_acf_location_post_object_sites_only' );
+add_filter( 'acf/fields/post_object/query/name=location', 'lp_acf_location_post_object_sites_only' );
+
+/**
+ * The Classes view-rail tabs, shared by Agenda and Map.
  *
  * Session counts come from clasbpro via lp_class_upcoming_sessions().
+ * Site counts are class sites only (not map-only spots).
  *
  * @param string $lp_active agenda|map.
  * @return array Tabs in view-rail.php's shape.
@@ -154,7 +239,7 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 		$lp_sessions += count( lp_class_upcoming_sessions( (int) $lp_id, 16 ) );
 	}
 
-	$lp_sites = (int) ( wp_count_posts( 'lp_location' )->publish ?? 0 );
+	$lp_sites = count( lp_locations_by_kind( 'site' ) );
 
 	return array(
 		array(
@@ -213,15 +298,7 @@ function lp_class_filter_cells( array $lp_current = array() ): array {
 		);
 	}
 
-	$lp_sites = get_posts(
-		array(
-			'post_type'      => 'lp_location',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		)
-	);
+	$lp_sites = lp_locations_by_kind( 'site' );
 
 	$lp_site_n = count( $lp_sites );
 	$lp_site_options = array(

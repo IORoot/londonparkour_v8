@@ -26,18 +26,48 @@
             "key": "field_18b6fa3975646273"
         },
         {
+            "name": "location_kind",
+            "label": "Place kind",
+            "type": "button_group",
+            "choices": {
+                "site": "Site",
+                "spot": "Spot"
+            },
+            "default_value": "site",
+            "instructions": "Sites are class locations (map + meeting points). Spots are training points shown on the map only — title, coordinates and Street View are enough.",
+            "key": "field_bf653bc37d00c33e"
+        },
+        {
             "name": "tag",
             "label": "Tag",
             "type": "text",
             "instructions": "e.g. \"INDOOR SITE\"",
-            "key": "field_8a993ec34c507db8"
+            "key": "field_8a993ec34c507db8",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_bf653bc37d00c33e",
+                        "operator": "==",
+                        "value": "site"
+                    }
+                ]
+            ]
         },
         {
             "name": "meta",
             "label": "Meta",
             "type": "text",
             "instructions": "e.g. \"SW8 1SR · 4 MIN FROM VAUXHALL · OPEN 07:00–22:00\"",
-            "key": "field_14ba33d09351a88c"
+            "key": "field_14ba33d09351a88c",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_bf653bc37d00c33e",
+                        "operator": "==",
+                        "value": "site"
+                    }
+                ]
+            ]
         },
         {
             "name": "type",
@@ -48,7 +78,16 @@
                 "OUTDOOR": "Outdoor"
             },
             "default_value": "INDOOR",
-            "key": "field_b4ec320b72756488"
+            "key": "field_b4ec320b72756488",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_bf653bc37d00c33e",
+                        "operator": "==",
+                        "value": "site"
+                    }
+                ]
+            ]
         },
         {
             "name": "latitude",
@@ -66,7 +105,7 @@
             "name": "streetview",
             "label": "Street View URL",
             "type": "url",
-            "instructions": "Optional. Paste a Google Street View (or other) URL. If empty, the map page falls back to a Maps link at the coordinates above.",
+            "instructions": "Optional for sites; recommended for spots. Paste a Google Street View (or other) URL. If empty, the map falls back to a Maps link at the coordinates above.",
             "key": "field_5fd5a9e59f2aaae7"
         },
         {
@@ -76,21 +115,48 @@
             "rows": 2,
             "new_lines": "",
             "instructions": "Where to stand, in one sentence. e.g. \"Outside Tube station exit 2, next to metal pillars and open area.\"",
-            "key": "field_75028e214a14e992"
+            "key": "field_75028e214a14e992",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_bf653bc37d00c33e",
+                        "operator": "==",
+                        "value": "site"
+                    }
+                ]
+            ]
         },
         {
             "name": "transport_rail",
             "label": "Transport — rail",
             "type": "text",
             "instructions": "e.g. \"Victoria Underground Line · Vauxhall (South Western Railway)\"",
-            "key": "field_fb89a8cc6ad2b071"
+            "key": "field_fb89a8cc6ad2b071",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_bf653bc37d00c33e",
+                        "operator": "==",
+                        "value": "site"
+                    }
+                ]
+            ]
         },
         {
             "name": "transport_bus",
             "label": "Transport — bus",
             "type": "text",
             "instructions": "e.g. \"Buses — 2 · 36 · 87 · 88 · 156 · 185 · 196 · 344 · 436\"",
-            "key": "field_7f0343f0ddbe6a51"
+            "key": "field_7f0343f0ddbe6a51",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_bf653bc37d00c33e",
+                        "operator": "==",
+                        "value": "site"
+                    }
+                ]
+            ]
         }
     ]
 }

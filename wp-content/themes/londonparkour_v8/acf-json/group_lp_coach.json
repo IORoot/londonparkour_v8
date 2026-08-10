@@ -48,6 +48,7 @@
             ],
             "return_format": "id",
             "allow_null": 1,
+            "instructions": "Class site only — training spots do not appear here.",
             "key": "field_0020d7bbb15bdc61"
         },
         {

@@ -25,7 +25,7 @@
             "label": "Location",
             "name": "acf_location",
             "type": "post_object",
-            "instructions": "Theme site record (map pins, filters). Separate from clasbpro's string location field.",
+            "instructions": "Theme class site (map pins, filters). Training spots are excluded. Separate from clasbpro's string location field.",
             "required": 0,
             "post_type": ["lp_location"],
             "return_format": "id",

@@ -4,6 +4,9 @@
  *
  * Wheel zoom only with ⌘/Ctrl (and trackpad pinch, which browsers send as
  * Ctrl+wheel) so ordinary page scroll is not stolen.
+ *
+ * Sidebar tabs switch Sites / Spots lists. Site pins scroll to meeting panels;
+ * spot pins open Street View.
  */
 
 import L from 'leaflet';
@@ -12,6 +15,11 @@ import 'leaflet/dist/leaflet.css';
 const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 const TILE_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+const TAB_ACTIVE =
+  'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b-2 border-accent bg-transparent cursor-pointer';
+const TAB_IDLE =
+  'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/50 border-b-2 border-transparent bg-transparent cursor-pointer';
 
 const highlightSite = (siteId) => {
   if (!siteId) return;
@@ -24,10 +32,13 @@ const highlightSite = (siteId) => {
   }, 1600);
 };
 
+const openStreetview = (url) => {
+  if (!url || url === '#') return;
+  window.open(url, '_blank', 'noopener,noreferrer');
+};
+
 const enableModifierWheelZoom = (map) => {
   const el = map.getContainer();
-  // ⌘/Ctrl+scroll, and trackpad pinch (browsers send pinch as Ctrl+wheel).
-  // Plain scroll keeps paging the document.
   const onWheel = (event) => {
     if (!(event.metaKey || event.ctrlKey)) return;
     event.preventDefault();
@@ -39,6 +50,34 @@ const enableModifierWheelZoom = (map) => {
   };
   el.addEventListener('wheel', onWheel, { passive: false });
   return () => el.removeEventListener('wheel', onWheel);
+};
+
+const bindSidebarTabs = (network) => {
+  const tabs = [...network.querySelectorAll('[data-map-list-tab]')];
+  if (!tabs.length) return () => {};
+
+  const setTab = (name) => {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.mapListTab === name;
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      tab.className = active ? TAB_ACTIVE : TAB_IDLE;
+    });
+    network.querySelectorAll('[data-map-list]').forEach((list) => {
+      const show = list.dataset.mapList === name;
+      list.classList.toggle('hidden', !show);
+      if (show) list.removeAttribute('hidden');
+      else list.setAttribute('hidden', '');
+    });
+  };
+
+  const onClick = (event) => {
+    const tab = event.target.closest('[data-map-list-tab]');
+    if (!tab || !network.contains(tab)) return;
+    setTab(tab.dataset.mapListTab);
+  };
+
+  network.addEventListener('click', onClick);
+  return () => network.removeEventListener('click', onClick);
 };
 
 const bindSiteListFlyTo = (map, mount) => {
@@ -55,6 +94,11 @@ const bindSiteListFlyTo = (map, mount) => {
 
     event.preventDefault();
     map.flyTo([lat, lon], Math.max(map.getZoom(), 15), { duration: 0.75 });
+
+    if (item.dataset.kind === 'spot') {
+      openStreetview(item.dataset.streetview || '');
+      return;
+    }
     highlightSite(item.dataset.siteId || '');
   };
 
@@ -75,9 +119,11 @@ export function initSiteNetworkMap(root = document) {
     if (!mapEl || !tpl) return;
 
     const pins = [...tpl.content.querySelectorAll('[data-site-pin]')];
+    const network = mount.closest('[data-component="map-network"]');
     let map = null;
     let removeWheel = null;
     let removeList = null;
+    let removeTabs = null;
 
     try {
       map = L.map(mapEl, {
@@ -89,6 +135,7 @@ export function initSiteNetworkMap(root = document) {
       });
       removeWheel = enableModifierWheelZoom(map);
       removeList = bindSiteListFlyTo(map, mount);
+      if (network) removeTabs = bindSidebarTabs(network);
 
       L.tileLayer(TILE_URL, {
         attribution: TILE_ATTR,
@@ -102,6 +149,8 @@ export function initSiteNetworkMap(root = document) {
         const lat = Number(pin.dataset.lat);
         const lon = Number(pin.dataset.lon);
         const siteId = pin.dataset.siteId || '';
+        const kind = pin.dataset.kind || 'site';
+        const streetview = pin.dataset.streetview || '';
         if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
         bounds.push([lat, lon]);
@@ -121,7 +170,13 @@ export function initSiteNetworkMap(root = document) {
           title: pin.dataset.name || siteId,
         }).addTo(map);
 
-        marker.on('click', () => highlightSite(siteId));
+        marker.on('click', () => {
+          if (kind === 'spot') {
+            openStreetview(streetview);
+            return;
+          }
+          highlightSite(siteId);
+        });
       });
 
       if (bounds.length) {
@@ -137,6 +192,7 @@ export function initSiteNetworkMap(root = document) {
     }
 
     cleanups.push(() => {
+      removeTabs?.();
       removeList?.();
       removeWheel?.();
       map?.remove();

@@ -542,7 +542,9 @@ function lp_resolve_term_source( array $args, string $taxonomy, array $opts = ar
  * @param array  $opts      'expand' => 'sessions' to flatten class time-slots;
  *                          'exclude_flag' => a true_false field name whose set
  *                          records are left out (the entity already featured
- *                          above the list).
+ *                          above the list);
+ *                          'require_kind' => for lp_location, keep only
+ *                          site|spot (missing kind counts as site).
  * @return array<int, array>
  */
 function lp_resolve_source( array $args, string $post_type, array $opts = array() ): array {
@@ -632,6 +634,16 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 	foreach ( $ids as $id ) {
 		$id = (int) $id;
 		if ( ! $id ) {
+			continue;
+		}
+
+		// Locations block / Train in person: spots are map-only, never class sites.
+		if (
+			'lp_location' === $post_type
+			&& ! empty( $opts['require_kind'] )
+			&& function_exists( 'lp_location_kind' )
+			&& lp_location_kind( $id ) !== (string) $opts['require_kind']
+		) {
 			continue;
 		}
 
