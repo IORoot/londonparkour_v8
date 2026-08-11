@@ -2835,8 +2835,21 @@
                                     "label": "Link",
                                     "type": "link",
                                     "return_format": "array",
-                                    "instructions": "The link text is the button label.",
+                                    "instructions": "Button label (link text). URL is ignored when a coupon pack is set — the drawer opens instead.",
                                     "key": "field_d93de797e03a1198"
+                                },
+                                {
+                                    "name": "pack",
+                                    "label": "Coupon pack",
+                                    "type": "post_object",
+                                    "post_type": [
+                                        "clasbpro_pack"
+                                    ],
+                                    "return_format": "id",
+                                    "allow_null": 1,
+                                    "ui": 1,
+                                    "instructions": "Opens the buy drawer for this clasbpro coupon (DROP-IN / 5-PACK / 10-PACK).",
+                                    "key": "field_769450573b8e581f"
                                 },
                                 {
                                     "name": "values",
@@ -3067,98 +3080,6 @@
                             "key": "field_70173de9405cc3d9"
                         },
                         {
-                            "name": "panel_kicker",
-                            "label": "Panel kicker",
-                            "type": "text",
-                            "key": "field_e4dac07bd6809b37",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
-                            "name": "panel_title",
-                            "label": "Panel title",
-                            "type": "text",
-                            "key": "field_9f4551778df5c09a",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
-                            "name": "panel_lead",
-                            "label": "Panel lead",
-                            "type": "textarea",
-                            "rows": 2,
-                            "new_lines": "",
-                            "key": "field_9bab0b6bef3a4b5c",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
-                            "name": "week_range",
-                            "label": "Week range",
-                            "type": "text",
-                            "key": "field_ad0b3b04a52c8cf6",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
-                            "name": "selected_label",
-                            "label": "Selected label",
-                            "type": "text",
-                            "key": "field_fcdbd6d9f89e9a17",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
-                            "name": "selected_value",
-                            "label": "Selected value",
-                            "type": "text",
-                            "key": "field_bbaa2ccf2e1dac2b",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
                             "name": "tab_items",
                             "label": "Items",
                             "type": "tab",
@@ -3187,154 +3108,6 @@
                                 }
                             ],
                             "key": "field_fd41c6fc3810d357"
-                        },
-                        {
-                            "name": "days",
-                            "label": "Days",
-                            "type": "repeater",
-                            "layout": "table",
-                            "button_label": "Add day",
-                            "sub_fields": [
-                                {
-                                    "name": "label",
-                                    "label": "Label",
-                                    "type": "text",
-                                    "key": "field_54cc2dfc06cd61a1"
-                                },
-                                {
-                                    "name": "date",
-                                    "label": "Date",
-                                    "type": "text",
-                                    "key": "field_d248cdd971a8c871"
-                                }
-                            ],
-                            "key": "field_5914835abcc54dd5",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
-                            "name": "rows",
-                            "label": "Rows",
-                            "type": "repeater",
-                            "layout": "table",
-                            "button_label": "Add row",
-                            "instructions": "Booking week grid — one row per time slot.",
-                            "sub_fields": [
-                                {
-                                    "name": "time",
-                                    "label": "Time",
-                                    "type": "text",
-                                    "key": "field_ff8eb291ab32d0c9"
-                                },
-                                {
-                                    "name": "mon",
-                                    "label": "Mon",
-                                    "type": "select",
-                                    "choices": {
-                                        "available": "Available",
-                                        "taken": "Taken",
-                                        "closed": "Closed",
-                                        "selected": "Selected"
-                                    },
-                                    "default_value": "closed",
-                                    "key": "field_fa48de8405fa7fb3"
-                                },
-                                {
-                                    "name": "tue",
-                                    "label": "Tue",
-                                    "type": "select",
-                                    "choices": {
-                                        "available": "Available",
-                                        "taken": "Taken",
-                                        "closed": "Closed",
-                                        "selected": "Selected"
-                                    },
-                                    "default_value": "closed",
-                                    "key": "field_9e353b3f39f60af3"
-                                },
-                                {
-                                    "name": "wed",
-                                    "label": "Wed",
-                                    "type": "select",
-                                    "choices": {
-                                        "available": "Available",
-                                        "taken": "Taken",
-                                        "closed": "Closed",
-                                        "selected": "Selected"
-                                    },
-                                    "default_value": "closed",
-                                    "key": "field_15b306906bcd9a63"
-                                },
-                                {
-                                    "name": "thu",
-                                    "label": "Thu",
-                                    "type": "select",
-                                    "choices": {
-                                        "available": "Available",
-                                        "taken": "Taken",
-                                        "closed": "Closed",
-                                        "selected": "Selected"
-                                    },
-                                    "default_value": "closed",
-                                    "key": "field_81e497f5ab128b6c"
-                                },
-                                {
-                                    "name": "fri",
-                                    "label": "Fri",
-                                    "type": "select",
-                                    "choices": {
-                                        "available": "Available",
-                                        "taken": "Taken",
-                                        "closed": "Closed",
-                                        "selected": "Selected"
-                                    },
-                                    "default_value": "closed",
-                                    "key": "field_99eb2986322873ae"
-                                },
-                                {
-                                    "name": "sat",
-                                    "label": "Sat",
-                                    "type": "select",
-                                    "choices": {
-                                        "available": "Available",
-                                        "taken": "Taken",
-                                        "closed": "Closed",
-                                        "selected": "Selected"
-                                    },
-                                    "default_value": "closed",
-                                    "key": "field_f8e2817ba4335f27"
-                                },
-                                {
-                                    "name": "sun",
-                                    "label": "Sun",
-                                    "type": "select",
-                                    "choices": {
-                                        "available": "Available",
-                                        "taken": "Taken",
-                                        "closed": "Closed",
-                                        "selected": "Selected"
-                                    },
-                                    "default_value": "closed",
-                                    "key": "field_a0c8aed4b2c366be"
-                                }
-                            ],
-                            "key": "field_777c2a15d0941685",
-                            "conditional_logic": [
-                                [
-                                    {
-                                        "field": "field_6c70955bd3bd8095",
-                                        "operator": "==",
-                                        "value": "booking"
-                                    }
-                                ]
-                            ]
                         },
                         {
                             "name": "tab_actions",
@@ -3411,7 +3184,30 @@
                                     "key": "field_3bc1f92a12f9fe92"
                                 }
                             ],
+                            "instructions": "Button label. Link is used only when no appointment class is selected.",
                             "key": "field_11f877efaef122f3",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_6c70955bd3bd8095",
+                                        "operator": "==",
+                                        "value": "booking"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "name": "appointment_class",
+                            "label": "Appointment class",
+                            "type": "post_object",
+                            "post_type": [
+                                "clasbpro_class"
+                            ],
+                            "return_format": "id",
+                            "allow_null": 1,
+                            "ui": 1,
+                            "instructions": "When set, the book button opens the shared booking overlay for this clasbpro appointment class.",
+                            "key": "field_9cb790e4acc205ef",
                             "conditional_logic": [
                                 [
                                     {

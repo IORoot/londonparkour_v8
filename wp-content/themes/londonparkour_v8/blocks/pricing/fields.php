@@ -171,7 +171,17 @@ return array(
 						'label'         => __( 'Link', 'londonparkour_v8' ),
 						'type'          => 'link',
 						'return_format' => 'array',
-						'instructions'  => __( 'The link text is the button label.', 'londonparkour_v8' ),
+						'instructions'  => __( 'Button label (link text). URL is ignored when a coupon pack is set — the drawer opens instead.', 'londonparkour_v8' ),
+					),
+					array(
+						'name'          => 'pack',
+						'label'         => __( 'Coupon pack', 'londonparkour_v8' ),
+						'type'          => 'post_object',
+						'post_type'     => array( 'clasbpro_pack' ),
+						'return_format' => 'id',
+						'allow_null'    => 1,
+						'ui'            => 1,
+						'instructions'  => __( 'Opens the buy drawer for this clasbpro coupon (DROP-IN / 5-PACK / 10-PACK).', 'londonparkour_v8' ),
 					),
 					array(
 						'name'         => 'values',

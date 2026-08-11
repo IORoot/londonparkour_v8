@@ -23,10 +23,10 @@
       "glyph_icon_id": "glyph-step",
       "price": "£15",
       "unit": "per session",
-      "description": "Turn up when it suits. One session, paid at the door — no pack required.",
+      "description": "One class credit. Buy online, book any session at Vauxhall, Old Street or Kilburn Park.",
       "work_out_value": "£15.00",
       "work_out_unit": "a class",
-      "cta": { "title": "BOOK A SESSION", "url": "#", "target": "" },
+      "cta": { "title": "BUY DROP-IN", "url": "#", "target": "" },
       "values": [
         { "row_key": "sessions", "value": "One" },
         { "row_key": "saving", "value": "—" }

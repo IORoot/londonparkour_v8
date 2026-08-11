@@ -178,6 +178,21 @@ abstract class REST {
 				'preset_slot_rule_id' => [ 'required' => false, 'sanitize_callback' => 'sanitize_key' ],
 			],
 		] );
+
+		register_rest_route( CLASBOWPRO_REST_NS, '/panel-form', [
+			'methods'             => 'GET',
+			'callback'            => [ self::class, 'panel_form' ],
+			'permission_callback' => '__return_true',
+			'args'                => [
+				'type'                => [
+					'required'          => true,
+					'sanitize_callback' => 'sanitize_key',
+				],
+				'id'                  => [ 'required' => true, 'sanitize_callback' => 'absint' ],
+				'preset_date'         => [ 'required' => false, 'sanitize_callback' => 'sanitize_text_field' ],
+				'preset_slot_rule_id' => [ 'required' => false, 'sanitize_callback' => 'sanitize_key' ],
+			],
+		] );
 	}
 
 	/**
@@ -924,10 +939,55 @@ abstract class REST {
 	 * GET /schedule-booking-form — booking form HTML for schedule modal.
 	 */
 	public static function schedule_booking_form( \WP_REST_Request $request ) {
-		$class_id           = (int) $request['class_id'];
-		$preset_date        = Helpers::normalise_date_string( (string) ( $request['preset_date'] ?? '' ) );
+		$request->set_param( 'type', 'booking' );
+		$request->set_param( 'id', (int) $request['class_id'] );
+		return self::panel_form( $request );
+	}
+
+	/**
+	 * GET /panel-form — shortcode HTML for drawer / overlay mounts.
+	 *
+	 * type=booking → [clasbpro_booking] (classes + appointments)
+	 * type=coupon  → [clasbpro_coupons id="N"]
+	 */
+	public static function panel_form( \WP_REST_Request $request ) {
+		$type = sanitize_key( (string) ( $request['type'] ?? '' ) );
+		$id   = (int) ( $request['id'] ?? 0 );
+
+		if ( $id <= 0 ) {
+			return new \WP_REST_Response( [ 'error' => 'invalid_id' ], 400 );
+		}
+
+		if ( 'coupon' === $type || 'pack' === $type ) {
+			$pack = get_post( $id );
+			if ( ! $pack || Constants::CPT_PACK !== $pack->post_type || 'publish' !== $pack->post_status ) {
+				return new \WP_REST_Response( [ 'error' => 'not_found' ], 404 );
+			}
+
+			$html = Shortcode::render_packs(
+				[
+					'id'      => (string) $id,
+					'heading' => '0',
+				]
+			);
+
+			return new \WP_REST_Response(
+				[
+					'html' => $html,
+					'type' => 'coupon',
+					'id'   => $id,
+				],
+				200
+			);
+		}
+
+		if ( 'booking' !== $type ) {
+			return new \WP_REST_Response( [ 'error' => 'invalid_type' ], 400 );
+		}
+
+		$preset_date         = Helpers::normalise_date_string( (string) ( $request['preset_date'] ?? '' ) );
 		$preset_slot_rule_id = sanitize_key( (string) ( $request['preset_slot_rule_id'] ?? '' ) );
-		$class_data         = Helpers::get_class_data( $class_id );
+		$class_data          = Helpers::get_class_data( $id );
 
 		if ( ! $class_data || empty( $class_data['class_active'] ) ) {
 			return new \WP_REST_Response( [ 'error' => 'not_found' ], 404 );
@@ -935,14 +995,21 @@ abstract class REST {
 
 		$html = Shortcode::render_booking_html(
 			[
-				'class_id'              => (string) $class_id,
-				'heading'               => '0',
-				'preset_date'           => $preset_date,
-				'preset_slot_rule_id'   => $preset_slot_rule_id,
+				'class_id'            => (string) $id,
+				'heading'             => '0',
+				'preset_date'         => $preset_date,
+				'preset_slot_rule_id' => $preset_slot_rule_id,
 			]
 		);
 
-		return new \WP_REST_Response( [ 'html' => $html ], 200 );
+		return new \WP_REST_Response(
+			[
+				'html' => $html,
+				'type' => 'booking',
+				'id'   => $id,
+			],
+			200
+		);
 	}
 
 	/**

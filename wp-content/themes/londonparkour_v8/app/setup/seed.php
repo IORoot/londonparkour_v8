@@ -388,6 +388,41 @@ function lp_seed_weekdays( $value ) {
 }
 
 /**
+ * Apply an optional example.refs.json map (dot-path => "post_type:slug").
+ *
+ * Parallel to example.media.json. Used so Flexible Content rows can name
+ * editor-owned clasbpro packs/classes without baking numeric IDs into git.
+ *
+ * @param array  $data Data, by reference.
+ * @param string $dir  Block directory path.
+ */
+function lp_seed_apply_refs( array &$data, string $dir ): void {
+	$map_file = $dir . '/example.refs.json';
+	if ( ! is_readable( $map_file ) ) {
+		return;
+	}
+
+	$map = json_decode( (string) file_get_contents( $map_file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+	if ( ! is_array( $map ) ) {
+		WP_CLI::warning( 'Invalid example.refs.json in ' . basename( $dir ) );
+		return;
+	}
+
+	foreach ( $map as $path => $spec ) {
+		$spec = (string) $spec;
+		if ( ! str_contains( $spec, ':' ) ) {
+			WP_CLI::warning( "Bad ref '{$spec}' at {$path} — expected post_type:slug." );
+			continue;
+		}
+		[ $post_type, $slug ] = explode( ':', $spec, 2 );
+		$id                   = lp_seed_ref( $post_type, $slug );
+		if ( $id ) {
+			lp_seed_set_path( $data, (string) $path, $id );
+		}
+	}
+}
+
+/**
  * Set a value at a dot-path inside an array, creating levels as needed.
  *
  * Numeric segments index repeater rows: 'source_manual.0.thumb'.
@@ -458,6 +493,8 @@ function lp_seed_rows( array $media ): array {
 				}
 			}
 		}
+
+		lp_seed_apply_refs( $data, $dir );
 
 		$rows[] = array_merge( array( 'acf_fc_layout' => $layout ), $data );
 
@@ -551,6 +588,8 @@ function lp_seed_block_row( string $slug, array $media ): ?array {
 			}
 		}
 	}
+
+	lp_seed_apply_refs( $data, $dir );
 
 	return array_merge( array( 'acf_fc_layout' => $layout ), $data );
 }

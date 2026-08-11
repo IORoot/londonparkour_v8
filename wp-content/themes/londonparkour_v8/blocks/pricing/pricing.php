@@ -73,11 +73,11 @@ $lp_default_tiers = array(
 		'glyph_icon_id'  => 'glyph-step',
 		'price'          => '£15',
 		'unit'           => 'per session',
-		'description'    => 'Turn up when it suits. One session, paid at the door — no pack required.',
+		'description'    => 'One class credit. Buy online, book any session at Vauxhall, Old Street or Kilburn Park.',
 		'work_out_value' => '£15.00',
 		'work_out_unit'  => 'a class',
 		'cta'            => array(
-			'title' => 'BOOK A SESSION',
+			'title' => 'BUY DROP-IN',
 			'url'   => '#',
 		),
 		'values'         => array(
@@ -296,7 +296,24 @@ $lp_spacing = lp_section_spacing( $args );
 							<?php endforeach; ?>
 							<div class="pt-[16px] px-[28px] pb-[24px] flex items-end">
 								<?php
-								if ( $lp_cta ) {
+								$lp_pack_id = absint( $lp_tier['pack'] ?? 0 );
+								$lp_cta_label = $lp_cta['label'] ?? '';
+								if ( $lp_pack_id > 0 ) {
+									$lp_buy = lp_pack_buy_button_args(
+										$lp_pack_id,
+										$lp_cta_label ?: 'BUY',
+										$lp_highlight ? 'primary' : 'ghost'
+									);
+									lp_part(
+										'elements/button',
+										array_merge(
+											$lp_buy,
+											array(
+												'class' => 'w-full',
+											)
+										)
+									);
+								} elseif ( $lp_cta ) {
 									lp_part(
 										'elements/button',
 										array(

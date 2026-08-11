@@ -1,0 +1,458 @@
+/**
+ * Concourse — clasbpro form chrome for londonparkour_v8.
+ *
+ * Dark recessed board (secondary/neutral), hairline borders, zero radius, signal
+ * fill. Aligns with london_parkour_V7.pen Booking Drawer / Private Coaching panel.
+ *
+ * Specificity must beat `.cbfs-form--layout-modern .cbfs-form__surface` (plugin
+ * white card) and appointment-calendar’s light-surface CSS variables.
+ */
+
+.cbfs-form,
+.cbfs-status,
+.cbfs-packs,
+.cbfs-appointment-calendar,
+.cbfs-class-date-calendar,
+[data-cbfs-appointment-calendar],
+[data-cbfs-class-date-calendar] {
+	--cbfs-radius: 0;
+	--cbfs-radius-sm: 0;
+	--cbfs-radius-lg: 0;
+	--cbfs-shadow: none;
+	--cbfs-border: color-mix(in srgb, var(--color-neutral-content, #f2f1e9) 14%, transparent);
+	--cbfs-muted: color-mix(in srgb, var(--color-neutral-content, #f2f1e9) 50%, transparent);
+	--cbfs-bg: var(--color-secondary, #0e0d0b);
+	--cbfs-panel: var(--color-neutral, #141310);
+	--cbfs-fg: var(--color-neutral-content, #f2f1e9);
+	--cbfs-accent: var(--color-primary, #ffc400);
+	--cbfs-accent-hover: var(--color-primary, #ffc400);
+	--cbfs-accent-ink: var(--color-primary-content, #141310);
+	--cbfs-warn-bg: var(--color-neutral, #141310);
+	--cbfs-warn-fg: var(--color-primary, #ffc400);
+	--cbfs-error-bg: var(--color-neutral, #141310);
+	--cbfs-error-fg: var(--color-error, #e8402a);
+	--cbfs-success-bg: var(--color-neutral, #141310);
+	--cbfs-success-fg: var(--color-success, #3e6b4d);
+	--cbfs-font-label: var(--font-label, Inter, system-ui, sans-serif);
+	--cbfs-font-heading: var(--font-heading, Archivo, Inter, system-ui, sans-serif);
+
+	/* Appointment / class-date calendars — dark board tokens (plugin defaults are white/navy). */
+	--cbfs-cal-fg: var(--cbfs-fg);
+	--cbfs-cal-bg: var(--cbfs-panel);
+	--cbfs-cal-surface: var(--cbfs-bg);
+	--cbfs-cal-border: var(--cbfs-border);
+	--cbfs-cal-muted: var(--cbfs-muted);
+	--cbfs-cal-hover-bg: var(--cbfs-bg);
+	--cbfs-cal-hover-border: var(--cbfs-accent);
+	--cbfs-cal-hover-shadow: 0 0 0 1px var(--cbfs-accent);
+	--cbfs-cal-selected-bg: var(--cbfs-accent);
+	--cbfs-cal-selected-fg: var(--cbfs-accent-ink);
+	--cbfs-cal-focus-ring: var(--cbfs-accent);
+	--cbfs-cal-available: var(--cbfs-accent);
+	--cbfs-cal-available-bg: color-mix(in srgb, var(--cbfs-accent) 18%, var(--cbfs-panel));
+	--cbfs-cal-booked: var(--cbfs-muted);
+	--cbfs-cal-booked-bg: color-mix(in srgb, var(--cbfs-fg) 8%, var(--cbfs-panel));
+	--cbfs-cal-disabled-fg: color-mix(in srgb, var(--cbfs-fg) 35%, transparent);
+	--cbfs-cal-disabled-bg: var(--cbfs-bg);
+}
+
+/* ── Shell / modern layout (kill white card) ─────────────────────────────── */
+
+.cbfs-form,
+.cbfs-form.cbfs-form--layout-modern,
+.cbfs-status,
+.cbfs-status.cbfs-status--layout-modern {
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	color: var(--cbfs-fg);
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	font-family: var(--cbfs-font-label);
+}
+
+.cbfs-form__surface,
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__surface,
+.cbfs-form__card,
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__card {
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	padding: 0;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__hero {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 0 0 20px;
+	padding: 0 0 16px;
+	border-bottom: 1px solid color-mix(in srgb, var(--cbfs-fg) 18%, transparent);
+	background: transparent;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__title,
+.cbfs-form__title {
+	margin: 0;
+	font-family: var(--cbfs-font-heading);
+	font-size: 1.125rem;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: var(--cbfs-accent);
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__meta,
+.cbfs-form__meta,
+.cbfs-form__description {
+	margin: 6px 0 0;
+	color: var(--cbfs-muted);
+	font-size: 0.8125rem;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__price-badge {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 2px;
+	padding: 8px 12px;
+	background: var(--cbfs-panel);
+	border: 1px solid var(--cbfs-border);
+	border-radius: 0;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__price-badge-label {
+	font-family: var(--cbfs-font-label);
+	font-size: 9px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: var(--cbfs-muted);
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__price-badge-value {
+	font-family: var(--cbfs-font-heading);
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: var(--cbfs-fg);
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__body {
+	padding: 0;
+	background: transparent;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__card {
+	background: transparent !important;
+	border: 0 !important;
+	padding: 0;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__date-fixed {
+	background: var(--cbfs-panel);
+	border: 1px solid var(--cbfs-border);
+	border-radius: 0;
+	color: var(--cbfs-fg);
+}
+
+/* ── Labels / fields ─────────────────────────────────────────────────────── */
+
+.cbfs-form label,
+.cbfs-form__label,
+.cbfs-form .cbfs-form__label,
+.cbfs-packs__label span {
+	font-family: var(--cbfs-font-label);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: var(--cbfs-muted);
+}
+
+.cbfs-form input[type='text'],
+.cbfs-form input[type='email'],
+.cbfs-form input[type='number'],
+.cbfs-form input[type='tel'],
+.cbfs-form input[type='password'],
+.cbfs-form .cbfs-form__input,
+.cbfs-form select,
+.cbfs-form textarea,
+.cbfs-packs__input,
+.cbfs-form .cbfs-form-select {
+	width: 100%;
+	min-height: 48px;
+	height: 48px;
+	border-radius: 0 !important;
+	border: 1px solid var(--cbfs-border);
+	background: var(--cbfs-panel) !important;
+	color: var(--cbfs-fg) !important;
+	padding: 0 16px;
+	font-size: 13px;
+	letter-spacing: 0.2px;
+	box-shadow: none !important;
+}
+
+.cbfs-form textarea {
+	height: auto;
+	min-height: 96px;
+	padding: 12px 16px;
+}
+
+.cbfs-form input::placeholder,
+.cbfs-form textarea::placeholder,
+.cbfs-packs__input::placeholder {
+	color: var(--cbfs-muted);
+	opacity: 1;
+}
+
+.cbfs-form input:focus,
+.cbfs-form select:focus,
+.cbfs-form textarea:focus,
+.cbfs-packs__input:focus,
+.cbfs-form .cbfs-form__input:focus {
+	outline: 2px solid var(--cbfs-accent);
+	outline-offset: -2px;
+	border-color: var(--cbfs-accent);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+.cbfs-form__button,
+.cbfs-packs__button,
+.cbfs-form button[type='submit'],
+.cbfs-form .cbfs-form__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 48px;
+	margin-top: 8px;
+	padding: 0 22px;
+	border: 0;
+	border-radius: 0 !important;
+	background: var(--cbfs-accent) !important;
+	color: var(--cbfs-accent-ink) !important;
+	font-family: var(--cbfs-font-label);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	cursor: pointer;
+	box-shadow: none !important;
+	transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cbfs-form__button:hover,
+.cbfs-packs__button:hover,
+.cbfs-form button[type='submit']:hover,
+.cbfs-form .cbfs-form__button:hover {
+	background: var(--cbfs-panel) !important;
+	color: var(--cbfs-accent) !important;
+}
+
+/* Secondary actions (e.g. coupon Apply) — not the primary Stripe CTA. */
+.cbfs-form button:not([type='submit']):not(.cbfs-form__button):not(.cbfs-appointment-calendar__day):not(.cbfs-appointment-calendar__prev):not(.cbfs-appointment-calendar__next) {
+	border-radius: 0 !important;
+	border: 1px solid var(--cbfs-border);
+	background: var(--cbfs-panel) !important;
+	color: var(--cbfs-accent) !important;
+	font-family: var(--cbfs-font-label);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	box-shadow: none !important;
+}
+
+.cbfs-form__total,
+.cbfs-form__summary,
+.cbfs-form .cbfs-form__total {
+	border-top: 1px solid var(--cbfs-border);
+	padding-top: 16px;
+	color: var(--cbfs-fg);
+}
+
+/* ── Coupons / packs ─────────────────────────────────────────────────────── */
+
+.cbfs-packs {
+	background: transparent;
+	color: var(--cbfs-fg);
+	padding: 0;
+	max-width: none;
+}
+
+.cbfs-packs__heading {
+	display: none;
+}
+
+.cbfs-packs__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.cbfs-packs__item {
+	border: 1px solid var(--cbfs-border);
+	background: var(--cbfs-panel);
+	padding: 20px;
+	border-radius: 0;
+}
+
+.cbfs-packs__title {
+	margin: 0 0 8px;
+	font-family: var(--cbfs-font-heading);
+	font-size: 1.125rem;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: var(--cbfs-accent);
+}
+
+.cbfs-packs__description,
+.cbfs-packs__meta {
+	color: var(--cbfs-muted);
+	font-size: 0.75rem;
+}
+
+.cbfs-packs__price {
+	margin: 12px 0 16px;
+	font-family: var(--cbfs-font-heading);
+	font-size: 1.75rem;
+	font-weight: 600;
+	color: var(--cbfs-fg);
+}
+
+.cbfs-packs__form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.cbfs-packs__label {
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+}
+
+/* ── Calendars ───────────────────────────────────────────────────────────── */
+
+.cbfs-appointment-calendar,
+.cbfs-class-date-calendar,
+[data-cbfs-appointment-calendar],
+[data-cbfs-class-date-calendar],
+.cbfs-form .cbfs-appointment-calendar,
+.cbfs-form .cbfs-class-date-calendar {
+	background: var(--cbfs-panel);
+	border: 1px solid var(--cbfs-border);
+	border-radius: 0 !important;
+	color: var(--cbfs-fg);
+	padding: 12px;
+}
+
+.cbfs-appointment-calendar button,
+.cbfs-class-date-calendar button,
+.cbfs-appointment-calendar__day,
+.cbfs-class-date-calendar__day {
+	border-radius: 0 !important;
+}
+
+.cbfs-appointment-calendar__nav,
+.cbfs-class-date-calendar__nav {
+	border-color: var(--cbfs-border);
+	color: var(--cbfs-fg);
+}
+
+.cbfs-appointment-calendar__title,
+.cbfs-class-date-calendar__title {
+	font-family: var(--cbfs-font-heading);
+	color: var(--cbfs-fg);
+}
+
+.cbfs-appointment-calendar__weekday,
+.cbfs-class-date-calendar__weekday {
+	color: var(--cbfs-muted);
+	font-family: var(--cbfs-font-label);
+	font-size: 10px;
+	letter-spacing: 0.8px;
+	text-transform: uppercase;
+}
+
+.cbfs-appointment-calendar__day,
+.cbfs-class-date-calendar__day,
+.cbfs-appointment-calendar [data-day],
+.cbfs-class-date-calendar [data-day] {
+	background: var(--cbfs-cal-bg) !important;
+	border: 1px solid var(--cbfs-border) !important;
+	border-radius: 0 !important;
+	color: var(--cbfs-fg) !important;
+	box-shadow: none !important;
+}
+
+.cbfs-appointment-calendar__day.is-available,
+.cbfs-appointment-calendar [data-available='1'],
+.cbfs-class-date-calendar [data-available='1'] {
+	background: var(--cbfs-cal-available-bg) !important;
+	border-color: var(--cbfs-border) !important;
+	color: var(--cbfs-fg) !important;
+}
+
+.cbfs-appointment-calendar__day.is-selected,
+.cbfs-appointment-calendar [aria-pressed='true'],
+.cbfs-appointment-calendar [data-selected='1'],
+.cbfs-class-date-calendar [data-selected='1'] {
+	background: var(--cbfs-accent) !important;
+	color: var(--cbfs-accent-ink) !important;
+	border-color: var(--cbfs-accent) !important;
+}
+
+.cbfs-appointment-calendar__day:focus-visible,
+.cbfs-class-date-calendar__day:focus-visible {
+	outline: 2px solid var(--cbfs-accent);
+	outline-offset: -2px;
+}
+
+.cbfs-appointment-calendar__slot,
+.cbfs-appointment-calendar [data-slot] {
+	border-radius: 0 !important;
+	border: 1px solid var(--cbfs-border);
+	background: var(--cbfs-panel);
+	color: var(--cbfs-fg);
+}
+
+.cbfs-appointment-calendar__slot.is-selected,
+.cbfs-appointment-calendar [data-slot][aria-pressed='true'] {
+	background: var(--cbfs-accent);
+	color: var(--cbfs-accent-ink);
+	border-color: var(--cbfs-accent);
+}
+
+.cbfs-appointment-calendar__hint,
+.cbfs-form .cbfs-form__hint {
+	color: var(--cbfs-muted);
+	font-size: 0.75rem;
+}
+
+/* ── Radio / coupon toggle rows ──────────────────────────────────────────── */
+
+.cbfs-form__choice,
+.cbfs-form [class*='pay-option'],
+.cbfs-form .cbfs-form__radio-row {
+	border-color: var(--cbfs-border);
+	color: var(--cbfs-fg);
+}
+
+/* ── Mount contexts ──────────────────────────────────────────────────────── */
+
+[data-lp-booking-mount] .cbfs-form,
+[data-lp-booking-mount] .cbfs-packs,
+[data-component='private-coaching-booking-panel'] .cbfs-form,
+[data-component='private-coaching-booking-panel'] .cbfs-form.cbfs-form--layout-modern {
+	max-width: none;
+}

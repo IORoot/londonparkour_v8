@@ -10,48 +10,11 @@
   "fare_label": "FROM",
   "amount": "£65",
   "unit": "PER SESSION",
-  "reassure": "No commitment. We call back within one working day and match you to a coach.",
-  "panel_kicker": "PICK A TIME",
-  "panel_title": "Book your session",
-  "panel_lead": "Choose a slot below. We confirm by email within one working day.",
-  "week_range": "MON 14 — SUN 20 JUL",
-  "selected_label": "SELECTED",
-  "selected_value": "Thu 17 Jul · 14:00 · Vauxhall",
+  "reassure": "No commitment. We'll confirm your booking by email within one working day.",
   "facts": [
     { "label": "DURATION", "value": "60 min" },
     { "label": "WHERE", "value": "Any site" },
     { "label": "WHO", "value": "L2 coach" }
-  ],
-  "days": [
-    { "label": "MON", "date": "14" },
-    { "label": "TUE", "date": "15" },
-    { "label": "WED", "date": "16" },
-    { "label": "THU", "date": "17" },
-    { "label": "FRI", "date": "18" },
-    { "label": "SAT", "date": "19" },
-    { "label": "SUN", "date": "20" }
-  ],
-  "rows": [
-    {
-      "time": "09:00",
-      "slots": ["available", "taken", "available", "available", "available", "closed", "closed"]
-    },
-    {
-      "time": "11:00",
-      "slots": ["available", "available", "closed", "available", "available", "available", "closed"]
-    },
-    {
-      "time": "14:00",
-      "slots": ["available", "closed", "available", "selected", "available", "closed", "closed"]
-    },
-    {
-      "time": "16:00",
-      "slots": ["available", "available", "available", "available", "closed", "available", "available"]
-    },
-    {
-      "time": "18:30",
-      "slots": ["closed", "closed", "closed", "available", "available", "available", "closed"]
-    }
   ],
   "book_action": {
     "link": { "title": "REQUEST 1:1", "url": "/private-coaching/request/", "target": "" }

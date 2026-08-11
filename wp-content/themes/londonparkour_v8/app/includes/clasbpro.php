@@ -460,11 +460,49 @@ function lp_class_board_fields( int $class_id ): array {
  */
 function lp_class_book_button_args( int $class_id, string $preset_date = '', string $label = 'BOOK', string $variant = 'primary' ): array {
 	$attrs = array(
-		'data-lp-book'  => '1',
-		'data-class-id' => (string) $class_id,
+		'data-lp-panel'  => 'booking',
+		'data-lp-book'   => '1',
+		'data-class-id'  => (string) $class_id,
+		'data-lp-id'     => (string) $class_id,
+		'data-lp-list'   => 'classes',
 	);
 	if ( '' !== $preset_date ) {
 		$attrs['data-preset-date'] = $preset_date;
+	}
+
+	$title = get_the_title( $class_id );
+	if ( is_string( $title ) && '' !== $title ) {
+		$attrs['data-lp-item-name'] = $title;
+	}
+
+	return array(
+		'variant'     => $variant,
+		'label'       => $label,
+		'command'     => 'show-modal',
+		'command_for' => 'lp-booking-drawer',
+		'data_attrs'  => $attrs,
+	);
+}
+
+/**
+ * Args for elements/button.php that open the shared coupon drawer.
+ *
+ * @param int    $pack_id Pack post ID (clasbpro_pack).
+ * @param string $label   Button label.
+ * @param string $variant Button variant.
+ * @return array<string,mixed>
+ */
+function lp_pack_buy_button_args( int $pack_id, string $label = 'BUY', string $variant = 'primary' ): array {
+	$attrs = array(
+		'data-lp-panel' => 'coupon',
+		'data-pack-id'  => (string) $pack_id,
+		'data-lp-id'    => (string) $pack_id,
+		'data-lp-list'  => 'pricing',
+	);
+
+	$title = get_the_title( $pack_id );
+	if ( is_string( $title ) && '' !== $title ) {
+		$attrs['data-lp-item-name'] = $title;
 	}
 
 	return array(

@@ -3,6 +3,7 @@ import '@tailwindplus/elements';
 import { initAllVideoDialogs } from './elements/DialogVideo.js';
 import { initAllFilterForms } from './elements/FilterForm.js';
 import { initBookingDrawer } from './elements/BookingDrawer.js';
+import { initCommercePurchase } from './elements/CommercePurchase.js';
 import { initSiteNetworkMap } from './elements/SiteNetworkMap.js';
 import { AppInitialiser } from './AppInitialiser.js';
 import { createDOMObserver } from './utils/createDOMObserver.js';
@@ -54,10 +55,18 @@ const MODULES = {
 
   bookingDrawer: {
     init: () => initBookingDrawer(),
-    selector: '[data-lp-book], #lp-booking-drawer',
+    selector: '[data-lp-book], [data-lp-panel], #lp-booking-drawer',
     critical: false,
     lazy: false,
     timeout: 5000
+  },
+
+  commercePurchase: {
+    init: () => initCommercePurchase(),
+    selector: '[data-lp-purchase]',
+    critical: false,
+    lazy: false,
+    timeout: 3000
   },
 
   siteNetworkMap: {
@@ -101,7 +110,10 @@ export async function initApp(options = {}) {
  * which re-ran after every story mount. On the site the DOM is server-rendered
  * once, so a single boot on DOMContentLoaded replaces it.
  */
-const boot = () => initApp({ modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'siteNetworkMap'] });
+const boot = () =>
+  initApp({
+    modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'commercePurchase', 'siteNetworkMap'],
+  });
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', boot, { once: true });

@@ -33,8 +33,11 @@ fail=0
 # `icon`, all of which button.php already ships. Promoting a one-page shape
 # would be building ahead, so the shape stays here and the rule steps around it.
 # If a second file ever needs it, that is the moment it becomes a variant.
+# agenda-card.php is exempt for the yellow book rail: the whole fare column is
+# the drawer invoker (command/commandfor + data-lp-book). button.php's variants
+# cannot fill that rail without changing the Concourse AgendaCard composition.
 rules=(
-  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|404\.php'
+  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|404\.php|parts/components/agenda-card\.php'
   'daisyUI btn class|class="[^"]*\bbtn\b|parts/elements/button.php|'
   'hand-rolled separator|role="separator"|parts/elements/rule.php|'
   'inline <svg>|<svg[[:space:]>]|lp_icon() in app/includes/html.php|'

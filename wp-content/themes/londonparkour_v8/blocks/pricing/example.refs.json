@@ -1,0 +1,5 @@
+{
+  "tiers.0.pack": "clasbpro_pack:single-class",
+  "tiers.1.pack": "clasbpro_pack:five-pack",
+  "tiers.2.pack": "clasbpro_pack:ten-pack"
+}
