@@ -120,6 +120,12 @@ return array(
 						'label' => __( 'Label', 'londonparkour_v8' ),
 						'type'  => 'text',
 					),
+					array(
+						'name'         => 'glyph_icon_id',
+						'label'        => __( 'Glyph', 'londonparkour_v8' ),
+						'type'         => 'text',
+						'instructions' => __( 'Sprite id from glyphs.svg, e.g. "glyph-step".', 'londonparkour_v8' ),
+					),
 					lp_field_eyebrow(
 						array(
 							'name'         => 'badge',

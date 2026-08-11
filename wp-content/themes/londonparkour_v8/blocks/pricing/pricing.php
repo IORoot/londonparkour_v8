@@ -4,7 +4,9 @@
  *
  * Ported from src/stories/Blocks/Pricing/Pricing.js (node `k4hV1` /
  * homepage `Rf8Qz`): DROP-IN / 5-PACK / 10-PACK on a PRICE PER CLASS axis,
- * with SESSIONS / SAVING comparison rows.
+ * with SESSIONS / SAVING comparison rows. Each tier label leads with a
+ * `#glyph-icons` mark (`glyph-step` / `glyph-flowing` / `glyph-chaining`).
+ * The worked-out rate cell is a tight `gap-[7px]` pair, not `justify-between`.
  *
  * Repeater-only: two lists, `row_labels` (the left rail) and `tiers` (the
  * columns). Each tier carries a `values` repeater whose rows are keyed by
@@ -68,6 +70,7 @@ $lp_default_row_labels = array(
 $lp_default_tiers = array(
 	array(
 		'label'          => 'DROP-IN',
+		'glyph_icon_id'  => 'glyph-step',
 		'price'          => '£15',
 		'unit'           => 'per session',
 		'description'    => 'Turn up when it suits. One session, paid at the door — no pack required.',
@@ -91,6 +94,7 @@ $lp_default_tiers = array(
 	array(
 		'label'          => '5-PACK',
 		'badge'          => 'MOST POPULAR',
+		'glyph_icon_id'  => 'glyph-flowing',
 		'highlight'      => true,
 		'price'          => '£65',
 		'unit'           => 'for 5 classes',
@@ -115,6 +119,7 @@ $lp_default_tiers = array(
 	array(
 		'label'          => '10-PACK',
 		'badge'          => 'BEST VALUE',
+		'glyph_icon_id'  => 'glyph-chaining',
 		'price'          => '£120',
 		'unit'           => 'for 10 classes',
 		'description'    => 'Ten classes at the best rate we offer. Buy once, book when you want.',
@@ -239,6 +244,7 @@ $lp_spacing = lp_section_spacing( $args );
 						// same slugs ('DROP-IN' → 'drop-in', '5-PACK' → '5-pack') without another field.
 						$lp_tier_id   = sanitize_title( (string) ( $lp_tier['label'] ?? '' ) ) ?: 'tier-' . $lp_index;
 						$lp_badge     = (string) ( $lp_tier['badge'] ?? '' );
+						$lp_glyph_id  = (string) ( $lp_tier['glyph_icon_id'] ?? '' );
 						$lp_unit      = (string) ( $lp_tier['unit'] ?? '' );
 						$lp_desc      = (string) ( $lp_tier['description'] ?? '' );
 						$lp_work_val  = (string) ( $lp_tier['work_out_value'] ?? '' );
@@ -255,7 +261,10 @@ $lp_spacing = lp_section_spacing( $args );
 						<div class="<?php echo lp_classes( 'row-span-full grid grid-rows-subgrid w-[280px] sm:w-auto', $lp_wash, $lp_edge ); ?>" data-component="pricing-tier" data-tier="<?php echo esc_attr( $lp_tier_id ); ?>">
 							<div class="<?php echo esc_attr( $lp_bar ); ?>" aria-hidden="true"></div>
 							<div class="flex flex-col gap-[20px] pt-[24px] pb-[36px] px-[28px]">
-								<div class="flex items-center gap-[12px] flex-wrap">
+								<div class="flex items-center gap-[10px] flex-wrap">
+									<?php if ( '' !== $lp_glyph_id ) : ?>
+										<?php lp_icon( $lp_glyph_id, 'w-[18px] h-[18px] text-base-content/65', array( 'data-slot' => 'glyph' ) ); ?>
+									<?php endif; ?>
 									<span class="font-label text-[11px] font-semibold tracking-[0.6px] uppercase text-base-content"><?php echo esc_html( (string) ( $lp_tier['label'] ?? '' ) ); ?></span>
 									<?php if ( '' !== $lp_badge ) : ?>
 										<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-accent">— <?php echo esc_html( $lp_badge ); ?></span>
@@ -271,11 +280,9 @@ $lp_spacing = lp_section_spacing( $args );
 									<p class="font-body text-[11px] leading-[1.5] text-base-content/65 max-w-[280px]"><?php echo esc_html( $lp_desc ); ?></p>
 								<?php endif; ?>
 							</div>
-							<div class="flex items-center justify-between py-[11px] px-[28px] border-t border-base-300/60 min-h-[36px]">
+							<div class="flex items-center gap-[7px] py-[11px] px-[28px] border-t border-base-300/60 min-h-[36px]" data-slot="work-out">
 								<?php if ( '' !== $lp_work_val ) : ?>
 									<span class="font-heading text-[17px] font-medium text-base-content"><?php echo esc_html( $lp_work_val ); ?></span>
-								<?php else : ?>
-									<span></span>
 								<?php endif; ?>
 								<?php if ( '' !== $lp_work_unit ) : ?>
 									<span class="font-label text-[11px] font-normal text-base-content/65"><?php echo esc_html( $lp_work_unit ); ?></span>

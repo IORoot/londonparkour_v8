@@ -180,7 +180,7 @@ $lp_foot_note = (string) ( $args['foot_note'] ?? '6 SITES · 7 DAYS · 40+ SESSI
 // The source always renders this link, falling back to its own default copy.
 $lp_foot = lp_action( $args['primary_action'] ?? null ) ?? array(
 	'label' => 'VIEW THE FULL TIMETABLE →',
-	'href'  => '#',
+	'href'  => '/classes',
 );
 
 // One query layer; the projection is this block's own. CPT records contribute

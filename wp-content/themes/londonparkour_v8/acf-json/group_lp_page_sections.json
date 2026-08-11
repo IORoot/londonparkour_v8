@@ -2777,6 +2777,13 @@
                                     "key": "field_2dd99fdf5f38e88e"
                                 },
                                 {
+                                    "name": "glyph_icon_id",
+                                    "label": "Glyph",
+                                    "type": "text",
+                                    "instructions": "Sprite id from glyphs.svg, e.g. \"glyph-step\".",
+                                    "key": "field_1efc98fc5e7f5b93"
+                                },
+                                {
                                     "name": "badge",
                                     "label": "Badge",
                                     "type": "text",

@@ -16,6 +16,6 @@
     { "thumb_alt": "", "glyph_icon_id": "icon-home", "time": "09:30", "date_label": "SAT", "title": "Family Session", "subtitle": "60 min · ages 5+ with an adult", "location": "Wembley Park", "level": "All levels", "price": "£24", "price_label": "2 PEOPLE", "book_label": "BOOK" }
   ],
   "primary_action": {
-    "link": { "title": "VIEW THE FULL TIMETABLE →", "url": "/timetable/", "target": "" }
+    "link": { "title": "VIEW THE FULL TIMETABLE →", "url": "/classes", "target": "" }
   }
 }

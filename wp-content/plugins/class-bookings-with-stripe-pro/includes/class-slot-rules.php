@@ -80,7 +80,8 @@ abstract class Slot_Rules {
 		$price_raw = $row['price_gbp'] ?? '';
 		$price_gbp = ( '' === $price_raw || null === $price_raw ) ? null : max( 0, (float) $price_raw );
 
-		$skip_dates = self::parse_skip_dates( (string) ( $row['skip_dates'] ?? '' ) );
+		// Form POSTs a textarea string; stored meta is already a Y-m-d list.
+		$skip_dates = self::normalise_skip_dates( $row['skip_dates'] ?? '' );
 
 		$rule = [
 			'id'               => $id,
@@ -122,6 +123,28 @@ abstract class Slot_Rules {
 
 	public static function generate_rule_id(): string {
 		return 'rule_' . wp_generate_password( 10, false, false );
+	}
+
+	/**
+	 * @param mixed $value Textarea string (admin form) or Y-m-d list (stored meta).
+	 * @return array<int, string>
+	 */
+	public static function normalise_skip_dates( $value ): array {
+		if ( is_array( $value ) ) {
+			$dates = [];
+			foreach ( $value as $item ) {
+				if ( ! is_scalar( $item ) ) {
+					continue;
+				}
+				$norm = Helpers::normalise_date_string( (string) $item );
+				if ( '' !== $norm ) {
+					$dates[] = $norm;
+				}
+			}
+			return array_values( array_unique( $dates ) );
+		}
+
+		return self::parse_skip_dates( (string) ( $value ?? '' ) );
 	}
 
 	/**

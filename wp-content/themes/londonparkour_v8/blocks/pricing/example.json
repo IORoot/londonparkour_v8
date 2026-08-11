@@ -20,6 +20,7 @@
   "tiers": [
     {
       "label": "DROP-IN",
+      "glyph_icon_id": "glyph-step",
       "price": "£15",
       "unit": "per session",
       "description": "Turn up when it suits. One session, paid at the door — no pack required.",
@@ -34,6 +35,7 @@
     {
       "label": "5-PACK",
       "badge": "MOST POPULAR",
+      "glyph_icon_id": "glyph-flowing",
       "highlight": true,
       "price": "£65",
       "unit": "for 5 classes",
@@ -49,6 +51,7 @@
     {
       "label": "10-PACK",
       "badge": "BEST VALUE",
+      "glyph_icon_id": "glyph-chaining",
       "price": "£120",
       "unit": "for 10 classes",
       "description": "Ten classes at the best rate we offer. Buy once, book when you want.",
