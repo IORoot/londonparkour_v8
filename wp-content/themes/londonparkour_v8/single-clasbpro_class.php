@@ -12,8 +12,9 @@
  * Masthead visually but is a landmark child of <main>).
  *
  * Section order: breadcrumb → masthead → fact rail → class body (media +
- * about + what-to-expect + booking aside) → meeting point (accent band) →
- * upcoming sessions (board) → onward. Nav/footer are get_header()/get_footer().
+ * about + what-to-expect + booking aside) → meeting point (white band + OSM) →
+ * upcoming sessions (board) → your coach (accent band) → onward. Nav/footer
+ * are get_header()/get_footer().
  *
  * Theme fields: acf_subtitle, acf_location, acf_coaches, acf_what_to_expect.
  * Duration / price / image / sessions come from clasbpro helpers. The aside
@@ -49,9 +50,38 @@ while ( have_posts() ) :
 	$lp_location_id    = lp_class_location_id( $lp_post_id );
 	$lp_location_title = $lp_location_id ? get_the_title( $lp_location_id ) : '';
 	$lp_meeting_point  = $lp_location_id ? (string) get_field( 'meeting_point', $lp_location_id ) : '';
-	$lp_lat            = $lp_location_id ? (string) get_field( 'latitude', $lp_location_id ) : '';
-	$lp_lon            = $lp_location_id ? (string) get_field( 'longitude', $lp_location_id ) : '';
-	$lp_coords         = ( '' !== $lp_lat && '' !== $lp_lon ) ? sprintf( '%s°N %s°W', $lp_lat, ltrim( $lp_lon, '-' ) ) : '';
+	$lp_lat            = $lp_location_id ? trim( (string) get_field( 'latitude', $lp_location_id ) ) : '';
+	$lp_lon            = $lp_location_id ? trim( (string) get_field( 'longitude', $lp_location_id ) ) : '';
+	$lp_transport_rail = $lp_location_id ? (string) get_field( 'transport_rail', $lp_location_id ) : '';
+	$lp_transport_bus  = $lp_location_id ? (string) get_field( 'transport_bus', $lp_location_id ) : '';
+	$lp_location_meta  = $lp_location_id ? (string) get_field( 'meta', $lp_location_id ) : '';
+	$lp_location_tag   = $lp_location_id ? (string) get_field( 'tag', $lp_location_id ) : '';
+	$lp_location_type  = $lp_location_id ? (string) get_field( 'type', $lp_location_id ) : '';
+	$lp_streetview     = $lp_location_id ? lp_location_streetview_url( (int) $lp_location_id ) : '';
+	$lp_osm_maps       = lp_osm_maps_url( $lp_lat, $lp_lon );
+	$lp_coords_label   = ( '' !== $lp_lat && '' !== $lp_lon ) ? sprintf( '%s / %s', $lp_lat, $lp_lon ) : '';
+	$lp_foot_parts     = array_filter(
+		array(
+			( '' !== $lp_lat && '' !== $lp_lon ) ? sprintf( '%s°N %s°W', $lp_lat, ltrim( $lp_lon, '-' ) ) : '',
+			$lp_location_meta,
+		)
+	);
+	$lp_meeting_foot = implode( ' · ', $lp_foot_parts );
+	$lp_kicker_parts = array_filter(
+		array(
+			$lp_location_type,
+			$lp_location_tag ? $lp_location_tag : ( $lp_location_title ? strtoupper( $lp_location_title ) : '' ),
+		)
+	);
+	$lp_meeting_kicker = implode( ' · ', $lp_kicker_parts );
+	$lp_site_heading   = $lp_location_title ? ( rtrim( $lp_location_title, '.' ) . '.' ) : '';
+	$lp_show_meeting   = $lp_location_id && (
+		'' !== $lp_meeting_point
+		|| '' !== $lp_transport_rail
+		|| '' !== $lp_transport_bus
+		|| ( '' !== $lp_lat && '' !== $lp_lon )
+		|| '' !== $lp_meeting_foot
+	);
 
 	$lp_level_terms = get_the_terms( $lp_post_id, 'lp_level' );
 	$lp_level_name  = ( is_array( $lp_level_terms ) && $lp_level_terms ) ? $lp_level_terms[0]->name : '';
@@ -146,7 +176,7 @@ while ( have_posts() ) :
 	if ( $lp_coach_id ) {
 		$lp_coach_name  = get_the_title( $lp_coach_id );
 		$lp_coach_role  = (string) get_field( 'role', $lp_coach_id );
-		$lp_coach_bio   = (string) get_field( 'bio', $lp_coach_id );
+		$lp_coach_bio   = lp_first_sentences( (string) get_field( 'bio', $lp_coach_id ), 2 );
 		$lp_coach_photo = has_post_thumbnail( $lp_coach_id ) ? (int) get_post_thumbnail_id( $lp_coach_id ) : 0;
 	}
 
@@ -188,6 +218,10 @@ while ( have_posts() ) :
 	);
 
 	$lp_image_id = lp_class_image_id( $lp_post_id );
+
+	$lp_video_url = function_exists( 'get_field' ) ? (string) get_field( 'video_url', $lp_post_id ) : '';
+	$lp_video_id  = lp_youtube_id_from_url( $lp_video_url );
+	$lp_video_dlg = 'class-video-' . $lp_post_id;
 	?>
 
 	<main id="main">
@@ -231,21 +265,22 @@ while ( have_posts() ) :
 		</div>
 
 		<div class="w-full bg-base-100" data-component="class-detail-body">
-			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
-				<div class="flex-1 min-w-0 flex flex-col gap-[28px]">
-					<div class="relative w-full aspect-video bg-base-300 overflow-hidden">
-						<?php if ( $lp_image_id ) : ?>
-							<?php
-							lp_part(
-								'components/media-photo',
-								array(
-									'image_id' => $lp_image_id,
-									'size'     => 'lp_wide',
-									'sizes'    => '(min-width: 1024px) 50vw, 100vw',
-								)
-							);
-							?>
-						<?php endif; ?>
+			<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-x-10 lg:gap-x-16 gap-y-16 items-start">
+				<div class="relative w-full bg-base-300 overflow-hidden order-2 lg:col-start-1 lg:row-start-1 lg:order-none">
+					<?php if ( $lp_image_id ) : ?>
+						<?php
+						lp_part(
+							'components/media-photo',
+							array(
+								'image_id' => $lp_image_id,
+								'layout'   => 'plain',
+								'size'     => 'lp_wide',
+								'sizes'    => '(min-width: 1024px) 50vw, 100vw',
+							)
+						);
+						?>
+					<?php endif; ?>
+					<?php if ( '' !== $lp_video_id ) : ?>
 						<span class="absolute top-[16px] left-[16px]">
 							<?php
 							lp_part(
@@ -254,57 +289,60 @@ while ( have_posts() ) :
 									'variant'          => 'primary',
 									'label'            => 'WATCH THE CLASS',
 									'trailing_icon_id' => 'icon-play',
+									'command'          => 'show-modal',
+									'command_for'      => $lp_video_dlg,
+									'data_attrs'       => array(
+										'data-video-type' => 'youtube',
+										'data-video-id'   => $lp_video_id,
+										'data-autoplay'   => 'true',
+									),
 								)
 							);
 							?>
 						</span>
-					</div>
-					<?php if ( $lp_about ) : ?>
-						<div class="flex flex-col gap-[12px]">
-							<?php
-							lp_part(
-								'elements/glyph-label',
-								array(
-									'label'   => 'ABOUT THIS CLASS',
-									'surface' => 'page',
-									'tone'    => 'muted',
-								)
-							);
-							?>
-							<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/80 max-w-[560px]"><?php echo wp_kses_post( $lp_about ); ?></p>
-						</div>
 					<?php endif; ?>
-					<?php if ( $lp_expect ) : ?>
-						<div class="flex flex-col gap-[16px]">
+					<?php if ( '' !== $lp_subtitle ) : ?>
+						<span class="absolute bottom-[16px] left-[16px]">
 							<?php
 							lp_part(
-								'elements/glyph-label',
+								'elements/badge',
 								array(
-									'label'   => 'WHAT TO EXPECT',
-									'surface' => 'page',
-									'tone'    => 'muted',
+									'variant' => 'category',
+									'label'   => $lp_subtitle,
 								)
 							);
 							?>
-							<ol class="flex flex-col gap-[14px] m-0 p-0 list-none max-w-[560px]">
-								<?php foreach ( $lp_expect as $lp_i => $lp_step ) : ?>
-									<li>
-										<?php
-										lp_part(
-											'components/checklist-item',
-											array(
-												'text'  => (string) ( $lp_step['text'] ?? '' ),
-												'index' => str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT ),
-											)
-										);
-										?>
-									</li>
-								<?php endforeach; ?>
-							</ol>
-						</div>
+						</span>
 					<?php endif; ?>
 				</div>
-				<div class="w-full lg:w-[380px] lg:shrink-0">
+				<?php if ( $lp_about ) : ?>
+					<div class="flex flex-col gap-[22px] border-t border-base-content pt-[22px] order-3 lg:col-start-1 lg:order-none">
+						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">ABOUT THIS CLASS</span>
+						<?php /* Div not <p>: post content may already contain block tags. */ ?>
+						<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80"><?php echo wp_kses_post( $lp_about ); ?></div>
+					</div>
+				<?php endif; ?>
+				<?php if ( $lp_expect ) : ?>
+					<div class="flex flex-col border-t border-base-content pt-[22px] order-4 lg:col-start-1 lg:order-none">
+						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">WHAT TO EXPECT</span>
+						<ol class="flex flex-col m-0 p-0 list-none [&>li:last-child_[data-variant=expect]]:border-b-0">
+							<?php foreach ( $lp_expect as $lp_i => $lp_step ) : ?>
+								<li>
+									<?php
+									lp_part(
+										'components/checklist-item',
+										array(
+											'text'  => (string) ( $lp_step['text'] ?? '' ),
+											'index' => str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT ),
+										)
+									);
+									?>
+								</li>
+							<?php endforeach; ?>
+						</ol>
+					</div>
+				<?php endif; ?>
+				<div class="w-full order-1 lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:order-none">
 					<?php
 					lp_part(
 						'components/aside-panel',
@@ -325,59 +363,101 @@ while ( have_posts() ) :
 			</div>
 		</div>
 
-		<div class="w-full bg-accent" data-component="class-detail-meeting-point">
-			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-16">
-				<?php if ( '' !== $lp_meeting_point || '' !== $lp_coords ) : ?>
-					<div class="flex flex-col gap-[14px] max-w-[560px]">
-						<?php
-						lp_part(
-							'elements/glyph-label',
-							array(
-								'label'   => 'MEETING POINT',
-								'surface' => 'accent',
-								'tone'    => 'ink',
-							)
-						);
-						?>
-						<?php if ( '' !== $lp_meeting_point ) : ?>
-							<p class="font-body text-[14px] leading-[1.6] tracking-[0.1px] text-accent-content/85 m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
+		<?php if ( $lp_show_meeting ) : ?>
+			<div class="w-full bg-base-200" data-component="class-detail-meeting-point">
+				<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
+					<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-[16px]">
+						<div class="flex flex-col gap-[14px] min-w-0">
+							<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">MEETING POINT</span>
+							<?php if ( '' !== $lp_site_heading ) : ?>
+								<h2 class="font-heading text-[36px] lg:text-[42px] font-bold leading-none tracking-[-1.6px] text-base-content m-0"><?php echo esc_html( $lp_site_heading ); ?></h2>
+							<?php endif; ?>
+						</div>
+						<?php if ( '' !== $lp_streetview ) : ?>
+							<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent shrink-0">STREETVIEW ↗</a>
 						<?php endif; ?>
-						<?php if ( '' !== $lp_coords ) : ?>
-							<div class="flex flex-wrap items-center gap-[16px] pt-1.5">
-								<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_coords ); ?></span>
-								<?php /* Source href is '#' — no real destination. Label kept, no dead <a>; see docblock. */ ?>
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-primary">STREETVIEW ↗</span>
+					</div>
+
+					<div class="flex flex-col lg:flex-row gap-12 items-start">
+						<div class="flex-1 min-w-0 flex flex-col gap-[28px] border-t border-base-content pt-[22px]">
+							<?php if ( '' !== $lp_meeting_kicker ) : ?>
+								<div class="flex items-center gap-[8px]">
+									<span class="text-base-content" aria-hidden="true"><?php lp_icon( 'icon-map-pin', 'w-[12px] h-[12px]' ); ?></span>
+									<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_meeting_kicker ); ?></span>
+								</div>
+							<?php endif; ?>
+							<?php if ( '' !== $lp_meeting_point ) : ?>
+								<div class="flex flex-col gap-[10px]">
+									<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
+									<p class="font-label text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
+								</div>
+							<?php endif; ?>
+							<?php if ( '' !== $lp_transport_rail || '' !== $lp_transport_bus ) : ?>
+								<div class="flex flex-col gap-[10px]">
+									<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
+									<?php if ( '' !== $lp_transport_rail ) : ?>
+										<p class="font-body text-[13px] font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_transport_rail ); ?></p>
+									<?php endif; ?>
+									<?php if ( '' !== $lp_transport_bus ) : ?>
+										<p class="font-body text-[12px] font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_transport_bus ); ?></p>
+									<?php endif; ?>
+								</div>
+							<?php endif; ?>
+							<?php if ( '' !== $lp_meeting_foot || '' !== $lp_osm_maps ) : ?>
+								<div class="flex flex-wrap items-center justify-between gap-[16px] border-t border-base-300 pt-[14px]">
+									<?php if ( '' !== $lp_meeting_foot ) : ?>
+										<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_meeting_foot ); ?></span>
+									<?php endif; ?>
+									<?php if ( '' !== $lp_osm_maps ) : ?>
+										<a href="<?php echo esc_url( $lp_osm_maps ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent">OPEN IN MAPS ↗</a>
+									<?php endif; ?>
+								</div>
+							<?php endif; ?>
+						</div>
+
+						<?php if ( '' !== $lp_lat && '' !== $lp_lon && is_numeric( $lp_lat ) && is_numeric( $lp_lon ) ) : ?>
+							<div class="w-full lg:w-[560px] lg:shrink-0 flex flex-col gap-[12px]">
+								<div
+									class="relative isolate w-full h-[360px] bg-base-300 border border-base-300 overflow-hidden"
+									data-component="class-detail-osm"
+									data-lat="<?php echo esc_attr( $lp_lat ); ?>"
+									data-lon="<?php echo esc_attr( $lp_lon ); ?>"
+									data-name="<?php echo esc_attr( $lp_location_title ? $lp_location_title : 'Meeting point' ); ?>"
+								>
+									<div class="absolute inset-0 z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:!z-0" data-mount="leaflet"></div>
+									<div class="absolute inset-x-0 top-0 z-[500] flex items-center justify-between h-10 px-4 bg-base-100 border-b border-base-300 pointer-events-none">
+										<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content">OPENSTREETMAP</span>
+										<?php if ( '' !== $lp_coords_label ) : ?>
+											<span class="font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_coords_label ); ?></span>
+										<?php endif; ?>
+									</div>
+									<div class="absolute inset-x-0 bottom-0 z-[500] flex items-center justify-between h-11 px-4 bg-base-100 border-t border-base-300">
+										<span class="font-label text-[9px] font-normal tracking-[0.7px] text-base-content/65">© OPENSTREETMAP CONTRIBUTORS</span>
+										<?php if ( '' !== $lp_streetview ) : ?>
+											<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent pointer-events-auto">STREETVIEW ↗</a>
+										<?php endif; ?>
+									</div>
+									<div class="hidden" data-meeting-pin aria-hidden="true">
+										<?php
+										lp_part(
+											'components/map-pin',
+											array(
+												'name'     => $lp_location_title ? $lp_location_title : 'Meeting point',
+												'variant'  => 'icon',
+												'flagship' => true,
+												'label'    => false,
+											)
+										);
+										?>
+									</div>
+								</div>
+								<p class="font-label text-[11px] font-normal leading-[1.5] tracking-[0.1px] text-base-content/65 m-0">Map centres on the meeting point.</p>
 							</div>
 						<?php endif; ?>
 					</div>
-				<?php endif; ?>
-				<?php if ( $lp_coach_id ) : ?>
-					<div class="flex flex-col gap-[16px]">
-						<?php
-						lp_part(
-							'elements/glyph-label',
-							array(
-								'label'   => 'YOUR COACH',
-								'surface' => 'accent',
-								'tone'    => 'ink',
-							)
-						);
-						lp_part(
-							'components/byline',
-							array(
-								'name'      => $lp_coach_name,
-								'secondary' => $lp_coach_role,
-								'bio'       => $lp_coach_bio,
-								'size'      => 'lg',
-								'surface'   => 'accent',
-								'photo_id'  => $lp_coach_photo,
-							)
-						);
-						?>
-					</div>
-				<?php endif; ?>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 
 		<div class="w-full bg-neutral" data-component="class-detail-upcoming-sessions">
 			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-10">
@@ -408,6 +488,29 @@ while ( have_posts() ) :
 			</div>
 		</div>
 
+		<?php if ( $lp_coach_id ) : ?>
+			<div class="w-full bg-accent" data-component="class-detail-your-coach">
+				<div class="px-6 lg:px-16 py-scale-2xl">
+					<div class="flex flex-col gap-[18px] border-t border-accent-content pt-[22px]">
+						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-accent-content">YOUR COACH</span>
+						<?php
+						lp_part(
+							'components/byline',
+							array(
+								'name'      => $lp_coach_name,
+								'secondary' => $lp_coach_role,
+								'bio'       => $lp_coach_bio,
+								'size'      => 'lg',
+								'surface'   => 'accent',
+								'photo_id'  => $lp_coach_photo,
+							)
+						);
+						?>
+					</div>
+				</div>
+			</div>
+		<?php endif; ?>
+
 		<?php
 		lp_part(
 			'components/page-onward',
@@ -420,6 +523,16 @@ while ( have_posts() ) :
 				'next' => $lp_onward_next,
 			)
 		);
+
+		if ( '' !== $lp_video_id ) {
+			lp_part(
+				'elements/dialog-video',
+				array(
+					'dialog_id'  => $lp_video_dlg,
+					'video_type' => 'youtube',
+				)
+			);
+		}
 		?>
 	</main>
 

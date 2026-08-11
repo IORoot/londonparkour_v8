@@ -62,6 +62,7 @@ $lp_sizes = array(
 		'bio'         => 'font-body text-[11px] font-normal leading-[1.5] tracking-[0.1px]',
 		'crop'        => 'lp_thumb',
 		'sizes_attr'  => '34px',
+		'align'       => 'items-center',
 	),
 	'sm' => array(
 		'gap'         => 'gap-[12px]',
@@ -71,16 +72,20 @@ $lp_sizes = array(
 		'bio'         => 'font-body text-[10px] font-normal leading-[1.4] tracking-[0.1px]',
 		'crop'        => 'lp_thumb',
 		'sizes_attr'  => '26px',
+		'align'       => 'items-center',
 	),
 	// "Your Coach" (Classes/Class Detail) — a 104×126 portrait, not a square.
+	// Bio is short prose (first two sentences at the call site), so size/leading
+	// read as body copy rather than a 11px caption.
 	'lg' => array(
 		'gap'         => 'gap-[20px]',
 		'avatar_box'  => 'w-[104px] h-[126px]',
 		'name'        => 'font-heading text-[26px] font-semibold tracking-[-0.8px]',
 		'secondary'   => 'font-label text-[10px] font-normal tracking-[1px] uppercase',
-		'bio'         => 'font-body text-[11px] font-normal leading-[1.5] tracking-[0.1px]',
+		'bio'         => 'font-body text-[14px] font-normal leading-[1.65] tracking-[0.1px] max-w-[36rem]',
 		'crop'        => 'lp_portrait_sm',
 		'sizes_attr'  => '104px',
+		'align'       => 'items-start',
 	),
 );
 
@@ -100,24 +105,26 @@ $lp_has_photo = $lp_photo_id || '' !== $lp_photo_url;
 // existing two-line call site still renders byte-identically.
 $lp_column_gap = '' !== $lp_bio ? 'gap-[9px]' : 'gap-[2px]';
 ?>
-<div class="<?php echo lp_classes( 'flex items-center', $lp_size['gap'] ); ?>" data-component="byline">
+<div class="<?php echo lp_classes( 'flex', $lp_size['align'], $lp_size['gap'] ); ?>" data-component="byline">
 	<?php if ( $lp_has_photo ) : ?>
-		<?php /* daisyUI: the placeholder form is only for the initial avatar. */ ?>
-		<div class="avatar" aria-hidden="true">
-			<?php
-			lp_part(
-				'components/media-photo',
-				array(
-					'image_id'  => $lp_photo_id,
-					'image_url' => $lp_photo_url,
-					'alt'       => '',
-					'layout'    => 'none',
-					'class'     => $lp_size['avatar_box'] . ' object-cover',
-					'size'      => $lp_size['crop'],
-					'sizes'     => $lp_size['sizes_attr'],
-				)
-			);
-			?>
+		<?php /* daisyUI sizes via a nested box — classes on the photo alone expand. */ ?>
+		<div class="avatar shrink-0" aria-hidden="true">
+			<div class="<?php echo esc_attr( $lp_size['avatar_box'] . ' shrink-0 overflow-hidden' ); ?>">
+				<?php
+				lp_part(
+					'components/media-photo',
+					array(
+						'image_id'  => $lp_photo_id,
+						'image_url' => $lp_photo_url,
+						'alt'       => '',
+						'layout'    => 'none',
+						'class'     => 'w-full h-full object-cover',
+						'size'      => $lp_size['crop'],
+						'sizes'     => $lp_size['sizes_attr'],
+					)
+				);
+				?>
+			</div>
 		</div>
 	<?php else : ?>
 		<?php

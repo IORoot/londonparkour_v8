@@ -186,3 +186,152 @@ function lp_icon( string $id, string $classes = 'w-6 h-6', array $attrs = array(
 		esc_attr( $symbol )
 	);
 }
+
+/**
+ * Emit sanitized inline SVG markup (e.g. clasbpro Card icon).
+ *
+ * Prefer lp_icon() for sprite symbols. Use this only when the design needs
+ * editor-supplied SVG (calendar card icons) that is not in the sprite.
+ *
+ * @param string $markup  Raw SVG string; sanitized before output.
+ * @param string $classes Classes for the root <svg>. Whole literal string.
+ */
+function lp_inline_svg( string $markup, string $classes = 'w-7 h-7' ): void {
+	if ( class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Helpers' ) ) {
+		$markup = \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::sanitize_calendar_icon_svg( $markup );
+	} else {
+		$markup = trim( $markup );
+		if ( '' === $markup || ! preg_match( '/<svg\b/i', $markup ) ) {
+			return;
+		}
+		$markup = (string) wp_kses(
+			$markup,
+			array(
+				'svg'      => array(
+					'xmlns'       => true,
+					'viewbox'     => true,
+					'viewBox'     => true,
+					'width'       => true,
+					'height'      => true,
+					'fill'        => true,
+					'stroke'      => true,
+					'class'       => true,
+					'aria-hidden' => true,
+					'role'        => true,
+					'focusable'   => true,
+				),
+				'path'     => array(
+					'd'               => true,
+					'fill'            => true,
+					'stroke'          => true,
+					'stroke-width'    => true,
+					'stroke-linecap'  => true,
+					'stroke-linejoin' => true,
+					'class'           => true,
+				),
+				'circle'   => array(
+					'cx'           => true,
+					'cy'           => true,
+					'r'            => true,
+					'fill'         => true,
+					'stroke'       => true,
+					'stroke-width' => true,
+					'class'        => true,
+				),
+				'g'        => array(
+					'fill'   => true,
+					'stroke' => true,
+					'class'  => true,
+				),
+				'line'     => array(
+					'x1'           => true,
+					'y1'           => true,
+					'x2'           => true,
+					'y2'           => true,
+					'stroke'       => true,
+					'stroke-width' => true,
+				),
+				'polyline' => array(
+					'points'       => true,
+					'fill'         => true,
+					'stroke'       => true,
+					'stroke-width' => true,
+				),
+				'polygon'  => array(
+					'points'       => true,
+					'fill'         => true,
+					'stroke'       => true,
+					'stroke-width' => true,
+				),
+			)
+		);
+	}
+
+	if ( '' === trim( $markup ) || ! preg_match( '/<svg\b/i', $markup ) ) {
+		return;
+	}
+
+	$classes = trim( $classes );
+	$markup  = (string) preg_replace_callback(
+		'/<svg\b([^>]*)>/i',
+		static function ( array $matches ) use ( $classes ): string {
+			$attrs = $matches[1];
+			$attrs = (string) preg_replace( '/\sclass=("|\')[^"\']*\1/i', '', $attrs );
+			if ( ! preg_match( '/\saria-hidden=/i', $attrs ) ) {
+				$attrs .= ' aria-hidden="true"';
+			}
+			return '<svg class="' . esc_attr( $classes ) . '"' . $attrs . '>';
+		},
+		$markup,
+		1
+	);
+
+	echo $markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized via Helpers::sanitize_calendar_icon_svg / wp_kses above.
+}
+
+/**
+ * Extract an 11-char YouTube video id from a watch / short / embed URL (or a bare id).
+ *
+ * Used by Class Detail's WATCH THE CLASS dialog (`DialogVideo.js` needs
+ * data-video-id, not a full URL). Returns '' when the input is empty or not a
+ * recognisable YouTube target — callers hide the control in that case.
+ *
+ * @param string $url Full YouTube URL or bare video id.
+ * @return string
+ */
+function lp_youtube_id_from_url( string $url ): string {
+	$url = trim( $url );
+	if ( '' === $url ) {
+		return '';
+	}
+
+	if ( preg_match( '/^[A-Za-z0-9_-]{11}$/', $url ) ) {
+		return $url;
+	}
+
+	$parts = wp_parse_url( $url );
+	if ( ! is_array( $parts ) ) {
+		return '';
+	}
+
+	$host = strtolower( (string) ( $parts['host'] ?? '' ) );
+	$path = (string) ( $parts['path'] ?? '' );
+
+	if ( str_contains( $host, 'youtu.be' ) ) {
+		$id = trim( $path, '/' );
+		return preg_match( '/^[A-Za-z0-9_-]{11}$/', $id ) ? $id : '';
+	}
+
+	if ( str_contains( $host, 'youtube.com' ) || str_contains( $host, 'youtube-nocookie.com' ) ) {
+		parse_str( (string) ( $parts['query'] ?? '' ), $query );
+		$v = (string) ( $query['v'] ?? '' );
+		if ( preg_match( '/^[A-Za-z0-9_-]{11}$/', $v ) ) {
+			return $v;
+		}
+		if ( preg_match( '#/(?:embed|shorts|live|v)/([A-Za-z0-9_-]{11})#', $path, $matches ) ) {
+			return $matches[1];
+		}
+	}
+
+	return '';
+}

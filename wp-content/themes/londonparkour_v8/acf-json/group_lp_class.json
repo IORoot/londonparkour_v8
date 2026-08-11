@@ -6,74 +6,188 @@
             "key": "field_lp_class_tab_content",
             "label": "Content",
             "name": "",
+            "aria-label": "",
             "type": "tab",
-            "placement": "top"
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_10bb7b0eaec90afa",
             "label": "Subtitle note",
             "name": "acf_subtitle",
+            "aria-label": "",
             "type": "text",
             "instructions": "Trailing note only — duration comes from clasbpro duration_minutes. e.g. \"all kit provided\"",
             "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
             "default_value": "",
             "maxlength": "",
-            "placeholder": ""
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         },
         {
             "key": "field_48ccd04f8506deb0",
             "label": "Location",
             "name": "acf_location",
+            "aria-label": "",
             "type": "post_object",
-            "instructions": "Theme class site (map pins, filters). Training spots are excluded. Separate from clasbpro's string location field.",
+            "instructions": "Theme site record (map pins, filters). Separate from clasbpro's string location field.",
             "required": 0,
-            "post_type": ["lp_location"],
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "lp_location"
+            ],
             "return_format": "id",
             "multiple": 0,
             "allow_null": 0,
-            "ui": 1
+            "ui": 1,
+            "taxonomy": [],
+            "bidirectional_target": []
         },
         {
             "key": "field_7fb232d1e03a7ac0",
             "label": "Coaches",
             "name": "acf_coaches",
+            "aria-label": "",
             "type": "relationship",
+            "instructions": "",
             "required": 0,
-            "post_type": ["lp_coach"],
-            "filters": ["search"],
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "lp_coach"
+            ],
+            "filters": [
+                "search"
+            ],
             "return_format": "id",
-            "elements": ""
+            "elements": "",
+            "taxonomy": [],
+            "min": 0,
+            "max": 0,
+            "bidirectional_target": []
         },
         {
             "key": "field_lp_class_is_featured",
             "label": "Featured class",
             "name": "acf_is_featured",
+            "aria-label": "",
             "type": "true_false",
             "instructions": "Shown above the Classes grid, and left out of it.",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
             "ui": 1,
-            "default_value": 0
+            "default_value": 0,
+            "message": "",
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_6a7b2de285f19",
+            "label": "Video URL",
+            "name": "video_url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "https:\/\/www.youtube.com\/watch?v=uM804lbR9VM",
+            "allow_in_bindings": 0,
+            "placeholder": ""
         },
         {
             "key": "field_lp_class_tab_expect",
             "label": "What to expect",
             "name": "",
+            "aria-label": "",
             "type": "tab",
-            "placement": "top"
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
         },
         {
             "key": "field_lp_class_what_to_expect",
             "label": "What to expect",
             "name": "acf_what_to_expect",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "Numbered checklist on the class page. Order is meaningful.",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
             "layout": "table",
             "button_label": "Add step",
+            "min": 0,
+            "max": 0,
+            "rows_per_page": 20,
+            "collapsed": "",
             "sub_fields": [
                 {
                     "key": "field_lp_class_what_to_expect_text",
                     "label": "Step",
                     "name": "text",
-                    "type": "text"
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": false,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_lp_class_what_to_expect"
                 }
             ]
         }
@@ -96,5 +210,8 @@
     "active": true,
     "description": "Theme-only fields on clasbpro_class. Preserved — not overwritten by wp lp acf:build.",
     "show_in_rest": 0,
-    "modified": 1786263000
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1786457671
 }

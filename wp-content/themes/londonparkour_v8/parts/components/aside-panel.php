@@ -43,7 +43,7 @@ $lp_surfaces = array(
 		'muted'         => 'text-neutral-content/50',
 	),
 	'page'  => array(
-		'root'          => 'bg-base-100 border-base-300',
+		'root'          => 'bg-base-200 border-base-300',
 		'header_border' => 'border-base-content',
 		'row_border'    => 'border-base-300',
 		'signal'        => 'text-accent',
@@ -80,7 +80,7 @@ $lp_rows       = is_array( $args['rows'] ?? null ) ? $args['rows'] : $lp_default
 $lp_cta_label  = (string) ( $args['cta_label'] ?? 'BOOK THIS SESSION' );
 $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours before. All kit provided.' );
 ?>
-<div class="<?php echo lp_classes( 'flex flex-col w-full max-w-[380px]', $lp_surf['root'] ); ?>" data-component="aside-panel">
+<div class="<?php echo lp_classes( 'flex flex-col w-full max-w-none lg:max-w-[380px]', $lp_surf['root'] ); ?>" data-component="aside-panel">
 	<div class="<?php echo lp_classes( 'flex items-center justify-between border-b', $lp_surf['header_border'], 'px-[22px] py-[16px]' ); ?>">
 		<span class="<?php echo lp_classes( 'font-label text-[12px] font-semibold uppercase tracking-[1px]', $lp_surf['signal'] ); ?>"><?php echo esc_html( $lp_title ); ?></span>
 		<?php if ( '' !== $lp_spots_left ) : ?>

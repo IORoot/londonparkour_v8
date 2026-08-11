@@ -36,13 +36,16 @@
  * @param string $args['spaces']
  * @param int    $args['thumb']            Attachment ID for the optional 56×56 thumb.
  * @param string $args['thumb_alt']        Alt for the thumb; default '' (decorative).
- * @param string $args['glyph_icon_id']    Optional 28×28 row glyph (e.g. 'icon-sun').
+ * @param string $args['glyph_icon_id']    Optional 28×28 row glyph sprite id (e.g. 'icon-sun').
+ * @param string $args['glyph_svg']        Optional inline SVG (clasbpro Card icon). Wins over glyph_icon_id.
  * @param string $args['price']            sell only.
  * @param string $args['price_label']      sell only.
  * @param string $args['book_label']       sell only. Default 'BOOK'.
  * @param bool   $args['sold_out']
  * @param string $args['tone']             available|sold_out|watched|new|now_playing. Overrides sold_out.
- * @param string $args['href']             Renders the row as one focusable <a>. Ignored by `sell`.
+ * @param string $args['href']             default: whole-row link. sell: MORE DETAILS
+ *                                         under the subtitle (class page); row stays a div.
+ * @param string $args['detail_label']     sell only. Default 'MORE DETAILS'.
  * @param string $args['book_href']        sell only. Ignored when book_class_id is set.
  * @param int    $args['book_class_id']    sell only. Opens the booking drawer (no href).
  * @param string $args['book_preset_date'] sell only. Optional Y-m-d for the drawer.
@@ -69,6 +72,8 @@ $lp_variant     = (string) ( $args['variant'] ?? 'default' );
 $lp_is_sell     = 'sell' === $lp_variant;
 $lp_href        = (string) ( $args['href'] ?? '' );
 $lp_is_link     = ! $lp_is_sell && '' !== $lp_href;
+$lp_detail_href = $lp_is_sell ? $lp_href : '';
+$lp_detail_lbl  = (string) ( $args['detail_label'] ?? 'MORE DETAILS' );
 $lp_sold_out    = ! empty( $args['sold_out'] );
 $lp_show_spaces = ! isset( $args['show_spaces'] ) || (bool) $args['show_spaces'];
 
@@ -86,8 +91,15 @@ $lp_book_label = (string) ( $args['book_label'] ?? 'BOOK' );
 $lp_level_icon    = (string) ( $args['level_icon_id'] ?? 'icon-level-beginner' );
 $lp_location_icon = (string) ( $args['location_icon_id'] ?? 'icon-map-pin' );
 $lp_glyph_icon    = (string) ( $args['glyph_icon_id'] ?? '' );
+$lp_glyph_svg     = (string) ( $args['glyph_svg'] ?? '' );
 $lp_thumb         = ! empty( $args['thumb'] ) ? (int) $args['thumb'] : 0;
 $lp_thumb_alt     = (string) ( $args['thumb_alt'] ?? '' );
+
+// Sell rows always show a glyph (pen `b6g5C`). Prefer ACF Card icon SVG, then
+// sprite id, then glyph-balancing.
+if ( $lp_is_sell && '' === $lp_glyph_svg && '' === $lp_glyph_icon ) {
+	$lp_glyph_icon = 'glyph-balancing';
+}
 
 // `tone` is additive: with none passed, sold_out resolves exactly as before.
 $lp_tone_key = (string) ( $args['tone'] ?? '' );
@@ -126,12 +138,33 @@ $lp_root = $lp_is_link ? $lp_root_base . ' ' . $lp_root_interactive : $lp_root_b
 			<span class="font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content"><?php echo esc_html( $lp_time ); ?></span>
 			<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_date_label ); ?></span>
 		</div>
-		<?php if ( '' !== $lp_glyph_icon ) : ?>
-			<span class="hidden sm:inline-flex w-7 h-7 shrink-0 text-neutral-content items-center justify-center" aria-hidden="true" data-slot="glyph"><?php lp_icon( $lp_glyph_icon, 'w-7 h-7' ); ?></span>
+		<?php if ( '' !== $lp_glyph_svg || '' !== $lp_glyph_icon ) : ?>
+			<span class="hidden sm:inline-flex w-7 h-7 shrink-0 text-neutral-content items-center justify-center" aria-hidden="true" data-slot="glyph">
+				<?php
+				if ( '' !== $lp_glyph_svg && function_exists( 'lp_inline_svg' ) ) {
+					lp_inline_svg( $lp_glyph_svg, 'w-7 h-7' );
+				} else {
+					lp_icon( $lp_glyph_icon, 'w-7 h-7' );
+				}
+				?>
+			</span>
 		<?php endif; ?>
 		<div class="flex-1 min-w-0 flex flex-col gap-[5px]">
 			<p class="font-heading text-[17px] font-medium tracking-[-0.2px] text-neutral-content truncate"><?php echo esc_html( $lp_title ); ?></p>
 			<p class="font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/50 truncate"><?php echo esc_html( $lp_subtitle ); ?></p>
+			<?php
+			if ( '' !== $lp_detail_href ) {
+				lp_part(
+					'elements/text-link',
+					array(
+						'label'   => $lp_detail_lbl,
+						'href'    => $lp_detail_href,
+						'variant' => 'board_compact',
+						'class'   => 'w-fit',
+					)
+				);
+			}
+			?>
 		</div>
 	</div>
 	<div class="flex items-center justify-between gap-3 sm:contents">

@@ -56,6 +56,7 @@ $lp_default_sessions = array(
 		'price_label'   => 'DROP-IN',
 		'book_label'    => 'WAITLIST',
 		'sold_out'      => true,
+		'href'          => '/classes/sunrise-session',
 		'glyph_icon_id' => 'icon-sun',
 	),
 	array(
@@ -69,6 +70,7 @@ $lp_default_sessions = array(
 		'price'         => '£12',
 		'price_label'   => 'PER CHILD',
 		'book_label'    => 'BOOK',
+		'href'          => '/classes/kids-parkour-5-11',
 		'glyph_icon_id' => 'icon-user-group',
 	),
 	array(
@@ -82,6 +84,7 @@ $lp_default_sessions = array(
 		'price'         => '£15',
 		'price_label'   => 'DROP-IN',
 		'book_label'    => 'BOOK',
+		'href'          => '/classes/beginners-parkour',
 		'glyph_icon_id' => 'icon-academic-cap',
 	),
 	array(
@@ -95,6 +98,7 @@ $lp_default_sessions = array(
 		'price'         => '£8',
 		'price_label'   => 'DROP-IN',
 		'book_label'    => 'BOOK',
+		'href'          => '/classes/open-gym',
 		'glyph_icon_id' => 'icon-building-library',
 	),
 	array(
@@ -108,6 +112,7 @@ $lp_default_sessions = array(
 		'price'         => '£15',
 		'price_label'   => 'DROP-IN',
 		'book_label'    => 'BOOK',
+		'href'          => '/classes/womens-session',
 		'glyph_icon_id' => 'icon-heart',
 	),
 	array(
@@ -121,6 +126,7 @@ $lp_default_sessions = array(
 		'price'         => '£15',
 		'price_label'   => 'DROP-IN',
 		'book_label'    => 'BOOK',
+		'href'          => '/classes/advanced-movement',
 		'glyph_icon_id' => 'icon-bolt',
 	),
 	array(
@@ -134,6 +140,7 @@ $lp_default_sessions = array(
 		'price'         => '£24',
 		'price_label'   => '2 PEOPLE',
 		'book_label'    => 'BOOK',
+		'href'          => '/classes/family-session',
 		'glyph_icon_id' => 'icon-home',
 	),
 );
@@ -215,11 +222,13 @@ $lp_sessions = array_map(
 			// The source's own defaults follow exactly this rule.
 			'book_label'       => (string) ( $item['book_label'] ?? ( empty( $item['sold_out'] ) ? 'BOOK' : 'WAITLIST' ) ),
 			'sold_out'         => ! empty( $item['sold_out'] ),
+			'href'             => (string) ( $item['url'] ?? $item['href'] ?? '' ),
 			'book_class_id'    => ! empty( $item['id'] ) ? (int) $item['id'] : 0,
 			'book_preset_date' => $lp_ymd,
 			'thumb'            => ! empty( $item['thumb'] ) ? (int) $item['thumb'] : 0,
 			'thumb_alt'        => (string) ( $item['thumb_alt'] ?? '' ),
 			'glyph_icon_id'    => (string) ( $item['glyph_icon_id'] ?? '' ),
+			'glyph_svg'        => (string) ( $item['glyph_svg'] ?? '' ),
 		);
 	},
 	lp_resolve_source( $args, lp_class_post_type(), array( 'expand' => 'sessions' ) )

@@ -191,6 +191,87 @@ function lp_location_streetview_url( int $lp_id ): string {
 }
 
 /**
+ * OpenStreetMap embed URL for a lat/lon pin (Class Detail meeting map).
+ *
+ * @param string $lp_lat Latitude.
+ * @param string $lp_lon Longitude.
+ * @param float  $lp_delta Half-bbox in degrees.
+ * @return string Empty when coords are missing / non-numeric.
+ */
+function lp_osm_embed_url( string $lp_lat, string $lp_lon, float $lp_delta = 0.01 ): string {
+	if ( '' === trim( $lp_lat ) || '' === trim( $lp_lon ) || ! is_numeric( $lp_lat ) || ! is_numeric( $lp_lon ) ) {
+		return '';
+	}
+
+	$lp_la = (float) $lp_lat;
+	$lp_lo = (float) $lp_lon;
+	$lp_bbox = sprintf(
+		'%F,%F,%F,%F',
+		$lp_lo - $lp_delta,
+		$lp_la - $lp_delta,
+		$lp_lo + $lp_delta,
+		$lp_la + $lp_delta
+	);
+
+	return sprintf(
+		'https://www.openstreetmap.org/export/embed.html?bbox=%s&layer=mapnik&marker=%s',
+		rawurlencode( $lp_bbox ),
+		rawurlencode( sprintf( '%F,%F', $lp_la, $lp_lo ) )
+	);
+}
+
+/**
+ * OpenStreetMap “open in maps” URL for a lat/lon pin.
+ *
+ * @param string $lp_lat Latitude.
+ * @param string $lp_lon Longitude.
+ * @return string Empty when coords are missing / non-numeric.
+ */
+function lp_osm_maps_url( string $lp_lat, string $lp_lon ): string {
+	if ( '' === trim( $lp_lat ) || '' === trim( $lp_lon ) || ! is_numeric( $lp_lat ) || ! is_numeric( $lp_lon ) ) {
+		return '';
+	}
+
+	return sprintf(
+		'https://www.openstreetmap.org/?mlat=%s&mlon=%s#map=17/%s/%s',
+		rawurlencode( $lp_lat ),
+		rawurlencode( $lp_lon ),
+		rawurlencode( $lp_lat ),
+		rawurlencode( $lp_lon )
+	);
+}
+
+/**
+ * First N sentences of plain text, whitespace-normalised into one paragraph.
+ * Used on Class Detail coach bios so the byline stays short.
+ *
+ * @param string $lp_text  Source copy.
+ * @param int    $lp_count Sentence count (default 2).
+ * @return string
+ */
+function lp_first_sentences( string $lp_text, int $lp_count = 2 ): string {
+	$lp_text = trim( preg_replace( '/\s+/u', ' ', wp_strip_all_tags( $lp_text ) ) ?? '' );
+	if ( '' === $lp_text || $lp_count < 1 ) {
+		return '';
+	}
+
+	if ( ! preg_match_all( '/[^.!?]+(?:[.!?]+(?:\s+|$)|$)/u', $lp_text, $lp_matches ) ) {
+		return $lp_text;
+	}
+
+	$lp_parts = array_values(
+		array_filter(
+			array_map( 'trim', $lp_matches[0] ),
+			static function ( string $lp_part ): bool {
+				return '' !== $lp_part;
+			}
+		)
+	);
+
+	return trim( implode( ' ', array_slice( $lp_parts, 0, $lp_count ) ) );
+}
+
+/**
  * Keep class/coach location pickers on sites — spots are map-only.
  *
  * @param array $lp_args WP_Query args for ACF post_object.

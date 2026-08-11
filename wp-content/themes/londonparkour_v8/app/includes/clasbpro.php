@@ -430,23 +430,50 @@ function lp_class_board_fields( int $class_id ): array {
 	$location_id = lp_class_location_id( $class_id );
 	$levels      = get_the_terms( $class_id, 'lp_level' );
 	$level       = ( is_array( $levels ) && $levels ) ? $levels[0]->name : '';
+	$glyph_svg   = lp_class_calendar_icon_svg( $class_id );
 
 	return array(
-		'id'          => $class_id,
-		'title'       => get_the_title( $class_id ),
-		'url'         => (string) get_permalink( $class_id ),
-		'thumb'       => lp_class_image_id( $class_id ) ?: null,
-		'subtitle'    => lp_class_composed_subtitle( $class_id ),
-		'location'    => $location_id ? get_the_title( $location_id ) : '',
-		'location_id' => $location_id,
-		'level'       => $level,
-		'price'       => lp_class_price_display( $class_id ),
-		'price_label' => lp_class_price_label(),
-		'coaches'     => implode(
+		'id'            => $class_id,
+		'title'         => get_the_title( $class_id ),
+		'url'           => (string) get_permalink( $class_id ),
+		'thumb'         => lp_class_image_id( $class_id ) ?: null,
+		'subtitle'      => lp_class_composed_subtitle( $class_id ),
+		'location'      => $location_id ? get_the_title( $location_id ) : '',
+		'location_id'   => $location_id,
+		'level'         => $level,
+		'price'         => lp_class_price_display( $class_id ),
+		'price_label'   => lp_class_price_label(),
+		'glyph_svg'     => $glyph_svg,
+		'glyph_icon_id' => '' === $glyph_svg ? 'glyph-balancing' : '',
+		'coaches'       => implode(
 			', ',
 			array_map( 'get_the_title', lp_class_coach_ids( $class_id ) )
 		),
 	);
+}
+
+/**
+ * Class calendar icon from ACF Card icon (SVG). Empty when unset — board rows
+ * then fall back to sprite `glyph-balancing`.
+ *
+ * @param int $class_id Post ID.
+ * @return string Sanitized SVG markup, or ''.
+ */
+function lp_class_calendar_icon_svg( int $class_id ): string {
+	$custom = '';
+	if ( $class_id && function_exists( 'get_field' ) ) {
+		$custom = (string) get_field( 'calendar_icon', $class_id );
+	}
+
+	if ( class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Helpers' ) ) {
+		return \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::sanitize_calendar_icon_svg( $custom );
+	}
+
+	if ( '' === trim( $custom ) || ! preg_match( '/<svg\b/i', $custom ) ) {
+		return '';
+	}
+
+	return $custom;
 }
 
 /**
