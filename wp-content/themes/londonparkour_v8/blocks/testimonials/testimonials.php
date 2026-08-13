@@ -12,7 +12,8 @@
  *
  * @param string $args['eyebrow']
  * @param string $args['meta']
- * @param array  $args['quotes'] Rows of index/quote/attribution.
+ * @param array  $args['quotes']         Rows of index/quote/attribution.
+ * @param array  $args['review_action']  ACF action group — Google Business write-review.
  *
  * @package londonparkour_v8
  */
@@ -53,6 +54,17 @@ if ( ! $lp_quotes ) {
 	$lp_quotes = $lp_default_quotes;
 }
 
+$lp_review = lp_action( $args['review_action'] ?? null );
+if ( ! $lp_review ) {
+	$lp_review = array(
+		'label'  => 'LEAVE A GOOGLE REVIEW',
+		'href'   => 'https://g.page/r/CY-t6mExHHvoEAI/review',
+		'target' => '_blank',
+	);
+} elseif ( '' === $lp_review['target'] ) {
+	$lp_review['target'] = '_blank';
+}
+
 $lp_spacing = lp_section_spacing( $args );
 $lp_last    = count( $lp_quotes ) - 1;
 ?>
@@ -90,5 +102,19 @@ $lp_last    = count( $lp_quotes ) - 1;
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
+		<?php if ( '' !== $lp_review['href'] && '' !== $lp_review['label'] ) : ?>
+			<?php
+			lp_part(
+				'elements/button',
+				array(
+					'variant'          => 'ghost',
+					'label'            => $lp_review['label'],
+					'href'             => $lp_review['href'],
+					'target'           => $lp_review['target'],
+					'trailing_icon_id' => 'icon-arrow-right',
+				)
+			);
+			?>
+		<?php endif; ?>
 	</div>
 </section>

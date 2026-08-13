@@ -2,7 +2,7 @@
 /**
  * Testimonials — field definition.
  *
- * Repeater-only: quotes are copy, not entities.
+ * Repeater quotes plus a Google-review action.
  *
  * @package londonparkour_v8
  */
@@ -50,6 +50,9 @@ return array(
 					),
 				),
 			),
+
+			lp_tab( __( 'Actions', 'londonparkour_v8' ) ),
+			lp_field_action( 'review_action', __( 'Google review', 'londonparkour_v8' ) ),
 		),
 
 		lp_field_settings()

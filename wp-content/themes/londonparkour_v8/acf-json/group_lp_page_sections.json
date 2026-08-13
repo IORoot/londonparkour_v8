@@ -3572,6 +3572,31 @@
                             "key": "field_6efd6d520171e37a"
                         },
                         {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_accab2bbb021511f"
+                        },
+                        {
+                            "name": "review_action",
+                            "label": "Google review",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_ec5a67cea9dfc69c"
+                                }
+                            ],
+                            "key": "field_e14b60c6c13b3b1a"
+                        },
+                        {
                             "name": "tab_settings",
                             "label": "Settings",
                             "type": "tab",
