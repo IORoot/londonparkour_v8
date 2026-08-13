@@ -2,7 +2,8 @@
 /**
  * Clients — field definition.
  *
- * Repeater-only: logos are text wordmarks in the source, not entities.
+ * Repeater of client logos: label, optional link, optional image. Defaults
+ * in the block fill the live white transparent GIF set when the repeater is empty.
  *
  * @package londonparkour_v8
  */
@@ -36,6 +37,12 @@ return array(
 						'label' => __( 'Label', 'londonparkour_v8' ),
 						'type'  => 'text',
 					),
+					array(
+						'name'  => 'href',
+						'label' => __( 'Link', 'londonparkour_v8' ),
+						'type'  => 'url',
+					),
+					lp_field_media( array( 'name' => 'image', 'label' => __( 'Logo', 'londonparkour_v8' ) ) ),
 				),
 			),
 		),

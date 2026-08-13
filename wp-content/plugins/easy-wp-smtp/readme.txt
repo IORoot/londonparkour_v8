@@ -2,9 +2,9 @@
 Contributors: sendlayer, smub, capuderg
 Tags: email, smtp, email logs, gmail, outlook
 Requires at least: 5.5
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.15.0
+Stable tag: 2.15.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,34 +257,25 @@ Manage Easy WP SMTP settings for all your multisite subsites in one place, simpl
 
 Network administrators can easily monitor and manage email logs, email reports, debug events, and exports for all subsites in the network from a central dashboard.
 
-### Easy WP SMTP Plugin Usage
+### Who Is Easy WP SMTP For?
 
-Once you have installed the plugin there are a few options that you need to configure.
-The plugin settings can be found in your WordPress Dashboard by clicking on the Easy WP SMTP menu item.
+Easy WP SMTP works on any WordPress site that sends email, from a small blog to a high-traffic store. Here is who gets the most value from reliable email delivery.
 
-#### Easy WP SMTP Settings
+#### WooCommerce and Online Stores
 
-The settings section consists of two sections: Mailer Settings and General Settings.
+Order confirmations, shipping updates, and password resets have to land in the inbox. Easy WP SMTP sends your WooCommerce emails through an authenticated mailer so customers actually receive them.
 
-##### Mailer Settings
+#### Contact Forms and Lead Notifications
 
-* Mailer Selection: Choose a mailer you want to use (a transactional mailer or an SMTP server).
-* Mailer-Specific Settings: Depending on your mailer selection, different settings will be displayed, for you to configure.
+When form entries from WPForms, Contact Form 7, or Gravity Forms stop arriving, the cause is almost always the default WordPress mailer. Connect an SMTP mailer once and every notification gets delivered.
 
-##### General Settings
+#### Membership, LMS, and Community Sites
 
-* From Email Address: The email address that will be used to send emails to your recipients.
-* Force From Email: If you want to always overwrite the from email address, which can be set by other plugins.
-* From Name: The name your recipients will see as part of the "from" or "sender" value when they receive your email.
-* Force From Name: If you want to always overwrite the from name, which can be set by other plugins.
+Welcome emails, account notices, and course updates keep your members active. Authenticated SMTP makes sure new sign-ups can confirm their account and log in without emails getting lost.
 
-For more information on how you can configure all plugin settings, please visit our <a href="https://easywpsmtp.com/docs" rel="friend">plugin documentation</a>.
+#### Agencies and Freelancers
 
-#### Easy WP SMTP Email Test
-
-On the Email Test page you can send a test email to your own email address, using your configured mailer or SMTP service, to make sure that your WordPress site is ready to send all outgoing emails.
-
-Once you click the "Send Test Email" button, by default a predefined email template (HTML or plain text) will be sent. But if you prefer, you can also define your own subject and email content in the Email Test settings.
+Set up email delivery the same reliable way on every client site. The built-in Setup Wizard gets each install configured in a couple of minutes.
 
 ### Other Notes
 
@@ -323,6 +314,9 @@ And we will try to help out as soon as possible.
 10. Setup Wizard - Step 2
 
 == Changelog ==
+
+= 2.15.1 - 2026-08-12 =
+* Changed: Updated the order of mailers in the plugin settings and the Setup Wizard.
 
 = 2.15.0 - 2026-06-30 =
 * IMPORTANT: Support for WordPress versions 5.4.x or lower has been discontinued. If you are using one of those versions, you MUST upgrade WordPress before installing or upgrading to Easy WP SMTP v2.15.0. Failure to do that will disable Easy WP SMTP functionality.

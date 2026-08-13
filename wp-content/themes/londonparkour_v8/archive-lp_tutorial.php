@@ -73,6 +73,13 @@
  * seeded terms nested, both sides render empty (page-onward's own guard),
  * which is correct given the data, not a broken control.
  *
+ * Numbered page pagination is separate: the main query is paged
+ * (`posts_per_page`), and when there is more than one page the shared
+ * `components/pagination` band (same shape as Search / Classes listings)
+ * mounts after the board via `lp_pagination_args( …, 'VIDEOS' )`. The design
+ * file never drew that band on TutorialsIndex — it assumed a filtered
+ * move-sized set — but without it a real archive cannot be walked.
+ *
  * @package londonparkour_v8
  */
 
@@ -414,6 +421,14 @@ get_header();
 				</div>
 			</div>
 		</div>
+
+		<?php
+		$lp_pagination = lp_pagination_args( null, 'VIDEOS' );
+		if ( $lp_pagination ) {
+			$lp_pagination['aria_label'] = 'Tutorial pages';
+			lp_part( 'components/pagination', $lp_pagination );
+		}
+		?>
 	<?php endif; ?>
 
 	<?php lp_render_block( 'train-in-person', array() ); ?>

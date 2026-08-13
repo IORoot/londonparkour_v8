@@ -22,8 +22,9 @@ class Loader {
 	 */
 	protected $providers = [
 		'sendlayer'    => 'EasyWPSMTP\Providers\Sendlayer\\',
-		'amazonses'    => 'EasyWPSMTP\Providers\AmazonSES\\',
+		'smtpcom'      => 'EasyWPSMTP\Providers\SMTPcom\\',
 		'sendinblue'   => 'EasyWPSMTP\Providers\Sendinblue\\',
+		'amazonses'    => 'EasyWPSMTP\Providers\AmazonSES\\',
 		'elasticemail' => 'EasyWPSMTP\Providers\ElasticEmail\\',
 		'gmail'        => 'EasyWPSMTP\Providers\Gmail\\',
 		'mailgun'      => 'EasyWPSMTP\Providers\Mailgun\\',
@@ -34,7 +35,6 @@ class Loader {
 		'postmark'     => 'EasyWPSMTP\Providers\Postmark\\',
 		'resend'       => 'EasyWPSMTP\Providers\Resend\\',
 		'sendgrid'     => 'EasyWPSMTP\Providers\Sendgrid\\',
-		'smtpcom'      => 'EasyWPSMTP\Providers\SMTPcom\\',
 		'smtp2go'      => 'EasyWPSMTP\Providers\SMTP2GO\\',
 		'sparkpost'    => 'EasyWPSMTP\Providers\SparkPost\\',
 		'zoho'         => 'EasyWPSMTP\Providers\Zoho\\',

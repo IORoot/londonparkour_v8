@@ -367,6 +367,21 @@
                                     "label": "Label",
                                     "type": "text",
                                     "key": "field_3783e65f3a4dbc0d"
+                                },
+                                {
+                                    "name": "href",
+                                    "label": "Link",
+                                    "type": "url",
+                                    "key": "field_e46dadf57ae9c0f5"
+                                },
+                                {
+                                    "name": "image",
+                                    "label": "Logo",
+                                    "type": "image",
+                                    "return_format": "id",
+                                    "preview_size": "medium",
+                                    "library": "all",
+                                    "key": "field_73e00be238216365"
                                 }
                             ],
                             "key": "field_a5de5ff90414efed"

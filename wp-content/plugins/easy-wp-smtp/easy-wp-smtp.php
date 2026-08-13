@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Easy WP SMTP
- * Version: 2.15.0
+ * Version: 2.15.1
  * Requires at least: 5.5
  * Requires PHP: 7.4
  * Plugin URI: https://easywpsmtp.com/
@@ -13,7 +13,7 @@
  */
 
 if ( ! defined( 'EasyWPSMTP_PLUGIN_VERSION' ) ) {
-	define( 'EasyWPSMTP_PLUGIN_VERSION', '2.15.0' );
+	define( 'EasyWPSMTP_PLUGIN_VERSION', '2.15.1' );
 }
 if ( ! defined( 'EasyWPSMTP_PHP_VERSION' ) ) {
 	define( 'EasyWPSMTP_PHP_VERSION', '7.4' );

@@ -71,11 +71,22 @@ function lp_pagination_args( ?WP_Query $lp_query = null, string $lp_noun = 'RESU
 	$lp_from     = ( ( $lp_current - 1 ) * $lp_per_page ) + 1;
 	$lp_to       = min( $lp_current * $lp_per_page, $lp_found );
 
-	// ponytail: every page number, no ellipsis — the design draws three boxes
-	// and has no truncated state to port. Window this when a real query runs
-	// past ~10 pages AND the design gains an ellipsis to window it with.
+	// The design draws a short run of page boxes with no ellipsis state.
+	// When a real archive exceeds that, window around the current page —
+	// prev/next + the count line still cover the full range (PORT-FINDINGS §16).
+	$lp_window = 7;
+	if ( $lp_total <= $lp_window ) {
+		$lp_start = 1;
+		$lp_end   = $lp_total;
+	} else {
+		$lp_half  = (int) floor( $lp_window / 2 );
+		$lp_start = max( 1, $lp_current - $lp_half );
+		$lp_end   = min( $lp_total, $lp_start + $lp_window - 1 );
+		$lp_start = max( 1, $lp_end - $lp_window + 1 );
+	}
+
 	$lp_pages = array();
-	for ( $lp_i = 1; $lp_i <= $lp_total; $lp_i++ ) {
+	for ( $lp_i = $lp_start; $lp_i <= $lp_end; $lp_i++ ) {
 		$lp_pages[] = array(
 			'label'   => (string) $lp_i,
 			'href'    => get_pagenum_link( $lp_i ),

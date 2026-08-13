@@ -2,17 +2,17 @@
   "eyebrow": "06 — CLIENTS / TRUSTED BY",
   "meta": "(12)",
   "logos": [
-    { "label": "NIKE" },
-    { "label": "UCL" },
-    { "label": "BBC" },
-    { "label": "RED BULL" },
-    { "label": "PARKOUR UK" },
-    { "label": "ADIDAS" },
-    { "label": "GOOGLE" },
-    { "label": "SKY" },
-    { "label": "O2" },
-    { "label": "ITV" },
-    { "label": "PUMA" },
-    { "label": "HSBC" }
+    { "label": "The Ned", "href": "https://www.thened.com/" },
+    { "label": "Vivobarefoot", "href": "https://www.vivobarefoot.com" },
+    { "label": "Imperial", "href": "https://www.instagram.com/reel/DBjrtI6vbMy/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" },
+    { "label": "Sky", "href": "/blog/sky/" },
+    { "label": "Sandringham", "href": "/blog/sandringham-flower-show" },
+    { "label": "2012 Olympics", "href": "https://www.youtube.com/watch?v=KTZbSYxg5Pk" },
+    { "label": "The Guardian", "href": "/blog/the-guardian/" },
+    { "label": "The Stranglers", "href": "/blog/stranglers/" },
+    { "label": "Universal", "href": "https://www.youtube.com/watch?v=Ab6rslFsr_M" },
+    { "label": "Ministry of Defence", "href": "https://www.gov.uk/government/organisations/ministry-of-defence" },
+    { "label": "Soho House", "href": "https://www.sohohouse.com/" },
+    { "label": "Army", "href": "/blog/the-army/" }
   ]
 }

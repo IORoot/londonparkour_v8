@@ -1,50 +1,160 @@
 <?php
 /**
- * Clients — "06 — CLIENTS / TRUSTED BY": accent logo grid of text wordmarks.
+ * Clients — "06 — CLIENTS / TRUSTED BY": accent logo grid of client GIFs.
  *
  * Ported from src/stories/Blocks/Clients/Clients.js.
  *
- * Repeater-only. Cell labels are plain text in the source (not image logos).
- * Ground is `bg-accent`; ink / muted / hairline follow the accent column of
- * docs/phase7/surface-axis.md (`accent-content`). The 1px channel is
- * `gap-px` on an `accent-content/15` track — same as the Storybook source.
+ * Cells are linked white transparent GIF wordmarks (uploads/Logos), falling back to a text
+ * wordmark when no image is given. Ground is `bg-accent`; ink / muted /
+ * hairline follow the accent column of docs/phase7/surface-axis.md
+ * (`accent-content`). The 1px channel is `gap-px` on an `accent-content/15`
+ * track — same as the Storybook source.
  *
  * @param string $args['eyebrow']
  * @param string $args['meta']
- * @param array  $args['logos'] Rows of array( 'label' => … ).
+ * @param array  $args['logos'] Rows of array( 'label', 'href', 'image' ).
  *
  * @package londonparkour_v8
  */
 
 defined( 'ABSPATH' ) || exit;
 
+$lp_cell      = 'flex items-center justify-center min-h-[112px] min-w-0 px-3 bg-accent';
+$lp_cell_link = 'flex items-center justify-center min-h-[112px] min-w-0 px-3 bg-accent no-underline hover:opacity-80 transition-opacity duration-150';
+$lp_logo_img  = 'min-w-0 max-h-[200px] max-w-full w-auto h-auto object-contain';
+
 $lp_default_logos = array(
-	'NIKE',
-	'UCL',
-	'BBC',
-	'RED BULL',
-	'PARKOUR UK',
-	'ADIDAS',
-	'GOOGLE',
-	'SKY',
-	'O2',
-	'ITV',
-	'PUMA',
-	'HSBC',
+	array(
+		'label' => 'The Ned',
+		'href'  => 'https://www.thened.com/',
+		'file'  => 'transparent_ned_white.gif',
+	),
+	array(
+		'label' => 'Vivobarefoot',
+		'href'  => 'https://www.vivobarefoot.com',
+		'file'  => 'transparent_vivo_white.gif',
+	),
+	array(
+		'label' => 'Imperial',
+		'href'  => 'https://www.instagram.com/reel/DBjrtI6vbMy/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
+		'file'  => 'transparent_imperial_white.gif',
+	),
+	array(
+		'label' => 'Sky',
+		'href'  => '/blog/sky/',
+		'file'  => 'transparent_sky_white.gif',
+	),
+	array(
+		'label' => 'Sandringham',
+		'href'  => '/blog/sandringham-flower-show',
+		'file'  => 'transparent_sandringham_white.gif',
+	),
+	array(
+		'label' => '2012 Olympics',
+		'href'  => 'https://www.youtube.com/watch?v=KTZbSYxg5Pk',
+		'file'  => 'transparent_olympics_white.gif',
+	),
+	array(
+		'label' => 'The Guardian',
+		'href'  => '/blog/the-guardian/',
+		'file'  => 'transparent_guardian_white.gif',
+	),
+	array(
+		'label' => 'The Stranglers',
+		'href'  => '/blog/stranglers/',
+		'file'  => 'transparent_stranglers_white.gif',
+	),
+	array(
+		'label' => 'Universal',
+		'href'  => 'https://www.youtube.com/watch?v=Ab6rslFsr_M',
+		'file'  => 'transparent_universal_white.gif',
+	),
+	array(
+		'label' => 'Ministry of Defence',
+		'href'  => 'https://www.gov.uk/government/organisations/ministry-of-defence',
+		'file'  => 'transparent_mod_white.gif',
+	),
+	array(
+		'label' => 'Soho House',
+		'href'  => 'https://www.sohohouse.com/',
+		'file'  => 'transparent_soho_house_white.gif',
+	),
+	array(
+		'label' => 'Army',
+		'href'  => '/blog/the-army/',
+		'file'  => 'transparent_army_white.gif',
+	),
 );
+
+$lp_defaults_by_label = array();
+foreach ( $lp_default_logos as $lp_default ) {
+	$lp_defaults_by_label[ strtoupper( $lp_default['label'] ) ] = $lp_default;
+}
+
+$lp_logo_file_url = static function ( string $lp_file ): string {
+	$lp_file = basename( $lp_file );
+	if ( '' === $lp_file ) {
+		return '';
+	}
+	return content_url( '/uploads/Logos/' . $lp_file );
+};
+
+$lp_logo_href = static function ( string $lp_href ): string {
+	$lp_href = trim( $lp_href );
+	if ( '' === $lp_href ) {
+		return '';
+	}
+	if ( str_starts_with( $lp_href, '/' ) ) {
+		return home_url( $lp_href );
+	}
+	return $lp_href;
+};
 
 $lp_eyebrow = (string) ( $args['eyebrow'] ?? '06 — CLIENTS / TRUSTED BY' );
 $lp_meta    = (string) ( $args['meta'] ?? '(12)' );
 
 $lp_logos = array();
 foreach ( is_array( $args['logos'] ?? null ) ? $args['logos'] : array() as $lp_row ) {
-	$lp_label = is_array( $lp_row ) ? (string) ( $lp_row['label'] ?? '' ) : (string) $lp_row;
-	if ( '' !== $lp_label ) {
-		$lp_logos[] = $lp_label;
+	if ( ! is_array( $lp_row ) ) {
+		$lp_label = trim( (string) $lp_row );
+		if ( '' === $lp_label ) {
+			continue;
+		}
+		$lp_row = array( 'label' => $lp_label );
 	}
+
+	$lp_label = trim( (string) ( $lp_row['label'] ?? '' ) );
+	if ( '' === $lp_label ) {
+		continue;
+	}
+
+	$lp_known = $lp_defaults_by_label[ strtoupper( $lp_label ) ] ?? array();
+	$lp_href  = (string) ( $lp_row['href'] ?? '' );
+	if ( '' === $lp_href ) {
+		$lp_href = (string) ( $lp_known['href'] ?? '' );
+	}
+
+	$lp_image_id  = ! empty( $lp_row['image'] ) ? (int) $lp_row['image'] : 0;
+	$lp_image_url = $lp_image_id ? (string) wp_get_attachment_url( $lp_image_id ) : '';
+	if ( '' === $lp_image_url ) {
+		$lp_file = (string) ( $lp_row['file'] ?? ( $lp_known['file'] ?? '' ) );
+		$lp_image_url = $lp_logo_file_url( $lp_file );
+	}
+
+	$lp_logos[] = array(
+		'label'     => $lp_label,
+		'href'      => $lp_logo_href( $lp_href ),
+		'image_url' => $lp_image_url,
+	);
 }
 if ( ! $lp_logos ) {
-	$lp_logos = $lp_default_logos;
+	foreach ( $lp_default_logos as $lp_default ) {
+		$lp_logos[] = array(
+			'label'     => $lp_default['label'],
+			'href'      => $lp_logo_href( $lp_default['href'] ),
+			'image_url' => $lp_logo_file_url( $lp_default['file'] ),
+		);
+	}
 }
 
 $lp_spacing = lp_section_spacing( $args );
@@ -70,13 +180,37 @@ $lp_spacing = lp_section_spacing( $args );
 			aria-label="<?php echo esc_attr__( 'Trusted by', 'londonparkour_v8' ); ?>"
 		>
 			<?php foreach ( $lp_logos as $lp_logo ) : ?>
-				<div role="listitem">
-					<div
-						class="flex items-center justify-center min-h-[112px] px-3 bg-accent"
-						data-component="clients-logo"
-					>
-						<span class="font-label text-[14px] sm:text-[16px] font-semibold tracking-[1.2px] uppercase text-accent-content text-center leading-none"><?php echo esc_html( $lp_logo ); ?></span>
-					</div>
+				<div role="listitem" class="min-w-0">
+					<?php if ( '' !== $lp_logo['href'] ) : ?>
+						<a
+							href="<?php echo esc_url( $lp_logo['href'] ); ?>"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="<?php echo esc_attr( $lp_cell_link ); ?>"
+							data-component="clients-logo"
+						>
+					<?php else : ?>
+						<div
+							class="<?php echo esc_attr( $lp_cell ); ?>"
+							data-component="clients-logo"
+						>
+					<?php endif; ?>
+						<?php if ( '' !== $lp_logo['image_url'] ) : ?>
+							<?php
+							lp_part(
+								'components/media-photo',
+								array(
+									'image_url' => $lp_logo['image_url'],
+									'alt'       => $lp_logo['label'],
+									'layout'    => 'none',
+									'class'     => $lp_logo_img,
+								)
+							);
+							?>
+						<?php else : ?>
+							<span class="font-label text-[14px] sm:text-[16px] font-semibold tracking-[1.2px] uppercase text-accent-content text-center leading-none"><?php echo esc_html( $lp_logo['label'] ); ?></span>
+						<?php endif; ?>
+					<?php echo '' !== $lp_logo['href'] ? '</a>' : '</div>'; ?>
 				</div>
 			<?php endforeach; ?>
 		</div>

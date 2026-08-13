@@ -58,6 +58,19 @@ class Options extends OptionsAbstract {
 			esc_url( easy_wp_smtp()->get_utm_url( 'https://easywpsmtp.com/docs/setting-up-the-smtp-com-mailer/', 'SMTP.com documentation' ) )
 		);
 
+		$mailer_options = $connection->get_options()->get_group( self::SLUG );
+
+		if ( empty( $mailer_options['api_key'] ) && empty( $mailer_options['channel'] ) ) {
+			// The Setup Wizard renders its own Get Started button and builds its description by
+			// truncating this one at the last literal '<p>', so this paragraph has to keep an
+			// attribute to stay out of that cut - otherwise the wizard shows the button twice.
+			$description .= sprintf(
+				'<p class="easy-wp-smtp-mailer-offer"><a href="%1$s" target="_blank" rel="noopener noreferrer" class="easy-wp-smtp-btn easy-wp-smtp-btn--sm easy-wp-smtp-btn--secondary">%2$s</a></p>',
+				esc_url( 'https://easywpsmtp.com/go/smtp/' ),
+				esc_html__( 'Get Started with SMTP.com', 'easy-wp-smtp' )
+			);
+		}
+
 		$description .= '<p class="easy-wp-smtp-tooltip">' .
 			esc_html__( 'Transparency and Disclosure', 'easy-wp-smtp' ) .
 			'<span class="easy-wp-smtp-tooltip-text">' .
@@ -70,6 +83,7 @@ class Options extends OptionsAbstract {
 				'slug'        => self::SLUG,
 				'title'       => esc_html__( 'SMTP.com', 'easy-wp-smtp' ),
 				'description' => $description,
+				'recommended' => true,
 				'supports'    => [
 					'from_email'       => true,
 					'from_name'        => true,
