@@ -2,18 +2,18 @@
 /**
  * Testimonials — "07 — TESTIMONIALS / IN THEIR WORDS": page-ground quote stack.
  *
- * Ported from src/stories/Blocks/Testimonials/Testimonials.js.
+ * Ported from src/stories/Blocks/Testimonials/Testimonials.js, then wired to
+ * lp_testimonial (5-star, quote filled). Slot numerals 01–03 stay put; the
+ * quote board rotates when the pool is larger than three. SEE ALL sits in
+ * the old (03) meta slot. LEAVE A GOOGLE REVIEW stays the ghost button.
  *
- * Repeater-only. Index numerals use `text-accent` on the page ground (never
- * `text-primary`) — surface-axis signal role on light grounds.
- *
- * Copy defaults transcribed from the Storybook source (pen leaves under
- * `g6OHme`), not from phase7 inventories.
+ * Index numerals use `text-accent` on the page ground (never `text-primary`).
  *
  * @param string $args['eyebrow']
- * @param string $args['meta']
- * @param array  $args['quotes']         Rows of index/quote/attribution.
- * @param array  $args['review_action']  ACF action group — Google Business write-review.
+ * @param string $args['quote_source']  latest|random|choose.
+ * @param array  $args['source_items']  Chosen lp_testimonial IDs.
+ * @param array  $args['see_all_action']
+ * @param array  $args['review_action']
  *
  * @package londonparkour_v8
  */
@@ -22,43 +22,53 @@ defined( 'ABSPATH' ) || exit;
 
 $lp_default_quotes = array(
 	array(
-		'index'       => '01',
 		'quote'       => '“A brilliant mind and playful spirit — the ability to lead a group and set the mood in a room is unparalleled.”',
 		'attribution' => 'JAMES R. / TRAINING SINCE 2018',
 	),
 	array(
-		'index'       => '02',
 		'quote'       => '“An inspiring, exceptional place to train. The coaching applies the same work ethic to a first-timer as to an athlete.”',
 		'attribution' => 'PRIYA S. / FUNDAMENTALS STUDENT',
 	),
 	array(
-		'index'       => '03',
 		'quote'       => '“London Parkour changed how I move through the city.”',
 		'attribution' => 'TOM H. / ADVANCED',
 	),
 );
 
 $lp_eyebrow = (string) ( $args['eyebrow'] ?? '07 — TESTIMONIALS / IN THEIR WORDS' );
-$lp_meta    = (string) ( $args['meta'] ?? '(03)' );
 
 $lp_quotes = array();
-foreach ( is_array( $args['quotes'] ?? null ) ? $args['quotes'] : array() as $lp_row ) {
-	if ( ! is_array( $lp_row ) ) {
-		continue;
-	}
-	if ( '' !== (string) ( $lp_row['quote'] ?? '' ) || '' !== (string) ( $lp_row['attribution'] ?? '' ) ) {
-		$lp_quotes[] = $lp_row;
-	}
+if ( function_exists( 'lp_resolve_testimonial_quotes' ) ) {
+	$lp_quotes = lp_resolve_testimonial_quotes( $args );
 }
 if ( ! $lp_quotes ) {
 	$lp_quotes = $lp_default_quotes;
+}
+
+$lp_visible     = array_slice( $lp_quotes, 0, 3 );
+$lp_can_rotate  = count( $lp_quotes ) > 3;
+$lp_quotes_json = wp_json_encode( $lp_quotes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+if ( false === $lp_quotes_json ) {
+	$lp_quotes_json = '[]';
+	$lp_can_rotate  = false;
+}
+
+$lp_see_all = lp_action( $args['see_all_action'] ?? null );
+if ( ! $lp_see_all ) {
+	$lp_see_all = array(
+		'label'  => 'SEE ALL',
+		'href'   => 'https://g.page/r/CaEUXmf0e4IHEBM',
+		'target' => '_blank',
+	);
+} elseif ( '' === $lp_see_all['target'] ) {
+	$lp_see_all['target'] = '_blank';
 }
 
 $lp_review = lp_action( $args['review_action'] ?? null );
 if ( ! $lp_review ) {
 	$lp_review = array(
 		'label'  => 'LEAVE A GOOGLE REVIEW',
-		'href'   => 'https://g.page/r/CY-t6mExHHvoEAI/review',
+		'href'   => 'https://g.page/r/CaEUXmf0e4IHEBM/review',
 		'target' => '_blank',
 	);
 } elseif ( '' === $lp_review['target'] ) {
@@ -66,42 +76,72 @@ if ( ! $lp_review ) {
 }
 
 $lp_spacing = lp_section_spacing( $args );
-$lp_last    = count( $lp_quotes ) - 1;
+$lp_last    = count( $lp_visible ) - 1;
 ?>
 <section
-	class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-16 lg:px-[72px] lg:py-[96px]', $lp_spacing ); ?>"
+	class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[96px] lg:px-[72px]', $lp_spacing ); ?>"
 	data-component="testimonials"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 >
 	<div class="flex flex-col gap-14">
 		<header class="flex flex-col gap-[18px]">
 			<div class="flex items-baseline justify-between gap-4">
 				<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
-				<?php if ( '' !== $lp_meta ) : ?>
-					<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_meta ); ?></span>
+				<?php if ( '' !== $lp_see_all['href'] && '' !== $lp_see_all['label'] ) : ?>
+					<a
+						class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"
+						href="<?php echo esc_url( $lp_see_all['href'] ); ?>"
+						target="<?php echo esc_attr( $lp_see_all['target'] ); ?>"
+						rel="noopener noreferrer"
+					><?php echo esc_html( $lp_see_all['label'] ); ?></a>
 				<?php endif; ?>
 			</div>
 			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
 		</header>
 
-		<div class="flex flex-col gap-12">
+		<div
+			class="flex flex-col gap-12"
+			data-quote-board-list
+			<?php if ( $lp_can_rotate ) : ?>
+				data-motion-quote-board
+				data-motion-quote-board-dwell="10"
+				data-quotes="<?php echo esc_attr( $lp_quotes_json ); ?>"
+			<?php endif; ?>
+		>
 			<?php
-			foreach ( $lp_quotes as $lp_i => $lp_q ) :
-				$lp_index       = (string) ( $lp_q['index'] ?? '' );
+			foreach ( $lp_visible as $lp_i => $lp_q ) :
+				$lp_index       = str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT );
 				$lp_quote       = (string) ( $lp_q['quote'] ?? '' );
 				$lp_attribution = (string) ( $lp_q['attribution'] ?? '' );
 				?>
-				<blockquote class="flex flex-col sm:flex-row gap-6 sm:gap-[48px] items-start" data-component="testimonial-quote">
-					<span class="font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1"><?php echo esc_html( $lp_index ); ?></span>
+				<blockquote class="flex flex-col sm:flex-row gap-6 sm:gap-[48px] items-start" data-component="testimonial-quote" data-quote-row>
+					<span class="font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1" data-quote-index><?php echo esc_html( $lp_index ); ?></span>
 					<div class="flex flex-col gap-6 min-w-0">
-						<p class="font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0"><?php echo esc_html( $lp_quote ); ?></p>
-						<footer class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_attribution ); ?></footer>
+						<p class="font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0" data-quote-text><?php echo esc_html( $lp_quote ); ?></p>
+						<footer class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65" data-quote-attr><?php echo esc_html( $lp_attribution ); ?></footer>
 					</div>
 				</blockquote>
 				<?php if ( (int) $lp_i !== $lp_last ) : ?>
-					<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
+					<div class="h-px w-full bg-base-300" aria-hidden="true" data-quote-rule></div>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
+		<template data-quote-row-template>
+			<blockquote class="flex flex-col sm:flex-row gap-6 sm:gap-[48px] items-start" data-component="testimonial-quote" data-quote-row>
+				<span class="font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1" data-quote-index></span>
+				<div class="flex flex-col gap-6 min-w-0">
+					<p
+						class="font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0"
+						data-quote-text
+						data-motion-decode-charset="board"
+						data-motion-decode-wrap="true"
+					></p>
+					<footer class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65" data-quote-attr></footer>
+				</div>
+			</blockquote>
+		</template>
+		<template data-quote-rule-template>
+			<div class="h-px w-full bg-base-300" aria-hidden="true" data-quote-rule></div>
+		</template>
 		<?php if ( '' !== $lp_review['href'] && '' !== $lp_review['label'] ) : ?>
 			<?php
 			lp_part(

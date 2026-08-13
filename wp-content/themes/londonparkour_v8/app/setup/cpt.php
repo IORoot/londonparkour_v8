@@ -3,8 +3,8 @@
  * Custom post types and taxonomies.
  *
  * Classes are clasbpro_class (plugin CPT) — see app/setup/clasbpro.php. Theme-
- * owned CPTs below are coaches, locations, tutorials. Session expansion for
- * boards lives in app/includes/clasbpro.php.
+ * owned CPTs below are coaches, locations, tutorials, testimonials. Session
+ * expansion for boards lives in app/includes/clasbpro.php.
  *
  * @package londonparkour_v8
  */
@@ -42,6 +42,19 @@ function lp_post_types(): array {
 			'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes' ),
 			'taxes'    => array( 'lp_level', 'lp_series' ),
 		),
+		'lp_testimonial' => array(
+			'singular'            => __( 'Testimonial', 'londonparkour_v8' ),
+			'plural'              => __( 'Testimonials', 'londonparkour_v8' ),
+			'slug'                => 'testimonials',
+			'icon'                => 'dashicons-format-quote',
+			'supports'            => array( 'title', 'editor' ),
+			'taxes'               => array(),
+			'public'              => false,
+			'publicly_queryable'  => false,
+			'exclude_from_search' => true,
+			'has_archive'         => false,
+			'show_in_nav_menus'   => false,
+		),
 	);
 }
 
@@ -74,6 +87,33 @@ function lp_taxonomies(): array {
  * lp_post_types() / lp_taxonomies() are the source for JSON generation — see
  * `wp lp acf:build` in app/setup/acf-build.php.
  */
+
+/**
+ * ACF still assigns a query var even when publicly_queryable is false.
+ * Testimonials are admin-only — never front-end queryable.
+ *
+ * @param array  $args      register_post_type args.
+ * @param string $post_type Post type name.
+ * @return array
+ */
+function lp_testimonial_post_type_args( array $args, string $post_type ): array {
+	if ( 'lp_testimonial' !== $post_type ) {
+		return $args;
+	}
+
+	$args['public']              = false;
+	$args['publicly_queryable']  = false;
+	$args['exclude_from_search'] = true;
+	$args['has_archive']         = false;
+	$args['rewrite']             = false;
+	$args['query_var']           = false;
+	$args['show_in_nav_menus']   = false;
+	$args['show_ui']             = true;
+	$args['show_in_menu']        = true;
+
+	return $args;
+}
+add_filter( 'register_post_type_args', 'lp_testimonial_post_type_args', 20, 2 );
 
 /**
  * Build a WordPress labels array from a singular and plural name.

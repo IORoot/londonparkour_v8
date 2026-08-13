@@ -732,6 +732,111 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 }
 
 /**
+ * Testimonials source control — Latest / Random / Choose.
+ *
+ * Not lp_field_source(): that helper is Latest / Choose / Manual for every
+ * other list-backed block, and acf:build asserts those choices match.
+ *
+ * @return array Fields to splice into the Testimonials layout.
+ */
+function lp_field_testimonial_source(): array {
+	return array(
+		array(
+			'name'          => 'quote_source',
+			'label'         => __( 'Quote source', 'londonparkour_v8' ),
+			'type'          => 'button_group',
+			'instructions'  => __( '5-star testimonials with a quote. Random shuffles once per page load.', 'londonparkour_v8' ),
+			'choices'       => array(
+				'latest' => __( 'Latest', 'londonparkour_v8' ),
+				'random' => __( 'Random', 'londonparkour_v8' ),
+				'choose' => __( 'Choose', 'londonparkour_v8' ),
+			),
+			'default_value' => 'latest',
+		),
+		array(
+			'name'           => 'source_items',
+			'label'          => __( 'Quotes', 'londonparkour_v8' ),
+			'type'           => 'relationship',
+			'post_type'      => array( 'lp_testimonial' ),
+			'return_format'  => 'id',
+			'filters'        => array( 'search' ),
+			'lp_conditional' => array( array( array( 'field' => 'quote_source', 'operator' => '==', 'value' => 'choose' ) ) ),
+		),
+	);
+}
+
+/**
+ * Eligible testimonial: 5 stars and a non-empty quote field.
+ *
+ * @param int $post_id Post ID.
+ * @return array{quote:string,attribution:string}|null
+ */
+function lp_testimonial_project( int $post_id ): ?array {
+	$quote = function_exists( 'get_field' ) ? get_field( 'quote', $post_id ) : '';
+	$quote = is_string( $quote ) ? trim( $quote ) : '';
+	if ( '' === $quote ) {
+		return null;
+	}
+
+	$rating = function_exists( 'get_field' ) ? (int) get_field( 'rating', $post_id ) : 0;
+	if ( 5 !== $rating ) {
+		return null;
+	}
+
+	$title = get_the_title( $post_id );
+	return array(
+		'quote'       => $quote,
+		'attribution' => function_exists( 'mb_strtoupper' )
+			? mb_strtoupper( $title, 'UTF-8' )
+			: strtoupper( $title ),
+	);
+}
+
+/**
+ * Resolve the Testimonials quote pool.
+ *
+ * @param array $args Block field values.
+ * @return array<int, array{quote:string,attribution:string}>
+ */
+function lp_resolve_testimonial_quotes( array $args ): array {
+	$mode = (string) ( $args['quote_source'] ?? 'latest' );
+
+	$ids = array();
+
+	if ( 'choose' === $mode ) {
+		$ids = array_filter( array_map( 'intval', (array) ( $args['source_items'] ?? array() ) ) );
+	} else {
+		$ids = get_posts(
+			array(
+				'post_type'              => 'lp_testimonial',
+				'post_status'            => 'publish',
+				'posts_per_page'         => 100,
+				'orderby'                => 'date',
+				'order'                  => 'DESC',
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => true,
+				'update_post_term_cache' => false,
+			)
+		);
+	}
+
+	$items = array();
+	foreach ( (array) $ids as $id ) {
+		$projected = lp_testimonial_project( (int) $id );
+		if ( $projected ) {
+			$items[] = $projected;
+		}
+	}
+
+	if ( 'random' === $mode ) {
+		shuffle( $items );
+	}
+
+	return $items;
+}
+
+/**
  * Expand class records into one item per session.
  *
  * Clasbpro classes expand via lp_class_upcoming_sessions(); manual rows (or any

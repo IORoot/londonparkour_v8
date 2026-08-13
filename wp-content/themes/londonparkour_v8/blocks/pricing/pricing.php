@@ -183,7 +183,7 @@ if ( ! $lp_tiers ) {
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-base-200 px-6 md:px-16 pt-[72px] pb-16', $lp_spacing ); ?>" data-component="pricing"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'bg-base-200 px-6 md:px-16 pt-[100px] pb-[104px]', $lp_spacing ); ?>" data-component="pricing"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col gap-[40px]">
 		<div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-[24px]">
 			<div class="flex flex-col gap-[16px]">

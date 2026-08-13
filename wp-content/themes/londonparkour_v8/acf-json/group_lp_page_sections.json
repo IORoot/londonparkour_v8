@@ -3528,12 +3528,6 @@
                             "key": "field_2ede9b3fb6ff145c"
                         },
                         {
-                            "name": "meta",
-                            "label": "Meta",
-                            "type": "text",
-                            "key": "field_c71a95411f7ad7af"
-                        },
-                        {
                             "name": "tab_items",
                             "label": "Items",
                             "type": "tab",
@@ -3542,34 +3536,39 @@
                             "key": "field_f79b4fca41ae8151"
                         },
                         {
-                            "name": "quotes",
+                            "name": "quote_source",
+                            "label": "Quote source",
+                            "type": "button_group",
+                            "instructions": "5-star testimonials with a quote. Random shuffles once per page load.",
+                            "choices": {
+                                "latest": "Latest",
+                                "random": "Random",
+                                "choose": "Choose"
+                            },
+                            "default_value": "latest",
+                            "key": "field_64852bba59b094e1"
+                        },
+                        {
+                            "name": "source_items",
                             "label": "Quotes",
-                            "type": "repeater",
-                            "layout": "block",
-                            "button_label": "Add quote",
-                            "sub_fields": [
-                                {
-                                    "name": "index",
-                                    "label": "Index",
-                                    "type": "text",
-                                    "instructions": "e.g. \"01\"",
-                                    "key": "field_9564ee425bf9422c"
-                                },
-                                {
-                                    "name": "quote",
-                                    "label": "Quote",
-                                    "type": "textarea",
-                                    "rows": 3,
-                                    "key": "field_30d098fac5db838b"
-                                },
-                                {
-                                    "name": "attribution",
-                                    "label": "Attribution",
-                                    "type": "text",
-                                    "key": "field_853eceee1b46e3ae"
-                                }
+                            "type": "relationship",
+                            "post_type": [
+                                "lp_testimonial"
                             ],
-                            "key": "field_6efd6d520171e37a"
+                            "return_format": "id",
+                            "filters": [
+                                "search"
+                            ],
+                            "key": "field_a06293ddd640589c",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_64852bba59b094e1",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
                         },
                         {
                             "name": "tab_actions",
@@ -3578,6 +3577,23 @@
                             "placement": "top",
                             "endpoint": 0,
                             "key": "field_accab2bbb021511f"
+                        },
+                        {
+                            "name": "see_all_action",
+                            "label": "See all reviews",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_33d62771ceb639f8"
+                                }
+                            ],
+                            "key": "field_e3ac835b7969a0ef"
                         },
                         {
                             "name": "review_action",

@@ -19,6 +19,7 @@ import { counterEffect } from './effects/counter.js';
 import { glyphAssemblyEffect } from './effects/glyphAssembly.js';
 import { decodeEffect } from './effects/decode.js';
 import { kenBurnsEffect } from './effects/kenBurns.js';
+import { quoteBoardEffect } from './effects/quoteBoard.js';
 
 // Order matters: 'stagger' must run before 'entrance' so a stagger
 // container's own [data-motion-enter] is claimed by staggerEffect first
@@ -33,6 +34,7 @@ const registry = new Map([
   ['glyphAssembly', glyphAssemblyEffect],
   ['decode', decodeEffect],
   ['kenBurns', kenBurnsEffect],
+  ['quoteBoard', quoteBoardEffect],
 ]);
 
 /**

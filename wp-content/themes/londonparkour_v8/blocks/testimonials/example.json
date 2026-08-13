@@ -1,27 +1,17 @@
 {
   "eyebrow": "07 — TESTIMONIALS / IN THEIR WORDS",
-  "meta": "(03)",
-  "quotes": [
-    {
-      "index": "01",
-      "quote": "“A brilliant mind and playful spirit — the ability to lead a group and set the mood in a room is unparalleled.”",
-      "attribution": "JAMES R. / TRAINING SINCE 2018"
-    },
-    {
-      "index": "02",
-      "quote": "“An inspiring, exceptional place to train. The coaching applies the same work ethic to a first-timer as to an athlete.”",
-      "attribution": "PRIYA S. / FUNDAMENTALS STUDENT"
-    },
-    {
-      "index": "03",
-      "quote": "“London Parkour changed how I move through the city.”",
-      "attribution": "TOM H. / ADVANCED"
+  "quote_source": "latest",
+  "see_all_action": {
+    "link": {
+      "title": "SEE ALL",
+      "url": "https://g.page/r/CaEUXmf0e4IHEBM",
+      "target": "_blank"
     }
-  ],
+  },
   "review_action": {
     "link": {
       "title": "LEAVE A GOOGLE REVIEW",
-      "url": "https://g.page/r/CY-t6mExHHvoEAI/review",
+      "url": "https://g.page/r/CaEUXmf0e4IHEBM/review",
       "target": "_blank"
     }
   }

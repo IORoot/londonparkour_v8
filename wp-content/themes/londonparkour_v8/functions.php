@@ -47,6 +47,7 @@ $lp_includes = array(
 	'app/setup/acf-build.php',
 	'app/setup/seed.php',
 	'app/setup/import-spots.php',
+	'app/setup/import-reviews.php',
 	// Admin hooks.
 	'hooks/initialise_hooks.php',
 	// Legacy _tw template helpers.

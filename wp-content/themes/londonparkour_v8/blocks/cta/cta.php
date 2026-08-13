@@ -43,14 +43,14 @@ $lp_panel_link = 'no-underline cursor-pointer transition-colors duration-150 hov
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-primary px-6 md:px-16 pt-[24px] pb-[64px]', $lp_spacing ); ?>" data-component="cta"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
-	<div class="flex flex-col gap-[68px]">
+<section class="<?php echo lp_classes( 'bg-primary px-6 md:px-16 pt-[92px] pb-[96px]', $lp_spacing ); ?>" data-component="cta"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+	<div class="flex flex-col gap-[60px]">
 		<div class="flex items-center justify-between gap-4">
 			<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary-content"><?php echo esc_html( $lp_kicker ); ?></span>
 			<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary-content/70"><?php echo esc_html( $lp_coordinates ); ?></span>
 		</div>
 
-		<div class="grid lg:grid-cols-[1fr_auto] gap-[40px] items-start">
+		<div class="grid lg:grid-cols-[1fr_auto] gap-[72px] items-start">
 			<div class="flex flex-col gap-[40px] max-w-[790px]">
 				<h2 class="font-heading text-step-5 font-semibold tracking-[-2px] leading-[0.95] text-primary-content"><?php echo esc_html( $lp_headline ); ?></h2>
 				<?php if ( '' !== $lp_subhead ) : ?>

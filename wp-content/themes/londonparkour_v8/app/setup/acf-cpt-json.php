@@ -17,6 +17,7 @@ function lp_acf_post_type_keys(): array {
 		'lp_coach'    => 'post_type_lp0102coach',
 		'lp_location' => 'post_type_lp0103location',
 		'lp_tutorial' => 'post_type_lp0104tutorial',
+		'lp_testimonial' => 'post_type_lp0105testimonial',
 	);
 }
 
@@ -62,6 +63,28 @@ function lp_acf_write_cpt_taxonomy_json(): array {
 		$acf_labels['remove_featured_image'] = '';
 		$acf_labels['use_featured_image']    = '';
 
+		$public             = $type['public'] ?? true;
+		$publicly_queryable = $type['publicly_queryable'] ?? $public;
+		$exclude_search     = $type['exclude_from_search'] ?? ! $public;
+		$has_archive        = $type['has_archive'] ?? $public;
+		$show_in_nav_menus  = $type['show_in_nav_menus'] ?? $public;
+
+		$rewrite = $has_archive || $publicly_queryable
+			? array(
+				'permalink_rewrite' => 'custom_permalink',
+				'slug'              => $type['slug'],
+				'with_front'        => '0',
+				'feeds'             => '0',
+				'pages'             => '1',
+			)
+			: array(
+				'permalink_rewrite' => 'no_permalink',
+				'slug'              => $type['slug'],
+				'with_front'        => '0',
+				'feeds'             => '0',
+				'pages'             => '0',
+			);
+
 		$data = array(
 			'key'                      => $key,
 			'title'                    => $type['plural'],
@@ -75,15 +98,15 @@ function lp_acf_write_cpt_taxonomy_json(): array {
 			'ai_description'           => '',
 			'labels'                   => $acf_labels,
 			'description'              => '',
-			'public'                   => true,
+			'public'                   => $public,
 			'hierarchical'             => false,
-			'exclude_from_search'      => false,
-			'publicly_queryable'       => true,
+			'exclude_from_search'      => $exclude_search,
+			'publicly_queryable'       => $publicly_queryable,
 			'show_ui'                  => true,
 			'show_in_menu'             => true,
 			'admin_menu_parent'        => '',
 			'show_in_admin_bar'        => true,
-			'show_in_nav_menus'        => true,
+			'show_in_nav_menus'        => $show_in_nav_menus,
 			'show_in_rest'             => false,
 			'rest_base'                => '',
 			'rest_namespace'           => 'wp/v2',
@@ -98,16 +121,10 @@ function lp_acf_write_cpt_taxonomy_json(): array {
 			'plural_capability_name'   => 'posts',
 			'supports'                 => $type['supports'],
 			'taxonomies'               => $type['taxes'],
-			'has_archive'              => true,
+			'has_archive'              => $has_archive,
 			'has_archive_slug'         => '',
-			'rewrite'                  => array(
-				'permalink_rewrite' => 'custom_permalink',
-				'slug'              => $type['slug'],
-				'with_front'        => '0',
-				'feeds'             => '0',
-				'pages'             => '1',
-			),
-			'query_var'                => 'post_type_key',
+			'rewrite'                  => $rewrite,
+			'query_var'                => $publicly_queryable ? 'post_type_key' : 0,
 			'query_var_name'           => '',
 			'can_export'               => true,
 			'delete_with_user'         => false,

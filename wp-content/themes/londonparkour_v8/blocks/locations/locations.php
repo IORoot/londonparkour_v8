@@ -82,8 +82,8 @@ $lp_sites = array_map(
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-accent px-6 md:px-16 pt-[72px] pb-16', $lp_spacing ); ?>" data-component="locations"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
-	<div class="flex flex-col gap-[40px]">
+<section class="<?php echo lp_classes( 'bg-accent px-6 md:px-16 pt-[100px] pb-[34px]', $lp_spacing ); ?>" data-component="locations"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+	<div class="flex flex-col gap-[60px]">
 		<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-[24px]">
 			<div class="flex flex-col gap-[16px]">
 				<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-accent-content/70"><?php echo esc_html( $lp_eyebrow ); ?></span>
@@ -158,7 +158,7 @@ $lp_spacing = lp_section_spacing( $args );
 		</div>
 
 		<?php if ( '' !== $lp_tagline ) : ?>
-			<p class="font-label text-[10px] font-normal tracking-[1px] uppercase text-accent-content/70 pt-[16px] border-t border-accent-content/15"><?php echo esc_html( $lp_tagline ); ?></p>
+			<p class="font-label text-[10px] font-normal tracking-[1px] uppercase text-accent-content/70 pt-[30px] border-t border-accent-content/15"><?php echo esc_html( $lp_tagline ); ?></p>
 		<?php endif; ?>
 	</div>
 </section>

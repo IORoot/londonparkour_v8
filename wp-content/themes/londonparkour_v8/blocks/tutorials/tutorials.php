@@ -134,7 +134,7 @@ if ( ! $lp_shelf ) {
 $lp_spacing = lp_section_spacing( $args );
 ?>
 <section
-	class="<?php echo lp_classes( 'w-full bg-secondary px-6 py-16 lg:px-16 lg:py-[96px]', $lp_spacing ); ?>"
+	class="<?php echo lp_classes( 'w-full bg-secondary px-6 pt-[96px] pb-[100px] lg:px-16', $lp_spacing ); ?>"
 	data-component="tutorials"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 >
 	<div class="flex flex-col gap-10">

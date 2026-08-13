@@ -141,7 +141,7 @@ if ( 'grid' === $lp_layout ) {
 		$lp_coaches = $lp_default_grid_coaches;
 	}
 	?>
-<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-16 lg:px-[72px] lg:py-[96px]', $lp_spacing ); ?>" data-component="coaches" data-layout="grid"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[96px] lg:px-[72px]', $lp_spacing ); ?>" data-component="coaches" data-layout="grid"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col gap-12">
 		<header class="flex flex-col gap-[18px]">
 			<div class="flex items-baseline justify-between gap-4">

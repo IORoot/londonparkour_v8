@@ -38,6 +38,8 @@ Site: http://localhost:8102 · admin `admin` / `admin` · QA page: `/blocks-qa/`
 | Changed a demo image | replace the file in `bin/demo-media/` → `bin/wp lp seed --fresh` → `bin/wp media regenerate --yes` |
 | Verify a block in isolation | `bin/wp lp render <layout>` |
 | Verify a partial | `bin/wp lp part components/<name>` |
+| Parse Google reviews HTML | `php bin/parse-google-reviews.php` |
+| Import testimonials | `bin/wp lp import-reviews` |
 
 `docker compose down -v` destroys the database. That is the supported recovery
 path, not a disaster — bootstrap and seed rebuild it in under a minute.
@@ -93,6 +95,7 @@ seed warns and skips. `--fresh` deletes only marked records.
 | `audit-reuse.sh` | Fails the build on hand-rolled markup — a raw `<svg>`, a raw `<img>`, or a built class string. Verified by injection; trust it. |
 | `demo-content/` | CPT records and terms, read by `wp lp seed`. |
 | `demo-media/` | Demo photographs, read by `wp lp seed`. |
+| `data/reviews/` | Google review HTML dump + parsed JSON. Not seed. Parse with `php bin/parse-google-reviews.php`, import with `bin/wp lp import-reviews`. Re-parse keeps `quote` by `review_id`. Import never deletes posts, and never overwrites a quote that is already set. |
 
 `wp lp seed` itself is not here — it needs WordPress bootstrapped, so it lives
 in `app/setup/seed.php` like every other `wp lp *` command.
