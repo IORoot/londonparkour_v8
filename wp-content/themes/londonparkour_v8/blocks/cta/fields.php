@@ -51,28 +51,27 @@ return array(
 					array(
 						'name'         => 'kicker',
 						'label'        => __( 'Kicker', 'londonparkour_v8' ),
-						'instructions' => __( 'e.g. "NEXT BEGINNERS SESSION"', 'londonparkour_v8' ),
+						'instructions' => __( 'Unused when a live next session exists. Fallback: "NEXT SESSION".', 'londonparkour_v8' ),
 					)
 				),
 				array(
-					'name'  => 'time',
-					'label' => __( 'Time', 'londonparkour_v8' ),
+					'name'  => 'when',
+					'label' => __( 'When', 'londonparkour_v8' ),
 					'type'  => 'text',
 				),
 				array(
-					'name'  => 'location',
-					'label' => __( 'Location', 'londonparkour_v8' ),
+					'name'  => 'meta',
+					'label' => __( 'Meta', 'londonparkour_v8' ),
 					'type'  => 'text',
 				),
-				lp_field_eyebrow(
-					array(
-						'name'  => 'spaces_label',
-						'label' => __( 'Spaces label', 'londonparkour_v8' ),
-					)
+				array(
+					'name'  => 'foot_label',
+					'label' => __( 'Foot label', 'londonparkour_v8' ),
+					'type'  => 'text',
 				),
 				array(
-					'name'  => 'spaces',
-					'label' => __( 'Spaces', 'londonparkour_v8' ),
+					'name'  => 'foot_value',
+					'label' => __( 'Foot value', 'londonparkour_v8' ),
 					'type'  => 'text',
 				),
 			),

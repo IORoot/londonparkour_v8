@@ -600,14 +600,15 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 			}
 		}
 
+		$meta_queries = array();
+
 		// A block that features one record separately (Locations' flagship,
 		// Coaches' lead) must not list it again underneath. The manual fixtures
 		// avoid this by hand — the author simply did not retype the flagship
 		// into the list — and a query cannot infer that. See PORT-FINDINGS §13.
 		if ( ! empty( $opts['exclude_flag'] ) ) {
-			$flag = (string) $opts['exclude_flag'];
-
-			$query_args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			$flag           = (string) $opts['exclude_flag'];
+			$meta_queries[] = array(
 				'relation' => 'OR',
 				array(
 					'key'     => $flag,
@@ -618,6 +619,43 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 					'value'   => '1',
 					'compare' => '!=',
 				),
+			);
+		}
+
+		// Filter in the query so source_limit counts matching kinds — fetching
+		// the latest N posts then dropping spots left the Locations list empty
+		// (and the hardcoded Peckham/Stratford fixtures filled in).
+		if ( 'lp_location' === $post_type && ! empty( $opts['require_kind'] ) ) {
+			$kind = (string) $opts['require_kind'];
+			if ( 'spot' === $kind ) {
+				$meta_queries[] = array(
+					'key'   => 'location_kind',
+					'value' => 'spot',
+				);
+			} else {
+				$meta_queries[] = array(
+					'relation' => 'OR',
+					array(
+						'key'   => 'location_kind',
+						'value' => 'site',
+					),
+					array(
+						'key'     => 'location_kind',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'location_kind',
+						'value'   => '',
+						'compare' => '=',
+					),
+				);
+			}
+		}
+
+		if ( $meta_queries ) {
+			$query_args['meta_query'] = array_merge( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array( 'relation' => 'AND' ),
+				$meta_queries
 			);
 		}
 

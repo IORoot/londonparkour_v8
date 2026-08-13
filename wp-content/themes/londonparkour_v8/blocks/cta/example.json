@@ -6,11 +6,11 @@
   "source": "manual",
   "source_manual": [
     {
-      "kicker": "NEXT BEGINNERS SESSION",
-      "time": "Today, 18:30",
-      "location": "Vauxhall — The Arches, SW8 1SR",
-      "spaces_label": "SPACES LEFT",
-      "spaces": "4"
+      "kicker": "NEXT SESSION",
+      "when": "In 2 days",
+      "meta": "Vauxhall · 18:30 · Level 1",
+      "foot_label": "CLASS",
+      "foot_value": "Beginners Parkour"
     }
   ],
   "primary_action": {

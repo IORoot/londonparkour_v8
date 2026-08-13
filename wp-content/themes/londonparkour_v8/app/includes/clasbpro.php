@@ -663,6 +663,76 @@ function lp_class_next_session( int $horizon_days = 28 ): ?array {
 }
 
 /**
+ * Relative day label for a Y-m-d session date: "Today", "Tomorrow", "In 2 days".
+ *
+ * @param string $date Y-m-d.
+ */
+function lp_class_relative_day( string $date ): string {
+	$target = DateTimeImmutable::createFromFormat( 'Y-m-d', $date, wp_timezone() );
+	if ( ! $target ) {
+		return '';
+	}
+
+	$today = current_datetime()->setTime( 0, 0 );
+	$day   = $target->setTime( 0, 0 );
+	$diff  = (int) $today->diff( $day )->format( '%r%a' );
+
+	if ( 0 === $diff ) {
+		return 'Today';
+	}
+	if ( 1 === $diff ) {
+		return 'Tomorrow';
+	}
+	if ( $diff > 1 ) {
+		return sprintf( 'In %d days', $diff );
+	}
+
+	return $day->format( 'D j M' );
+}
+
+/**
+ * Project a clasbpro session row into the homepage CTA next-session panel.
+ *
+ * @param array<string,mixed>|null $session From lp_class_next_session(); looked up if null.
+ * @return array<string,string>
+ */
+function lp_cta_session_panel( ?array $session = null ): array {
+	if ( null === $session ) {
+		$session = lp_class_next_session();
+	}
+
+	$defaults = array(
+		'kicker'     => 'NEXT SESSION',
+		'when'       => 'In 2 days',
+		'meta'       => 'Vauxhall · 18:30 · Level 1',
+		'foot_label' => 'CLASS',
+		'foot_value' => 'Beginners Parkour',
+		'href'       => function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : '/classes/',
+	);
+
+	if ( ! $session ) {
+		return $defaults;
+	}
+
+	$time     = (string) ( $session['time'] ?? '' );
+	$location = (string) ( $session['location'] ?? '' );
+	$level    = (string) ( $session['level'] ?? '' );
+	$date     = (string) ( $session['date'] ?? '' );
+	$when     = '' !== $date ? lp_class_relative_day( $date ) : '';
+	$meta     = implode( ' · ', array_filter( array( $location, $time, $level ) ) );
+	$title    = (string) ( $session['title'] ?? '' );
+
+	return array(
+		'kicker'     => 'NEXT SESSION',
+		'when'       => '' !== $when ? $when : $defaults['when'],
+		'meta'       => '' !== $meta ? $meta : $defaults['meta'],
+		'foot_label' => 'CLASS',
+		'foot_value' => '' !== $title ? $title : $defaults['foot_value'],
+		'href'       => $defaults['href'],
+	);
+}
+
+/**
  * Live "UPDATED HH:MM · DDD D MON" stamp for hero / board headers.
  */
 function lp_hero_board_stamp( ?DateTimeInterface $at = null ): string {

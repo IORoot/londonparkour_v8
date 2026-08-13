@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 $lp_cell      = 'flex items-center justify-center min-h-[112px] min-w-0 px-3 bg-accent';
 $lp_cell_link = 'flex items-center justify-center min-h-[112px] min-w-0 px-3 bg-accent no-underline hover:opacity-80 transition-opacity duration-150';
-$lp_logo_img  = 'min-w-0 max-h-[200px] max-w-full w-auto h-auto object-contain';
+$lp_logo_img  = 'min-w-0 max-h-[120px] max-w-full w-auto h-auto object-contain';
 
 $lp_default_logos = array(
 	array(

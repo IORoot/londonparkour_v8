@@ -61,23 +61,9 @@ return array(
 				),
 			),
 			array(
-				'name'  => 'clients_label',
-				'label' => __( 'Clients label', 'londonparkour_v8' ),
+				'name'  => 'tagline',
+				'label' => __( 'Tagline', 'londonparkour_v8' ),
 				'type'  => 'text',
-			),
-			array(
-				'name'         => 'clients',
-				'label'        => __( 'Clients', 'londonparkour_v8' ),
-				'type'         => 'repeater',
-				'layout'       => 'table',
-				'button_label' => __( 'Add client', 'londonparkour_v8' ),
-				'sub_fields'   => array(
-					array(
-						'name'  => 'label',
-						'label' => __( 'Label', 'londonparkour_v8' ),
-						'type'  => 'text',
-					),
-				),
 			),
 
 			lp_tab( __( 'Items', 'londonparkour_v8' ) ),

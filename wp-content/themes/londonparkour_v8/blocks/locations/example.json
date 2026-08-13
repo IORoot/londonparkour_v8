@@ -1,29 +1,17 @@
 {
-  "eyebrow": "07 — WHERE WE TRAIN",
-  "heading": "Six spots across London.",
-  "note": "Every site is a ten-minute walk from a tube or overground station. We checked.",
+  "eyebrow": "08 — WHERE WE TRAIN",
+  "heading": "Three spots across London.",
+  "note": "Every site is next to a tube or overground station.",
   "flagship": {
     "tag": "FLAGSHIP INDOOR SITE",
     "name": "Vauxhall — The Arches",
     "meta": "SW8 1SR · 4 MIN FROM VAUXHALL · OPEN 07:00–22:00"
   },
-  "clients_label": "WE'VE WORKED WITH",
-  "clients": [
-    { "label": "NIKE" },
-    { "label": "BBC" },
-    { "label": "RED BULL" },
-    { "label": "UCL" },
-    { "label": "ADIDAS" },
-    { "label": "SKY" },
-    { "label": "PUMA" },
-    { "label": "O2" }
-  ],
+  "tagline": "We move around the area to new spots every week. Class content always changes.",
   "source": "manual",
   "source_manual": [
-    { "title": "Peckham Rye", "meta": "SE15 3UA · Rye Lane · 6 min", "type": "INDOOR" },
-    { "title": "Southbank Undercroft", "meta": "SE1 8XX · Waterloo · 8 min", "type": "OUTDOOR" },
-    { "title": "Stratford East", "meta": "E20 1EJ · Stratford · 5 min", "type": "INDOOR" },
-    { "title": "Hackney Marshes", "meta": "E9 5PF · Homerton · 10 min", "type": "OUTDOOR" },
-    { "title": "Wembley Park", "meta": "HA9 0FJ · Wembley Park · 7 min", "type": "OUTDOOR" }
+    { "title": "Vauxhall", "meta": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15", "type": "OUTDOOR" },
+    { "title": "Old Street", "meta": "OLD STREET ST · LONDON EC1Y 1BE", "type": "OUTDOOR" },
+    { "title": "Kilburn Park", "meta": "NW6 5AD · SUNDAYS · 11:00-12:30", "type": "OUTDOOR" }
   ]
 }

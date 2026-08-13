@@ -967,33 +967,32 @@
                                     "name": "kicker",
                                     "label": "Kicker",
                                     "type": "text",
-                                    "instructions": "e.g. \"NEXT BEGINNERS SESSION\"",
+                                    "instructions": "Unused when a live next session exists. Fallback: \"NEXT SESSION\".",
                                     "key": "field_52802722df050e2a"
                                 },
                                 {
-                                    "name": "time",
-                                    "label": "Time",
+                                    "name": "when",
+                                    "label": "When",
                                     "type": "text",
-                                    "key": "field_9da021d8ed8fdc82"
+                                    "key": "field_276f3374b83e4899"
                                 },
                                 {
-                                    "name": "location",
-                                    "label": "Location",
+                                    "name": "meta",
+                                    "label": "Meta",
                                     "type": "text",
-                                    "key": "field_ce3963979d332b74"
+                                    "key": "field_b6909ac9d6bac255"
                                 },
                                 {
-                                    "name": "spaces_label",
-                                    "label": "Spaces label",
+                                    "name": "foot_label",
+                                    "label": "Foot label",
                                     "type": "text",
-                                    "instructions": "Short uppercase label above the heading.",
-                                    "key": "field_4125037326c9437f"
+                                    "key": "field_d842ffeec76aa7c2"
                                 },
                                 {
-                                    "name": "spaces",
-                                    "label": "Spaces",
+                                    "name": "foot_value",
+                                    "label": "Foot value",
                                     "type": "text",
-                                    "key": "field_9c92e768ec9d50b4"
+                                    "key": "field_ae89bfba294f9998"
                                 }
                             ],
                             "key": "field_eb602cc61acf07b9",
@@ -2099,26 +2098,10 @@
                             "key": "field_2609d750272f79a9"
                         },
                         {
-                            "name": "clients_label",
-                            "label": "Clients label",
+                            "name": "tagline",
+                            "label": "Tagline",
                             "type": "text",
-                            "key": "field_50551b88b0860df2"
-                        },
-                        {
-                            "name": "clients",
-                            "label": "Clients",
-                            "type": "repeater",
-                            "layout": "table",
-                            "button_label": "Add client",
-                            "sub_fields": [
-                                {
-                                    "name": "label",
-                                    "label": "Label",
-                                    "type": "text",
-                                    "key": "field_9a84d63ff013d66d"
-                                }
-                            ],
-                            "key": "field_6ef25725b5761179"
+                            "key": "field_64335134a10cc139"
                         },
                         {
                             "name": "tab_items",

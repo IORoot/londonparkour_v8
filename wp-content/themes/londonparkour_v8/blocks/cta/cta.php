@@ -4,9 +4,9 @@
  *
  * Ported from src/stories/Blocks/CTA/CTA.js.
  *
- * Takes the CPT source control (the plan's matrix), but with multiple => false:
- * the panel shows ONE session, so lp_resolve_source() is read for its first row
- * and projected locally. A manual row supplies the same five names.
+ * The next-session panel is the chronologically next upcoming class
+ * (`lp_class_next_session()`), not the first row of the source query. The
+ * whole panel is one link to the Classes page.
  *
  * The primary CTA is elements/button.php variant `inverse` — the dark quiet
  * button, correct on this bg-primary band. The alt CTA is a plain underline
@@ -33,16 +33,13 @@ $lp_subhead     = (string) ( $args['subhead'] ?? 'Beginners sessions run Tuesday
 $lp_primary = lp_action( $args['primary_action'] ?? null );
 $lp_alt     = lp_action( $args['alt_action'] ?? null );
 
-// One session, not a list — the same query layer, read for its first row.
-$lp_rows    = lp_resolve_source( $args, lp_class_post_type(), array( 'expand' => 'sessions' ) );
-$lp_row     = is_array( $lp_rows[0] ?? null ) ? $lp_rows[0] : array();
-$lp_session = array(
-	'kicker'       => (string) ( $lp_row['kicker'] ?? 'NEXT BEGINNERS SESSION' ),
-	'time'         => (string) ( $lp_row['time'] ?? 'Today, 18:30' ),
-	'location'     => (string) ( $lp_row['location'] ?? 'Vauxhall — The Arches, SW8 1SR' ),
-	'spaces_label' => (string) ( $lp_row['spaces_label'] ?? 'SPACES LEFT' ),
-	'spaces'       => (string) ( $lp_row['spaces'] ?? '4' ),
-);
+$lp_session     = function_exists( 'lp_cta_session_panel' ) ? lp_cta_session_panel() : array();
+$lp_session_href = (string) ( $lp_session['href'] ?? '' );
+$lp_session_link = '' !== $lp_session_href;
+
+/* Whole literal strings. Tailwind v4 scans source text — never build a class. */
+$lp_panel_base = 'group w-full lg:w-[450px] bg-neutral flex flex-col gap-[26px] p-[28px]';
+$lp_panel_link = 'no-underline cursor-pointer transition-colors duration-150 hover:bg-neutral-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
@@ -78,16 +75,20 @@ $lp_spacing = lp_section_spacing( $args );
 				</div>
 			</div>
 
-			<div class="w-full lg:w-[450px] bg-neutral flex flex-col gap-[26px] p-[28px]" data-component="cta-session-panel">
-				<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary"><?php echo esc_html( $lp_session['kicker'] ); ?></span>
-				<p class="font-heading text-[36px] font-semibold tracking-[-1px] text-neutral-content"><?php echo esc_html( $lp_session['time'] ); ?></p>
-				<p class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/60"><?php echo esc_html( $lp_session['location'] ); ?></p>
-				<div class="h-px bg-neutral-content/15" aria-hidden="true"></div>
+			<?php if ( $lp_session_link ) : ?>
+			<a class="<?php echo lp_classes( $lp_panel_base, $lp_panel_link ); ?>" href="<?php echo esc_url( $lp_session_href ); ?>" data-component="cta-session-panel">
+			<?php else : ?>
+			<div class="<?php echo esc_attr( $lp_panel_base ); ?>" data-component="cta-session-panel">
+			<?php endif; ?>
+				<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( $lp_session['kicker'] ); ?></span>
+				<p class="font-heading text-[36px] font-semibold tracking-[-1px] text-neutral-content group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( $lp_session['when'] ); ?></p>
+				<p class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/60 group-hover:text-neutral/60 transition-colors duration-150"><?php echo esc_html( $lp_session['meta'] ); ?></p>
+				<div class="h-px bg-neutral-content/15 group-hover:bg-neutral/15 transition-colors duration-150" aria-hidden="true"></div>
 				<div class="flex items-center justify-between">
-					<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-neutral-content/60"><?php echo esc_html( $lp_session['spaces_label'] ); ?></span>
-					<span class="font-heading text-[20px] font-semibold text-primary"><?php echo esc_html( $lp_session['spaces'] ); ?></span>
+					<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-neutral-content/60 group-hover:text-neutral/60 transition-colors duration-150"><?php echo esc_html( $lp_session['foot_label'] ); ?></span>
+					<span class="font-heading text-[20px] font-semibold text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( $lp_session['foot_value'] ); ?></span>
 				</div>
-			</div>
+			<?php echo $lp_session_link ? '</a>' : '</div>'; ?>
 		</div>
 	</div>
 </section>
