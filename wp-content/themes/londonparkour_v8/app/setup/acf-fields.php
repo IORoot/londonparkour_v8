@@ -441,7 +441,9 @@ function lp_field_term_source( string $taxonomy, string $label, array $manual_su
  *
  * @param array  $args     The block's field values (the whole $args array).
  * @param string $taxonomy Taxonomy to query when source is 'latest' or 'choose'.
- * @param array  $opts     'exclude' => term ID (or list) already featured above.
+ * @param array  $opts     'exclude' => term ID (or list) already featured above;
+ *                         'hide_empty' => bool (default false);
+ *                         'orderby' / 'order' => get_terms() sort (default term_id ASC).
  * @return array<int, array>
  */
 function lp_resolve_term_source( array $args, string $taxonomy, array $opts = array() ): array {
@@ -462,7 +464,10 @@ function lp_resolve_term_source( array $args, string $taxonomy, array $opts = ar
 		);
 	}
 
-	$exclude = array_filter( array_map( 'intval', (array) ( $opts['exclude'] ?? array() ) ) );
+	$exclude    = array_filter( array_map( 'intval', (array) ( $opts['exclude'] ?? array() ) ) );
+	$hide_empty = ! empty( $opts['hide_empty'] );
+	$orderby    = (string) ( $opts['orderby'] ?? 'term_id' );
+	$order      = (string) ( $opts['order'] ?? 'ASC' );
 
 	if ( 'choose' === $source ) {
 		$ids = array_filter( array_map( 'intval', (array) ( $args['source_items'] ?? array() ) ) );
@@ -472,10 +477,10 @@ function lp_resolve_term_source( array $args, string $taxonomy, array $opts = ar
 		$fetched = get_terms(
 			array(
 				'taxonomy'   => $taxonomy,
-				'hide_empty' => false,
+				'hide_empty' => $hide_empty,
 				'number'     => $limit + count( $exclude ),
-				'orderby'    => 'term_id',
-				'order'      => 'ASC',
+				'orderby'    => $orderby,
+				'order'      => $order,
 			)
 		);
 		$ids = is_wp_error( $fetched ) ? array() : wp_list_pluck( $fetched, 'term_id' );
@@ -917,7 +922,6 @@ function lp_expand_sessions( array $items, int $limit ): array {
 function lp_source_taxonomy_for( string $post_type ): ?string {
 	$map = array(
 		'clasbpro_class' => 'lp_level',
-		'lp_tutorial'    => 'lp_level',
 	);
 
 	return $map[ $post_type ] ?? null;

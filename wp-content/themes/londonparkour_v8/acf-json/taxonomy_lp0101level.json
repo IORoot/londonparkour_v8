@@ -5,8 +5,7 @@
     "active": true,
     "taxonomy": "lp_level",
     "object_type": [
-        "clasbpro_class",
-        "lp_tutorial"
+        "clasbpro_class"
     ],
     "advanced_configuration": true,
     "import_source": "",
@@ -68,5 +67,5 @@
     "meta_box_sanitize_cb": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1786632186
+    "modified": 1786726280
 }

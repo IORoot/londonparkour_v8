@@ -8,8 +8,9 @@
  *   - Components/ListRow.js `surface: 'board'`        -> variant 'list_row_board'
  *   - Components/ListRow.js `surface: 'page'`         -> variant 'list_row_page'
  *   - Components/MediaCard.js (isLink)                -> variant 'media_card'
- *   - Components/VideoCard.js `variant="compact"` (isLink) -> variant 'media_card'
- *     (byte-identical to MediaCard's string — one variant covers both, per §2b)
+ *   - Components/VideoCard.js `variant="compact"`     -> variant 'media_card_static'
+ *     plus call-site `group-hover:text-neutral` (card hover is yellow/black,
+ *     not the MediaCard accent chevron)
  *   - Components/SearchResultRow.js                   -> variant 'search_result_row'
  *     (the one outlier icon size: w-[13px] h-[13px] vs everyone else's w-3.5 h-3.5)
  *   - Blocks/Locations.js site row                     -> variant 'accent_band'

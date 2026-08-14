@@ -647,11 +647,13 @@ function lp_seed_homepage( array $media ): void {
  */
 function lp_seed_template_pages(): void {
 	$pages = array(
-		'legal'       => array( 'Legal', 'templates/legal.php' ),
-		'classes'     => array( 'Classes', 'templates/classes-agenda.php' ),
-		'classes-map' => array( 'Classes — Map', 'templates/classes-map.php' ),
-		'contact'     => array( 'Contact', 'templates/contact.php' ),
-		'docs-faq'    => array( 'Docs — FAQ', 'templates/docs-faq.php' ),
+		'legal'            => array( 'Legal', 'templates/legal.php' ),
+		'classes'          => array( 'Classes', 'templates/classes-agenda.php' ),
+		'classes-map'      => array( 'Classes — Map', 'templates/classes-map.php' ),
+		'contact'          => array( 'Contact', 'templates/contact.php' ),
+		'docs-faq'         => array( 'Docs — FAQ', 'templates/docs-faq.php' ),
+		'tutorials-series'   => array( 'Tutorials — Series', 'templates/tutorials-series.php' ),
+		'tutorials-category' => array( 'Tutorials — Category', 'templates/tutorials-category.php' ),
 	);
 
 	$sections = array(

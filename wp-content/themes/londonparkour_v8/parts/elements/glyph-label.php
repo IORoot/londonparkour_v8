@@ -23,6 +23,7 @@
  * @param string $args['icon_id'] Optional leading glyph.
  * @param string $args['surface'] page|board|fill|accent.
  * @param string $args['tone']    signal|ink|muted.
+ * @param string $args['class']   Extra call-site classes (whole literals).
  *
  * @package londonparkour_v8
  */
@@ -55,6 +56,7 @@ $lp_tones = array(
 $lp_root    = 'inline-flex items-center gap-[8px] font-label text-[10px] font-semibold tracking-[1px] uppercase whitespace-nowrap';
 $lp_surface = $lp_tones[ $args['surface'] ?? 'page' ] ?? $lp_tones['page'];
 $lp_tone    = $lp_surface[ $args['tone'] ?? 'muted' ] ?? $lp_surface['muted'];
+$lp_extra   = (string) ( $args['class'] ?? '' );
 $lp_label   = (string) ( $args['label'] ?? '' );
 
 if ( '' === $lp_label ) {
@@ -62,7 +64,7 @@ if ( '' === $lp_label ) {
 }
 ?>
 <?php // No stray whitespace inside the span — it is inline-flex and gap already spaces the glyph. ?>
-<span class="<?php echo lp_classes( $lp_root, $lp_tone ); ?>" data-component="glyph-label"><?php
+<span class="<?php echo lp_classes( $lp_root, $lp_tone, $lp_extra ); ?>" data-component="glyph-label"><?php
 if ( ! empty( $args['icon_id'] ) ) {
 	// Decorative: the label carries the meaning, and currentColor makes the glyph track the tone.
 	echo '<span class="shrink-0" aria-hidden="true">';

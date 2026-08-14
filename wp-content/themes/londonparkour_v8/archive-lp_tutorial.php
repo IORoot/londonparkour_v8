@@ -6,7 +6,7 @@
  * Read that file's docblock before touching this one.
  *
  * Section order: breadcrumb → masthead → view rail → filter grid → "03 The
- * Board" (meta-row → rule → 3-per-row video-card grid → an inline PageOnward
+ * Board" (meta-row → rule → 4-per-row video-card grid → an inline PageOnward
  * pagination rail) → Train In Person → onward. Nav/footer are
  * get_header()/get_footer(), outside the one <main>.
  *
@@ -29,169 +29,62 @@
  *
  * ── Card facts ──────────────────────────────────────────────────────────
  *
- * `duration` is the existing `duration` field on group_lp_tutorial. `note` is
- * the post excerpt (`get_the_excerpt()` — native data, not an ACF field; three
- * short excerpts were seeded in bin/demo-content/lp_tutorial.json for this
- * port, same pattern as lp_class.json's own excerpts). The "01 ·" sequence
- * number is the post's own `menu_order`.
- *
- * `kicker` / `meta` (category / move) read the hierarchical `lp_series`
- * taxonomy: a parent term is the category, a child term is the move. This
- * reads literally — the kicker is the term's PARENT's name (empty when the
- * term has no parent, since there is then nothing to read), and the meta is
- * the sequence number plus the term's own name. The three seeded tutorials
- * each carry one FLAT (parent-less) `lp_series` term, so their kicker is
- * currently empty and their meta is just "0N · TERMNAME" — an honest
- * reflection of the data, not a defect. The moment an editor nests a term
- * under a category, the kicker appears for that tutorial.
- *
- * ── The two flags ───────────────────────────────────────────────────────
- *
- * RESUME (source card 4) is per-user watch progress. This theme has no user
- * model, no auth and no progress store, so it CANNOT be built and is not
- * faked — same gap class as PORT-FINDINGS §19's SITES. No card ever renders
- * it.
- *
- * NEW (source card 9) IS derivable — from the post date. A tutorial published
- * within the last 30 days gets the flag. Thirty days was chosen as a plain,
- * unremarkable "recently added" window for a slow-moving tutorial library;
- * there is no design-specified value to match.
+ * Cards are `lp_video_card_args_from_tutorial( …, 'full' )`. Kicker / meta /
+ * glyph read the hierarchical `tutorial-category` taxonomy (parent = category,
+ * child = move). Duration is YouTube runtime when present. NEW is a post
+ * published in the last 30 days. RESUME cannot be built (no user progress
+ * store) and never renders.
  *
  * ── Filtering ──────────────────────────────────────────────────────────────
  *
- * A real GET form, following archive-lp_class.php's own pattern. See
- * app/setup/queries.php for why the parameters are `tutorial_search` /
- * `tutorial_category` / `tutorial_move` / `tutorial_sort` and not `s` or the
- * taxonomy query var. Category options are the taxonomy's parent (top-level)
- * terms; Move options are the selected category's children, so the two
- * cascade through a normal page reload — no extra JS needed beyond
- * FilterForm.js, which filter-grid.php already wires up.
+ * A real GET form. Parameters are `tutorial_search` / `tutorial_category`
+ * / `tutorial_series` / `tutorial_tag`. Category is parent or child
+ * `tutorial-category`; series is an `lp_series` term; tag is challenge,
+ * demonstration or tutorial. The board orders by category, then series,
+ * then curriculum order number (award_level on challenges, order_position
+ * on tutorials). Demonstrations have no order number and sort last inside
+ * their series.
  *
- * The inline pagination rail inside "03 The Board" is prev/next MOVE (a
- * sibling `lp_series` term), per the source design — NOT numbered paging.
- * It only has something to show once a move is selected; with none of the
- * seeded terms nested, both sides render empty (page-onward's own guard),
- * which is correct given the data, not a broken control.
+ * The inline pagination rail inside "03 The Board" is prev/next PAGE of the
+ * filtered listing. Category is the dropdown; this rail pages the board.
+ * It only has something to show when there is more than one page.
  *
  * Numbered page pagination is separate: the main query is paged
- * (`posts_per_page`), and when there is more than one page the shared
- * `components/pagination` band (same shape as Search / Classes listings)
- * mounts after the board via `lp_pagination_args( …, 'VIDEOS' )`. The design
- * file never drew that band on TutorialsIndex — it assumed a filtered
- * move-sized set — but without it a real archive cannot be walked.
+ * (120 per page, set in lp_filter_tutorial_archive()), and when there
+ * is more than one page the shared `components/pagination` band mounts
+ * after the board via `lp_pagination_args( …, 'VIDEOS' )`.
  *
  * @package londonparkour_v8
  */
 
 defined( 'ABSPATH' ) || exit;
 
-/** Kicker (parent term name) / meta ("0N · TERM") for one tutorial, from lp_series. */
-$lp_series_info = static function ( WP_Post $lp_post ): array {
-	$lp_terms = get_the_terms( $lp_post, 'lp_series' );
-	$lp_term  = ( is_array( $lp_terms ) && $lp_terms ) ? $lp_terms[0] : null;
-
-	if ( ! $lp_term ) {
-		return array(
-			'kicker' => '',
-			'meta'   => '',
-		);
-	}
-
-	$lp_parent = $lp_term->parent ? get_term( $lp_term->parent, 'lp_series' ) : null;
-	$lp_kicker = ( $lp_parent && ! is_wp_error( $lp_parent ) ) ? strtoupper( $lp_parent->name ) : '';
-
-	return array(
-		'kicker' => $lp_kicker,
-		'meta'   => sprintf( '%02d · %s', (int) $lp_post->menu_order, strtoupper( $lp_term->name ) ),
-		'term'   => $lp_term,
-	);
-};
-
-/** Flatten one tutorial into components/video-card.php's `full` args. */
-$lp_card = static function ( WP_Post $lp_post ) use ( $lp_series_info ): array {
-	$lp_info     = $lp_series_info( $lp_post );
-	$lp_duration = function_exists( 'get_field' ) ? (string) get_field( 'duration', $lp_post->ID ) : '';
-
-	// NEW: published within the last 30 days. RESUME cannot be built (no user
-	// model/progress store) and never renders — see the docblock.
-	$lp_is_new = ( time() - get_post_time( 'U', true, $lp_post ) ) <= ( 30 * DAY_IN_SECONDS );
-
-	return array(
-		'variant'     => 'full',
-		'image_id'    => get_post_thumbnail_id( $lp_post ) ?: 0,
-		'kicker'      => $lp_info['kicker'],
-		'meta'        => $lp_info['meta'],
-		'title'       => get_the_title( $lp_post ),
-		'note'        => get_the_excerpt( $lp_post ),
-		'duration'    => $lp_duration,
-		'badge_label' => 'Lesson',
-		'flag'        => $lp_is_new ? 'NEW' : '',
-		'cta_label'   => 'Watch lesson',
-		'cta_href'    => (string) get_permalink( $lp_post ),
-	);
-};
-
-$lp_values      = lp_tutorial_filter_values();
-$lp_category    = $lp_values['tutorial_category'];
-$lp_move        = $lp_values['tutorial_move'];
-$lp_sort        = $lp_values['tutorial_sort'];
-$lp_archive_url = (string) get_post_type_archive_link( 'lp_tutorial' );
-
-$lp_total_tutorials = (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
-$lp_all_series      = get_terms( array( 'taxonomy' => 'lp_series', 'hide_empty' => false ) );
-$lp_total_series    = is_array( $lp_all_series ) ? count( $lp_all_series ) : 0;
-
-// Category (parent) / Move (child of the selected category) terms.
-$lp_category_terms = get_terms(
-	array(
-		'taxonomy'   => 'lp_series',
-		'parent'     => 0,
-		'hide_empty' => false,
-	)
-);
-$lp_category_terms = is_array( $lp_category_terms ) ? $lp_category_terms : array();
-$lp_category_term   = null;
-foreach ( $lp_category_terms as $lp_t ) {
-	if ( $lp_t->slug === $lp_category ) {
-		$lp_category_term = $lp_t;
-		break;
-	}
+$lp_values           = lp_tutorial_filter_values();
+$lp_category         = $lp_values['tutorial_category'];
+$lp_series           = $lp_values['tutorial_series'];
+$lp_tag              = $lp_values['tutorial_tag'];
+$lp_archive_url      = (string) get_post_type_archive_link( 'lp_tutorial' );
+$lp_total_tutorials  = (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
+$lp_category_options = lp_tutorial_category_filter_options();
+$lp_series_options   = lp_tutorial_series_filter_options();
+$lp_tag_options      = lp_tutorial_tag_filter_options();
+$lp_category_term    = '' !== $lp_category
+	? get_term_by( 'slug', $lp_category, 'tutorial-category' )
+	: null;
+if ( ! $lp_category_term instanceof WP_Term ) {
+	$lp_category_term = null;
 }
-
-$lp_move_terms = array();
-if ( $lp_category_term ) {
-	$lp_move_terms = get_terms(
-		array(
-			'taxonomy'   => 'lp_series',
-			'parent'     => $lp_category_term->term_id,
-			'hide_empty' => false,
-		)
-	);
-	$lp_move_terms = is_array( $lp_move_terms ) ? $lp_move_terms : array();
+$lp_series_term = '' !== $lp_series
+	? get_term_by( 'slug', $lp_series, 'lp_series' )
+	: null;
+if ( ! $lp_series_term instanceof WP_Term ) {
+	$lp_series_term = null;
 }
-
-$lp_move_term = null;
-foreach ( $lp_move_terms as $lp_t ) {
-	if ( $lp_t->slug === $lp_move ) {
-		$lp_move_term = $lp_t;
-		break;
-	}
-}
-
-$lp_category_options = array( array( 'value' => '', 'label' => 'All categories' ) );
-foreach ( $lp_category_terms as $lp_t ) {
-	$lp_category_options[] = array(
-		'value' => $lp_t->slug,
-		'label' => $lp_t->name,
-	);
-}
-
-$lp_move_options = array( array( 'value' => '', 'label' => 'All moves' ) );
-foreach ( $lp_move_terms as $lp_t ) {
-	$lp_move_options[] = array(
-		'value' => $lp_t->slug,
-		'label' => $lp_t->name,
-	);
+$lp_tag_term = '' !== $lp_tag
+	? get_term_by( 'slug', $lp_tag, 'tutorial-tag' )
+	: null;
+if ( ! $lp_tag_term instanceof WP_Term ) {
+	$lp_tag_term = null;
 }
 
 get_header();
@@ -200,7 +93,7 @@ get_header();
 <main id="main">
 	<?php
 	// Breadcrumb reflects real filter state — HOME / TUTORIALS, plus the
-	// category and/or move when the page is actually filtered to them.
+	// category and/or series when the page is actually filtered.
 	$lp_crumbs = array(
 		array(
 			'label' => 'HOME',
@@ -208,26 +101,22 @@ get_header();
 		),
 	);
 
-	if ( ! $lp_category_term && ! $lp_move_term ) {
+	if ( ! $lp_category_term && ! $lp_series_term && ! $lp_tag_term ) {
 		$lp_crumbs[] = array( 'label' => 'TUTORIALS' );
 	} else {
 		$lp_crumbs[] = array(
 			'label' => 'TUTORIALS',
 			'href'  => $lp_archive_url,
 		);
-	}
-
-	if ( $lp_category_term ) {
-		$lp_crumbs[] = $lp_move_term
-			? array(
-				'label' => strtoupper( $lp_category_term->name ),
-				'href'  => add_query_arg( 'tutorial_category', $lp_category_term->slug, $lp_archive_url ),
-			)
-			: array( 'label' => strtoupper( $lp_category_term->name ) );
-	}
-
-	if ( $lp_move_term ) {
-		$lp_crumbs[] = array( 'label' => strtoupper( $lp_move_term->name ) );
+		if ( $lp_category_term ) {
+			$lp_crumbs[] = array( 'label' => strtoupper( $lp_category_term->name ) );
+		}
+		if ( $lp_series_term ) {
+			$lp_crumbs[] = array( 'label' => strtoupper( $lp_series_term->name ) );
+		}
+		if ( $lp_tag_term ) {
+			$lp_crumbs[] = array( 'label' => strtoupper( $lp_tag_term->name ) );
+		}
 	}
 
 	lp_part(
@@ -236,7 +125,7 @@ get_header();
 			'crumbs' => $lp_crumbs,
 			'action' => array(
 				'label' => 'BY SERIES ↗',
-				'href'  => home_url( '/tutorials/series' ),
+				'href'  => lp_tutorials_series_url(),
 			),
 		)
 	);
@@ -246,7 +135,7 @@ get_header();
 		array(
 			'title' => 'Tutorials.',
 			'note'  => sprintf(
-				'%d coached videos, filed by movement. Filter down to the exact move — or browse the whole board.',
+				'%d coached videos, filed by movement. Filter by category, series or tag — or browse the whole board.',
 				$lp_total_tutorials
 			),
 		)
@@ -257,22 +146,7 @@ get_header();
 		array(
 			'context'    => 'tutorials',
 			'aria_label' => 'Tutorials view',
-			'tabs'       => array(
-				array(
-					'label'   => 'By series',
-					'meta'    => sprintf( '%d series', $lp_total_series ),
-					'icon_id' => 'icon-square-3-stack-3d',
-					'href'    => home_url( '/tutorials/series' ),
-					'active'  => false,
-				),
-				array(
-					'label'   => 'By tutorial',
-					'meta'    => sprintf( '%d videos', $lp_total_tutorials ),
-					'icon_id' => 'icon-play-circle',
-					'href'    => $lp_archive_url,
-					'active'  => true,
-				),
-			),
+			'tabs'       => lp_tutorials_view_tabs( 'tutorial' ),
 		)
 	);
 
@@ -296,20 +170,17 @@ get_header();
 				),
 				array(
 					'type'    => 'select',
-					'key'     => 'Move',
-					'name'    => 'tutorial_move',
-					'options' => $lp_move_options,
-					'value'   => $lp_move,
+					'key'     => 'Series',
+					'name'    => 'tutorial_series',
+					'options' => $lp_series_options,
+					'value'   => $lp_series,
 				),
 				array(
 					'type'    => 'select',
-					'key'     => 'Sort',
-					'name'    => 'tutorial_sort',
-					'options' => array(
-						array( 'value' => 'sequence', 'label' => 'Sequence' ),
-						array( 'value' => 'newest', 'label' => 'Newest' ),
-					),
-					'value'   => $lp_sort,
+					'key'     => 'Tag',
+					'name'    => 'tutorial_tag',
+					'options' => $lp_tag_options,
+					'value'   => $lp_tag,
 				),
 			),
 			'action' => $lp_archive_url,
@@ -323,15 +194,19 @@ get_header();
 	$lp_found = (int) $wp_query->found_posts;
 
 	if ( have_posts() ) :
-		$lp_left_bits = array_filter(
-			array(
-				$lp_category_term ? strtoupper( $lp_category_term->name ) : '',
-				$lp_move_term ? strtoupper( $lp_move_term->name ) : '',
-			)
-		);
+		$lp_board_bits = array();
+		if ( $lp_category_term ) {
+			$lp_board_bits[] = strtoupper( $lp_category_term->name );
+		}
+		if ( $lp_series_term ) {
+			$lp_board_bits[] = strtoupper( $lp_series_term->name );
+		}
+		if ( $lp_tag_term ) {
+			$lp_board_bits[] = strtoupper( $lp_tag_term->name );
+		}
 		$lp_content_left = sprintf(
 			'%s — %d VIDEOS',
-			$lp_left_bits ? implode( ' · ', $lp_left_bits ) : 'ALL TUTORIALS',
+			$lp_board_bits ? implode( ' · ', $lp_board_bits ) : 'ALL TUTORIALS',
 			$lp_found
 		);
 		?>
@@ -342,88 +217,77 @@ get_header();
 					'components/meta-row',
 					array(
 						'left'    => $lp_content_left,
-						'right'   => sprintf( 'SORT — %s ↓', strtoupper( $lp_sort ) ),
+						'right'   => '',
 						'surface' => 'page',
 					)
 				);
 
 				lp_part( 'elements/rule', array( 'tone' => 'ink' ) );
 				?>
-				<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-[24px]">
+				<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-[24px]">
 					<?php
 					while ( have_posts() ) :
 						the_post();
-						lp_part( 'components/video-card', $lp_card( get_post() ) );
+						lp_part( 'components/video-card', lp_video_card_args_from_tutorial( get_post(), 'full' ) );
 					endwhile;
 					?>
 				</div>
 				<?php
-				// Prev/next MOVE — a sibling lp_series term, not numbered
-				// paging. Only has something to show once a move is selected;
-				// see the docblock.
-				$lp_prev_move = array();
-				$lp_next_move = array();
+				// Prev/next PAGE of this listing — category is the dropdown,
+				// this rail pages the board. Skip the empty hairline when
+				// there is only one page.
+				$lp_pagination = lp_pagination_args( null, 'VIDEOS' );
+				$lp_paged      = max( 1, (int) $wp_query->get( 'paged' ) );
+				$lp_per_page   = (int) $wp_query->get( 'posts_per_page' );
+				$lp_max_pages  = (int) $wp_query->max_num_pages;
+				$lp_prev_page  = array();
+				$lp_next_page  = array();
 
-				if ( $lp_move_term ) {
-					$lp_siblings = $lp_move_terms; // Already the current move's siblings (children of its category).
-					usort( $lp_siblings, static fn( $lp_a, $lp_b ) => strcmp( $lp_a->name, $lp_b->name ) );
+				if ( $lp_max_pages > 1 && $lp_per_page > 0 ) {
+					$lp_video_range = static function ( int $lp_page ) use ( $lp_per_page, $lp_found ): string {
+						$lp_from = ( ( $lp_page - 1 ) * $lp_per_page ) + 1;
+						$lp_to   = min( $lp_page * $lp_per_page, $lp_found );
+						return sprintf( 'Videos %02d–%02d', $lp_from, $lp_to );
+					};
 
-					$lp_index = null;
-					foreach ( $lp_siblings as $lp_i => $lp_t ) {
-						if ( $lp_t->term_id === $lp_move_term->term_id ) {
-							$lp_index = $lp_i;
-							break;
-						}
+					if ( $lp_paged > 1 ) {
+						$lp_prev_page = array(
+							'keyword' => '← PREVIOUS PAGE',
+							'label'   => $lp_video_range( $lp_paged - 1 ),
+							'href'    => get_pagenum_link( $lp_paged - 1 ),
+						);
 					}
-
-					if ( null !== $lp_index ) {
-						$lp_sibling_href = static function ( WP_Term $lp_t ) use ( $lp_archive_url, $lp_category_term ) {
-							return add_query_arg(
-								array(
-									'tutorial_category' => $lp_category_term->slug,
-									'tutorial_move'      => $lp_t->slug,
-								),
-								$lp_archive_url
-							);
-						};
-
-						if ( $lp_index > 0 ) {
-							$lp_prev_term = $lp_siblings[ $lp_index - 1 ];
-							$lp_prev_move = array(
-								'keyword' => '← PREVIOUS MOVE',
-								'label'   => sprintf( '%s (%d videos)', $lp_prev_term->name, (int) $lp_prev_term->count ),
-								'href'    => $lp_sibling_href( $lp_prev_term ),
-							);
-						}
-						if ( $lp_index < count( $lp_siblings ) - 1 ) {
-							$lp_next_term = $lp_siblings[ $lp_index + 1 ];
-							$lp_next_move = array(
-								'keyword' => 'NEXT MOVE →',
-								'label'   => sprintf( '%s (%d videos)', $lp_next_term->name, (int) $lp_next_term->count ),
-								'href'    => $lp_sibling_href( $lp_next_term ),
-							);
-						}
+					if ( $lp_paged < $lp_max_pages ) {
+						$lp_next_page = array(
+							'keyword' => 'NEXT PAGE →',
+							'label'   => $lp_video_range( $lp_paged + 1 ),
+							'href'    => get_pagenum_link( $lp_paged + 1 ),
+						);
 					}
 				}
-				?>
+
+				if ( $lp_prev_page || $lp_next_page ) {
+					?>
 				<div class="pt-2">
 					<?php
 					lp_part(
 						'components/page-onward',
 						array(
-							'prev'    => $lp_prev_move,
-							'next'    => $lp_next_move,
+							'prev'    => $lp_prev_page,
+							'next'    => $lp_next_page,
 							'surface' => 'page',
 							'variant' => 'bare',
 						)
 					);
 					?>
 				</div>
+					<?php
+				}
+				?>
 			</div>
 		</div>
 
 		<?php
-		$lp_pagination = lp_pagination_args( null, 'VIDEOS' );
 		if ( $lp_pagination ) {
 			$lp_pagination['aria_label'] = 'Tutorial pages';
 			lp_part( 'components/pagination', $lp_pagination );
@@ -440,7 +304,7 @@ get_header();
 			'prev' => array(
 				'keyword' => '← THE SERIES',
 				'label'   => 'The twelve lines',
-				'href'    => home_url( '/tutorials/series' ),
+				'href'    => lp_tutorials_series_url(),
 			),
 			'next' => array(
 				'keyword' => 'BOOK A CLASS →',

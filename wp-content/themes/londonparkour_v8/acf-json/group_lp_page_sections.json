@@ -3918,6 +3918,36 @@
                             "key": "field_20fea2fdc9cef070"
                         },
                         {
+                            "name": "featured_series",
+                            "label": "Featured series",
+                            "type": "taxonomy",
+                            "taxonomy": "lp_series",
+                            "field_type": "select",
+                            "allow_null": 1,
+                            "add_term": 0,
+                            "save_terms": 0,
+                            "load_terms": 0,
+                            "return_format": "id",
+                            "instructions": "Empty = the series tagged START HERE, else the first published series. Episode count, runtime and poster come from its tutorials.",
+                            "key": "field_74d6ecf97b41c071",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_4890c7d95742f176",
+                                        "operator": "==",
+                                        "value": "latest"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "field": "field_4890c7d95742f176",
+                                        "operator": "==",
+                                        "value": "choose"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
                             "name": "featured",
                             "label": "Featured series",
                             "type": "group",
@@ -3981,7 +4011,16 @@
                                     "key": "field_fbbe01f978969bf4"
                                 }
                             ],
-                            "key": "field_a2be9f2d0c8dd913"
+                            "key": "field_a2be9f2d0c8dd913",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_4890c7d95742f176",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
                         },
                         {
                             "name": "shelf_label",

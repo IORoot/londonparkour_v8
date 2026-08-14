@@ -39,8 +39,8 @@ function lp_post_types(): array {
 			'plural'   => __( 'Tutorials', 'londonparkour_v8' ),
 			'slug'     => 'tutorials',
 			'icon'     => 'dashicons-video-alt3',
-			'supports' => array( 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes' ),
-			'taxes'    => array( 'lp_level', 'lp_series' ),
+			'supports' => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes' ),
+			'taxes'    => array( 'lp_series' ),
 		),
 		'lp_testimonial' => array(
 			'singular'            => __( 'Testimonial', 'londonparkour_v8' ),
@@ -70,7 +70,7 @@ function lp_taxonomies(): array {
 			'plural'       => __( 'Levels', 'londonparkour_v8' ),
 			'slug'         => 'level',
 			'hierarchical' => true,
-			'post_types'   => array( 'clasbpro_class', 'lp_tutorial' ),
+			'post_types'   => array( 'clasbpro_class' ),
 		),
 		'lp_series' => array(
 			'singular'     => __( 'Series', 'londonparkour_v8' ),

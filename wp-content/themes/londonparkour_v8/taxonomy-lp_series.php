@@ -6,25 +6,18 @@
  * Read that file's docblock before touching this one.
  *
  * Section order: breadcrumb → masthead → view rail → "02 The Lessons"
- * (sidebar + series header + lesson boards) → Train In Person → onward.
- * Nav/footer are get_header()/get_footer(), outside the one <main>.
+ * (sidebar + series header + category shelves or a full-card grid) →
+ * Train In Person → onward. Nav/footer are get_header()/get_footer(),
+ * outside the one <main>.
  *
- * Train In Person is the already-ported block, called via lp_render_block().
+ * Layout is the series term's ACF `layout` field: `categories` (default) is
+ * one horizontal lesson-card shelf per child tutorial-category, with a 2px
+ * track and prev/next arrows; `grid` is one board of the same lesson cards.
+ * Runtime is computed (YouTube data, then transcript) — ACF tutorial
+ * `duration` and series `episode_count` / `duration` are ignored at render.
  *
- * ── Data projection ─────────────────────────────────────────────────────
- * Masthead title / note come from the term name and `logline` term field.
- * Sidebar lists every `lp_series` term (menu_order / term_id), tagging the
- * current one. Lesson boards: the current series first, then up to two
- * sibling series that have published tutorials (the source shows three LINE
- * boards as composition furniture — we only emit boards that have real
- * lessons). Each lesson row is an `lp_tutorial` in that term.
- *
- * ── Gaps (do not invent) ────────────────────────────────────────────────
  * Watch progress (WATCHED / RESUME / "4 OF 8 WATCHED" / progress bar fill)
- * needs a per-user store this theme does not have — same class as
- * archive-lp_tutorial.php's RESUME gap. Rows use WATCH, or NEW when the
- * tutorial is ≤30 days old. The progress bar and watched-count copy are
- * omitted rather than faked at 50%.
+ * needs a per-user store this theme does not have — omitted rather than faked.
  *
  * @package londonparkour_v8
  */
@@ -39,145 +32,64 @@ if ( ! ( $lp_term instanceof WP_Term ) || 'lp_series' !== $lp_term->taxonomy ) {
 	return;
 }
 
-$lp_term_id   = (int) $lp_term->term_id;
-$lp_fields    = function_exists( 'get_fields' ) ? get_fields( 'term_' . $lp_term_id ) : array();
-$lp_fields    = is_array( $lp_fields ) ? $lp_fields : array();
-$lp_logline   = (string) ( $lp_fields['logline'] ?? '' );
-$lp_tag       = (string) ( $lp_fields['tag'] ?? '' );
-$lp_ep_count  = isset( $lp_fields['episode_count'] ) ? (int) $lp_fields['episode_count'] : 0;
-$lp_duration  = (string) ( $lp_fields['duration'] ?? '' );
-$lp_coach     = (string) ( $lp_fields['coach_label'] ?? '' );
-$lp_cta_label = (string) ( $lp_fields['cta_label'] ?? 'PLAY SERIES' );
+$lp_term_id     = (int) $lp_term->term_id;
+$lp_fields      = function_exists( 'get_fields' ) ? get_fields( 'term_' . $lp_term_id ) : array();
+$lp_fields      = is_array( $lp_fields ) ? $lp_fields : array();
+$lp_logline     = (string) ( $lp_fields['logline'] ?? '' );
+$lp_coach       = (string) ( $lp_fields['coach_label'] ?? '' );
+$lp_layout_raw  = (string) ( $lp_fields['layout'] ?? 'categories' );
+$lp_is_grid     = 'grid' === $lp_layout_raw;
+$lp_cta_label   = 'PLAY SERIES';
 
 $lp_archive_url = (string) get_post_type_archive_link( 'lp_tutorial' );
+$lp_series_url  = lp_tutorials_series_url();
 $lp_term_link   = get_term_link( $lp_term );
 $lp_term_url    = is_wp_error( $lp_term_link ) ? $lp_archive_url : (string) $lp_term_link;
 
-$lp_all_series = get_terms(
-	array(
-		'taxonomy'   => 'lp_series',
-		'hide_empty' => false,
-		'orderby'    => 'term_id',
-		'order'      => 'ASC',
-	)
-);
-$lp_all_series = is_array( $lp_all_series ) ? $lp_all_series : array();
-
+$lp_all_series      = lp_series_terms_nonempty();
 $lp_total_tutorials = (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
-$lp_total_series    = count( $lp_all_series );
 
-/**
- * Published tutorials in a series term, menu_order then date.
- *
- * @param int $term_id Series term ID.
- * @return WP_Post[]
- */
-$lp_lessons_in = static function ( int $term_id ): array {
-	$q = new WP_Query(
-		array(
-			'post_type'              => 'lp_tutorial',
-			'post_status'            => 'publish',
-			'posts_per_page'         => 24,
-			'orderby'                => array(
-				'menu_order' => 'ASC',
-				'date'       => 'ASC',
-			),
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => true,
-			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-				array(
-					'taxonomy' => 'lp_series',
-					'field'    => 'term_id',
-					'terms'    => $term_id,
-				),
-			),
-		)
-	);
-	return $q->posts;
-};
-
-/**
- * Project tutorials into board-row args for a lesson board.
- *
- * @param WP_Post[] $posts Lessons.
- * @return array<int,array{part:string,args:array}>
- */
-$lp_board_rows = static function ( array $posts ): array {
-	$rows = array();
-	$i    = 0;
-	foreach ( $posts as $post ) {
-		++$i;
-		$duration = function_exists( 'get_field' ) ? (string) get_field( 'duration', $post->ID ) : '';
-		$coaches  = function_exists( 'get_field' ) ? get_field( 'coaches', $post->ID ) : array();
-		$coach_ids = array_filter( array_map( 'intval', (array) $coaches ) );
-		$subtitle  = $coach_ids ? get_the_title( $coach_ids[0] ) : '';
-
-		$is_new = ( time() - get_post_time( 'U', true, $post ) ) <= ( 30 * DAY_IN_SECONDS );
-
-		$rows[] = array(
-			'part' => 'components/board-row',
-			'args' => array(
-				'time'             => sprintf( '%02d', $i ),
-				'title'            => get_the_title( $post ),
-				'subtitle'         => $subtitle,
-				'location'         => 'Lesson',
-				'level'            => $duration,
-				'location_icon_id' => 'icon-tag',
-				'level_icon_id'    => 'icon-clock',
-				'spaces'           => $is_new ? 'NEW' : 'WATCH',
-				'tone'             => $is_new ? 'new' : 'available',
-				'href'             => (string) get_permalink( $post ),
-			),
-		);
-	}
-	return $rows;
-};
-
-$lp_current_lessons = $lp_lessons_in( $lp_term_id );
+$lp_current_lessons = lp_tutorials_in_series( $lp_term_id );
+$lp_poster_id       = lp_series_poster_id( $lp_term_id, $lp_fields, $lp_current_lessons[0] ?? null );
 $lp_lesson_count    = count( $lp_current_lessons );
-if ( ! $lp_ep_count ) {
-	$lp_ep_count = $lp_lesson_count;
+$lp_total_secs      = lp_tutorials_total_seconds( $lp_current_lessons );
+$lp_mins_label      = lp_format_runtime_minutes( $lp_total_secs );
+if ( '' !== $lp_mins_label && false === stripos( $lp_mins_label, 'TOTAL' ) ) {
+	$lp_mins_label .= ' TOTAL';
 }
+
+$lp_series_index = 1;
+foreach ( $lp_all_series as $lp_i => $lp_s ) {
+	if ( (int) $lp_s->term_id === $lp_term_id ) {
+		$lp_series_index = $lp_i + 1;
+		break;
+	}
+}
+
+list( , $lp_level ) = lp_series_label_parts( (string) ( $lp_fields['series_label'] ?? '' ), $lp_series_index );
 
 $lp_facts = array_values(
 	array_filter(
 		array(
-			$lp_ep_count ? sprintf( '%02d LESSONS', $lp_ep_count ) : '',
-			$lp_duration ? strtoupper( $lp_duration ) . ( false === stripos( $lp_duration, 'TOTAL' ) ? ' TOTAL' : '' ) : '',
+			$lp_lesson_count ? sprintf( '%02d LESSONS', $lp_lesson_count ) : '',
+			$lp_mins_label,
+			$lp_level ? strtoupper( $lp_level ) : '',
 			$lp_coach ? 'COACH · ' . strtoupper( $lp_coach ) : '',
 		)
 	)
 );
 
-// Boards: current series, then siblings with lessons (max 3 boards total).
-$lp_board_specs = array(
-	array(
-		'term'    => $lp_term,
-		'fields'  => $lp_fields,
-		'lessons' => $lp_current_lessons,
-		'line'    => 1,
-	),
+$lp_play_href = $lp_current_lessons
+	? (string) get_permalink( $lp_current_lessons[0] )
+	: $lp_term_url;
+
+$lp_shelves = $lp_is_grid ? array() : lp_series_category_shelves( $lp_current_lessons );
+
+$lp_masthead = array(
+	'title' => $lp_term->name . ( str_ends_with( $lp_term->name, '.' ) ? '' : '.' ),
 );
-$lp_line = 1;
-foreach ( $lp_all_series as $lp_sib ) {
-	if ( (int) $lp_sib->term_id === $lp_term_id ) {
-		continue;
-	}
-	$lp_sib_lessons = $lp_lessons_in( (int) $lp_sib->term_id );
-	if ( ! $lp_sib_lessons ) {
-		continue;
-	}
-	++$lp_line;
-	$lp_sib_fields = function_exists( 'get_fields' ) ? get_fields( 'term_' . $lp_sib->term_id ) : array();
-	$lp_board_specs[] = array(
-		'term'    => $lp_sib,
-		'fields'  => is_array( $lp_sib_fields ) ? $lp_sib_fields : array(),
-		'lessons' => $lp_sib_lessons,
-		'line'    => $lp_line,
-	);
-	if ( count( $lp_board_specs ) >= 3 ) {
-		break;
-	}
+if ( '' !== $lp_logline ) {
+	$lp_masthead['note'] = $lp_logline;
 }
 
 get_header();
@@ -199,7 +111,7 @@ get_header();
 				),
 				array(
 					'label' => 'SERIES',
-					'href'  => $lp_archive_url,
+					'href'  => $lp_series_url,
 				),
 				array(
 					'label' => strtoupper( $lp_term->name ),
@@ -207,42 +119,19 @@ get_header();
 			),
 			'action' => array(
 				'label' => 'ALL SERIES ↗',
-				'href'  => $lp_archive_url,
+				'href'  => $lp_series_url,
 			),
 		)
 	);
 
-	lp_part(
-		'components/page-masthead',
-		array(
-			'title' => $lp_term->name . ( str_ends_with( $lp_term->name, '.' ) ? '' : '.' ),
-			'note'  => $lp_logline
-				? $lp_logline
-				: 'Work the line in order — or jump to wherever you already are.',
-		)
-	);
+	lp_part( 'components/page-masthead', $lp_masthead );
 
 	lp_part(
 		'components/view-rail',
 		array(
-			'context'   => 'tutorials',
+			'context'    => 'tutorials',
 			'aria_label' => 'Tutorials view',
-			'tabs'      => array(
-				array(
-					'label'   => 'By series',
-					'meta'    => sprintf( '%d series', $lp_total_series ),
-					'icon_id' => 'icon-square-3-stack-3d',
-					'active'  => true,
-					'href'    => $lp_archive_url,
-				),
-				array(
-					'label'   => 'By tutorial',
-					'meta'    => sprintf( '%d videos', $lp_total_tutorials ),
-					'icon_id' => 'icon-play-circle',
-					'active'  => false,
-					'href'    => $lp_archive_url,
-				),
-			),
+			'tabs'       => lp_tutorials_view_tabs( 'series' ),
 		)
 	);
 	?>
@@ -250,13 +139,13 @@ get_header();
 	<div class="w-full bg-neutral" data-section="lessons">
 		<div class="px-6 lg:px-16 py-scale-2xl">
 			<div class="flex flex-col lg:flex-row gap-9 items-start">
-				<aside class="w-full lg:w-[300px] shrink-0 flex flex-col gap-6 bg-secondary p-4" data-component="series-sidebar">
-					<div class="flex flex-col gap-1">
-						<span class="font-label text-[10px] font-semibold uppercase tracking-[0.8px] text-neutral-content/50">SERIES</span>
-						<h2 class="font-heading text-[20px] font-medium tracking-[-0.3px] text-neutral-content m-0">All eight lines.</h2>
-						<p class="font-label text-[10px] uppercase tracking-[0.6px] text-neutral-content/50 m-0"><?php echo esc_html( sprintf( '%d episodes · pick a series', $lp_total_tutorials ) ); ?></p>
+				<aside class="w-full lg:w-[360px] shrink-0 flex flex-col bg-secondary border border-neutral-content/10 overflow-hidden" data-component="series-sidebar">
+					<div class="flex flex-col gap-2 px-4 pt-5 pb-4 border-b border-neutral-content/10">
+						<span class="font-label text-[10px] font-bold tracking-[1.2px] uppercase text-primary">SERIES</span>
+						<h2 class="font-heading text-[22px] font-semibold tracking-[-0.4px] text-neutral-content m-0">Every line.</h2>
+						<p class="font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/50 m-0"><?php echo esc_html( sprintf( '%d episodes · pick a series', $lp_total_tutorials ) ); ?></p>
 					</div>
-					<nav class="flex flex-col gap-2" aria-label="<?php echo esc_attr__( 'Series list', 'londonparkour_v8' ); ?>">
+					<nav class="flex flex-col gap-3 p-3.5" aria-label="<?php echo esc_attr__( 'Series list', 'londonparkour_v8' ); ?>">
 						<?php
 						$lp_idx = 0;
 						foreach ( $lp_all_series as $lp_item ) :
@@ -264,13 +153,20 @@ get_header();
 							$lp_item_fields = function_exists( 'get_fields' ) ? get_fields( 'term_' . $lp_item->term_id ) : array();
 							$lp_item_fields = is_array( $lp_item_fields ) ? $lp_item_fields : array();
 							$lp_item_tag    = (string) ( $lp_item_fields['tag'] ?? '' );
-							$lp_item_eps    = isset( $lp_item_fields['episode_count'] ) ? (int) $lp_item_fields['episode_count'] : 0;
+							$lp_item_eps    = lp_series_published_count( (int) $lp_item->term_id );
 							$lp_item_link   = get_term_link( $lp_item );
 							$lp_item_href   = is_wp_error( $lp_item_link ) ? '#' : (string) $lp_item_link;
 							$lp_active      = (int) $lp_item->term_id === $lp_term_id;
+							$lp_item_poster = lp_series_poster_id( (int) $lp_item->term_id, $lp_item_fields );
 							$lp_item_cls    = $lp_active
-								? 'flex gap-3 p-2 border border-primary bg-neutral no-underline text-left transition-colors'
-								: 'flex gap-3 p-2 border border-neutral-content/10 bg-secondary hover:border-neutral-content/25 no-underline text-left transition-colors';
+								? 'group flex h-[108px] overflow-hidden bg-neutral border border-primary no-underline text-left hover:bg-primary'
+								: 'group flex h-[108px] overflow-hidden bg-neutral border border-neutral-content/10 no-underline text-left hover:bg-primary';
+							$lp_no_cls      = $lp_active
+								? 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral'
+								: 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70';
+							$lp_tag_cls     = $lp_active
+								? 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral'
+								: 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-neutral-content/40 group-hover:text-neutral/70';
 							?>
 							<a
 								href="<?php echo esc_url( $lp_item_href ); ?>"
@@ -278,17 +174,33 @@ get_header();
 								data-component="series-sidebar-item"
 								<?php echo $lp_active ? ' aria-current="page"' : ''; ?>
 							>
-								<span class="w-[72px] h-[56px] shrink-0 bg-neutral-content/10" aria-hidden="true"></span>
-								<span class="flex flex-col gap-1 min-w-0 justify-center">
+								<span class="relative h-full aspect-[16/9] shrink-0 bg-neutral overflow-hidden" aria-hidden="true">
+									<?php
+									if ( $lp_item_poster ) {
+										lp_part(
+											'components/media-photo',
+											array(
+												'image_id' => $lp_item_poster,
+												'alt'      => '',
+												'layout'   => 'fill',
+												'size'     => 'lp_thumb',
+												'sizes'    => '192px',
+											)
+										);
+									}
+									?>
+									<span class="absolute inset-0 bg-gradient-to-r from-transparent to-neutral group-hover:to-primary"></span>
+								</span>
+								<span class="flex flex-col gap-1.5 min-w-0 flex-1 justify-center px-4 py-3.5">
 									<span class="flex items-center gap-2">
-										<span class="font-label text-[10px] font-semibold uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( sprintf( 'S%02d', $lp_idx ) ); ?></span>
+										<span class="<?php echo esc_attr( $lp_no_cls ); ?>"><?php echo esc_html( sprintf( 'S%02d', $lp_idx ) ); ?></span>
 										<?php if ( '' !== $lp_item_tag ) : ?>
-											<span class="font-label text-[9px] font-semibold uppercase tracking-[0.6px] text-primary"><?php echo esc_html( $lp_item_tag ); ?></span>
+											<span class="<?php echo esc_attr( $lp_tag_cls ); ?>"><?php echo esc_html( $lp_item_tag ); ?></span>
 										<?php endif; ?>
 									</span>
-									<span class="font-heading text-[13px] font-medium tracking-[-0.2px] text-neutral-content truncate"><?php echo esc_html( $lp_item->name ); ?></span>
+									<span class="font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-neutral-content group-hover:text-neutral"><?php echo esc_html( $lp_item->name ); ?></span>
 									<?php if ( $lp_item_eps ) : ?>
-										<span class="font-label text-[10px] uppercase tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( sprintf( '%d EPISODES', $lp_item_eps ) ); ?></span>
+										<span class="font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( sprintf( '%d EPISODES', $lp_item_eps ) ); ?></span>
 									<?php endif; ?>
 								</span>
 							</a>
@@ -297,105 +209,131 @@ get_header();
 				</aside>
 
 				<div class="flex-1 min-w-0 flex flex-col gap-[64px]">
-					<div class="flex flex-col gap-5" data-component="series-header">
-						<div class="flex flex-col lg:flex-row gap-6 lg:items-start justify-between">
-							<div class="flex flex-col gap-3 min-w-0 flex-1">
+					<div class="flex flex-col gap-6" data-component="series-header">
+						<div class="flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-stretch">
+							<div class="w-full lg:w-1/2 flex flex-col gap-4 min-w-0 justify-center">
 								<div class="flex items-center gap-3">
 									<?php
 									lp_part(
 										'elements/badge',
 										array(
 											'variant' => 'paper',
-											'label'   => sprintf( 'LINE %02d', 1 ),
+											'label'   => sprintf( 'LINE %02d', $lp_series_index ),
 										)
 									);
 									?>
-									<span class="font-label text-[10px] font-semibold uppercase tracking-[0.8px] text-primary">ACTIVE SERIES</span>
+									<span class="font-label text-[11px] font-bold uppercase tracking-[1.2px] text-primary">ACTIVE SERIES</span>
 								</div>
-								<h2 class="font-heading text-[32px] font-medium tracking-[-0.6px] text-neutral-content m-0"><?php echo esc_html( $lp_term->name ); ?></h2>
+								<h2 class="font-heading text-[40px] font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_term->name ); ?></h2>
 								<?php if ( '' !== $lp_logline ) : ?>
-									<p class="font-body text-[14px] leading-[1.55] text-neutral-content/65 m-0 max-w-[520px]"><?php echo esc_html( $lp_logline ); ?></p>
+									<p class="font-body text-[16px] leading-[1.5] text-neutral-content/65 m-0"><?php echo esc_html( $lp_logline ); ?></p>
 								<?php endif; ?>
 								<div class="flex flex-wrap items-center gap-4 pt-1">
 									<?php
 									lp_part(
 										'elements/button',
 										array(
-											'label'   => $lp_cta_label ? $lp_cta_label : 'PLAY SERIES',
+											'label'   => $lp_cta_label,
 											'variant' => 'primary',
-											'href'    => $lp_current_lessons ? (string) get_permalink( $lp_current_lessons[0] ) : $lp_term_url,
+											'href'    => $lp_play_href,
 										)
 									);
 									?>
 								</div>
+								<?php if ( $lp_facts ) : ?>
+									<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-label text-[10px] uppercase tracking-[0.8px] text-neutral-content/50">
+										<?php foreach ( $lp_facts as $lp_fi => $lp_fact ) : ?>
+											<?php if ( $lp_fi ) : ?>
+												<span aria-hidden="true">·</span>
+											<?php endif; ?>
+											<span><?php echo esc_html( $lp_fact ); ?></span>
+										<?php endforeach; ?>
+									</div>
+								<?php endif; ?>
 							</div>
-							<div class="w-full lg:w-[280px] h-[160px] shrink-0 bg-secondary border border-neutral-content/10 flex items-center justify-center" aria-hidden="true">
-								<span class="font-label text-[24px] text-primary">▶</span>
-							</div>
+							<?php if ( $lp_poster_id ) : ?>
+								<div class="w-full lg:w-1/2 aspect-[16/9] bg-secondary border border-neutral-content/10 relative overflow-hidden">
+									<?php
+									lp_part(
+										'components/media-photo',
+										array(
+											'image_id' => $lp_poster_id,
+											'alt'      => $lp_term->name,
+											'layout'   => 'fill',
+											'size'     => 'lp_wide',
+											'sizes'    => '(min-width: 1024px) 40vw, 100vw',
+										)
+									);
+									?>
+								</div>
+							<?php else : ?>
+								<div class="w-full lg:w-1/2 aspect-[16/9] bg-secondary border border-neutral-content/10 flex items-center justify-center" aria-hidden="true">
+									<span class="font-label text-[24px] text-primary">▶</span>
+								</div>
+							<?php endif; ?>
 						</div>
-						<?php if ( $lp_facts ) : ?>
-							<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-label text-[10px] uppercase tracking-[0.8px] text-neutral-content/50">
-								<?php foreach ( $lp_facts as $lp_fi => $lp_fact ) : ?>
-									<?php if ( $lp_fi ) : ?>
-										<span aria-hidden="true">·</span>
-									<?php endif; ?>
-									<span><?php echo esc_html( $lp_fact ); ?></span>
-								<?php endforeach; ?>
-							</div>
-						<?php endif; ?>
+						<div class="h-[2px] w-full bg-neutral-content/10" aria-hidden="true"></div>
 					</div>
 
 					<div class="flex flex-col gap-[64px]">
-						<?php foreach ( $lp_board_specs as $lp_spec ) : ?>
-							<?php
-							$lp_b_term    = $lp_spec['term'];
-							$lp_b_fields  = $lp_spec['fields'];
-							$lp_b_lessons = $lp_spec['lessons'];
-							$lp_b_line    = (int) $lp_spec['line'];
-							$lp_b_eps     = isset( $lp_b_fields['episode_count'] ) ? (int) $lp_b_fields['episode_count'] : count( $lp_b_lessons );
-							$lp_b_dur     = (string) ( $lp_b_fields['duration'] ?? '' );
-							$lp_b_meta    = trim(
-								sprintf(
-									'%02d LESSONS%s',
-									$lp_b_eps ? $lp_b_eps : count( $lp_b_lessons ),
-									$lp_b_dur ? ' · ' . strtoupper( $lp_b_dur ) : ''
-								)
-							);
-							$lp_b_link  = get_term_link( $lp_b_term );
-							$lp_b_href  = is_wp_error( $lp_b_link ) ? '#' : (string) $lp_b_link;
-							$lp_b_rows  = $lp_board_rows( $lp_b_lessons );
-							?>
-							<div class="flex flex-col gap-[24px]">
-								<div class="flex items-center justify-between gap-3">
-									<div class="flex items-center gap-[16px]">
-										<?php
-										lp_part(
-											'elements/badge',
-											array(
-												'variant' => 'paper',
-												'label'   => sprintf( 'LINE %02d', $lp_b_line ),
-											)
-										);
-										?>
-										<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content"><?php echo esc_html( $lp_b_term->name ); ?></h3>
-									</div>
-									<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 whitespace-nowrap"><?php echo esc_html( $lp_b_meta ); ?></span>
-								</div>
-								<?php lp_part( 'elements/rule', array( 'tone' => 'board' ) ); ?>
-								<?php
-								lp_part(
-									'components/board-shell',
-									array(
-										'columns'    => array(),
-										'rows'       => $lp_b_rows,
-										'foot_left'  => sprintf( 'VIEW ALL %d LESSONS →', count( $lp_b_lessons ) ),
-										'foot_href'  => $lp_b_href,
-										'foot_right' => 'PROGRESSION · WATCH IN ORDER',
-									)
-								);
-								?>
+						<?php if ( $lp_is_grid ) : ?>
+							<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" data-component="series-card-grid">
+								<?php foreach ( $lp_current_lessons as $lp_gi => $lp_lesson ) : ?>
+									<?php lp_part( 'components/video-card', lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_gi + 1 ) ); ?>
+								<?php endforeach; ?>
 							</div>
-						<?php endforeach; ?>
+						<?php else : ?>
+							<?php foreach ( $lp_shelves as $lp_shelf ) : ?>
+								<div class="flex flex-col gap-[24px]" data-component="series-category-shelf">
+									<div class="flex items-center justify-between gap-3">
+										<div class="flex items-center gap-3 min-w-0">
+											<?php if ( '' !== ( $lp_shelf['glyph_id'] ?? '' ) ) : ?>
+												<span class="w-7 h-7 shrink-0 text-primary" aria-hidden="true"><?php lp_icon( $lp_shelf['glyph_id'], 'w-7 h-7' ); ?></span>
+											<?php endif; ?>
+											<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
+										</div>
+										<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 whitespace-nowrap"><?php echo esc_html( $lp_shelf['meta'] ); ?></span>
+									</div>
+									<?php lp_part( 'elements/rule', array( 'tone' => 'board' ) ); ?>
+									<div class="flex flex-col gap-4" data-component="series-card-shelf">
+										<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-shelf-scroller>
+											<?php foreach ( $lp_shelf['posts'] as $lp_si => $lp_lesson ) : ?>
+												<div class="w-[248px] shrink-0 snap-start">
+													<?php lp_part( 'components/video-card', lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_si + 1 ) ); ?>
+												</div>
+											<?php endforeach; ?>
+										</div>
+										<div class="flex items-center gap-4">
+											<div class="relative flex-1 h-[2px] bg-neutral-content/10" aria-hidden="true">
+												<div class="absolute left-0 top-0 h-[2px] bg-primary" data-shelf-thumb></div>
+											</div>
+											<div class="flex gap-2">
+												<?php
+												lp_part(
+													'elements/button',
+													array(
+														'variant'    => 'shelf_nav',
+														'label'      => '‹',
+														'aria_label' => __( 'Previous lessons', 'londonparkour_v8' ),
+														'data_attrs' => array( 'data-shelf-prev' => '' ),
+													)
+												);
+												lp_part(
+													'elements/button',
+													array(
+														'variant'    => 'shelf_nav',
+														'label'      => '›',
+														'aria_label' => __( 'Next lessons', 'londonparkour_v8' ),
+														'data_attrs' => array( 'data-shelf-next' => '' ),
+													)
+												);
+												?>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
@@ -411,7 +349,7 @@ get_header();
 			'prev' => array(
 				'keyword' => '← ALL SERIES',
 				'label'   => 'Back to the series index',
-				'href'    => $lp_archive_url,
+				'href'    => $lp_series_url,
 			),
 			'next' => array(
 				'keyword' => 'TRAIN IN PERSON →',

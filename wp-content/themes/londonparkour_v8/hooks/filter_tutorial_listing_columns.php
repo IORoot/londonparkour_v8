@@ -32,13 +32,13 @@ function lp_tutorial_listing_columns( array $columns ): array {
 		$ordered['cb'] = $columns['cb'];
 	}
 
-	$ordered['featured_image']    = __( 'Featured Image', 'londonparkour_v8' );
-	$ordered['title']             = $columns['title'] ?? __( 'Title', 'londonparkour_v8' );
-	$ordered['tutorial_category'] = __( 'Tutorial Category', 'londonparkour_v8' );
-	$ordered['tutorial_tags']     = __( 'Tags', 'londonparkour_v8' );
-	$ordered['youtube_id']        = __( 'YouTube ID', 'londonparkour_v8' );
-	$ordered['chatgpt_summary']   = __( 'ChatGPT Summary', 'londonparkour_v8' );
-	$ordered['video_filename']    = __( 'Video Filename', 'londonparkour_v8' );
+	$ordered['featured_image']      = __( 'Featured Image', 'londonparkour_v8' );
+	$ordered['title']               = $columns['title'] ?? __( 'Title', 'londonparkour_v8' );
+	$ordered['tutorial_order']      = __( 'Order', 'londonparkour_v8' );
+	$ordered['taxonomy-lp_series']  = $columns['taxonomy-lp_series'] ?? __( 'Series', 'londonparkour_v8' );
+	$ordered['tutorial_category']   = __( 'Tutorial Category', 'londonparkour_v8' );
+	$ordered['tutorial_tags']       = __( 'Tags', 'londonparkour_v8' );
+	$ordered['youtube_id']          = __( 'YouTube ID', 'londonparkour_v8' );
 
 	if ( isset( $columns['date'] ) ) {
 		$ordered['date'] = $columns['date'];
@@ -69,6 +69,11 @@ function lp_tutorial_listing_column_content( string $column, int $post_id ): voi
 			}
 			break;
 
+		case 'tutorial_order':
+			$label = lp_tutorial_order_label( $post_id );
+			echo '' !== $label ? esc_html( $label ) : '—';
+			break;
+
 		case 'tutorial_category':
 			$terms = get_the_terms( $post_id, 'tutorial-category' );
 			echo $terms && ! is_wp_error( $terms )
@@ -86,14 +91,6 @@ function lp_tutorial_listing_column_content( string $column, int $post_id ): voi
 		case 'youtube_id':
 			echo esc_html( lp_tutorial_listing_trim( lp_tutorial_listing_field( $post_id, 'video_id' ) ) );
 			break;
-
-		case 'chatgpt_summary':
-			echo esc_html( lp_tutorial_listing_trim( lp_tutorial_listing_field( $post_id, 'video_transcript_chatgpt' ) ) );
-			break;
-
-		case 'video_filename':
-			echo esc_html( lp_tutorial_listing_trim( lp_tutorial_listing_field( $post_id, 'video_filename' ) ) );
-			break;
 	}
 }
 
@@ -102,9 +99,8 @@ function lp_tutorial_listing_column_content( string $column, int $post_id ): voi
  * @return array<string, string>
  */
 function lp_tutorial_listing_sortable_columns( array $columns ): array {
-	$columns['youtube_id']      = 'youtube_id';
-	$columns['video_filename']  = 'video_filename';
-	$columns['chatgpt_summary'] = 'chatgpt_summary';
+	$columns['youtube_id']     = 'youtube_id';
+	$columns['tutorial_order'] = 'tutorial_order';
 
 	return $columns;
 }
@@ -124,15 +120,24 @@ function lp_tutorial_listing_column_orderby( WP_Query $query ): void {
 	$orderby = $query->get( 'orderby' );
 
 	$meta_map = array(
-		'youtube_id'      => 'video_id',
-		'video_filename'  => 'video_filename',
-		'chatgpt_summary' => 'video_transcript_chatgpt',
+		'youtube_id' => 'video_id',
 	);
 
 	if ( isset( $meta_map[ $orderby ] ) ) {
 		$query->set( 'meta_key', $meta_map[ $orderby ] );
 		$query->set( 'orderby', 'meta_value' );
+		return;
 	}
+
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- admin list table sort.
+	$requested = isset( $_GET['orderby'] ) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : '';
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+	if ( '' !== $requested && 'tutorial_order' !== $requested ) {
+		return;
+	}
+
+	$query->set( 'lp_natural_order', true );
 }
 
 /**
@@ -147,11 +152,11 @@ function lp_tutorial_listing_column_styles(): void {
 
 	echo '<style>
 		.column-featured_image { width: 90px; }
+		.column-taxonomy-lp_series,
 		.column-tutorial_category,
 		.column-tutorial_tags { width: 12%; }
-		.column-youtube_id,
-		.column-video_filename,
-		.column-chatgpt_summary { width: 14%; }
+		.column-tutorial_order { width: 72px; text-align: center; }
+		.column-youtube_id { width: 14%; }
 		td.featured_image.column-featured_image img {
 			max-width: 72px;
 			height: auto;

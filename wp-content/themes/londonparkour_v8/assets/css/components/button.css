@@ -70,7 +70,11 @@
    for primary/icon while reading semantically for ghost, which has no fill
    of its own to swap). */
 .btn[data-component="button"].btn-primary:hover:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])),
-.btn[data-component="button"].btn-outline:hover:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])) {
+.btn[data-component="button"].btn-outline:hover:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])),
+/* VideoCard hover fills the card yellow; invert the nested primary CTA so it
+   stays visible (same swap as :hover on the button itself). Utilities cannot
+   beat these !important fills, so the invert lives here. */
+[data-component="video-card"]:hover .btn[data-component="button"].btn-primary:not(:is(:disabled, .btn-disabled, [aria-disabled="true"])) {
   background-color: var(--color-neutral) !important;
   color: var(--color-primary) !important;
   border-color: var(--color-neutral) !important;

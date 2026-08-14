@@ -173,8 +173,10 @@ $lp_root = $lp_is_link ? $lp_root_base . ' ' . $lp_root_interactive : $lp_root_b
 			<span class="font-label text-[12px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral-content transition-colors duration-150 truncate"><?php echo esc_html( $lp_location ); ?></span>
 		</div>
 		<div class="hidden lg:flex items-center gap-2 sm:w-[146px] sm:shrink-0">
+			<?php if ( '' !== $lp_level ) : ?>
 			<span class="text-neutral-content/80" aria-hidden="true"><?php lp_icon( $lp_level_icon, 'w-3.5 h-3.5' ); ?></span>
 			<span class="font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/80 truncate"><?php echo esc_html( $lp_level ); ?></span>
+			<?php endif; ?>
 		</div>
 		<?php if ( $lp_is_sell ) : ?>
 			<div class="hidden sm:flex flex-col items-end gap-[2px] w-[76px] sm:shrink-0">

@@ -6,6 +6,7 @@ import { initBookingDrawer } from './elements/BookingDrawer.js';
 import { initCommercePurchase } from './elements/CommercePurchase.js';
 import { initSiteNetworkMap } from './elements/SiteNetworkMap.js';
 import { initClassDetailOsmMaps } from './elements/ClassDetailOsmMap.js';
+import { initAllSeriesShelves } from './elements/SeriesShelf.js';
 import { AppInitialiser } from './AppInitialiser.js';
 import { createDOMObserver } from './utils/createDOMObserver.js';
 import { initAll as initMotion } from './motion/index.js';
@@ -84,6 +85,14 @@ const MODULES = {
     critical: false,
     lazy: false,
     timeout: 8000
+  },
+
+  seriesShelves: {
+    init: () => initAllSeriesShelves(),
+    selector: '[data-component="series-card-shelf"]',
+    critical: false,
+    lazy: false,
+    timeout: 3000
   }
 };
 
@@ -121,7 +130,7 @@ export async function initApp(options = {}) {
  */
 const boot = () =>
   initApp({
-    modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'commercePurchase', 'siteNetworkMap', 'classDetailOsmMap'],
+    modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'commercePurchase', 'siteNetworkMap', 'classDetailOsmMap', 'seriesShelves'],
   });
 
 if (document.readyState === 'loading') {

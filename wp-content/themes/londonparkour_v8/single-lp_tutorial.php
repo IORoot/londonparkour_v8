@@ -13,7 +13,7 @@
  * ── Native / ACF data ───────────────────────────────────────────────────
  * Title, excerpt, featured image are native. `duration`, `video_url`,
  * `coaches`, `body`, `key_takeaways`, `closing_*`, `demonstrations` are
- * group_lp_tutorial. Series board rows are sibling `lp_tutorial` posts in
+ * optional post meta. Series board rows are sibling `lp_tutorial` posts in
  * the same `lp_series` term. Filter grid posts to the tutorials archive
  * (same GET contract as archive-lp_tutorial.php).
  *
@@ -42,6 +42,9 @@ while ( have_posts() ) :
 	$lp_coaches   = function_exists( 'get_field' ) ? get_field( 'coaches' ) : array();
 	$lp_coach_ids = array_filter( array_map( 'intval', (array) $lp_coaches ) );
 
+	$lp_raw_content   = trim( wp_strip_all_tags( (string) get_post_field( 'post_content', $lp_post_id ) ) );
+	$lp_has_copy      = '' !== $lp_raw_content && 'description' !== strtolower( $lp_raw_content );
+
 	$lp_body       = function_exists( 'get_field' ) ? get_field( 'body' ) : array();
 	$lp_takeaways  = function_exists( 'get_field' ) ? get_field( 'key_takeaways' ) : array();
 	$lp_closing    = function_exists( 'get_field' ) ? (string) get_field( 'closing_text' ) : '';
@@ -53,8 +56,6 @@ while ( have_posts() ) :
 
 	$lp_series_terms = get_the_terms( $lp_post_id, 'lp_series' );
 	$lp_series_term  = ( is_array( $lp_series_terms ) && $lp_series_terms ) ? $lp_series_terms[0] : null;
-	$lp_level_terms  = get_the_terms( $lp_post_id, 'lp_level' );
-	$lp_level_term   = ( is_array( $lp_level_terms ) && $lp_level_terms ) ? $lp_level_terms[0] : null;
 
 	$lp_archive_url = (string) get_post_type_archive_link( 'lp_tutorial' );
 	$lp_series_url  = $lp_archive_url;
@@ -70,31 +71,13 @@ while ( have_posts() ) :
 
 	$lp_siblings = array();
 	if ( $lp_series_term ) {
-		$lp_sib_q = new WP_Query(
-			array(
-				'post_type'      => 'lp_tutorial',
-				'post_status'    => 'publish',
-				'posts_per_page' => 24,
-				'orderby'        => array(
-					'menu_order' => 'ASC',
-					'date'       => 'ASC',
-				),
-				'no_found_rows'  => true,
-				'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-					array(
-						'taxonomy' => 'lp_series',
-						'field'    => 'term_id',
-						'terms'    => (int) $lp_series_term->term_id,
-					),
-				),
-			)
-		);
-		$lp_siblings = $lp_sib_q->posts;
+		$lp_siblings = lp_tutorials_in_series( (int) $lp_series_term->term_id );
 	}
 	if ( ! $lp_siblings ) {
 		$lp_siblings = array( get_post( $lp_post_id ) );
 	}
 
+	$lp_order_label  = lp_tutorial_order_label( $lp_post_id );
 	$lp_lesson_index = 1;
 	$lp_lesson_total = count( $lp_siblings );
 	$lp_next_post    = null;
@@ -106,36 +89,28 @@ while ( have_posts() ) :
 		}
 	}
 
-	$lp_total_tutorials = (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
-	$lp_all_series      = get_terms( array( 'taxonomy' => 'lp_series', 'hide_empty' => false ) );
-	$lp_total_series    = is_array( $lp_all_series ) ? count( $lp_all_series ) : 0;
-
-	$lp_values          = lp_tutorial_filter_values();
-	$lp_category_terms  = get_terms( array( 'taxonomy' => 'lp_series', 'parent' => 0, 'hide_empty' => false ) );
-	$lp_category_terms  = is_array( $lp_category_terms ) ? $lp_category_terms : array();
-	$lp_category_options = array( array( 'value' => '', 'label' => 'All categories' ) );
-	foreach ( $lp_category_terms as $lp_t ) {
-		$lp_category_options[] = array( 'value' => $lp_t->slug, 'label' => $lp_t->name );
-	}
-	$lp_move_options = array( array( 'value' => '', 'label' => 'All moves' ) );
+	$lp_total_tutorials  = (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
+	$lp_values           = lp_tutorial_filter_values();
+	$lp_category_options = lp_tutorial_category_filter_options();
+	$lp_series_options   = lp_tutorial_series_filter_options();
+	$lp_tag_options      = lp_tutorial_tag_filter_options();
 
 	$lp_board_rows = array();
 	foreach ( $lp_siblings as $lp_i => $lp_sib ) {
 		$lp_sib_dur   = function_exists( 'get_field' ) ? (string) get_field( 'duration', $lp_sib->ID ) : '';
+		$lp_sib_order = lp_tutorial_order_label( $lp_sib );
 		$lp_is_here   = (int) $lp_sib->ID === (int) $lp_post_id;
 		$lp_is_new    = ( time() - get_post_time( 'U', true, $lp_sib ) ) <= ( 30 * DAY_IN_SECONDS );
-		$lp_level_n   = $lp_level_term ? $lp_level_term->name : '';
 		$lp_board_rows[] = array(
 			'part' => 'components/board-row',
 			'args' => array(
-				'time'             => $lp_sib_dur ? $lp_sib_dur : sprintf( '%02d', $lp_i + 1 ),
-				'date_label'       => sprintf( 'LESSON %02d', $lp_i + 1 ),
+				'time'             => $lp_sib_dur ? $lp_sib_dur : ( '' !== $lp_sib_order ? $lp_sib_order : '—' ),
+				'date_label'       => '' !== $lp_sib_order ? sprintf( 'LESSON %s', $lp_sib_order ) : 'DEMO',
 				'title'            => get_the_title( $lp_sib ),
 				'subtitle'         => get_the_excerpt( $lp_sib ),
 				'location'         => $lp_series_term ? $lp_series_term->name : '',
-				'level'            => $lp_level_n,
+				'level'            => '',
 				'location_icon_id' => 'icon-tag',
-				'level_icon_id'    => 'icon-level-beginner',
 				'spaces'           => $lp_is_here ? 'NOW PLAYING' : ( $lp_is_new ? 'NEW' : 'WATCH' ),
 				'tone'             => $lp_is_here ? 'now_playing' : ( $lp_is_new ? 'new' : 'available' ),
 				'href'             => $lp_is_here ? '' : (string) get_permalink( $lp_sib ),
@@ -147,7 +122,6 @@ while ( have_posts() ) :
 		array(
 			$lp_category_name ? strtoupper( $lp_category_name ) : '',
 			$lp_series_term ? strtoupper( $lp_series_term->name ) : '',
-			$lp_level_term ? strtoupper( $lp_level_term->name ) : '',
 		)
 	);
 
@@ -156,7 +130,6 @@ while ( have_posts() ) :
 			array(
 				$lp_series_term ? array( 'label' => 'SERIES', 'value' => $lp_series_term->name ) : null,
 				$lp_category_name ? array( 'label' => 'CATEGORY', 'value' => $lp_category_name ) : null,
-				$lp_level_term ? array( 'label' => 'LEVEL', 'value' => $lp_level_term->name ) : null,
 				array(
 					'label' => 'RUNTIME',
 					'value' => trim(
@@ -227,22 +200,7 @@ while ( have_posts() ) :
 		array(
 			'context'    => 'tutorials',
 			'aria_label' => 'Tutorials view',
-			'tabs'       => array(
-				array(
-					'label'   => 'By series',
-					'meta'    => sprintf( '%d series', $lp_total_series ),
-					'icon_id' => 'icon-square-3-stack-3d',
-					'href'    => $lp_series_url,
-					'active'  => false,
-				),
-				array(
-					'label'   => 'By tutorial',
-					'meta'    => sprintf( '%d videos', $lp_total_tutorials ),
-					'icon_id' => 'icon-play-circle',
-					'href'    => $lp_archive_url,
-					'active'  => true,
-				),
-			),
+			'tabs'       => lp_tutorials_view_tabs( 'tutorial' ),
 		)
 	);
 
@@ -266,20 +224,17 @@ while ( have_posts() ) :
 				),
 				array(
 					'type'    => 'select',
-					'key'     => 'Move',
-					'name'    => 'tutorial_move',
-					'options' => $lp_move_options,
-					'value'   => $lp_values['tutorial_move'],
+					'key'     => 'Series',
+					'name'    => 'tutorial_series',
+					'options' => $lp_series_options,
+					'value'   => $lp_values['tutorial_series'],
 				),
 				array(
 					'type'    => 'select',
-					'key'     => 'Sort',
-					'name'    => 'tutorial_sort',
-					'options' => array(
-						array( 'value' => 'sequence', 'label' => 'Sequence' ),
-						array( 'value' => 'newest', 'label' => 'Newest' ),
-					),
-					'value'   => $lp_values['tutorial_sort'],
+					'key'     => 'Tag',
+					'name'    => 'tutorial_tag',
+					'options' => $lp_tag_options,
+					'value'   => $lp_values['tutorial_tag'],
 				),
 			),
 			'action' => $lp_archive_url,
@@ -298,11 +253,17 @@ while ( have_posts() ) :
 						'components/video-stage',
 						array(
 							'image_id'       => $lp_thumb_id,
-							'status_label'   => sprintf( 'NOW PLAYING · LESSON %02d', $lp_lesson_index ),
+							'status_label'   => '' !== $lp_order_label
+								? sprintf( 'NOW PLAYING · LESSON %s', $lp_order_label )
+								: 'NOW PLAYING',
 							'quality_label'  => $lp_duration ? 'EN · HD · ' . $lp_duration : 'EN · HD',
-							'badge_label'    => $lp_series_term
-								? sprintf( '%s · LESSON %02d OF %02d', strtoupper( $lp_series_term->name ), $lp_lesson_index, $lp_lesson_total )
-								: sprintf( 'LESSON %02d OF %02d', $lp_lesson_index, $lp_lesson_total ),
+							'badge_label'    => $lp_series_term && '' !== $lp_order_label
+								? sprintf( '%s · LESSON %s OF %02d', strtoupper( $lp_series_term->name ), $lp_order_label, $lp_lesson_total )
+								: ( $lp_series_term
+									? strtoupper( $lp_series_term->name )
+									: ( '' !== $lp_order_label
+										? sprintf( 'LESSON %s OF %02d', $lp_order_label, $lp_lesson_total )
+										: 'DEMONSTRATION' ) ),
 							'duration_label' => $lp_duration,
 							'title'          => $lp_title,
 							'stage_meta'     => implode( ' · ', $lp_stage_meta_bits ),
@@ -321,7 +282,9 @@ while ( have_posts() ) :
 						'components/aside-panel',
 						array(
 							'title'      => 'THIS TUTORIAL',
-							'spots_left' => sprintf( 'LESSON %d / %d', $lp_lesson_index, $lp_lesson_total ),
+							'spots_left' => '' !== $lp_order_label
+								? sprintf( 'LESSON %s / %d', $lp_order_label, $lp_lesson_total )
+								: sprintf( '%d VIDEOS', $lp_lesson_total ),
 							'rows'       => $lp_aside_rows,
 							'cta_label'  => $lp_series_term ? 'VIEW SERIES' : 'ALL TUTORIALS',
 							'href'       => $lp_series_url,
@@ -364,7 +327,7 @@ while ( have_posts() ) :
 		</div>
 	</div>
 
-	<?php if ( $lp_body || $lp_takeaways || $lp_closing ) : ?>
+	<?php if ( $lp_body || $lp_takeaways || $lp_closing || $lp_has_copy ) : ?>
 	<div class="w-full bg-base-100" data-section="video-details">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-[32px]">
 			<?php
@@ -396,6 +359,8 @@ while ( have_posts() ) :
 						</div>
 					<?php endforeach; ?>
 				</div>
+			<?php elseif ( $lp_has_copy ) : ?>
+				<p class="m-0 font-body text-[13px] leading-[1.6] text-base-content/65 max-w-[720px]"><?php echo esc_html( $lp_raw_content ); ?></p>
 			<?php endif; ?>
 
 			<?php if ( $lp_takeaways ) : ?>

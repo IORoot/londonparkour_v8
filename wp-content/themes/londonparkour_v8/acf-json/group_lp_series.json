@@ -36,7 +36,7 @@
             "name": "series_label",
             "label": "Series label",
             "type": "text",
-            "instructions": "Featured line, e.g. \"SERIES 01 · BEGINNER\".",
+            "instructions": "Level only (\"BEGINNER\") or the full line (\"SERIES 01 · BEGINNER\"). Number falls back to list order.",
             "key": "field_e7e59e383876e057"
         },
         {
@@ -45,6 +45,13 @@
             "type": "textarea",
             "rows": 3,
             "key": "field_a0020c49cc2d32a4"
+        },
+        {
+            "name": "tags",
+            "label": "Tags",
+            "type": "text",
+            "instructions": "Comma-separated uppercase labels, e.g. \"VAULTING, FUNDAMENTALS\".",
+            "key": "field_63d5e0a28bdf4af7"
         },
         {
             "name": "poster",
@@ -83,6 +90,17 @@
             "type": "text",
             "default_value": "WATCH SERIES",
             "key": "field_a11754190be8ac75"
+        },
+        {
+            "name": "layout",
+            "label": "Lesson layout",
+            "type": "select",
+            "choices": {
+                "categories": "Categories (horizontal shelves)",
+                "grid": "Grid (full cards)"
+            },
+            "default_value": "categories",
+            "key": "field_fd1d7ebf28f73325"
         }
     ]
 }

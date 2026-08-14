@@ -13,7 +13,7 @@
  *
  * @param string $args['label']            Visible text.
  * @param string $args['href']             Renders an anchor when set.
- * @param string $args['variant']          primary|inverse|ghost|destructive|icon|band|band_text.
+ * @param string $args['variant']          primary|inverse|ghost|destructive|icon|band|band_text|shelf_nav.
  * @param bool   $args['disabled']
  * @param string $args['type']             button|submit, for the button form.
  * @param string $args['aria_label']       Required for variant=icon.
@@ -60,6 +60,7 @@ $lp_variants = array(
 	 * $args['class'], the same treatment text-link gives `whitespace-nowrap`.
 	 */
 	'band_text'   => 'font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content transition-colors duration-150',
+	'shelf_nav'   => 'w-7 h-7 shrink-0 border border-neutral-content/20 bg-transparent text-neutral-content/70 font-label text-[14px] leading-none grid place-items-center disabled:opacity-40',
 );
 
 $lp_variant  = $args['variant'] ?? 'primary';

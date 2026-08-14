@@ -16,7 +16,7 @@
   },
   "shelf_label": "MORE ON THE BOARD",
   "shelf_cta": {
-    "link": { "title": "BROWSE ALL SERIES →", "url": "/tutorials", "target": "" }
+    "link": { "title": "BROWSE ALL SERIES →", "url": "/tutorials/series/", "target": "" }
   },
   "source": "manual",
   "source_manual": [
