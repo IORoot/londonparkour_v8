@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit;
 $lp_hooks = array(
 	'hooks/filter_tutorial_listing_columns.php',
 	'hooks/filter_testimonial_listing_columns.php',
+	'hooks/filter_svg_featured_image.php',
 );
 
 foreach ( $lp_hooks as $lp_hook_file ) {

@@ -26,6 +26,9 @@ function lp_acf_json_save_point( string $path ): string {
 }
 add_filter( 'acf/settings/save_json', 'lp_acf_json_save_point' );
 
+// ACF hides the native Custom Fields metabox for speed. Same restore as v7.
+add_filter( 'acf/settings/remove_wp_meta_box', '__return_false' );
+
 /**
  * Where ACF looks for field groups on load.
  *
