@@ -60,7 +60,7 @@ $lp_is_links = (bool) array_filter( $lp_tabs, static fn( $lp_t ) => ! empty( $lp
 	</nav>
 <?php else : ?>
 	<nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="bg-neutral" data-component="view-rail" data-context="<?php echo esc_attr( $lp_context ); ?>">
-		<div <?php echo $lp_is_links ? '' : 'role="tablist"'; ?> aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex flex-wrap">
+		<div <?php echo $lp_is_links ? '' : 'role="tablist" aria-label="' . esc_attr( $lp_aria_label ) . '" '; ?>class="flex flex-wrap px-6 lg:px-16">
 			<?php foreach ( $lp_tabs as $lp_i => $lp_tab ) : ?>
 				<?php
 				lp_part(

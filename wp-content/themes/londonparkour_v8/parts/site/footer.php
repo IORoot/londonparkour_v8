@@ -148,13 +148,13 @@ $lp_social  = is_array( $args['social'] ?? null ) && $args['social'] ? $args['so
 
 		<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-10 lg:gap-[64px]">
 			<div class="flex flex-col gap-[20px] w-full lg:w-[320px] lg:shrink-0">
-				<a href="<?php echo esc_url( $lp_brand_href ); ?>" class="<?php echo lp_classes( 'inline-flex items-center w-fit', $lp_focus ); ?>" aria-label="<?php echo esc_attr( $lp_brand_label ); ?> — <?php esc_attr_e( 'Home', 'londonparkour_v8' ); ?>">
+				<a href="<?php echo esc_url( $lp_brand_href ); ?>" class="<?php echo lp_classes( 'inline-flex items-center w-fit text-neutral-content hover:text-primary transition-colors duration-150', $lp_focus ); ?>" aria-label="<?php echo esc_attr( $lp_brand_label ); ?> — <?php esc_attr_e( 'Home', 'londonparkour_v8' ); ?>">
 					<?php
 					lp_part(
 						'brand/logo',
 						array(
 							'width'       => $lp_logo_width,
-							'color_class' => 'text-neutral-content',
+							'color_class' => 'text-current',
 							'label'       => $lp_brand_label,
 						)
 					);

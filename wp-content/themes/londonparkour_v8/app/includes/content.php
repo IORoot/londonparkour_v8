@@ -352,6 +352,113 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 }
 
 /**
+ * Wiki / FAQ / Blog view-rail tabs (`r1ttmM` on DocsFaq, `Sx4SD` on BlogIndex).
+ *
+ * @param string $lp_active wiki|faq|blog.
+ * @return array Tabs in view-rail.php's shape.
+ */
+function lp_docs_view_tabs( string $lp_active = 'faq' ): array {
+	$lp_faq  = home_url( '/docs-faq/' );
+	$lp_blog = (string) get_permalink( (int) get_option( 'page_for_posts' ) );
+	if ( '' === $lp_blog || '0' === $lp_blog ) {
+		$lp_blog = home_url( '/blog/' );
+	}
+
+	$lp_counts  = wp_count_posts( 'post' );
+	$lp_stories = ( is_object( $lp_counts ) && isset( $lp_counts->publish ) ) ? (int) $lp_counts->publish : 0;
+
+	return array(
+		array(
+			'label'   => 'Wiki',
+			'meta'    => '15 PAGES',
+			'icon_id' => 'icon-book-open',
+			'href'    => $lp_faq . '#docs-index',
+			'active'  => 'wiki' === $lp_active,
+		),
+		array(
+			'label'   => 'FAQ',
+			'meta'    => '10 QUESTIONS',
+			'icon_id' => 'icon-question-mark-circle',
+			'href'    => $lp_faq,
+			'active'  => 'faq' === $lp_active,
+		),
+		array(
+			'label'   => 'Blog',
+			'meta'    => sprintf( '%d STORIES', $lp_stories ?: 12 ),
+			'icon_id' => 'icon-newspaper',
+			'href'    => $lp_blog,
+			'active'  => 'blog' === $lp_active,
+		),
+	);
+}
+
+/**
+ * Resolve a wiki/docs page URL by slug, falling back to the FAQ index.
+ *
+ * @param string $lp_slug     Page slug.
+ * @param string $lp_fallback Fallback URL.
+ */
+function lp_docs_wiki_url( string $lp_slug, string $lp_fallback = '' ): string {
+	$lp_page = get_page_by_path( $lp_slug );
+	if ( $lp_page instanceof WP_Post ) {
+		return (string) get_permalink( $lp_page );
+	}
+	return $lp_fallback;
+}
+
+/**
+ * Docs Index groups (`ZmkRu` / `yEyWZ`) — 15 wiki pages in three columns.
+ *
+ * @param string $lp_current_title Title marked CURRENT.
+ * @return array
+ */
+function lp_docs_index_groups( string $lp_current_title = 'Frequently Asked Questions' ): array {
+	$lp_faq = home_url( '/docs-faq/' );
+
+	$lp_link = static function ( string $lp_title, string $lp_slug, string $lp_fallback = '' ) use ( $lp_current_title, $lp_faq ): array {
+		$lp_current = $lp_title === $lp_current_title;
+		return array(
+			'title'  => $lp_title,
+			'marker' => $lp_current ? 'CURRENT' : '↗',
+			'href'   => $lp_current ? $lp_faq : lp_docs_wiki_url( $lp_slug, $lp_fallback ?: $lp_faq . '#docs-index' ),
+		);
+	};
+
+	return array(
+		array(
+			'heading' => 'CLASSES',
+			'pages'   => array(
+				$lp_link( 'Frequently Asked Questions', 'docs-faq', $lp_faq ),
+				$lp_link( 'Youth Class', 'youth-class' ),
+				$lp_link( 'Student Waiver', 'student-waiver' ),
+				$lp_link( 'Personal Training (PT)', 'personal-training' ),
+				$lp_link( 'Hiring us', 'hiring-us' ),
+				$lp_link( 'Gift Cards', 'gift-cards' ),
+				$lp_link( 'Class Locations', 'class-locations' ),
+				$lp_link( 'Beginners Class', 'beginners-class' ),
+			),
+		),
+		array(
+			'heading' => 'COMPANY',
+			'pages'   => array(
+				$lp_link( 'Privacy Policy', 'privacy' ),
+				$lp_link( 'Pricing', 'pricing' ),
+				$lp_link( 'Photography & Video', 'photography-video' ),
+				$lp_link( 'Equality Policy', 'equality' ),
+				$lp_link( 'Contacting us', 'contact', home_url( '/contact/' ) ),
+				$lp_link( 'Code of Conduct', 'code-of-conduct' ),
+			),
+		),
+		array(
+			'heading' => 'WEBSITE',
+			'pages'   => array(
+				$lp_link( 'Terms of Service', 'terms' ),
+			),
+		),
+	);
+}
+
+/**
  * The three Classes filter cells, in filter-grid.php's shape.
  *
  * Ported from ClassesHeaderCluster.js's `DEFAULT_FILTER_CELLS`. SITE's empty

@@ -8,8 +8,9 @@
  * never bg-neutral, never bg-primary; copy floor accent-content/70) and the
  * Recent grid's real per-card copy.
  *
- * Section order: breadcrumb → masthead → blog-index-lead → blog-index-recent
- * → onward. Nav/footer are get_header()/get_footer(), outside the one <main>.
+ * Section order: breadcrumb → masthead → view-rail → blog-index-lead →
+ * blog-index-recent → onward. Nav/footer are get_header()/get_footer(),
+ * outside the one <main>.
  *
  * The Lead article is the most recent published post; the Recent grid is the
  * next three. DEFAULT_LEAD / DEFAULT_CARDS below are transcribed verbatim
@@ -30,11 +31,8 @@
  * inner line in its own separator div — but it renders the same 1px
  * accent-content/15 line and is the shared part, not a retype.
  *
- * `/docs` (the breadcrumb's DOCS crumb and its ALL DOCS ↗ action) has no
- * built page yet on this site — docs/HANDOFF.md's Phase 5b table still lists
- * DocsFaq as "missing". Labels port verbatim; hrefs are left unset so
- * breadcrumb-rail's own '#' fallback applies, the same treatment Legal gives
- * its unbuilt Privacy/Cookie pager targets.
+ * DOCS crumb and ALL DOCS ↗ point at `/docs-faq/` — that page now carries
+ * the Wiki / FAQ / Blog view rail and the 15-page Docs Index.
  *
  * Onward: 'prev' ("FAQ — Passenger enquiries") has no matching content on
  * this site at all and is left hrefless for the same reason. 'next' points
@@ -51,10 +49,16 @@ $lp_crumbs        = array(
 		'label' => 'HOME',
 		'href'  => home_url( '/' ),
 	),
-	array( 'label' => 'DOCS' ), // No /docs page yet — see docblock above.
+	array(
+		'label' => 'DOCS',
+		'href'  => home_url( '/docs-faq/' ),
+	),
 	array( 'label' => 'NEWS & STORIES' ),
 );
-$lp_crumb_action  = array( 'label' => 'ALL DOCS ↗' ); // Same — no href.
+$lp_crumb_action = array(
+	'label' => 'ALL DOCS ↗',
+	'href'  => home_url( '/docs-faq/#docs-index' ),
+);
 
 $lp_masthead_title = "Everything we've written.";
 $lp_masthead_note  = 'Projects, press and the odd long read from the coaching floo…';
@@ -165,6 +169,15 @@ get_header();
 		array(
 			'title' => $lp_masthead_title,
 			'note'  => $lp_masthead_note,
+		)
+	);
+
+	lp_part(
+		'components/view-rail',
+		array(
+			'context'    => 'docs',
+			'aria_label' => 'Docs view',
+			'tabs'       => lp_docs_view_tabs( 'blog' ),
 		)
 	);
 	?>

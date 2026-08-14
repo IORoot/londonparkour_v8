@@ -3314,7 +3314,7 @@
                                 {
                                     "name": "href",
                                     "label": "Link",
-                                    "type": "url",
+                                    "type": "text",
                                     "key": "field_aac6035c2e58d61b"
                                 }
                             ],

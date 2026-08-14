@@ -19,8 +19,8 @@
  * utility override on top of `tab`.
  *
  * Plain ViewTab still has no hover in the .pen — inactive tabs keep a
- * subtle opacity lift. The `rich` variant (tutorials/classes view rail)
- * hovers onto `bg-primary` with `primary-content` ink.
+ * subtle opacity lift. The `rich` variant (tutorials/classes/docs view rail)
+ * hovers onto `bg-primary` with `text-neutral` ink.
  *
  * Deliberate departure: the source's `onClick` is a JS-object callback bound
  * in Storybook's `init()`, not a data-* driven behaviour from the motion
@@ -64,14 +64,14 @@ $lp_states = array(
  */
 $lp_rich_states = array(
 	'active'   => array(
-		'label' => 'text-primary group-hover:text-primary-content',
-		'meta'  => 'text-neutral-content/80 group-hover:text-primary-content/70',
-		'bar'   => 'h-[3px] bg-primary group-hover:bg-primary-content',
+		'label' => 'text-primary group-hover:text-neutral',
+		'meta'  => 'text-neutral-content/80 group-hover:text-neutral',
+		'bar'   => 'h-[3px] bg-primary group-hover:bg-neutral',
 	),
 	'inactive' => array(
-		'label' => 'text-neutral-content/65 group-hover:text-primary-content',
-		'meta'  => 'text-neutral-content/50 group-hover:text-primary-content/70',
-		'bar'   => 'h-px bg-neutral-content/15 group-hover:bg-primary-content',
+		'label' => 'text-neutral-content/65 group-hover:text-neutral',
+		'meta'  => 'text-neutral-content/50 group-hover:text-neutral',
+		'bar'   => 'h-px bg-neutral-content/15 group-hover:bg-neutral',
 	),
 );
 
@@ -85,7 +85,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	$lp_rich       = $lp_rich_states[ $lp_active ? 'active' : 'inactive' ];
 	$lp_meta       = (string) ( $args['meta'] ?? '' );
 	$lp_icon_id    = (string) ( $args['icon_id'] ?? 'icon-squares-2x2' );
-	$lp_rich_class = 'group relative flex-1 min-w-[160px] flex flex-col items-start gap-5 px-6 py-5 text-left transition-colors duration-150 border-r border-neutral-content/10 last:border-r-0 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+	$lp_rich_class = 'group relative flex-1 min-w-[160px] h-[66px] flex flex-col text-left transition-colors duration-150 border-r border-neutral-content/10 last:border-r-0 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 	?>
 	<?php if ( '' !== $lp_href ) : ?>
 	<a
@@ -107,11 +107,13 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 		data-variant="rich"
 	>
 	<?php endif; ?>
-		<span class="<?php echo lp_classes( 'flex items-center gap-[11px]', $lp_rich['label'] ); ?>">
-			<?php lp_icon( $lp_icon_id, 'w-[14px] h-[14px] flex-none text-current' ); ?>
-			<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px]"><?php echo esc_html( $lp_label ); ?></span>
+		<span class="flex-1 flex items-center justify-between gap-5 px-[26px]">
+			<span class="<?php echo lp_classes( 'flex items-center gap-[11px]', $lp_rich['label'] ); ?>">
+				<?php lp_icon( $lp_icon_id, 'w-[14px] h-[14px] flex-none text-current' ); ?>
+				<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px]"><?php echo esc_html( $lp_label ); ?></span>
+			</span>
+			<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px]', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
 		</span>
-		<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px]', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
 		<span class="<?php echo lp_classes( 'absolute inset-x-0 bottom-0', $lp_rich['bar'] ); ?>" aria-hidden="true"></span>
 	<?php echo '' !== $lp_href ? '</a>' : '</button>'; ?>
 	<?php

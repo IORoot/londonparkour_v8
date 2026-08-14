@@ -234,6 +234,7 @@ $lp_spacing = lp_section_spacing( $args );
 					lp_part( 'components/media-photo', $lp_photo );
 				}
 				?>
+				<span class="absolute inset-0 bg-gradient-to-r from-transparent via-neutral/60 via-70% to-neutral group-hover:via-primary/60 group-hover:to-primary pointer-events-none" aria-hidden="true"></span>
 			</div>
 			<div class="flex flex-col justify-center gap-4 px-10 py-9">
 				<div class="flex items-center gap-2.5 flex-wrap">
@@ -287,6 +288,7 @@ $lp_spacing = lp_section_spacing( $args );
 							lp_part( 'components/media-photo', $lp_card_photo );
 						}
 						?>
+						<span class="absolute inset-0 bg-gradient-to-b from-transparent from-40% to-neutral/90 group-hover:to-primary/90 pointer-events-none" aria-hidden="true"></span>
 					</div>
 					<div class="flex flex-col gap-2 px-3.5 pt-3.5 pb-4">
 						<span class="font-label text-[9px] font-bold tracking-[1px] uppercase text-primary group-hover:text-neutral"><?php echo esc_html( $lp_card['tag'] ); ?></span>

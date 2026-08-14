@@ -45,7 +45,7 @@ return array(
 					array(
 						'name'  => 'href',
 						'label' => __( 'Link', 'londonparkour_v8' ),
-						'type'  => 'url',
+						'type'  => 'text',
 					),
 				),
 			),

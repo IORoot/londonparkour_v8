@@ -253,13 +253,13 @@ foreach ( $lp_links as $lp_i => $lp_link ) {
 <header data-component="site-nav" data-variant="<?php echo esc_attr( $lp_variant ); ?>" data-over-hero="<?php echo $lp_over_hero ? 'true' : 'false'; ?>" class="<?php echo esc_attr( $lp_header_ground ); ?>">
 	<nav aria-label="Primary">
 		<div class="<?php echo lp_classes( 'hidden lg:flex items-stretch justify-between border-b border-neutral-content/10 pl-[64px]', $lp_bar_height ); ?>">
-			<a href="<?php echo esc_url( $lp_home_href ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="flex items-center text-neutral-content">
+			<a href="<?php echo esc_url( $lp_home_href ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="flex items-center text-neutral-content hover:text-primary transition-colors duration-150">
 				<?php
 				lp_part(
 					'brand/logo',
 					array(
 						'width'       => $lp_logo_width,
-						'color_class' => 'text-neutral-content',
+						'color_class' => 'text-current',
 						'label'       => $lp_brand,
 					)
 				);
@@ -315,13 +315,13 @@ foreach ( $lp_links as $lp_i => $lp_link ) {
 		</div>
 
 		<div class="flex lg:hidden items-stretch justify-between h-[60px] border-b border-neutral-content/10 pl-[20px]">
-			<a href="<?php echo esc_url( $lp_home_href ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="flex items-center text-neutral-content">
+			<a href="<?php echo esc_url( $lp_home_href ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="flex items-center text-neutral-content hover:text-primary transition-colors duration-150">
 				<?php
 				lp_part(
 					'brand/logo',
 					array(
 						'width'       => 88,
-						'color_class' => 'text-neutral-content',
+						'color_class' => 'text-current',
 						'label'       => $lp_brand,
 					)
 				);
