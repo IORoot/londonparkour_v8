@@ -35,11 +35,6 @@ $lp_category         = $lp_values['tutorial_category'];
 $lp_kinds            = lp_tutorial_kind_filter_values();
 $lp_category_options = lp_tutorial_category_filter_options();
 $lp_shelves          = lp_category_board_shelves( $lp_category, $lp_kinds );
-$lp_category_count   = count( $lp_shelves );
-$lp_visible_videos   = 0;
-foreach ( $lp_shelves as $lp_shelf ) {
-	$lp_visible_videos += count( $lp_shelf['posts'] );
-}
 $lp_category_term    = '' !== $lp_category
 	? get_term_by( 'slug', $lp_category, 'tutorial-category' )
 	: null;
@@ -99,8 +94,8 @@ get_header();
 			'title' => 'Categories.',
 			'note'  => sprintf(
 				'%d categories. %d coached videos, filed by category.',
-				$lp_category_count,
-				$lp_visible_videos
+				lp_tutorials_category_count(),
+				lp_tutorials_published_count()
 			),
 		)
 	);

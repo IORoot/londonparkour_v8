@@ -140,6 +140,31 @@ function lp_series_terms_nonempty(): array {
 }
 
 /**
+ * Published lp_tutorial count.
+ */
+function lp_tutorials_published_count(): int {
+	return (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
+}
+
+/**
+ * Parent movement families with at least one tutorial.
+ *
+ * Child moves (Step-Vault, Precisions, …) are shelves inside a family,
+ * not extra categories.
+ */
+function lp_tutorials_category_count(): int {
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'tutorial-category',
+			'parent'     => 0,
+			'hide_empty' => true,
+		)
+	);
+
+	return is_array( $terms ) ? count( $terms ) : 0;
+}
+
+/**
  * View-rail tabs shared by the tutorial archive, series overview, series
  * detail, and category board.
  *
@@ -148,21 +173,8 @@ function lp_series_terms_nonempty(): array {
  */
 function lp_tutorials_view_tabs( string $active = 'tutorial' ): array {
 	$series_count   = count( lp_series_terms_nonempty() );
-	$category_count = 0;
-	$category_terms = get_terms(
-		array(
-			'taxonomy'   => 'tutorial-category',
-			'hide_empty' => true,
-		)
-	);
-	if ( is_array( $category_terms ) ) {
-		foreach ( $category_terms as $lp_term ) {
-			if ( $lp_term->parent ) {
-				++$category_count;
-			}
-		}
-	}
-	$tutorial_count = (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
+	$category_count = lp_tutorials_category_count();
+	$tutorial_count = lp_tutorials_published_count();
 	$archive_url    = (string) get_post_type_archive_link( 'lp_tutorial' );
 
 	return array(
@@ -1225,6 +1237,41 @@ function lp_series_project_featured( int $term_id, int $index = 1 ): ?array {
 }
 
 /**
+ * Yellow eyebrow for a homepage shelf tile.
+ *
+ * Promotional `tag` first (NEW, LIBRARY), then the level from `series_label`
+ * (BEGINNER), then the first genre tag. Last resort is SERIES so the slot
+ * never collapses — the pen puts a tag above every shelf title.
+ *
+ * @param array<string,mixed> $fields ACF fields for the series term.
+ */
+function lp_series_shelf_eyebrow( array $fields ): string {
+	$tag = strtoupper( trim( (string) ( $fields['tag'] ?? '' ) ) );
+	if ( '' !== $tag ) {
+		return $tag;
+	}
+
+	$label = strtoupper( trim( (string) ( $fields['series_label'] ?? '' ) ) );
+	if ( '' !== $label ) {
+		if ( str_contains( $label, '·' ) ) {
+			$bits = array_map( 'trim', explode( '·', $label, 2 ) );
+			if ( '' !== ( $bits[1] ?? '' ) ) {
+				return strtoupper( $bits[1] );
+			}
+			return strtoupper( $bits[0] );
+		}
+		return $label;
+	}
+
+	$tags = lp_series_tag_list( (string) ( $fields['tags'] ?? '' ) );
+	if ( $tags ) {
+		return $tags[0];
+	}
+
+	return 'SERIES';
+}
+
+/**
  * Project an lp_series term into a homepage shelf tile.
  *
  * Count and poster come from the tutorials in the series without loading
@@ -1251,7 +1298,7 @@ function lp_series_project_shelf( int $term_id ): ?array {
 	$url  = is_wp_error( $link ) ? '' : (string) $link;
 
 	return array(
-		'tag'        => (string) ( $fields['tag'] ?? '' ),
+		'tag'        => lp_series_shelf_eyebrow( $fields ),
 		'title'      => $term->name,
 		'episodes'   => $count > 0 ? $count . ' EPS' : '',
 		'href'       => $url ? $url : '#',

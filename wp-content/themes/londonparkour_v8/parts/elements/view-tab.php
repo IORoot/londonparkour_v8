@@ -18,9 +18,9 @@
  * explicitly with border-b-2 instead; every other property is an explicit
  * utility override on top of `tab`.
  *
- * Spec gap carried over: no hover state is specified for ViewTab. A subtle
- * opacity lift on inactive-tab hover is the minimum real affordance for an
- * interactive control — not a spec value, flagged here as in the source.
+ * Plain ViewTab still has no hover in the .pen — inactive tabs keep a
+ * subtle opacity lift. The `rich` variant (tutorials/classes view rail)
+ * hovers onto `bg-primary` with `primary-content` ink.
  *
  * Deliberate departure: the source's `onClick` is a JS-object callback bound
  * in Storybook's `init()`, not a data-* driven behaviour from the motion
@@ -64,14 +64,14 @@ $lp_states = array(
  */
 $lp_rich_states = array(
 	'active'   => array(
-		'label' => 'text-primary',
-		'meta'  => 'text-neutral-content/80',
-		'bar'   => 'h-[3px] bg-primary',
+		'label' => 'text-primary group-hover:text-primary-content',
+		'meta'  => 'text-neutral-content/80 group-hover:text-primary-content/70',
+		'bar'   => 'h-[3px] bg-primary group-hover:bg-primary-content',
 	),
 	'inactive' => array(
-		'label' => 'text-neutral-content/65 group-hover:text-neutral-content/80',
-		'meta'  => 'text-neutral-content/50',
-		'bar'   => 'h-px bg-neutral-content/15',
+		'label' => 'text-neutral-content/65 group-hover:text-primary-content',
+		'meta'  => 'text-neutral-content/50 group-hover:text-primary-content/70',
+		'bar'   => 'h-px bg-neutral-content/15 group-hover:bg-primary-content',
 	),
 );
 
@@ -85,7 +85,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	$lp_rich       = $lp_rich_states[ $lp_active ? 'active' : 'inactive' ];
 	$lp_meta       = (string) ( $args['meta'] ?? '' );
 	$lp_icon_id    = (string) ( $args['icon_id'] ?? 'icon-squares-2x2' );
-	$lp_rich_class = 'group relative flex-1 min-w-[160px] flex flex-col items-start gap-5 px-6 py-5 text-left transition-colors duration-150 border-r border-neutral-content/10 last:border-r-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+	$lp_rich_class = 'group relative flex-1 min-w-[160px] flex flex-col items-start gap-5 px-6 py-5 text-left transition-colors duration-150 border-r border-neutral-content/10 last:border-r-0 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 	?>
 	<?php if ( '' !== $lp_href ) : ?>
 	<a

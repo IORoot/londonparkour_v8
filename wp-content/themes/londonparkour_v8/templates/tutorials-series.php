@@ -69,7 +69,10 @@ get_header();
 		'components/page-masthead',
 		array(
 			'title' => 'The series.',
-			'note'  => 'Eight taught progressions. Open a line for the full lesson board — image, summary, and a clear way into the videos.',
+			'note'  => sprintf(
+				'%d series. Open a line for the full lesson board — image, summary, and a clear way into the videos.',
+				$lp_series_count
+			),
 		)
 	);
 

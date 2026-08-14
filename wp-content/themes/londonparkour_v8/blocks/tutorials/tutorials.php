@@ -145,8 +145,18 @@ $lp_project_shelf = static function ( array $item ): array {
 		$href = (string) ( $item['url'] ?? '#' );
 	}
 
+	$tag = strtoupper( trim( (string) ( $item['tag'] ?? '' ) ) );
+	if ( '' === $tag ) {
+		$tag = lp_series_shelf_eyebrow(
+			array(
+				'series_label' => (string) ( $item['series'] ?? $item['series_label'] ?? '' ),
+				'tags'         => (string) ( $item['tags'] ?? '' ),
+			)
+		);
+	}
+
 	return array(
-		'tag'        => (string) ( $item['tag'] ?? '' ),
+		'tag'        => $tag,
 		'title'      => (string) ( $item['title'] ?? '' ),
 		'episodes'   => $episodes,
 		'href'       => $href ? $href : '#',
@@ -205,7 +215,7 @@ $lp_spacing = lp_section_spacing( $args );
 
 		<a
 			href="<?php echo esc_url( $lp_feat_href ); ?>"
-			class="grid lg:grid-cols-[1.2fr_1fr] bg-neutral no-underline border border-primary"
+			class="group grid lg:grid-cols-[1.2fr_1fr] bg-neutral no-underline border border-primary hover:bg-primary transition-colors duration-150"
 			data-component="tutorials-featured"
 		>
 			<div class="relative aspect-[16/9] w-full bg-neutral">
@@ -228,15 +238,15 @@ $lp_spacing = lp_section_spacing( $args );
 			<div class="flex flex-col justify-center gap-4 px-10 py-9">
 				<div class="flex items-center gap-2.5 flex-wrap">
 					<?php if ( '' !== $lp_feat_tag ) : ?>
-						<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[9px] font-bold tracking-[1px] uppercase text-primary-content"><?php echo esc_html( $lp_feat_tag ); ?></span>
+						<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[9px] font-bold tracking-[1px] uppercase text-primary-content group-hover:bg-neutral group-hover:text-primary"><?php echo esc_html( $lp_feat_tag ); ?></span>
 					<?php endif; ?>
-					<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_feat_series ); ?></span>
+					<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_feat_series ); ?></span>
 				</div>
-				<h3 class="font-heading text-[40px] font-semibold tracking-[-1px] text-neutral-content m-0"><?php echo esc_html( $lp_feat_title ); ?></h3>
-				<p class="font-body text-[13px] leading-[1.55] text-neutral-content/70 m-0"><?php echo esc_html( $lp_feat_logline ); ?></p>
+				<h3 class="font-heading text-[40px] font-semibold tracking-[-1px] text-neutral-content m-0 group-hover:text-neutral"><?php echo esc_html( $lp_feat_title ); ?></h3>
+				<p class="font-body text-[13px] leading-[1.55] text-neutral-content/70 m-0 group-hover:text-neutral/80"><?php echo esc_html( $lp_feat_logline ); ?></p>
 				<div class="flex items-center justify-between gap-4 flex-wrap pt-2">
-					<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_feat_meta ); ?></span>
-					<span class="inline-flex items-center gap-2 py-3 px-4 bg-primary font-label text-[11px] font-bold tracking-[1px] uppercase text-primary-content">
+					<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_feat_meta ); ?></span>
+					<span class="inline-flex items-center gap-2 py-3 px-4 bg-primary font-label text-[11px] font-bold tracking-[1px] uppercase text-primary-content group-hover:bg-neutral group-hover:text-primary">
 						<?php lp_icon( 'icon-play', 'w-3.5 h-3.5 shrink-0' ); ?>
 						<?php echo esc_html( $lp_feat_cta ); ?>
 					</span>
@@ -258,7 +268,7 @@ $lp_spacing = lp_section_spacing( $args );
 			<?php foreach ( $lp_shelf as $lp_card ) : ?>
 				<a
 					href="<?php echo esc_url( $lp_card['href'] ); ?>"
-					class="flex flex-col bg-neutral hover:bg-secondary transition-colors duration-150 no-underline border border-neutral-content/10"
+					class="group flex flex-col bg-neutral hover:bg-primary transition-colors duration-150 no-underline border border-neutral-content/10"
 					data-component="tutorials-shelf-card"
 				>
 					<div class="relative aspect-[16/9] w-full bg-neutral">
@@ -279,11 +289,9 @@ $lp_spacing = lp_section_spacing( $args );
 						?>
 					</div>
 					<div class="flex flex-col gap-2 px-3.5 pt-3.5 pb-4">
-						<?php if ( '' !== $lp_card['tag'] ) : ?>
-							<span class="font-label text-[9px] font-bold tracking-[1px] uppercase text-primary"><?php echo esc_html( $lp_card['tag'] ); ?></span>
-						<?php endif; ?>
-						<span class="font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content"><?php echo esc_html( $lp_card['title'] ); ?></span>
-						<span class="font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_card['episodes'] ); ?></span>
+						<span class="font-label text-[9px] font-bold tracking-[1px] uppercase text-primary group-hover:text-neutral"><?php echo esc_html( $lp_card['tag'] ); ?></span>
+						<span class="font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content group-hover:text-neutral"><?php echo esc_html( $lp_card['title'] ); ?></span>
+						<span class="font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_card['episodes'] ); ?></span>
 					</div>
 				</a>
 			<?php endforeach; ?>
