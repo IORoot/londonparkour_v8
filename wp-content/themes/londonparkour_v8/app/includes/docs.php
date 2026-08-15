@@ -1,0 +1,622 @@
+<?php
+/**
+ * Docs / wiki helpers — support CPT at /docs/{slug}, wiki landing at /docs,
+ * FAQ at /docs/frequently-asked-questions.
+ *
+ * @package londonparkour_v8
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Wiki landing URL.
+ */
+function lp_docs_url(): string {
+	return home_url( '/docs/' );
+}
+
+/**
+ * Blog index URL.
+ */
+function lp_docs_blog_url(): string {
+	$lp_blog = (string) get_permalink( (int) get_option( 'page_for_posts' ) );
+	if ( '' === $lp_blog || '0' === $lp_blog ) {
+		$lp_blog = home_url( '/blog/' );
+	}
+	return $lp_blog;
+}
+
+/**
+ * Find a published support post by any of the given slugs.
+ *
+ * @param string[] $lp_slugs Slugs to try.
+ * @return WP_Post|null
+ */
+function lp_docs_find_support( array $lp_slugs ): ?WP_Post {
+	foreach ( $lp_slugs as $lp_slug ) {
+		$lp_post = get_page_by_path( $lp_slug, OBJECT, 'support' );
+		if ( $lp_post instanceof WP_Post ) {
+			return $lp_post;
+		}
+	}
+	return null;
+}
+
+/**
+ * FAQ is the Wiki landing at /docs.
+ */
+function lp_docs_faq_url(): string {
+	return lp_docs_url();
+}
+
+/**
+ * Whether this support post is the FAQ page.
+ *
+ * @param WP_Post|null $lp_post Post.
+ */
+function lp_docs_is_faq( ?WP_Post $lp_post ): bool {
+	if ( ! $lp_post ) {
+		return false;
+	}
+	return in_array( $lp_post->post_name, array( 'frequently-asked-questions', 'faq' ), true );
+}
+
+/**
+ * Whether this support post is Class Locations (links out to the Classes map).
+ *
+ * @param WP_Post|null $lp_post Post.
+ */
+function lp_docs_is_class_locations( ?WP_Post $lp_post ): bool {
+	if ( ! $lp_post ) {
+		return false;
+	}
+	return in_array( $lp_post->post_name, array( 'class-locations', 'class-location', 'locations' ), true )
+		|| 0 === strcasecmp( get_the_title( $lp_post ), 'Class Locations' );
+}
+
+/**
+ * Gift Cards wiki URL.
+ */
+function lp_docs_gift_cards_url(): string {
+	$lp_post = lp_docs_find_support( array( 'gift-cards', 'giftcards', 'gift-card' ) );
+	if ( $lp_post ) {
+		return (string) get_permalink( $lp_post );
+	}
+	return home_url( '/docs/gift-cards/' );
+}
+
+/**
+ * Whether this support post is the Gift Cards article.
+ *
+ * @param WP_Post|null $lp_post Post.
+ */
+function lp_docs_is_gift_cards( ?WP_Post $lp_post ): bool {
+	if ( ! $lp_post ) {
+		return false;
+	}
+	return (bool) preg_match( '/gift-?cards?/', $lp_post->post_name );
+}
+
+/**
+ * Whether this support post is Terms of service.
+ *
+ * @param WP_Post|null $lp_post Post.
+ */
+function lp_docs_is_terms( ?WP_Post $lp_post ): bool {
+	if ( ! $lp_post ) {
+		return false;
+	}
+	$lp_slug  = $lp_post->post_name;
+	$lp_title = strtolower( $lp_post->post_title );
+	return in_array( $lp_slug, array( 'terms', 'terms-of-service' ), true )
+		|| false !== strpos( $lp_title, 'terms of service' );
+}
+
+/**
+ * Wiki | Legal for a support post.
+ *
+ * Only Terms of service uses the Legal page (clauses, doc meta). Every other
+ * support post — including Student Waiver, Privacy, Equality, Photography &
+ * Video, and Code of Conduct — uses the wiki article chrome, matching
+ * Beginners Class.
+ *
+ * @param int|WP_Post|null $lp_post Post.
+ */
+function lp_docs_template_mode( $lp_post = null ): string {
+	$lp_obj = $lp_post instanceof WP_Post ? $lp_post : null;
+	if ( ! $lp_obj ) {
+		$lp_id = (int) $lp_post;
+		if ( $lp_id < 1 ) {
+			$lp_id = (int) get_the_ID();
+		}
+		$lp_obj = $lp_id > 0 ? get_post( $lp_id ) : null;
+	}
+	return lp_docs_is_terms( $lp_obj instanceof WP_Post ? $lp_obj : null ) ? 'legal' : 'wiki';
+}
+
+/**
+ * Classes | Company | Website. Unset defaults to classes.
+ *
+ * @param int|WP_Post|null $lp_post Post.
+ */
+function lp_docs_index_group( $lp_post = null ): string {
+	$lp_id = $lp_post instanceof WP_Post ? (int) $lp_post->ID : (int) $lp_post;
+	if ( $lp_id < 1 ) {
+		$lp_id = (int) get_the_ID();
+	}
+	$lp_group = function_exists( 'get_field' ) ? (string) get_field( 'docs_index_group', $lp_id ) : '';
+	return in_array( $lp_group, array( 'classes', 'company', 'website' ), true ) ? $lp_group : 'classes';
+}
+
+/**
+ * Published support count.
+ */
+function lp_docs_support_count(): int {
+	$lp_counts = wp_count_posts( 'support' );
+	return ( is_object( $lp_counts ) && isset( $lp_counts->publish ) ) ? (int) $lp_counts->publish : 0;
+}
+
+/**
+ * Published story count (blog CPT, else native posts).
+ */
+function lp_docs_story_count(): int {
+	$lp_type   = post_type_exists( 'blog' ) ? 'blog' : 'post';
+	$lp_counts = wp_count_posts( $lp_type );
+	return ( is_object( $lp_counts ) && isset( $lp_counts->publish ) ) ? (int) $lp_counts->publish : 0;
+}
+
+/**
+ * Wiki / Blog / Gift Cards switcher rows.
+ *
+ * @param string $lp_active wiki|blog|gift-cards.
+ * @return array
+ */
+function lp_docs_switcher_rows( string $lp_active = 'wiki' ): array {
+	$lp_pages   = lp_docs_support_count();
+	$lp_stories = lp_docs_story_count();
+
+	return array(
+		array(
+			'index'   => 'SECTION A',
+			'title'   => 'Wiki',
+			'meta'    => sprintf( '%d pages', $lp_pages ?: 15 ),
+			'icon'    => 'icon-book-open',
+			'href'    => lp_docs_url(),
+			'current' => 'wiki' === $lp_active,
+		),
+		array(
+			'index'   => 'SECTION B',
+			'title'   => 'Blog',
+			'meta'    => sprintf( '%d stories', $lp_stories ?: 12 ),
+			'icon'    => 'icon-newspaper',
+			'href'    => lp_docs_blog_url(),
+			'current' => 'blog' === $lp_active,
+		),
+		array(
+			'index'   => 'SECTION C',
+			'title'   => 'Gift Cards',
+			'meta'    => 'buying, redeeming, expiry',
+			'icon'    => 'icon-tag',
+			'href'    => lp_docs_gift_cards_url(),
+			'current' => 'gift-cards' === $lp_active,
+		),
+	);
+}
+
+/**
+ * Docs Index groups from published support posts, A–Z per column.
+ *
+ * @param string $lp_current_title Title marked CURRENT. FAQ landing marks Frequently Asked Questions.
+ * @return array
+ */
+function lp_docs_index_groups( string $lp_current_title = '' ): array {
+	$lp_query = new WP_Query(
+		array(
+			'post_type'      => 'support',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+		)
+	);
+
+	$lp_buckets = array(
+		'classes' => array(),
+		'company' => array(),
+		'website' => array(),
+	);
+
+	$lp_faq_row = null;
+	foreach ( $lp_query->posts as $lp_post ) {
+		if ( ! $lp_post instanceof WP_Post ) {
+			continue;
+		}
+		$lp_title  = get_the_title( $lp_post );
+		$lp_marker = ( '' !== $lp_current_title && $lp_title === $lp_current_title ) ? 'CURRENT' : '↗';
+		if ( lp_docs_is_faq( $lp_post ) ) {
+			$lp_faq_row = array(
+				'title'  => $lp_title,
+				'marker' => $lp_marker,
+				'href'   => lp_docs_url(),
+			);
+			continue;
+		}
+		$lp_href = (string) get_permalink( $lp_post );
+		if ( lp_docs_is_class_locations( $lp_post ) ) {
+			$lp_href = function_exists( 'lp_classes_page_url' )
+				? lp_classes_page_url( 'classes-map' )
+				: home_url( '/classes-map/' );
+		}
+		$lp_group = lp_docs_index_group( $lp_post );
+		$lp_buckets[ $lp_group ][] = array(
+			'title'  => $lp_title,
+			'marker' => $lp_marker,
+			'href'   => $lp_href,
+		);
+	}
+
+	if ( ! $lp_faq_row ) {
+		$lp_faq_title = 'Frequently Asked Questions';
+		$lp_faq_row   = array(
+			'title'  => $lp_faq_title,
+			'marker' => ( '' !== $lp_current_title && $lp_current_title === $lp_faq_title ) ? 'CURRENT' : '↗',
+			'href'   => lp_docs_url(),
+		);
+	}
+	array_unshift( $lp_buckets['classes'], $lp_faq_row );
+
+	return array(
+		array(
+			'heading' => 'CLASSES',
+			'pages'   => $lp_buckets['classes'],
+		),
+		array(
+			'heading' => 'COMPANY',
+			'pages'   => $lp_buckets['company'],
+		),
+		array(
+			'heading' => 'WEBSITE',
+			'pages'   => $lp_buckets['website'],
+		),
+	);
+}
+
+/**
+ * Resolve a support URL by slug.
+ *
+ * @param string $lp_slug     Support slug.
+ * @param string $lp_fallback Fallback URL.
+ */
+function lp_docs_wiki_url( string $lp_slug, string $lp_fallback = '' ): string {
+	$lp_post = get_page_by_path( $lp_slug, OBJECT, 'support' );
+	if ( $lp_post instanceof WP_Post ) {
+		return (string) get_permalink( $lp_post );
+	}
+	return $lp_fallback;
+}
+
+/**
+ * Echo the Docs Index band.
+ *
+ * @param string $lp_current_title CURRENT row title.
+ */
+function lp_docs_render_index( string $lp_current_title = '' ): void {
+	$lp_groups = lp_docs_index_groups( $lp_current_title );
+	$lp_count  = lp_docs_support_count();
+	$lp_label  = sprintf( '%d PAGES', $lp_count );
+	?>
+	<div class="w-full bg-base-200" data-component="docs-index" id="docs-index">
+		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-[28px]">
+			<div class="flex items-end justify-between gap-4">
+				<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-base-content">DOCS INDEX</span>
+				<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_label ); ?></span>
+			</div>
+			<div class="h-px w-full bg-base-content" aria-hidden="true"></div>
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-x-16 gap-y-10">
+				<?php foreach ( $lp_groups as $lp_group ) : ?>
+					<div class="flex flex-col">
+						<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-base-content/65 pb-3"><?php echo esc_html( $lp_group['heading'] ); ?></span>
+						<div class="divide-y divide-base-300">
+							<?php foreach ( $lp_group['pages'] as $lp_page ) : ?>
+								<?php
+								lp_part(
+									'components/list-row',
+									array(
+										'index'   => '',
+										'title'   => $lp_page['title'],
+										'meta'    => '',
+										'marker'  => $lp_page['marker'],
+										'href'    => $lp_page['href'],
+										'surface' => 'panel',
+									)
+								);
+								?>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</div>
+	<?php
+}
+
+/**
+ * Switcher + Docs Index — the wiki block shared by every docs URL, including Legal.
+ *
+ * @param string $lp_switcher wiki|blog|gift-cards.
+ * @param string $lp_current  Index CURRENT title.
+ */
+function lp_docs_render_wiki_nav( string $lp_switcher, string $lp_current = '' ): void {
+	lp_render_block(
+		'section-directory',
+		array(
+			'rows' => lp_docs_switcher_rows( $lp_switcher ),
+		)
+	);
+
+	lp_docs_render_index( $lp_current );
+}
+
+/**
+ * Shared docs chrome crumbs + masthead + wiki nav.
+ *
+ * @param string $lp_third_crumb Third breadcrumb label.
+ * @param string $lp_switcher    wiki|blog|gift-cards.
+ * @param string $lp_current     Index CURRENT title.
+ */
+function lp_docs_render_wiki_chrome_start( string $lp_third_crumb, string $lp_switcher, string $lp_current = '' ): void {
+	lp_part(
+		'components/breadcrumb-rail',
+		array(
+			'crumbs' => array(
+				array(
+					'label' => 'HOME',
+					'href'  => home_url( '/' ),
+				),
+				array(
+					'label' => 'DOCS',
+					'href'  => lp_docs_url(),
+				),
+				array( 'label' => $lp_third_crumb ),
+			),
+			'action' => array(
+				'label' => 'ALL DOCS ↗',
+				'href'  => lp_docs_url(),
+			),
+		)
+	);
+
+	lp_part(
+		'components/page-masthead',
+		array(
+			'title' => 'Questions, answered.',
+			'note'  => 'Guides, FAQs and stories from LondonParkour. Start with answers to common questions — or switch to Blog for news and projects.',
+		)
+	);
+
+	lp_docs_render_wiki_nav( $lp_switcher, $lp_current );
+}
+
+/**
+ * Passenger enquiries + onward, shared by FAQ landing and wiki articles.
+ */
+function lp_docs_render_wiki_chrome_end(): void {
+	lp_render_block( 'passenger-enquiries', array() );
+
+	lp_part(
+		'components/page-onward',
+		array(
+			'prev' => array(
+				'keyword' => '← CONTACT',
+				'label'   => 'Send us a message',
+				'href'    => home_url( '/contact/' ),
+			),
+			'next' => array(
+				'keyword' => 'BOOK A CLASS →',
+				'label'   => 'Or just turn up in trainers',
+				'href'    => (string) get_post_type_archive_link( lp_class_post_type() ),
+			),
+		)
+	);
+}
+
+/**
+ * Render a v7 support post body. Imported posts store markdown in
+ * post_content — same path as blog, not `the_content()` which would print
+ * `##` headings as paragraphs.
+ *
+ * @param WP_Post|null $lp_post Post.
+ */
+function lp_docs_render_markdown_body( ?WP_Post $lp_post ): void {
+	if ( ! $lp_post instanceof WP_Post ) {
+		return;
+	}
+
+	$lp_parsed = lp_blog_parse_markdown( (string) $lp_post->post_content );
+	$lp_lead   = 'font-body text-[16px] leading-[1.75] tracking-[0.1px] text-base-content';
+	$lp_p      = 'font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content';
+	$lp_h      = 'font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]';
+	$lp_first  = true;
+
+	foreach ( $lp_parsed['intro'] as $lp_para ) {
+		echo '<p class="' . esc_attr( $lp_first ? $lp_lead : $lp_p ) . '">' . wp_kses_post( lp_blog_inline_markdown( $lp_para ) ) . '</p>';
+		$lp_first = false;
+	}
+	foreach ( $lp_parsed['sections'] as $lp_section ) {
+		echo '<h2 id="' . esc_attr( $lp_section['id'] ) . '" class="' . esc_attr( $lp_h ) . '">' . esc_html( $lp_section['heading'] ) . '</h2>';
+		foreach ( $lp_section['paragraphs'] as $lp_para ) {
+			echo '<p class="' . esc_attr( $lp_first ? $lp_lead : $lp_p ) . '">' . wp_kses_post( lp_blog_inline_markdown( $lp_para ) ) . '</p>';
+			$lp_first = false;
+		}
+	}
+}
+
+/**
+ * Route support singles to wiki or Legal templates.
+ *
+ * @param string $lp_template Current template.
+ * @return string
+ */
+function lp_docs_template_include( string $lp_template ): string {
+	if ( ! is_singular( 'support' ) ) {
+		return $lp_template;
+	}
+
+	if ( 'legal' === lp_docs_template_mode( get_post() ) ) {
+		$lp_legal = get_theme_file_path( 'templates/legal.php' );
+		return is_readable( $lp_legal ) ? $lp_legal : $lp_template;
+	}
+
+	$lp_wiki = get_theme_file_path( 'templates/docs-wiki.php' );
+	return is_readable( $lp_wiki ) ? $lp_wiki : $lp_template;
+}
+add_filter( 'template_include', 'lp_docs_template_include' );
+
+/**
+ * Force support permalinks under /docs/{slug} even before ACF JSON syncs.
+ *
+ * @param array  $lp_args      register_post_type args.
+ * @param string $lp_post_type Post type.
+ * @return array
+ */
+function lp_docs_support_post_type_args( array $lp_args, string $lp_post_type ): array {
+	if ( 'support' !== $lp_post_type ) {
+		return $lp_args;
+	}
+	$lp_args['rewrite']     = array(
+		'slug'       => 'docs',
+		'with_front' => false,
+	);
+	$lp_args['has_archive'] = false;
+	return $lp_args;
+}
+add_filter( 'register_post_type_args', 'lp_docs_support_post_type_args', 20, 2 );
+
+/**
+ * /support/{slug} still resolves after the rewrite slug became docs.
+ */
+function lp_docs_rewrite(): void {
+	add_rewrite_rule( '^support/([^/]+)/?$', 'index.php?support=$matches[1]', 'top' );
+}
+add_action( 'init', 'lp_docs_rewrite', 11 );
+
+/**
+ * Flush rewrites once after the docs slug change.
+ */
+function lp_docs_maybe_flush_rewrites(): void {
+	$lp_flag = 'lp_docs_rewrite_v2';
+	if ( get_option( $lp_flag ) ) {
+		return;
+	}
+	flush_rewrite_rules( false );
+	update_option( $lp_flag, '1' );
+}
+add_action( 'init', 'lp_docs_maybe_flush_rewrites', 99 );
+
+/**
+ * Old URL map: /docs-faq, /legal, /docs/faq, /support/{slug}.
+ */
+function lp_docs_redirects(): void {
+	$lp_request = trim( (string) ( $GLOBALS['wp']->request ?? '' ), '/' );
+
+	if ( is_page( 'docs-faq' ) || 'docs-faq' === $lp_request ) {
+		wp_safe_redirect( lp_docs_url(), 301 );
+		exit;
+	}
+
+	if ( is_page( 'legal' ) ) {
+		$lp_terms = lp_docs_find_support( array( 'terms', 'terms-of-service' ) );
+		wp_safe_redirect( $lp_terms ? (string) get_permalink( $lp_terms ) : lp_docs_url(), 301 );
+		exit;
+	}
+
+	if ( 'docs/faq' === $lp_request || ( is_singular( 'support' ) && lp_docs_is_faq( get_post() ) ) ) {
+		wp_safe_redirect( lp_docs_url(), 301 );
+		exit;
+	}
+
+	if ( is_singular( 'support' ) && lp_docs_is_class_locations( get_post() ) ) {
+		$lp_map = function_exists( 'lp_classes_page_url' )
+			? lp_classes_page_url( 'classes-map' )
+			: home_url( '/classes-map/' );
+		wp_safe_redirect( $lp_map, 301 );
+		exit;
+	}
+
+	if ( is_singular( 'support' ) && 0 === strpos( $lp_request, 'support/' ) ) {
+		wp_safe_redirect( (string) get_permalink(), 301 );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'lp_docs_redirects' );
+
+/**
+ * Known column + template for migrated support slugs / titles.
+ *
+ * @return array<string, array{group:string, template:string}>
+ */
+function lp_docs_known_support_map(): array {
+	return array(
+		'student-waiver'         => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'youth-class'            => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'personal-training'      => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'personal-training-pt'   => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'hiring-us'              => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'frequently-asked-questions' => array( 'group' => 'classes', 'template' => 'faq' ),
+		'faq'                    => array( 'group' => 'classes', 'template' => 'faq' ),
+		'gift-cards'             => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'giftcards'              => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'class-locations'        => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'beginners-class'        => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'privacy'                => array( 'group' => 'company', 'template' => 'wiki' ),
+		'privacy-policy'         => array( 'group' => 'company', 'template' => 'wiki' ),
+		'pricing'                => array( 'group' => 'company', 'template' => 'wiki' ),
+		'photography-video'      => array( 'group' => 'company', 'template' => 'wiki' ),
+		'photography-and-video'  => array( 'group' => 'company', 'template' => 'wiki' ),
+		'equality'               => array( 'group' => 'company', 'template' => 'wiki' ),
+		'equality-policy'        => array( 'group' => 'company', 'template' => 'wiki' ),
+		'contacting-us'          => array( 'group' => 'company', 'template' => 'wiki' ),
+		'code-of-conduct'        => array( 'group' => 'company', 'template' => 'wiki' ),
+		'terms'                  => array( 'group' => 'website', 'template' => 'legal' ),
+		'terms-of-service'       => array( 'group' => 'website', 'template' => 'legal' ),
+	);
+}
+
+/**
+ * Apply column + template to support posts. Known slugs get the pen map;
+ * everything else stays Classes + Wiki (the field defaults).
+ *
+ * @return int Posts updated.
+ */
+function lp_docs_seed_support_fields(): int {
+	if ( ! function_exists( 'update_field' ) ) {
+		return 0;
+	}
+
+	$lp_map   = lp_docs_known_support_map();
+	$lp_query = new WP_Query(
+		array(
+			'post_type'      => 'support',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'no_found_rows'  => true,
+		)
+	);
+
+	$lp_updated = 0;
+	foreach ( $lp_query->posts as $lp_post ) {
+		if ( ! $lp_post instanceof WP_Post ) {
+			continue;
+		}
+		$lp_known = $lp_map[ $lp_post->post_name ] ?? null;
+		$lp_group = $lp_known['group'] ?? 'classes';
+		$lp_mode  = $lp_known['template'] ?? 'wiki';
+		update_field( 'docs_index_group', $lp_group, $lp_post->ID );
+		update_field( 'docs_template', $lp_mode, $lp_post->ID );
+		++$lp_updated;
+	}
+
+	return $lp_updated;
+}

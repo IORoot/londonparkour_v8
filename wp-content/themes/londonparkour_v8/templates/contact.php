@@ -51,7 +51,7 @@ get_header();
 			'prev' => array(
 				'keyword' => '← FAQ',
 				'label'   => 'Common passenger questions',
-				'href'    => home_url( '/docs-faq/' ),
+				'href'    => lp_docs_url(),
 			),
 			'next' => array(
 				'keyword' => 'BOOK A CLASS →',

@@ -252,3 +252,58 @@ function lp_tutorial_filter_values(): array {
 	);
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 }
+
+/**
+ * Posts page lists the `blog` CPT, 24 to a page.
+ *
+ * The v7 import writes `blog` and deletes native `post`, so the posts-page
+ * main query is otherwise empty. home.php reads $wp_query->posts; a secondary
+ * WP_Query cannot paginate (and used to cap the board at four).
+ *
+ * @param WP_Query $lp_query The query being prepared.
+ */
+function lp_filter_blog_home( WP_Query $lp_query ): void {
+	if ( is_admin() || ! $lp_query->is_main_query() || ! $lp_query->is_home() ) {
+		return;
+	}
+
+	if ( post_type_exists( 'blog' ) ) {
+		$lp_query->set( 'post_type', 'blog' );
+	}
+
+	$lp_query->set( 'posts_per_page', 24 );
+	$lp_query->set( 'ignore_sticky_posts', true );
+}
+add_action( 'pre_get_posts', 'lp_filter_blog_home' );
+
+/**
+ * `/blog/page/2/` is parsed as a `blog` CPT single named "page".
+ *
+ * The CPT rewrite slug is `blog`, the same as page_for_posts, so the more
+ * specific CPT rule wins over the posts-page pagination rule. Send it back.
+ *
+ * @param array<string, mixed> $lp_vars Parsed request vars.
+ * @return array<string, mixed>
+ */
+function lp_fix_blog_paged_request( array $lp_vars ): array {
+	if ( ( $lp_vars['post_type'] ?? '' ) !== 'blog' ) {
+		return $lp_vars;
+	}
+
+	if ( ( $lp_vars['name'] ?? '' ) !== 'page' ) {
+		return $lp_vars;
+	}
+
+	$lp_page = isset( $lp_vars['page'] ) ? absint( $lp_vars['page'] ) : 0;
+	if ( $lp_page < 2 ) {
+		return $lp_vars;
+	}
+
+	unset( $lp_vars['post_type'], $lp_vars['name'], $lp_vars['blog'] );
+	$lp_vars['pagename'] = 'blog';
+	$lp_vars['paged']    = $lp_page;
+	unset( $lp_vars['page'] );
+
+	return $lp_vars;
+}
+add_filter( 'request', 'lp_fix_blog_paged_request' );

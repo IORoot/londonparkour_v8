@@ -17,24 +17,24 @@ defined( 'ABSPATH' ) || exit;
 $lp_default_rows = array(
 	array(
 		'index' => 'SECTION A',
-		'title' => 'Classes',
-		'meta'  => '05 questions · running, lateness, weather, refunds',
-		'icon'  => 'icon-academic-cap',
-		'href'  => '#classes',
+		'title' => 'Wiki',
+		'meta'  => '15 pages',
+		'icon'  => 'icon-book-open',
+		'href'  => '/docs',
 	),
 	array(
 		'index' => 'SECTION B',
-		'title' => 'Private Sessions',
-		'meta'  => '03 questions · pricing, parties, what you get',
-		'icon'  => 'icon-user-group',
-		'href'  => '#private-sessions',
+		'title' => 'Blog',
+		'meta'  => '12 stories',
+		'icon'  => 'icon-newspaper',
+		'href'  => '/blog',
 	),
 	array(
 		'index' => 'SECTION C',
 		'title' => 'Gift Cards',
-		'meta'  => '02 questions · buying, redeeming, expiry',
+		'meta'  => 'buying, redeeming, expiry',
 		'icon'  => 'icon-tag',
-		'href'  => '#gift-cards',
+		'href'  => '/docs/gift-cards',
 	),
 );
 
@@ -50,21 +50,44 @@ if ( ! $lp_rows ) {
 
 $lp_spacing = lp_section_spacing( $args );
 
-$lp_cell_first = 'group flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] pr-[44px] pl-0 no-underline text-left hover:bg-primary';
-$lp_cell_rest  = 'group flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-[44px] border-l border-base-300 no-underline text-left hover:bg-primary';
+$lp_cell = array(
+	'first'         => 'group flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-6 lg:pr-[44px] lg:pl-16 no-underline text-left hover:bg-primary',
+	'rest'          => 'group flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-6 lg:px-[44px] border-l border-base-300 no-underline text-left hover:bg-primary',
+	'last'          => 'group flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-6 lg:pl-[44px] lg:pr-16 border-l border-base-300 no-underline text-left hover:bg-primary',
+	'first_current' => 'flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-6 lg:pr-[44px] lg:pl-16 no-underline text-left bg-primary',
+	'rest_current'  => 'flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-6 lg:px-[44px] border-l border-base-300 no-underline text-left bg-primary',
+	'last_current'  => 'flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-6 lg:pl-[44px] lg:pr-16 border-l border-base-300 no-underline text-left bg-primary',
+);
+$lp_title_class = array(
+	'default' => 'font-heading text-[24px] font-medium tracking-[-0.6px] text-base-content group-hover:text-neutral',
+	'current' => 'font-heading text-[24px] font-medium tracking-[-0.6px] text-neutral',
+);
+$lp_meta_class = array(
+	'default' => 'font-body text-[11px] font-normal tracking-[0.15px] leading-[1.55] text-base-content/65 group-hover:text-neutral',
+	'current' => 'font-body text-[11px] font-normal tracking-[0.15px] leading-[1.55] text-neutral',
+);
 ?>
 <section class="<?php echo lp_classes( 'w-full bg-base-100 border-b border-base-300', $lp_spacing ); ?>" data-component="docs-faq-section-directory"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
-	<div class="px-6 lg:px-16">
-		<div class="flex flex-col lg:flex-row">
-			<?php foreach ( $lp_rows as $lp_i => $lp_row ) : ?>
-				<?php
-				$lp_href  = (string) ( $lp_row['href'] ?? '' );
-				$lp_class = 0 === $lp_i ? $lp_cell_first : $lp_cell_rest;
-				$lp_tag   = '' !== $lp_href ? 'a' : 'div';
-				?>
+	<div class="flex flex-col lg:flex-row">
+		<?php foreach ( $lp_rows as $lp_i => $lp_row ) : ?>
+			<?php
+			$lp_href    = (string) ( $lp_row['href'] ?? '' );
+			$lp_current = ! empty( $lp_row['current'] );
+			$lp_last    = ( count( $lp_rows ) - 1 ) === $lp_i;
+			if ( 0 === $lp_i ) {
+				$lp_key = $lp_current ? 'first_current' : 'first';
+			} elseif ( $lp_last ) {
+				$lp_key = $lp_current ? 'last_current' : 'last';
+			} else {
+				$lp_key = $lp_current ? 'rest_current' : 'rest';
+			}
+			$lp_tone = $lp_current ? 'current' : 'default';
+			$lp_tag  = '' !== $lp_href ? 'a' : 'div';
+			?>
 				<<?php echo $lp_tag; ?>
-					class="<?php echo esc_attr( $lp_class ); ?>"
+					class="<?php echo esc_attr( $lp_cell[ $lp_key ] ); ?>"
 					<?php if ( '' !== $lp_href ) : ?>href="<?php echo esc_url( $lp_href ); ?>"<?php endif; ?>
+					<?php echo $lp_current ? ' aria-current="page"' : ''; ?>
 				>
 					<?php
 					lp_part(
@@ -72,16 +95,15 @@ $lp_cell_rest  = 'group flex-1 flex flex-col gap-3 pt-[34px] pb-[36px] px-[44px]
 						array(
 							'label'   => (string) ( $lp_row['index'] ?? '' ),
 							'icon_id' => (string) ( $lp_row['icon'] ?? '' ),
-							'surface' => 'page',
+							'surface' => $lp_current ? 'fill' : 'page',
 							'tone'    => 'muted',
-							'class'   => 'group-hover:text-neutral',
+							'class'   => $lp_current ? '' : 'group-hover:text-neutral',
 						)
 					);
 					?>
-					<span class="font-heading text-[24px] font-medium tracking-[-0.6px] text-base-content group-hover:text-neutral"><?php echo esc_html( (string) ( $lp_row['title'] ?? '' ) ); ?></span>
-					<span class="font-body text-[11px] font-normal tracking-[0.15px] leading-[1.55] text-base-content/65 group-hover:text-neutral"><?php echo esc_html( (string) ( $lp_row['meta'] ?? '' ) ); ?></span>
+					<span class="<?php echo esc_attr( $lp_title_class[ $lp_tone ] ); ?>"><?php echo esc_html( (string) ( $lp_row['title'] ?? '' ) ); ?></span>
+					<span class="<?php echo esc_attr( $lp_meta_class[ $lp_tone ] ); ?>"><?php echo esc_html( (string) ( $lp_row['meta'] ?? '' ) ); ?></span>
 				</<?php echo $lp_tag; ?>>
 			<?php endforeach; ?>
-		</div>
 	</div>
 </section>

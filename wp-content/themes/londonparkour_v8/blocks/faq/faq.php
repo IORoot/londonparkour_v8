@@ -122,18 +122,17 @@ $lp_render_group = static function ( array $lp_group, int &$lp_ordinal ) {
 	$lp_icon    = (string) ( $lp_group['icon'] ?? '' );
 	$lp_items   = is_array( $lp_group['items'] ?? null ) ? $lp_group['items'] : array();
 	?>
-	<div<?php echo $lp_id ? ' id="' . esc_attr( $lp_id ) . '"' : ''; ?> class="flex flex-col gap-[18px]">
-		<?php
-		lp_part(
-			'components/meta-row',
-			array(
-				'left'    => $lp_label,
-				'right'   => $lp_entries,
-				'icon'    => $lp_icon,
-				'surface' => 'page',
-			)
-		);
-		?>
+	<div<?php echo $lp_id ? ' id="' . esc_attr( $lp_id ) . '"' : ''; ?> class="flex flex-col">
+		<div class="w-full flex items-center justify-between gap-4 pb-[17px]" data-component="docs-faq-group-head">
+			<span class="inline-flex items-center gap-3 font-label text-[11px] font-semibold tracking-[1px] uppercase text-base-content">
+				<?php if ( $lp_icon ) : ?>
+					<span class="shrink-0" aria-hidden="true"><?php lp_icon( $lp_icon, 'w-[14px] h-[14px]' ); ?></span>
+				<?php endif; ?>
+				<?php echo esc_html( $lp_label ); ?>
+			</span>
+			<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_entries ); ?></span>
+		</div>
+		<div class="h-px w-full bg-base-content" aria-hidden="true"></div>
 		<div class="divide-y divide-base-300">
 			<?php foreach ( $lp_items as $lp_item ) : ?>
 				<?php
@@ -144,10 +143,11 @@ $lp_render_group = static function ( array $lp_group, int &$lp_ordinal ) {
 				lp_part(
 					'components/faq-item',
 					array(
-						'index'    => str_pad( (string) $lp_ordinal, 2, '0', STR_PAD_LEFT ),
-						'question' => (string) ( $lp_item['question'] ?? '' ),
-						'answer'   => (string) ( $lp_item['answer'] ?? '' ),
-						'surface'  => 'page',
+						'index'        => str_pad( (string) $lp_ordinal, 2, '0', STR_PAD_LEFT ),
+						'question'     => (string) ( $lp_item['question'] ?? '' ),
+						'answer'       => (string) ( $lp_item['answer'] ?? '' ),
+						'surface'      => 'page',
+						'collapsible'  => false,
 					)
 				);
 				?>
@@ -168,7 +168,7 @@ if ( 'groups' === $lp_mode ) :
 		$lp_groups = $lp_default_groups;
 	}
 	?>
-<section class="<?php echo lp_classes( 'w-full bg-base-200', $lp_spacing ); ?>" data-component="docs-faq-body"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'w-full bg-base-100', $lp_spacing ); ?>" data-component="docs-faq-body"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="px-6 lg:px-16 py-scale-xl flex flex-col gap-[48px]">
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-[66px]">
 			<div class="flex flex-col gap-[66px]">

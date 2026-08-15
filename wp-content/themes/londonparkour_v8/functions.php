@@ -34,6 +34,7 @@ $lp_includes = array(
 	'app/includes/modules.php',
 	'app/includes/clasbpro.php',
 	'app/includes/content.php',
+	'app/includes/docs.php',
 	'app/includes/contact.php',
 	'app/includes/tutorials.php',
 	// Setup.

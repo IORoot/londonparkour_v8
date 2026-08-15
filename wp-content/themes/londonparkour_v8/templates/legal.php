@@ -30,18 +30,26 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$lp_support = is_singular( 'support' ) ? get_post() : null;
+
 $lp_title = 'Terms of service.';
 $lp_note  = 'The rules that apply when you book and train with us, written in plain English. Ten clauses, no small print — if anything here is unclear, ask us and we will explain it.';
 
-$lp_crumbs        = array(
+$lp_crumbs       = array(
 	array(
 		'label' => 'HOME',
 		'href'  => home_url( '/' ),
 	),
-	array( 'label' => 'LEGAL' ),
+	array(
+		'label' => 'DOCS',
+		'href'  => lp_docs_url(),
+	),
 	array( 'label' => 'TERMS OF SERVICE' ),
 );
-$lp_crumb_action  = array( 'label' => 'PRIVACY POLICY ↗' ); // No Privacy page exists — href deliberately omitted.
+$lp_crumb_action = array(
+	'label' => 'ALL DOCS ↗',
+	'href'  => lp_docs_url(),
+);
 
 // `b6u0Ph` Doc Meta defaults.
 $lp_default_doc_facts   = array(
@@ -232,6 +240,11 @@ get_header();
 			'title' => $lp_title,
 			'note'  => $lp_note,
 		)
+	);
+
+	lp_docs_render_wiki_nav(
+		'wiki',
+		$lp_support instanceof WP_Post ? get_the_title( $lp_support ) : 'Terms of service'
 	);
 	?>
 

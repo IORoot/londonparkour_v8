@@ -651,14 +651,13 @@ function lp_seed_template_pages(): void {
 		'classes'          => array( 'Classes', 'templates/classes-agenda.php' ),
 		'classes-map'      => array( 'Classes — Map', 'templates/classes-map.php' ),
 		'contact'          => array( 'Contact', 'templates/contact.php' ),
-		'docs-faq'         => array( 'Docs — FAQ', 'templates/docs-faq.php' ),
+		'docs'             => array( 'Docs', 'templates/docs-faq.php' ),
 		'tutorials-series'   => array( 'Tutorials — Series', 'templates/tutorials-series.php' ),
 		'tutorials-category' => array( 'Tutorials — Category', 'templates/tutorials-category.php' ),
 	);
 
 	$sections = array(
 		'contact'  => array( 'enquiries', 'other-ways', 'faq' ),
-		'docs-faq' => array( 'section-directory', 'faq:groups', 'passenger-enquiries' ),
 	);
 
 	foreach ( $pages as $slug => $page ) {
@@ -674,6 +673,10 @@ function lp_seed_template_pages(): void {
 		// Migrate the pre-rename Agenda slug so re-seed does not leave a duplicate.
 		if ( ! $existing && 'classes' === $slug ) {
 			$existing = lp_seed_find( 'page', 'classes-agenda' );
+		}
+
+		if ( ! $existing && 'docs' === $slug ) {
+			$existing = lp_seed_find( 'page', 'docs-faq' );
 		}
 
 		if ( $existing && ! lp_seed_is_ours( $existing ) ) {
@@ -896,6 +899,12 @@ WP_CLI::add_command(
 
 		WP_CLI::log( 'Template pages' );
 		lp_seed_template_pages();
+
+		if ( post_type_exists( 'support' ) ) {
+			WP_CLI::log( 'Support docs fields' );
+			$lp_n = lp_docs_seed_support_fields();
+			WP_CLI::log( sprintf( '  updated %d support post(s)', $lp_n ) );
+		}
 
 		WP_CLI::log( 'Homepage' );
 		lp_seed_homepage( $media );

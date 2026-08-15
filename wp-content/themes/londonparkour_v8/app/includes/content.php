@@ -24,14 +24,11 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  */
 function lp_post_card_args( WP_Post $lp_post ): array {
-	$lp_cats     = get_the_category( $lp_post->ID );
-	$lp_category = $lp_cats ? $lp_cats[0]->name : 'Project';
-	$lp_read     = function_exists( 'get_field' ) ? (string) get_field( 'read_time', $lp_post->ID ) : '';
-	$lp_author   = get_the_author_meta( 'display_name', (int) $lp_post->post_author );
+	$lp_author = get_the_author_meta( 'display_name', (int) $lp_post->post_author );
 
 	return array(
-		'category'  => strtoupper( $lp_category ),
-		'read_time' => $lp_read ?: '3 MIN READ',
+		'category'  => lp_post_category_label( $lp_post ),
+		'read_time' => lp_post_read_time( $lp_post ),
 		'title'     => get_the_title( $lp_post ),
 		'excerpt'   => get_the_excerpt( $lp_post ),
 		'author'    => $lp_author ?: 'Andy Pearson',
@@ -43,6 +40,151 @@ function lp_post_card_args( WP_Post $lp_post ): array {
 }
 
 /**
+ * The `blog` CPT (v7 import) uses `blog-category`. Native `post` uses `category`.
+ *
+ * @param WP_Post $lp_post The post.
+ * @return string Uppercased category label.
+ */
+function lp_post_category_label( WP_Post $lp_post ): string {
+	$lp_taxonomy = ( 'blog' === $lp_post->post_type && taxonomy_exists( 'blog-category' ) )
+		? 'blog-category'
+		: 'category';
+	$lp_terms    = get_the_terms( $lp_post->ID, $lp_taxonomy );
+	if ( $lp_terms && ! is_wp_error( $lp_terms ) ) {
+		return strtoupper( $lp_terms[0]->name );
+	}
+
+	return 'PROJECT';
+}
+
+/**
+ * ACF `read_time` when set; otherwise a word-count estimate so imported
+ * `blog` posts still print a meta line.
+ *
+ * @param WP_Post $lp_post The post.
+ * @return string e.g. "3 MIN READ".
+ */
+function lp_post_read_time( WP_Post $lp_post ): string {
+	$lp_acf = function_exists( 'get_field' ) ? (string) get_field( 'read_time', $lp_post->ID ) : '';
+	if ( '' !== $lp_acf ) {
+		return $lp_acf;
+	}
+
+	$lp_words = str_word_count( wp_strip_all_tags( (string) $lp_post->post_content ) );
+	$lp_mins  = max( 1, (int) round( $lp_words / 200 ) );
+
+	return $lp_mins . ' MIN READ';
+}
+
+/**
+ * Published `blog` CPT posts when that type exists, otherwise native `post`.
+ *
+ * The posts page (`home.php`) uses the main query via lp_filter_blog_home()
+ * so it can paginate. This helper is a one-off fetch with no found rows.
+ *
+ * @param int $lp_count How many to return (lead + recent grid).
+ * @return WP_Post[]
+ */
+function lp_blog_listing_posts( int $lp_count = 4 ): array {
+	$lp_type = post_type_exists( 'blog' ) ? 'blog' : 'post';
+	$lp_q    = new WP_Query(
+		array(
+			'post_type'           => $lp_type,
+			'post_status'         => 'publish',
+			'posts_per_page'      => $lp_count,
+			'orderby'             => 'date',
+			'order'               => 'DESC',
+			'ignore_sticky_posts' => true,
+			'no_found_rows'       => true,
+		)
+	);
+
+	return $lp_q->posts;
+}
+
+/**
+ * Split a markdown (or plain) article into intro paragraphs + ## sections.
+ *
+ * v7 blog bodies are markdown. Structured ACF repeaters, when present, take
+ * precedence in the template — this is the imported-content path.
+ *
+ * @param string $lp_content Raw post_content.
+ * @return array{intro: string[], sections: array<int, array{id: string, heading: string, paragraphs: string[]}>}
+ */
+function lp_blog_parse_markdown( string $lp_content ): array {
+	$lp_content = str_replace( array( "\r\n", "\r" ), "\n", trim( $lp_content ) );
+	$lp_content = (string) preg_replace( '/\A#\s+[^\n]+\n+/', '', $lp_content, 1 );
+
+	$lp_parts = preg_split( '/^#{2,6}\s+(.+)$/m', $lp_content, -1, PREG_SPLIT_DELIM_CAPTURE );
+	if ( ! is_array( $lp_parts ) ) {
+		$lp_parts = array( $lp_content );
+	}
+
+	$lp_intro    = lp_blog_split_paragraphs( (string) ( $lp_parts[0] ?? '' ) );
+	$lp_sections = array();
+	$lp_count    = count( $lp_parts );
+
+	for ( $lp_i = 1; $lp_i < $lp_count; $lp_i += 2 ) {
+		$lp_heading = trim( (string) $lp_parts[ $lp_i ] );
+		if ( '' === $lp_heading ) {
+			continue;
+		}
+		$lp_sections[] = array(
+			'id'         => sanitize_title( $lp_heading ),
+			'heading'    => $lp_heading,
+			'paragraphs' => lp_blog_split_paragraphs( (string) ( $lp_parts[ $lp_i + 1 ] ?? '' ) ),
+		);
+	}
+
+	return array(
+		'intro'    => $lp_intro,
+		'sections' => $lp_sections,
+	);
+}
+
+/**
+ * @param string $lp_text A markdown block.
+ * @return string[] Non-empty paragraphs.
+ */
+function lp_blog_split_paragraphs( string $lp_text ): array {
+	$lp_chunks = preg_split( '/\n\s*\n/', trim( $lp_text ) );
+	if ( ! is_array( $lp_chunks ) ) {
+		return array();
+	}
+
+	$lp_out = array();
+	foreach ( $lp_chunks as $lp_chunk ) {
+		$lp_chunk = trim( (string) $lp_chunk );
+		if ( '' !== $lp_chunk ) {
+			$lp_out[] = $lp_chunk;
+		}
+	}
+
+	return $lp_out;
+}
+
+/**
+ * Inline markdown → allowed HTML for an article paragraph.
+ *
+ * @param string $lp_text Escaped-then-marked-up paragraph.
+ * @return string
+ */
+function lp_blog_inline_markdown( string $lp_text ): string {
+	$lp_text = esc_html( $lp_text );
+	$lp_text = (string) preg_replace( '/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $lp_text );
+	$lp_text = (string) preg_replace( '/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/s', '<em>$1</em>', $lp_text );
+	$lp_text = (string) preg_replace_callback(
+		'/\[([^\]]+)\]\(([^)]+)\)/',
+		static function ( array $lp_m ): string {
+			return '<a class="text-accent hover:text-accent/70" href="' . esc_url( $lp_m[2] ) . '">' . $lp_m[1] . '</a>';
+		},
+		$lp_text
+	);
+
+	return nl2br( $lp_text, false );
+}
+
+/**
  * Project a query's paging state into parts/components/pagination.php's args.
  *
  * Returns an EMPTY array when there is only one page, so a caller can write
@@ -51,7 +193,7 @@ function lp_post_card_args( WP_Post $lp_post ): array {
  *
  * Hrefs come from get_pagenum_link(), which reads the current request — so
  * this suits the MAIN query. A secondary WP_Query would need its own link
- * builder; none of the three callers has one.
+ * builder; none of the callers has one.
  *
  * @param WP_Query|null $lp_query Defaults to the main query.
  * @param string        $lp_noun  Plural noun for the count line. Default 'RESULTS'.
@@ -347,113 +489,6 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 			'icon_id' => 'icon-map-pin',
 			'href'    => lp_classes_page_url( 'classes-map' ),
 			'active'  => 'map' === $lp_active,
-		),
-	);
-}
-
-/**
- * Wiki / FAQ / Blog view-rail tabs (`r1ttmM` on DocsFaq, `Sx4SD` on BlogIndex).
- *
- * @param string $lp_active wiki|faq|blog.
- * @return array Tabs in view-rail.php's shape.
- */
-function lp_docs_view_tabs( string $lp_active = 'faq' ): array {
-	$lp_faq  = home_url( '/docs-faq/' );
-	$lp_blog = (string) get_permalink( (int) get_option( 'page_for_posts' ) );
-	if ( '' === $lp_blog || '0' === $lp_blog ) {
-		$lp_blog = home_url( '/blog/' );
-	}
-
-	$lp_counts  = wp_count_posts( 'post' );
-	$lp_stories = ( is_object( $lp_counts ) && isset( $lp_counts->publish ) ) ? (int) $lp_counts->publish : 0;
-
-	return array(
-		array(
-			'label'   => 'Wiki',
-			'meta'    => '15 PAGES',
-			'icon_id' => 'icon-book-open',
-			'href'    => $lp_faq . '#docs-index',
-			'active'  => 'wiki' === $lp_active,
-		),
-		array(
-			'label'   => 'FAQ',
-			'meta'    => '10 QUESTIONS',
-			'icon_id' => 'icon-question-mark-circle',
-			'href'    => $lp_faq,
-			'active'  => 'faq' === $lp_active,
-		),
-		array(
-			'label'   => 'Blog',
-			'meta'    => sprintf( '%d STORIES', $lp_stories ?: 12 ),
-			'icon_id' => 'icon-newspaper',
-			'href'    => $lp_blog,
-			'active'  => 'blog' === $lp_active,
-		),
-	);
-}
-
-/**
- * Resolve a wiki/docs page URL by slug, falling back to the FAQ index.
- *
- * @param string $lp_slug     Page slug.
- * @param string $lp_fallback Fallback URL.
- */
-function lp_docs_wiki_url( string $lp_slug, string $lp_fallback = '' ): string {
-	$lp_page = get_page_by_path( $lp_slug );
-	if ( $lp_page instanceof WP_Post ) {
-		return (string) get_permalink( $lp_page );
-	}
-	return $lp_fallback;
-}
-
-/**
- * Docs Index groups (`ZmkRu` / `yEyWZ`) — 15 wiki pages in three columns.
- *
- * @param string $lp_current_title Title marked CURRENT.
- * @return array
- */
-function lp_docs_index_groups( string $lp_current_title = 'Frequently Asked Questions' ): array {
-	$lp_faq = home_url( '/docs-faq/' );
-
-	$lp_link = static function ( string $lp_title, string $lp_slug, string $lp_fallback = '' ) use ( $lp_current_title, $lp_faq ): array {
-		$lp_current = $lp_title === $lp_current_title;
-		return array(
-			'title'  => $lp_title,
-			'marker' => $lp_current ? 'CURRENT' : '↗',
-			'href'   => $lp_current ? $lp_faq : lp_docs_wiki_url( $lp_slug, $lp_fallback ?: $lp_faq . '#docs-index' ),
-		);
-	};
-
-	return array(
-		array(
-			'heading' => 'CLASSES',
-			'pages'   => array(
-				$lp_link( 'Frequently Asked Questions', 'docs-faq', $lp_faq ),
-				$lp_link( 'Youth Class', 'youth-class' ),
-				$lp_link( 'Student Waiver', 'student-waiver' ),
-				$lp_link( 'Personal Training (PT)', 'personal-training' ),
-				$lp_link( 'Hiring us', 'hiring-us' ),
-				$lp_link( 'Gift Cards', 'gift-cards' ),
-				$lp_link( 'Class Locations', 'class-locations' ),
-				$lp_link( 'Beginners Class', 'beginners-class' ),
-			),
-		),
-		array(
-			'heading' => 'COMPANY',
-			'pages'   => array(
-				$lp_link( 'Privacy Policy', 'privacy' ),
-				$lp_link( 'Pricing', 'pricing' ),
-				$lp_link( 'Photography & Video', 'photography-video' ),
-				$lp_link( 'Equality Policy', 'equality' ),
-				$lp_link( 'Contacting us', 'contact', home_url( '/contact/' ) ),
-				$lp_link( 'Code of Conduct', 'code-of-conduct' ),
-			),
-		),
-		array(
-			'heading' => 'WEBSITE',
-			'pages'   => array(
-				$lp_link( 'Terms of Service', 'terms' ),
-			),
 		),
 	);
 }

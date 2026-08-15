@@ -17,7 +17,7 @@
  * @param string $args['href']    Renders the row as one focusable <a>.
  * @param string $args['icon']    Optional leading glyph; decorative.
  * @param string $args['marker']  Trailing text label, replacing the chevron.
- * @param string $args['surface'] board|page. Default 'board'.
+ * @param string $args['surface'] board|page|panel. Default 'board'.
  *
  * @package londonparkour_v8
  */
@@ -39,6 +39,18 @@ $lp_surfaces = array(
 	),
 	'page'  => array(
 		'ground'  => 'bg-base-100 hover:bg-base-200',
+		'border'  => 'border-base-300',
+		'outline' => 'focus-visible:outline-accent',
+		'title'   => 'text-base-content',
+		'meta'    => 'text-base-content/65',
+		'icon'    => 'text-base-content/65',
+		'index'   => 'text-base-content/65 group-hover:text-base-content/80',
+		'marker'  => 'text-base-content/65 group-hover:text-accent',
+		'chevron' => 'list_row_page',
+	),
+	// $v2_surface white band. Same ink family as page. Docs Index on J8MoSB.
+	'panel' => array(
+		'ground'  => 'bg-base-200 hover:bg-base-100',
 		'border'  => 'border-base-300',
 		'outline' => 'focus-visible:outline-accent',
 		'title'   => 'text-base-content',

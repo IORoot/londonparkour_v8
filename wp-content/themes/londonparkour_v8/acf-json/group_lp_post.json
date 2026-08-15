@@ -6,6 +6,13 @@
             {
                 "param": "post_type",
                 "operator": "==",
+                "value": "blog"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
                 "value": "post"
             }
         ]

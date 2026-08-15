@@ -14,8 +14,8 @@
  * The source does not aria-hide this avatar (byline does), so it passes
  * decorative => false to keep that as-is.
  *
- * The category kicker composes elements/glyph-label.php; the grid CTA is
- * elements/button.php.
+ * The category kicker composes elements/glyph-label.php; both the grid CTA
+ * and the lead CTA compose elements/button.php (primary, READ ARTICLE).
  *
  * @param string $args['variant']           grid|lead. Default 'grid'.
  * @param int    $args['image_id']          Attachment id — enables srcset.
@@ -38,13 +38,13 @@ defined( 'ABSPATH' ) || exit;
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_variants = array(
 	'grid' => array(
-		'root'        => 'card bg-base-100 border border-base-300 rounded-none overflow-hidden',
-		'media'       => 'aspect-[12/5] w-full bg-base-300 overflow-hidden m-0',
-		'body'        => 'card-body p-0 pt-[18px] px-[16px] pb-[16px] gap-[14px]',
+		'root'        => 'card flex flex-col h-full bg-base-200 border border-base-300 rounded-none overflow-hidden',
+		'media'       => 'aspect-[16/9] w-full bg-base-300 overflow-hidden m-0',
+		'body'        => 'card-body flex flex-col flex-1 p-0 pt-[18px] px-[16px] pb-[16px] gap-[14px]',
 		'read_time'   => 'font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65',
 		'title'       => 'card-title font-heading text-[22px] font-bold tracking-[-0.5px] leading-tight text-base-content',
-		'excerpt'     => 'font-body text-[12px] font-normal tracking-[0.1px] leading-relaxed text-base-content/65',
-		'foot_wrap'   => 'flex flex-col gap-[14px] border-t border-base-300 pt-[14px]',
+		'excerpt'     => 'font-body text-[12px] font-normal tracking-[0.1px] leading-[1.6] text-base-content/65',
+		'foot_wrap'   => 'mt-auto flex flex-col gap-[14px] border-t border-base-300 pt-[14px]',
 		'author_name' => 'font-body text-[12px] font-semibold tracking-[0.1px] text-base-content',
 		'author_date' => 'font-body text-[12px] font-normal tracking-[0.1px] text-base-content/65',
 		// byline `sm` on this surface produces the source's exact avatar box.
@@ -54,15 +54,15 @@ $lp_variants = array(
 	),
 	'lead' => array(
 		'root'        => 'flex flex-col lg:flex-row gap-[40px] lg:gap-[64px]',
-		'media'       => 'aspect-[5/3] w-full lg:w-3/5 overflow-hidden m-0 shrink-0',
+		'media'       => 'aspect-[16/9] w-full lg:w-3/5 overflow-hidden m-0 shrink-0',
 		'body'        => 'flex flex-col gap-[22px] w-full lg:w-2/5',
 		'read_time'   => '',
 		'title'       => 'font-heading text-[36px] lg:text-[43px] font-bold tracking-[-1.6px] leading-none text-accent-content',
 		'excerpt'     => 'font-body text-[14px] font-normal tracking-[0.15px] leading-[1.65] text-accent-content/70',
 		'foot_wrap'   => 'flex items-center gap-3 border-t border-accent-content/15 pt-[22px]',
+		'spacer'      => 'max-lg:hidden flex-1 min-h-0',
 		'author_name' => 'font-body text-[12px] font-semibold tracking-[0.1px] text-accent-content',
 		'author_date' => 'font-body text-[12px] font-normal tracking-[0.1px] text-accent-content/70',
-		'link'        => 'font-body text-[13px] font-semibold tracking-[0.4px] text-accent-content no-underline inline-flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
 		'avatar_surf' => 'accent',
 		'kicker_surf' => 'accent',
 		'kicker_tone' => 'muted',
@@ -141,8 +141,21 @@ $lp_author_row = static function () use ( $lp_v, $lp_author, $lp_date ) {
 		<h3 class="<?php echo esc_attr( $lp_v['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></h3>
 		<p class="<?php echo esc_attr( $lp_v['excerpt'] ); ?>"><?php echo esc_html( $lp_excerpt ); ?></p>
 		<?php if ( $lp_is_lead ) : ?>
+			<div class="<?php echo esc_attr( $lp_v['spacer'] ); ?>" aria-hidden="true"></div>
 			<div class="<?php echo esc_attr( $lp_v['foot_wrap'] ); ?>"><?php $lp_author_row(); ?></div>
-			<a href="<?php echo esc_url( $lp_href ); ?>" class="<?php echo esc_attr( $lp_v['link'] ); ?>">Read article →</a>
+			<div class="grid">
+				<?php
+				lp_part(
+					'elements/button',
+					array(
+						'variant'          => 'primary',
+						'label'            => 'READ ARTICLE',
+						'trailing_icon_id' => 'icon-arrow-right',
+						'href'             => $lp_href,
+					)
+				);
+				?>
+			</div>
 		<?php else : ?>
 			<div class="<?php echo esc_attr( $lp_v['foot_wrap'] ); ?>">
 				<?php $lp_author_row(); ?>

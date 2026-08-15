@@ -76,8 +76,9 @@
     "has_archive": false,
     "has_archive_slug": "",
     "rewrite": {
-        "permalink_rewrite": "post_type_key",
-        "with_front": "1",
+        "permalink_rewrite": "custom_permalink",
+        "slug": "docs",
+        "with_front": "0",
         "feeds": "0",
         "pages": "1"
     },

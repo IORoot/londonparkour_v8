@@ -8,6 +8,13 @@
                 "operator": "==",
                 "value": "templates/legal.php"
             }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "support"
+            }
         ]
     ],
     "menu_order": 0,
