@@ -15,11 +15,18 @@
  * (`DOWNLOAD PDF ↓` / `PRINT THIS PAGE`) — byte-identical to `board_compact`
  * but `accent` in place of `primary`, matching the source's doc-meta ink.
  *
+ * `board_compact_on_fill` is the homepage sell-row `size=lg` MORE DETAILS
+ * link: yellow at rest, white on row/link hover so it stays readable on
+ * `hover:bg-primary`. Do not reuse `board_compact` there —
+ * `hover:text-primary/70` wins over any extra `group-hover` class. Paper
+ * (`neutral-content` / `#F2F1E9`) also fails on yellow; this is the one
+ * place `text-white` is the signed-off hover ink.
+ *
  * Always renders a real <a href> — never role="button" (Port Brief a11y rule).
  *
  * @param string $args['label']   Visible text.
  * @param string $args['href']    Required.
- * @param string $args['variant'] board|board_compact|board_compact_accent|accent_band|page_accent. Default 'board'.
+ * @param string $args['variant'] board|board_compact|board_compact_accent|board_compact_on_fill|accent_band|page_accent. Default 'board'.
  * @param string $args['class']   Extra call-site classes, e.g. 'whitespace-nowrap'.
  *
  * @package londonparkour_v8
@@ -33,8 +40,9 @@ defined( 'ABSPATH' ) || exit;
  */
 $lp_variants = array(
 	'board'                => 'font-label text-[12px] font-semibold uppercase tracking-[0.9px] text-primary hover:text-primary/70 transition-colors duration-150',
-	'board_compact'        => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-primary hover:text-primary/70 transition-colors duration-150',
-	'board_compact_accent' => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent hover:text-accent/70 transition-colors duration-150',
+	'board_compact'         => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-primary hover:text-primary/70 transition-colors duration-150',
+	'board_compact_accent'  => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent hover:text-accent/70 transition-colors duration-150',
+	'board_compact_on_fill' => 'font-label text-[11px] font-semibold uppercase tracking-[1px] text-primary group-hover:text-white hover:text-white transition-colors duration-150',
 	'accent_band'          => 'font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent-content hover:text-accent-content/70 transition-colors duration-150',
 	'page_accent'          => 'font-label text-step--2 font-semibold tracking-[0.5px] text-accent hover:text-accent/70 transition-colors duration-150',
 );

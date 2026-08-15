@@ -13,17 +13,11 @@
  * themes those two resolve to the same hex. The stamp is elements/status.php
  * with `surface => 'board'` for the same reason.
  *
- * V3 board anatomy (`bhjl3`): THUMB → TIME → GLYPH → SESSION → SITE (150) →
- * LEVEL (146) → FARE → BOOK. There is no Spaces column — rows pass
- * `show_spaces => false`. COLUMN_HEAD stays a hardcoded array (layout classes
- * as well as labels), hand-coupled to board-row.php's own column geometry:
- *   THUMB  sm:w-14 (56)
- *   TIME   sm:w-[92px]
- *   GLYPH  sm:w-7 (28)
- *   SITE   md:w-[150px], hidden below md
- *   LEVEL  lg:w-[146px], hidden below lg
- *   FARE   sm:w-[76px]
- *   BOOK   w-[84px]
+ * V3 board anatomy (`bhjl3`): THUMB 112 → TIME 112 → GLYPH 40 → SESSION →
+ * SITE 168 → LEVEL 164 → FARE 88 → BOOK 96. There is no Spaces column — rows
+ * pass `show_spaces => false` and `size => 'lg'`. COLUMN_HEAD stays a
+ * hardcoded array (layout classes as well as labels), hand-coupled to
+ * board-row.php's lg column geometry.
  *
  * Day splits (pen `Vc2hk`): consecutive rows sharing a `date_label` are grouped
  * under `components/board-day-band` — the slim agenda-style divider, not the
@@ -149,15 +143,15 @@ $lp_default_sessions = array(
 $lp_column_head = array(
 	array(
 		'label' => '',
-		'class' => 'hidden sm:block w-14 shrink-0',
+		'class' => 'hidden sm:block w-28 shrink-0',
 	),
 	array(
 		'label' => 'TIME',
-		'class' => 'w-[92px] shrink-0',
+		'class' => 'w-[112px] shrink-0',
 	),
 	array(
 		'label' => '',
-		'class' => 'hidden sm:block w-7 shrink-0',
+		'class' => 'hidden sm:block w-10 shrink-0',
 	),
 	array(
 		'label' => 'SESSION',
@@ -165,15 +159,15 @@ $lp_column_head = array(
 	),
 	array(
 		'label' => 'SITE',
-		'class' => 'hidden md:block md:w-[150px] shrink-0',
+		'class' => 'hidden md:block md:w-[168px] shrink-0',
 	),
 	array(
 		'label' => 'LEVEL',
-		'class' => 'hidden lg:block lg:w-[146px] shrink-0',
+		'class' => 'hidden lg:block lg:w-[164px] shrink-0',
 	),
 	array(
 		'label' => 'FARE',
-		'class' => 'hidden sm:block w-[76px] shrink-0 text-right',
+		'class' => 'hidden sm:block w-[88px] shrink-0 text-right',
 	),
 );
 
@@ -208,6 +202,7 @@ $lp_sessions = array_map(
 		return array(
 			'variant'          => 'sell',
 			'show_spaces'      => false,
+			'size'             => 'lg',
 			'time'             => (string) ( $item['time'] ?? '' ),
 			'date_label'       => (string) ( $item['date_label'] ?? '' ),
 			'day_date'         => $lp_day_date,
@@ -239,6 +234,7 @@ if ( ! $lp_sessions ) {
 		static function ( array $row ): array {
 			$row['variant']     = 'sell';
 			$row['show_spaces'] = false;
+			$row['size']        = 'lg';
 			return $row;
 		},
 		$lp_default_sessions
@@ -312,11 +308,11 @@ $lp_spacing = lp_section_spacing( $args );
 			?>
 		</div>
 
-		<div class="hidden sm:flex items-center gap-[24px] py-[13px] border-b border-neutral-content/10" aria-hidden="true">
+		<div class="hidden sm:flex items-center gap-[28px] py-[13px] border-b border-neutral-content/10" aria-hidden="true">
 			<?php foreach ( $lp_column_head as $lp_cell ) : ?>
 				<span class="<?php echo lp_classes( $lp_cell['class'], 'font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-neutral-content/50' ); ?>"><?php echo esc_html( $lp_cell['label'] ); ?></span>
 			<?php endforeach; ?>
-			<span class="w-[84px] shrink-0"></span>
+			<span class="w-[96px] shrink-0"></span>
 		</div>
 
 		<div data-slot="rows">
