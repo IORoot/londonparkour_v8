@@ -191,7 +191,7 @@ while ( have_posts() ) :
 			</div>
 		</div>
 
-		<figure class="w-full h-[540px] bg-base-300 m-0 overflow-hidden" data-component="blog-detail-media">
+		<figure class="relative w-full aspect-[16/9] bg-base-300 m-0 overflow-hidden" data-component="blog-detail-media">
 			<?php if ( has_post_thumbnail() ) : ?>
 				<?php
 				lp_part(
@@ -199,8 +199,7 @@ while ( have_posts() ) :
 					array(
 						'image_id'      => get_post_thumbnail_id(),
 						'element'       => 'img',
-						'layout'        => 'none',
-						'class'         => 'w-full h-full object-cover',
+						'layout'        => 'fill',
 						'size'          => 'lp_wide_lg',
 						'sizes'         => '100vw',
 						'loading'       => 'eager',
@@ -228,27 +227,28 @@ while ( have_posts() ) :
 
 		<div class="w-full bg-base-200" data-component="blog-detail-body">
 			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col lg:flex-row gap-[56px]">
-				<aside class="w-full lg:w-[260px] shrink-0 flex flex-col gap-[18px] lg:sticky lg:top-[24px] lg:self-start">
+				<aside class="w-full lg:w-[360px] shrink-0 lg:sticky lg:top-[24px] lg:self-start" data-component="blog-detail-toc">
 					<?php if ( $lp_toc ) : ?>
-						<p class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content m-0">IN THIS ARTICLE</p>
+						<p class="font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-base-content m-0">IN THIS ARTICLE</p>
+						<div class="h-3.5" aria-hidden="true"></div>
+						<div class="h-px w-full bg-base-content" aria-hidden="true"></div>
 						<nav aria-label="In this article">
 							<?php foreach ( $lp_toc as $lp_i => $lp_entry ) : ?>
 								<?php
-								lp_part(
-									'components/list-row',
-									array(
-										'index'   => str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT ),
-										'title'   => $lp_entry['title'],
-										'meta'    => '',
-										'href'    => '#' . $lp_entry['id'],
-										'surface' => 'page',
-									)
-								);
+								$lp_n           = str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT );
+								$lp_index_class = 0 === $lp_i
+									? 'font-label text-[10px] font-normal tracking-[0.8px] shrink-0 w-[20px] text-accent'
+									: 'font-label text-[10px] font-normal tracking-[0.8px] shrink-0 w-[20px] text-base-content/65';
 								?>
+								<a href="#<?php echo esc_attr( $lp_entry['id'] ); ?>" class="flex items-start gap-[14px] w-full py-[13px] border-b border-base-300 no-underline text-left">
+									<span class="<?php echo esc_attr( $lp_index_class ); ?>"><?php echo esc_html( $lp_n ); ?></span>
+									<span class="font-body text-[12px] font-normal tracking-[0.2px] leading-[1.4] text-base-content min-w-0 flex-1"><?php echo esc_html( $lp_entry['title'] ); ?></span>
+								</a>
 							<?php endforeach; ?>
 						</nav>
+						<div class="h-[26px]" aria-hidden="true"></div>
 					<?php endif; ?>
-					<a href="#" class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content hover:text-base-content/70 transition-colors duration-150">SHARE THIS ↗</a>
+					<a href="#" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content hover:text-base-content/70 transition-colors duration-150">SHARE THIS ↗</a>
 				</aside>
 				<article class="w-full max-w-[720px] flex flex-col gap-[28px]">
 					<?php foreach ( $lp_intro_paras as $lp_i => $lp_para ) : ?>

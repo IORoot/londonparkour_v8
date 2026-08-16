@@ -437,34 +437,32 @@ All five are in `search.php`'s own docblock; this records the reasoning once.
    claim tab semantics it cannot honour (Port Brief a11y rule). This mirrors
    `button.php`'s existing `<a>` vs `<button>` split; it is not a new shape.
 
-2. **The SORT select is dropped.** A GET `<select>` with no submit control needs
-   JS this theme does not have, and the design draws no submit beside it.
-   Shipping it inert or inventing a submit are both worse than omitting it.
-   Build it when sorting is designed. **The `<select>` markup in the source is
-   NOT `forms/select.php`** — the source is `w-[200px] bg-transparent` with an
-   external `aria-labelledby` span; the part is `w-full`, daisyUI-chromed and
-   stacks its own `<label>`. Routing one through the other would silently change
-   the design. Recorded so nobody "fixes" it later.
+2. **The SORT select is visual, not dropped.** `wsypA` draws it (`SORT` +
+   200×42, one option "Most relevant") and the source ports it byte-for-byte.
+   Extra options or onchange JS would be invented; WordPress search is already
+   relevance-ordered. **The `<select>` markup is NOT `forms/select.php`** — the
+   source is `w-[200px] bg-transparent` with an external `aria-labelledby`
+   span; the part is `w-full`, daisyUI-chromed and stacks its own `<label>`.
+   Routing one through the other would silently change the design.
 
 3. **`24 RESULTS · 0.04s` loses its timing.** WordPress exposes no search timing;
    `timer_stop()` measures page generation. A wrong number is worse than a
    missing one.
 
-4. **Two tabs the design predates.** The design has four kinds; this theme
-   registers six public post types, so coaches and locations are searchable and
-   would have appeared in results with no tab and no place in the ALL total.
-   Their labels are the registered CPT labels uppercased. The design's own four
-   words are used verbatim. Zero-count tabs are not rendered.
+4. **The rail is the design's four kinds, not every public type.** ARTICLES is
+   the `blog` CPT (v7 import), not native `post`. Coaches, locations, support
+   and notifications stay out of the main search query so ALL equals the sum of
+   the four tabs and the query-bar hint stays true. Zero-count tabs still
+   render — `wsypA` always draws all four.
 
-5. **`CLEAR ✕` stays `<button type="reset">`, as drawn — and is semantically
-   wrong on WordPress.** On a submitted query a reset restores the submitted
-   value, so it clears the user's *edits*, not the search. Reported rather than
-   redesigned: the honest fixes are a link to an empty-query state (which the
-   design does not have) or JS (which this theme does not load for forms).
+5. **`CLEAR SEARCH ✕` and `CLEAR ✕` link home.** The source's breadcrumb
+   action has no href and the query-bar control is `<button type="reset">`,
+   which on a submitted query restores the submitted value. Home is the honest
+   empty-search destination.
 
 **No zero-results state**, per the source's own explicit note. With no results
-the query bar reports `0 RESULTS` and the filter rail and results band are not
-rendered at all.
+the query bar reports `0 RESULTS` and the filter rail still renders (tabs stay
+operable). The results band and pagination do not.
 
 Row content maps to the design's own vocabulary — `category` is its singular
 word per kind (`LESSON` for a tutorial, `ARTICLE` for a post), `meta` its plural

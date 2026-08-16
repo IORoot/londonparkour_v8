@@ -254,6 +254,75 @@ function lp_tutorial_filter_values(): array {
 }
 
 /**
+ * Post types the search page lists, in `wsypA` tab order.
+ *
+ * The design's ARTICLES tab is native `post`; this site's articles are the
+ * `blog` CPT (v7 import). Coaches, locations, support and notifications are
+ * public but not on the designed rail — searching them would make ALL
+ * disagree with the four tabs. The query-bar hint names these four kinds.
+ *
+ * @return array<string, array{tab: string, row: string, meta: string}>
+ */
+function lp_search_types(): array {
+	$lp_articles = post_type_exists( 'blog' ) ? 'blog' : 'post';
+
+	return array(
+		lp_class_post_type() => array(
+			'tab'  => 'CLASSES',
+			'row'  => 'CLASS',
+			'meta' => 'CLASSES',
+		),
+		'lp_tutorial'        => array(
+			'tab'  => 'TUTORIALS',
+			'row'  => 'LESSON',
+			'meta' => 'TUTORIALS',
+		),
+		$lp_articles         => array(
+			'tab'  => 'ARTICLES',
+			'row'  => 'ARTICLE',
+			'meta' => 'BLOG',
+		),
+		'page'               => array(
+			'tab'  => 'PAGES',
+			'row'  => 'PAGE',
+			'meta' => 'PAGES',
+		),
+	);
+}
+
+/**
+ * Constrain front-end search to the designed four kinds, 8 to a page.
+ *
+ * `pjHyS/h0BaW` is "SHOWING 01–08 OF 24 RESULTS". A `post_type` query arg
+ * that matches a tab filters the main query; anything else (or none) is ALL.
+ *
+ * @param WP_Query $lp_query The query being prepared.
+ */
+function lp_filter_search( WP_Query $lp_query ): void {
+	if ( is_admin() || ! $lp_query->is_main_query() || ! $lp_query->is_search() ) {
+		return;
+	}
+
+	$lp_types     = array_keys( lp_search_types() );
+	$lp_requested = '';
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- public read-only filter, see the file docblock.
+	if ( isset( $_GET['post_type'] ) && is_string( $_GET['post_type'] ) ) {
+		$lp_requested = sanitize_key( wp_unslash( $_GET['post_type'] ) );
+	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+	if ( in_array( $lp_requested, $lp_types, true ) ) {
+		$lp_query->set( 'post_type', $lp_requested );
+	} else {
+		$lp_query->set( 'post_type', $lp_types );
+	}
+
+	$lp_query->set( 'posts_per_page', 8 );
+	$lp_query->set( 'ignore_sticky_posts', true );
+}
+add_action( 'pre_get_posts', 'lp_filter_search' );
+
+/**
  * Posts page lists the `blog` CPT, 24 to a page.
  *
  * The v7 import writes `blog` and deletes native `post`, so the posts-page

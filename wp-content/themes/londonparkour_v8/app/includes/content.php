@@ -3,7 +3,7 @@
  * Post → partial projections shared by more than one template.
  *
  * DATA shaping only — the markup these feed lives under parts/. A projection
- * with a single caller stays in that caller (search.php's post-type label map);
+ * with a single caller stays in that caller (search.php's row-meta closure);
  * anything here has at least two.
  *
  * @package londonparkour_v8

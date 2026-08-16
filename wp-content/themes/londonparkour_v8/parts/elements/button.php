@@ -53,11 +53,10 @@ $lp_variants = array(
 	'band'        => 'flex items-center justify-between gap-[12px] w-full h-[60px] px-[22px] bg-primary text-primary-content hover:bg-neutral hover:text-primary transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary',
 	/*
 	 * The dark band's bare text control — SearchResults' query-bar `CLEAR ✕`
-	 * (`A1PesB`), a real <button type="reset"> inside the search form. It is a
-	 * button variant rather than a text-link variant because every text-link
-	 * variant renders an <a href> and a form reset has no href. `shrink-0` is
-	 * a call-site layout modifier, not part of the atom — pass it via
-	 * $args['class'], the same treatment text-link gives `whitespace-nowrap`.
+	 * (`Zqc9v/A1PesB`). The source is a <button type="reset">; on WordPress a
+	 * reset restores the submitted value, so search.php passes `href` and this
+	 * renders as <a> (home). `shrink-0` is a call-site layout modifier — pass
+	 * it via $args['class'], the same treatment text-link gives `whitespace-nowrap`.
 	 */
 	'band_text'   => 'font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content transition-colors duration-150',
 	'shelf_nav'   => 'w-7 h-7 shrink-0 border border-neutral-content/20 bg-transparent text-neutral-content/70 font-label text-[14px] leading-none grid place-items-center disabled:opacity-40',
