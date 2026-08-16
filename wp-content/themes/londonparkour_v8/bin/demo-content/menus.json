@@ -1,8 +1,8 @@
 {
   "primary": [
     { "label": "Classes", "url": "/classes", "classes": "has-panel" },
-    { "label": "Tutorials", "url": "/tutorials" },
-    { "label": "Docs", "url": "/docs" },
+    { "label": "Tutorials", "url": "/tutorials/series", "classes": "has-panel-tutorials" },
+    { "label": "Docs", "url": "/docs", "classes": "has-panel-docs" },
     { "label": "Contact", "url": "/contact" }
   ],
   "footer": [

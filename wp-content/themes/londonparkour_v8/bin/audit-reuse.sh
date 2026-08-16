@@ -19,10 +19,11 @@ fail=0
 # The exemption exists because media-photo.php is itself under parts/components,
 # the directory this audit scans — it DEFINES <img>, so only that one file may.
 # parts/site/nav.php is exempt from the <button> rule alone, and only that
-# rule: its three buttons cannot be button.php. Two are Tailwind Plus Elements
-# invokers (`popovertarget`, `command`/`commandfor`) which only work on a real
-# <button>, and the third is a 60px icon-only bar cell — button.php's `icon`
-# variant is `btn btn-primary btn-square`, the exact chrome these must not have.
+# rule: its two remaining buttons cannot be button.php. Both are Tailwind Plus
+# Elements invokers (`command`/`commandfor`) which only work on a real
+# <button> — the hamburger is a 60px icon-only bar cell, and the drawer close
+# is a 40px icon-only control. button.php's `icon` variant is `btn btn-primary
+# btn-square`, the exact chrome these must not have.
 # It is NOT exempt from the <svg>/<use>/<img>/btn-class rules.
 #
 # 404.php is exempt from the <button> rule on the same terms, for a reason that

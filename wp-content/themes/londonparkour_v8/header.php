@@ -36,12 +36,15 @@ defined( 'ABSPATH' ) || exit;
 lp_part(
 	'site/nav',
 	array(
-		'brand'     => get_bloginfo( 'name' ),
-		'home_href' => home_url( '/' ),
-		'links'     => lp_menu_links( 'primary' ),
+		'brand'          => get_bloginfo( 'name' ),
+		'home_href'      => home_url( '/' ),
+		'links'          => lp_menu_links( 'primary' ),
 		// Homepage Hero embeds Nav with a transparent fill over the photo
 		// (`T1cC4` / `DsXnG`). Other pages keep the opaque `bg-neutral` bar.
-		'over_hero' => is_front_page(),
+		'over_hero'      => is_front_page(),
+		// Agenda is `/classes/`. Map is `/classes-map/`. See PORT-FINDINGS §21.
+		'cta_href'       => lp_classes_page_url( 'classes' ),
+		'find_site_href' => lp_classes_page_url( 'classes-map' ),
 	)
 );
 ?>

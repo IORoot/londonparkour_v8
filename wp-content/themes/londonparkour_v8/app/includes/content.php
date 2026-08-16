@@ -279,6 +279,27 @@ function lp_classes_page_url( string $lp_slug ): string {
 }
 
 /**
+ * Class-types listings archive (`/all-classes/`).
+ *
+ * Agenda is `/classes/` via `lp_classes_page_url( 'classes' )`. Map is
+ * `lp_classes_page_url( 'classes-map' )`. The nav's Classes item and Find a
+ * class both go to the agenda; this listings URL is the drop panel's ALL
+ * CLASSES foot. See docs/PORT-FINDINGS.md §21.
+ *
+ * @return string
+ */
+function lp_classes_listings_url(): string {
+	$lp_type = function_exists( 'lp_class_post_type' ) ? lp_class_post_type() : 'clasbpro_class';
+	$lp_link = get_post_type_archive_link( $lp_type );
+
+	if ( is_string( $lp_link ) && '' !== $lp_link ) {
+		return $lp_link;
+	}
+
+	return home_url( '/all-classes/' );
+}
+
+/**
  * Whether a location post is a class site or a map-only training spot.
  * Missing/unknown values default to site so existing records stay class sites.
  *

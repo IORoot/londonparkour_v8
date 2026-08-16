@@ -13,16 +13,63 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Sprite id for a primary-nav label.
+ *
+ * @param string $label Menu item title.
+ * @return string icon-* id, or empty when the label is not one of the four.
+ */
+function lp_nav_icon_id_from_label( string $label ): string {
+	$map = array(
+		'classes'   => 'icon-users',
+		'tutorials' => 'icon-play',
+		'docs'      => 'icon-book-open',
+		'contact'   => 'icon-envelope',
+	);
+
+	return $map[ strtolower( $label ) ] ?? '';
+}
+
+/**
+ * Drop-panel key for a primary-nav item.
+ *
+ * CSS classes win (`has-panel`, `has-panel-tutorials`, `has-panel-docs`) so
+ * an editor can re-assign a panel. Labels Classes / Tutorials / Docs then
+ * auto-detect, matching the V7 nav even when the seeded classes field is stale.
+ * Contact has no panel.
+ *
+ * @param string   $label   Menu item title.
+ * @param string[] $classes Menu item CSS classes.
+ * @return string classes|tutorials|docs, or empty.
+ */
+function lp_nav_panel_from_item( string $label, array $classes ): string {
+	if ( in_array( 'has-panel-tutorials', $classes, true ) ) {
+		return 'tutorials';
+	}
+	if ( in_array( 'has-panel-docs', $classes, true ) ) {
+		return 'docs';
+	}
+	if ( in_array( 'has-panel', $classes, true ) ) {
+		return 'classes';
+	}
+
+	$map = array(
+		'classes'   => 'classes',
+		'tutorials' => 'tutorials',
+		'docs'      => 'docs',
+	);
+
+	return $map[ strtolower( $label ) ] ?? '';
+}
+
+/**
  * The items assigned to a menu location, as a flat list.
  *
- * `has_panel` comes from a menu item's CSS Classes field: add `has-panel` to
- * the one item that opens the Classes drop panel. It is a per-site editorial
- * choice (which section owns the mega panel), not something derivable from a
- * post type — and only the FIRST flagged item is used, so a stray class on a
- * second item cannot produce two triggers.
+ * `panel` comes from a menu item's CSS Classes field (`has-panel`,
+ * `has-panel-tutorials`, `has-panel-docs`) or, if none is set, from the
+ * item's title (Classes / Tutorials / Docs). Contact has no panel.
  *
  * @param string $location Registered nav menu location, e.g. 'primary'.
- * @return array<int, array{label:string, href:string, active:bool, has_panel:bool}>
+ * @return array<int, array{label:string, href:string, active:bool, panel:string, icon_id:string, has_panel:bool}>
  */
 function lp_menu_links( string $location ): array {
 	$items = lp_menu_items( $location );
@@ -39,11 +86,16 @@ function lp_menu_links( string $location ): array {
 			continue;
 		}
 
+		$label = (string) $item->title;
+		$panel = lp_nav_panel_from_item( $label, (array) $item->classes );
+
 		$links[] = array(
-			'label'     => $item->title,
+			'label'     => $label,
 			'href'      => $item->url,
 			'active'    => lp_menu_item_is_current( $item ),
-			'has_panel' => in_array( 'has-panel', (array) $item->classes, true ),
+			'panel'     => $panel,
+			'icon_id'   => lp_nav_icon_id_from_label( $label ),
+			'has_panel' => '' !== $panel,
 		);
 	}
 
@@ -141,4 +193,398 @@ function lp_menu_item_is_current( $item ): bool {
 	$queried = get_queried_object_id();
 
 	return $queried && (int) $item->object_id === (int) $queried;
+}
+
+/**
+ * Default primary-nav links — Storybook copy with WordPress routes.
+ *
+ * Classes goes to the agenda (`/classes/`). Tutorials goes to the series
+ * listing (`/tutorials/series/`). Find a class (the CTA) goes to the agenda.
+ * Drop-panel feet still point at the listings archives.
+ *
+ * @return array<int, array{label:string, href:string, active:bool, panel:string, icon_id:string}>
+ */
+function lp_nav_default_links(): array {
+	$contact = get_page_by_path( 'contact' );
+
+	return array(
+		array(
+			'label'   => 'Classes',
+			'href'    => function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' ),
+			'active'  => false,
+			'panel'   => 'classes',
+			'icon_id' => 'icon-users',
+		),
+		array(
+			'label'   => 'Tutorials',
+			'href'    => function_exists( 'lp_tutorials_series_url' ) ? lp_tutorials_series_url() : home_url( '/tutorials/series/' ),
+			'active'  => false,
+			'panel'   => 'tutorials',
+			'icon_id' => 'icon-play',
+		),
+		array(
+			'label'   => 'Docs',
+			'href'    => function_exists( 'lp_docs_url' ) ? lp_docs_url() : home_url( '/docs/' ),
+			'active'  => false,
+			'panel'   => 'docs',
+			'icon_id' => 'icon-book-open',
+		),
+		array(
+			'label'   => 'Contact',
+			'href'    => $contact ? (string) get_permalink( $contact ) : home_url( '/contact/' ),
+			'active'  => false,
+			'panel'   => '',
+			'icon_id' => 'icon-envelope',
+		),
+	);
+}
+
+/**
+ * The three drop panels, filled from live CPTs when they exist.
+ *
+ * @return array{classes:array, tutorials:array, docs:array}
+ */
+function lp_nav_drop_panels(): array {
+	return array(
+		'classes'   => lp_nav_classes_panel(),
+		'tutorials' => lp_nav_tutorials_panel(),
+		'docs'      => lp_nav_docs_panel(),
+	);
+}
+
+/**
+ * Classes drop panel — every class type plus the map.
+ *
+ * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
+ */
+function lp_nav_classes_panel(): array {
+	$listings = function_exists( 'lp_classes_listings_url' ) ? lp_classes_listings_url() : home_url( '/all-classes/' );
+	$map      = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes-map' ) : home_url( '/classes-map/' );
+	$sites    = function_exists( 'lp_locations_by_kind' ) ? count( lp_locations_by_kind( 'site' ) ) : 6;
+
+	$rows = array();
+
+	if ( function_exists( 'lp_class_post_type' ) && function_exists( 'lp_class_active_meta_query' ) ) {
+		$posts = get_posts(
+			lp_class_active_meta_query(
+				array(
+					'post_type'        => lp_class_post_type(),
+					'post_status'      => 'publish',
+					'posts_per_page'   => 50,
+					'orderby'          => 'title',
+					'order'            => 'ASC',
+					'no_found_rows'    => true,
+					'suppress_filters' => false,
+				)
+			)
+		);
+		if ( function_exists( 'lp_class_dedupe_by_title' ) ) {
+			$posts = lp_class_dedupe_by_title( $posts );
+		}
+		foreach ( $posts as $post ) {
+			if ( ! $post instanceof WP_Post ) {
+				continue;
+			}
+			$location = function_exists( 'lp_class_location_id' ) ? lp_class_location_id( (int) $post->ID ) : 0;
+			$rows[]   = array(
+				'name' => get_the_title( $post ),
+				'meta' => $location ? strtoupper( get_the_title( $location ) ) : '',
+				'href' => (string) get_permalink( $post ),
+			);
+		}
+	}
+
+	if ( ! $rows ) {
+		$rows = array(
+			array(
+				'name' => 'Beginners Parkour',
+				'meta' => 'VAUXHALL',
+				'href' => home_url( '/classes/beginners-parkour/' ),
+			),
+			array(
+				'name' => 'Outdoor Class — Vauxhall',
+				'meta' => 'VAUXHALL',
+				'href' => home_url( '/classes/outdoor-class-vauxhall/' ),
+			),
+			array(
+				'name' => 'Evening Outdoor Class',
+				'meta' => 'SOUTHBANK',
+				'href' => home_url( '/classes/evening-outdoor-class/' ),
+			),
+			array(
+				'name' => 'Outdoor Class — Southbank',
+				'meta' => 'SOUTHBANK',
+				'href' => home_url( '/classes/outdoor-class-southbank/' ),
+			),
+			array(
+				'name' => 'Outdoor Class North',
+				'meta' => 'WEMBLEY PARK',
+				'href' => home_url( '/classes/outdoor-class-north/' ),
+			),
+			array(
+				'name' => 'Kids Class West (6–9s)',
+				'meta' => 'VAUXHALL',
+				'href' => home_url( '/classes/kids-class-west-6-9s/' ),
+			),
+			array(
+				'name' => 'Teens Class West (10–14s)',
+				'meta' => 'VAUXHALL',
+				'href' => home_url( '/classes/teens-class-west-10-14s/' ),
+			),
+			array(
+				'name' => 'Sunrise Session',
+				'meta' => 'PECKHAM RYE',
+				'href' => home_url( '/classes/sunrise-session/' ),
+			),
+			array(
+				'name' => 'Kids Parkour 5–11',
+				'meta' => 'HACKNEY MARSHES',
+				'href' => home_url( '/classes/kids-parkour-5-11/' ),
+			),
+			array(
+				'name' => 'Open Gym',
+				'meta' => 'STRATFORD EAST',
+				'href' => home_url( '/classes/open-gym/' ),
+			),
+			array(
+				'name' => "Women's Session",
+				'meta' => 'SOUTHBANK',
+				'href' => home_url( '/classes/womens-session/' ),
+			),
+			array(
+				'name' => 'Advanced Movement',
+				'meta' => 'VAUXHALL',
+				'href' => home_url( '/classes/advanced-movement/' ),
+			),
+			array(
+				'name' => 'Family Session',
+				'meta' => 'WEMBLEY PARK',
+				'href' => home_url( '/classes/family-session/' ),
+			),
+		);
+	}
+
+	$split   = (int) ceil( count( $rows ) / 2 );
+	$col_one = array_slice( $rows, 0, $split );
+	$col_two = array_slice( $rows, $split );
+
+	$columns = array(
+		array(
+			'title' => 'CLASSES',
+			'note'  => sprintf( '%02d–%02d', 1, count( $col_one ) ),
+			'rows'  => $col_one,
+		),
+	);
+
+	if ( $col_two ) {
+		$columns[] = array(
+			'title' => 'CLASSES',
+			'note'  => sprintf( '%02d–%02d', count( $col_one ) + 1, count( $col_one ) + count( $col_two ) ),
+			'rows'  => $col_two,
+		);
+	}
+
+	$columns[] = array(
+		'title' => 'THE MAP',
+		'note'  => sprintf( '%d SITES', $sites ?: 6 ),
+		'rows'  => array(
+			array(
+				'name' => 'Class map',
+				'meta' => sprintf( '%d SITES', $sites ?: 6 ),
+				'href' => $map,
+			),
+		),
+	);
+
+	return array(
+		'columns'   => $columns,
+		'all_label' => 'ALL CLASSES →',
+		'all_href'  => $listings,
+		'alt_label' => 'OPEN THE MAP ↗',
+		'alt_href'  => $map,
+	);
+}
+
+/**
+ * Parent tutorial-category name, uppercased — the panel's meta slot.
+ *
+ * @param WP_Post $post Tutorial.
+ * @return string
+ */
+function lp_nav_tutorial_family( WP_Post $post ): string {
+	$terms = get_the_terms( $post, 'tutorial-category' );
+	if ( ! is_array( $terms ) ) {
+		return '';
+	}
+	foreach ( $terms as $term ) {
+		if ( $term instanceof WP_Term && ! $term->parent ) {
+			return strtoupper( $term->name );
+		}
+	}
+	return $terms && $terms[0] instanceof WP_Term ? strtoupper( $terms[0]->name ) : '';
+}
+
+/**
+ * Tutorials drop panel — browse modes, newest three tutorials, newest series.
+ *
+ * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
+ */
+function lp_nav_tutorials_panel(): array {
+	$archive = (string) ( get_post_type_archive_link( 'lp_tutorial' ) ?: home_url( '/tutorials/' ) );
+	$series  = function_exists( 'lp_tutorials_series_url' ) ? lp_tutorials_series_url() : home_url( '/tutorials/series/' );
+	$category = function_exists( 'lp_tutorials_category_url' ) ? lp_tutorials_category_url() : home_url( '/tutorials/category/' );
+
+	$series_count   = function_exists( 'lp_series_terms_nonempty' ) ? count( lp_series_terms_nonempty() ) : 12;
+	$category_count = function_exists( 'lp_tutorials_category_count' ) ? lp_tutorials_category_count() : 11;
+	$tutorial_count = function_exists( 'lp_tutorials_published_count' ) ? lp_tutorials_published_count() : 840;
+
+	$newest = get_posts(
+		array(
+			'post_type'        => 'lp_tutorial',
+			'post_status'      => 'publish',
+			'posts_per_page'   => 3,
+			'orderby'          => 'date',
+			'order'            => 'DESC',
+			'no_found_rows'    => true,
+			'suppress_filters' => false,
+		)
+	);
+
+	$newest_rows = array();
+	foreach ( $newest as $post ) {
+		if ( ! $post instanceof WP_Post ) {
+			continue;
+		}
+		$newest_rows[] = array(
+			'name' => get_the_title( $post ),
+			'meta' => lp_nav_tutorial_family( $post ),
+			'href' => (string) get_permalink( $post ),
+		);
+	}
+
+	if ( ! $newest_rows ) {
+		$newest_rows = array(
+			array(
+				'name' => 'Slow and High',
+				'meta' => 'VAULTING',
+				'href' => home_url( '/tutorials/slow-and-high/' ),
+			),
+			array(
+				'name' => 'How to Cat Leap',
+				'meta' => 'CLIMBING',
+				'href' => home_url( '/tutorials/how-to-cat-leap/' ),
+			),
+			array(
+				'name' => 'Two Hands, One-foot.',
+				'meta' => 'VAULTING',
+				'href' => home_url( '/tutorials/two-hands-one-foot/' ),
+			),
+		);
+	}
+
+	$series_rows = array();
+	$terms       = function_exists( 'lp_series_terms_nonempty' ) ? lp_series_terms_nonempty() : array();
+	if ( $terms ) {
+		$term = $terms[0];
+		foreach ( $terms as $candidate ) {
+			if ( ! $candidate instanceof WP_Term ) {
+				continue;
+			}
+			if ( (int) $candidate->term_id > (int) $term->term_id ) {
+				$term = $candidate;
+			}
+		}
+		$link  = get_term_link( $term );
+		$count = function_exists( 'lp_series_published_count' ) ? lp_series_published_count( (int) $term->term_id ) : 0;
+		$series_rows[] = array(
+			'name' => $term->name,
+			'meta' => sprintf( '%d EPISODES', $count ?: 3 ),
+			'href' => is_wp_error( $link ) ? $series : (string) $link,
+		);
+	}
+
+	if ( ! $series_rows ) {
+		$series_rows[] = array(
+			'name' => 'Kids Curriculum',
+			'meta' => '3 EPISODES',
+			'href' => home_url( '/tutorials/kids/' ),
+		);
+	}
+
+	return array(
+		'columns'   => array(
+			array(
+				'title' => 'BROWSE',
+				'note'  => '3',
+				'rows'  => array(
+					array(
+						'name' => 'By series',
+						'meta' => sprintf( '%d SERIES', $series_count ?: 12 ),
+						'href' => $series,
+					),
+					array(
+						'name' => 'By category',
+						'meta' => sprintf( '%d CATEGORIES', $category_count ?: 11 ),
+						'href' => $category,
+					),
+					array(
+						'name' => 'By tutorial',
+						'meta' => sprintf( '%d VIDEOS', $tutorial_count ?: 840 ),
+						'href' => $archive,
+					),
+				),
+			),
+			array(
+				'title' => 'NEWEST TUTORIALS',
+				'note'  => (string) count( $newest_rows ),
+				'rows'  => $newest_rows,
+			),
+			array(
+				'title' => 'NEWEST SERIES',
+				'note'  => (string) count( $series_rows ),
+				'rows'  => $series_rows,
+			),
+		),
+		'all_label' => 'ALL TUTORIALS →',
+		'all_href'  => $archive,
+		'alt_label' => 'ALL SERIES ↗',
+		'alt_href'  => $series,
+	);
+}
+
+/**
+ * Docs drop panel — wiki and blog.
+ *
+ * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
+ */
+function lp_nav_docs_panel(): array {
+	$wiki  = function_exists( 'lp_docs_url' ) ? lp_docs_url() : home_url( '/docs/' );
+	$blog  = function_exists( 'lp_docs_blog_url' ) ? lp_docs_blog_url() : home_url( '/blog/' );
+	$pages = function_exists( 'lp_docs_support_count' ) ? lp_docs_support_count() : 15;
+	$stories = function_exists( 'lp_docs_story_count' ) ? lp_docs_story_count() : 12;
+
+	return array(
+		'columns'   => array(
+			array(
+				'title' => 'DOCS',
+				'note'  => '2',
+				'rows'  => array(
+					array(
+						'name' => 'Wiki',
+						'meta' => sprintf( '%d PAGES', $pages ?: 15 ),
+						'href' => $wiki,
+					),
+					array(
+						'name' => 'Blog',
+						'meta' => sprintf( '%d STORIES', $stories ?: 12 ),
+						'href' => $blog,
+					),
+				),
+			),
+		),
+		'all_label' => 'WIKI →',
+		'all_href'  => $wiki,
+		'alt_label' => 'BLOG ↗',
+		'alt_href'  => $blog,
+	);
 }
