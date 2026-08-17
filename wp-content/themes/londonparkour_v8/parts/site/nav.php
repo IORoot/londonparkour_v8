@@ -36,7 +36,7 @@
  * drop panel. Clicking the label goes to that section. Contact has no panel.
  * The Classes item and the CTA both go to the class agenda (`/classes/`).
  * Tutorials goes to the series listing (`/tutorials/series/`).
- * The Classes drop panel's first column is Agenda and Map.
+ * The Classes drop panel's first column is Agenda, Map and Private 1:1.
  * Column two lists every class type under ALL CLASSES.
  * ALL CLASSES in the panel foot goes to the listings archive (`/all-classes/`).
  * See PORT-FINDINGS §21.
@@ -198,7 +198,7 @@ $lp_default_classes_panel   = array(
 	'columns'   => array(
 		array(
 			'title' => 'FIND',
-			'note'  => '2',
+			'note'  => '3',
 			'rows'  => array(
 				array(
 					'name' => 'Agenda',
@@ -209,6 +209,11 @@ $lp_default_classes_panel   = array(
 					'name' => 'Map',
 					'meta' => '6 SITES',
 					'href' => '/classes-map',
+				),
+				array(
+					'name' => 'Private 1:1',
+					'meta' => 'ANY SITE',
+					'href' => '/private-coaching',
 				),
 			),
 		),

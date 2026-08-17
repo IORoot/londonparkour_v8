@@ -79,6 +79,10 @@ if ( ! in_array( $lp_layout, array( 'booking', 'offer' ), true ) ) {
 }
 $lp_is_booking = 'booking' === $lp_layout;
 
+if ( '' === (string) ( $args['anchor'] ?? '' ) ) {
+	$args['anchor'] = 'private-coaching';
+}
+
 $lp_eyebrow  = (string) ( $args['eyebrow'] ?? '04 — PRIVATE COACHING' );
 $lp_headline = (string) ( $args['headline'] ?? 'One coach. Just you.' );
 

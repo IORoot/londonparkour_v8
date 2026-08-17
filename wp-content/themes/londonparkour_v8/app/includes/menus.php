@@ -360,7 +360,17 @@ function lp_nav_drop_panels(): array {
 }
 
 /**
- * Classes drop panel — Agenda / Map, then every class type.
+ * True when a class type belongs in FIND as Private 1:1, not ALL CLASSES.
+ *
+ * @param string $name Class title.
+ * @return bool
+ */
+function lp_nav_is_private_class( string $name ): bool {
+	return str_contains( strtolower( $name ), 'private' );
+}
+
+/**
+ * Classes drop panel — Agenda / Map / Private 1:1, then every class type.
  *
  * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
  */
@@ -369,6 +379,14 @@ function lp_nav_classes_panel(): array {
 	$map      = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes-map' ) : home_url( '/classes-map/' );
 	$agenda   = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' );
 	$sites    = function_exists( 'lp_locations_by_kind' ) ? count( lp_locations_by_kind( 'site' ) ) : 6;
+	$private  = home_url( '/#private-coaching' );
+	foreach ( array( 'private-coaching', 'private-tuition' ) as $slug ) {
+		$page = get_page_by_path( $slug );
+		if ( $page instanceof WP_Post ) {
+			$private = (string) get_permalink( $page );
+			break;
+		}
+	}
 
 	$agenda_meta = '18 SESSIONS';
 	$map_meta    = sprintf( '%d SITES', $sites ?: 6 );
@@ -396,6 +414,11 @@ function lp_nav_classes_panel(): array {
 				'meta' => $map_meta,
 				'href' => $map,
 			),
+			array(
+				'name' => 'Private 1:1',
+				'meta' => 'ANY SITE',
+				'href' => $private,
+			),
 		)
 	);
 
@@ -422,9 +445,13 @@ function lp_nav_classes_panel(): array {
 			if ( ! $post instanceof WP_Post ) {
 				continue;
 			}
+			$title = get_the_title( $post );
+			if ( lp_nav_is_private_class( $title ) ) {
+				continue;
+			}
 			$location = function_exists( 'lp_class_location_id' ) ? lp_class_location_id( (int) $post->ID ) : 0;
 			$rows[]   = array(
-				'name' => get_the_title( $post ),
+				'name' => $title,
 				'meta' => $location ? strtoupper( get_the_title( $location ) ) : '',
 				'href' => (string) get_permalink( $post ),
 			);
@@ -506,7 +533,7 @@ function lp_nav_classes_panel(): array {
 	$columns = array(
 		array(
 			'title' => 'FIND',
-			'note'  => '2',
+			'note'  => '3',
 			'rows'  => $find,
 		),
 		array(
