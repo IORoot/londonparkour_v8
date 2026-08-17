@@ -46,6 +46,7 @@ function lp_nav_row_glyph( string $name, string $meta = '', int $index = 0 ): st
 		'wiki'        => 'glyph-rolling',
 		'blog'        => 'glyph-spirit',
 		'class map'   => 'glyph-traverse',
+		'agenda'      => 'glyph-flowing',
 		'kids'        => 'glyph-jumping',
 		'teen'        => 'glyph-climbing',
 		'youth'       => 'glyph-climbing',
@@ -359,14 +360,44 @@ function lp_nav_drop_panels(): array {
 }
 
 /**
- * Classes drop panel — every class type plus the map.
+ * Classes drop panel — Agenda / Map, then every class type.
  *
  * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
  */
 function lp_nav_classes_panel(): array {
 	$listings = function_exists( 'lp_classes_listings_url' ) ? lp_classes_listings_url() : home_url( '/all-classes/' );
 	$map      = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes-map' ) : home_url( '/classes-map/' );
+	$agenda   = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' );
 	$sites    = function_exists( 'lp_locations_by_kind' ) ? count( lp_locations_by_kind( 'site' ) ) : 6;
+
+	$agenda_meta = '18 SESSIONS';
+	$map_meta    = sprintf( '%d SITES', $sites ?: 6 );
+	if ( function_exists( 'lp_classes_view_tabs' ) ) {
+		$tabs = lp_classes_view_tabs();
+		if ( isset( $tabs[0]['meta'], $tabs[0]['href'] ) ) {
+			$agenda_meta = (string) $tabs[0]['meta'];
+			$agenda      = (string) $tabs[0]['href'];
+		}
+		if ( isset( $tabs[1]['meta'], $tabs[1]['href'] ) ) {
+			$map_meta = (string) $tabs[1]['meta'];
+			$map      = (string) $tabs[1]['href'];
+		}
+	}
+
+	$find = lp_nav_with_glyphs(
+		array(
+			array(
+				'name' => 'Agenda',
+				'meta' => $agenda_meta,
+				'href' => $agenda,
+			),
+			array(
+				'name' => 'Map',
+				'meta' => $map_meta,
+				'href' => $map,
+			),
+		)
+	);
 
 	$rows = array();
 
@@ -470,38 +501,18 @@ function lp_nav_classes_panel(): array {
 		);
 	}
 
-	$rows   = lp_nav_with_glyphs( $rows );
-	$split  = (int) ceil( count( $rows ) / 2 );
-	$col_one = array_slice( $rows, 0, $split );
-	$col_two = array_slice( $rows, $split );
+	$rows = lp_nav_with_glyphs( $rows );
 
 	$columns = array(
 		array(
-			'title' => 'CLASSES',
-			'note'  => sprintf( '%02d–%02d', 1, count( $col_one ) ),
-			'rows'  => $col_one,
+			'title' => 'FIND',
+			'note'  => '2',
+			'rows'  => $find,
 		),
-	);
-
-	if ( $col_two ) {
-		$columns[] = array(
-			'title' => 'CLASSES',
-			'note'  => sprintf( '%02d–%02d', count( $col_one ) + 1, count( $col_one ) + count( $col_two ) ),
-			'rows'  => $col_two,
-		);
-	}
-
-	$columns[] = array(
-		'title' => 'THE MAP',
-		'note'  => sprintf( '%d SITES', $sites ?: 6 ),
-		'rows'  => lp_nav_with_glyphs(
-			array(
-				array(
-					'name' => 'Class map',
-					'meta' => sprintf( '%d SITES', $sites ?: 6 ),
-					'href' => $map,
-				),
-			)
+		array(
+			'title' => 'ALL CLASSES',
+			'note'  => sprintf( '%02d–%02d', 1, count( $rows ) ),
+			'rows'  => $rows,
 		),
 	);
 
@@ -534,7 +545,7 @@ function lp_nav_tutorial_family( WP_Post $post ): string {
 }
 
 /**
- * Tutorials drop panel — browse modes, newest three tutorials, newest series.
+ * Tutorials drop panel — browse, newest three series, newest three tutorials.
  *
  * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
  */
@@ -616,29 +627,45 @@ function lp_nav_tutorials_panel(): array {
 	$series_rows = array();
 	$terms       = function_exists( 'lp_series_terms_nonempty' ) ? lp_series_terms_nonempty() : array();
 	if ( $terms ) {
-		$term = $terms[0];
-		foreach ( $terms as $candidate ) {
-			if ( ! $candidate instanceof WP_Term ) {
+		usort(
+			$terms,
+			static function ( $a, $b ) {
+				$id_a = $a instanceof WP_Term ? (int) $a->term_id : 0;
+				$id_b = $b instanceof WP_Term ? (int) $b->term_id : 0;
+				return $id_b <=> $id_a;
+			}
+		);
+		foreach ( array_slice( $terms, 0, 3 ) as $term ) {
+			if ( ! $term instanceof WP_Term ) {
 				continue;
 			}
-			if ( (int) $candidate->term_id > (int) $term->term_id ) {
-				$term = $candidate;
-			}
+			$link  = get_term_link( $term );
+			$count = function_exists( 'lp_series_published_count' ) ? lp_series_published_count( (int) $term->term_id ) : 0;
+			$series_rows[] = array(
+				'name' => $term->name,
+				'meta' => sprintf( '%d EPISODES', $count ?: 3 ),
+				'href' => is_wp_error( $link ) ? $series : (string) $link,
+			);
 		}
-		$link  = get_term_link( $term );
-		$count = function_exists( 'lp_series_published_count' ) ? lp_series_published_count( (int) $term->term_id ) : 0;
-		$series_rows[] = array(
-			'name' => $term->name,
-			'meta' => sprintf( '%d EPISODES', $count ?: 3 ),
-			'href' => is_wp_error( $link ) ? $series : (string) $link,
-		);
 	}
 
 	if ( ! $series_rows ) {
-		$series_rows[] = array(
-			'name' => 'Kids Curriculum',
-			'meta' => '3 EPISODES',
-			'href' => home_url( '/tutorials/kids/' ),
+		$series_rows = array(
+			array(
+				'name' => 'Flow Combinations',
+				'meta' => '9 EPISODES',
+				'href' => home_url( '/tutorials/flow/' ),
+			),
+			array(
+				'name' => 'Strength Conditioning',
+				'meta' => '6 EPISODES',
+				'href' => home_url( '/tutorials/strength/' ),
+			),
+			array(
+				'name' => 'Kids Curriculum',
+				'meta' => '3 EPISODES',
+				'href' => home_url( '/tutorials/kids/' ),
+			),
 		);
 	}
 
@@ -668,14 +695,14 @@ function lp_nav_tutorials_panel(): array {
 				),
 			),
 			array(
-				'title' => 'NEWEST TUTORIALS',
-				'note'  => (string) count( $newest_rows ),
-				'rows'  => lp_nav_with_glyphs( $newest_rows ),
-			),
-			array(
 				'title' => 'NEWEST SERIES',
 				'note'  => (string) count( $series_rows ),
 				'rows'  => lp_nav_with_glyphs( $series_rows ),
+			),
+			array(
+				'title' => 'NEWEST TUTORIALS',
+				'note'  => (string) count( $newest_rows ),
+				'rows'  => lp_nav_with_glyphs( $newest_rows ),
 			),
 		),
 		'all_label' => 'ALL TUTORIALS →',
@@ -686,7 +713,7 @@ function lp_nav_tutorials_panel(): array {
 }
 
 /**
- * Docs drop panel — wiki and blog.
+ * Docs drop panel — wiki and blog as two columns.
  *
  * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
  */
@@ -699,8 +726,8 @@ function lp_nav_docs_panel(): array {
 	return array(
 		'columns'   => array(
 			array(
-				'title' => 'DOCS',
-				'note'  => '2',
+				'title' => 'WIKI',
+				'note'  => sprintf( '%d PAGES', $pages ?: 15 ),
 				'rows'  => lp_nav_with_glyphs(
 					array(
 						array(
@@ -708,6 +735,14 @@ function lp_nav_docs_panel(): array {
 							'meta' => sprintf( '%d PAGES', $pages ?: 15 ),
 							'href' => $wiki,
 						),
+					)
+				),
+			),
+			array(
+				'title' => 'BLOG',
+				'note'  => sprintf( '%d STORIES', $stories ?: 12 ),
+				'rows'  => lp_nav_with_glyphs(
+					array(
 						array(
 							'name' => 'Blog',
 							'meta' => sprintf( '%d STORIES', $stories ?: 12 ),

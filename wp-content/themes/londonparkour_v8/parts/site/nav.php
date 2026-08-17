@@ -36,8 +36,10 @@
  * drop panel. Clicking the label goes to that section. Contact has no panel.
  * The Classes item and the CTA both go to the class agenda (`/classes/`).
  * Tutorials goes to the series listing (`/tutorials/series/`).
- * The drop panel lists every class type plus the map; ALL CLASSES in the
- * panel foot goes to the listings archive (`/all-classes/`). See PORT-FINDINGS §21.
+ * The Classes drop panel's first column is Agenda and Map.
+ * Column two lists every class type under ALL CLASSES.
+ * ALL CLASSES in the panel foot goes to the listings archive (`/all-classes/`).
+ * See PORT-FINDINGS §21.
  *
  * `el-dialog` / `command` / `commandfor` are Tailwind Plus Elements, already
  * imported in assets/js/app.js. They carry over verbatim.
@@ -125,95 +127,95 @@ $lp_panel_open = array(
 
 $lp_live_panels = function_exists( 'lp_nav_drop_panels' ) ? lp_nav_drop_panels() : array();
 
-$lp_default_classes_panel = array(
+$lp_default_class_type_rows = array(
+	array(
+		'name' => 'Beginners Parkour',
+		'meta' => 'VAUXHALL',
+		'href' => '/classes/beginners-parkour',
+	),
+	array(
+		'name' => 'Outdoor Class — Vauxhall',
+		'meta' => 'VAUXHALL',
+		'href' => '/classes/outdoor-class-vauxhall',
+	),
+	array(
+		'name' => 'Evening Outdoor Class',
+		'meta' => 'SOUTHBANK',
+		'href' => '/classes/evening-outdoor-class',
+	),
+	array(
+		'name' => 'Outdoor Class — Southbank',
+		'meta' => 'SOUTHBANK',
+		'href' => '/classes/outdoor-class-southbank',
+	),
+	array(
+		'name' => 'Outdoor Class North',
+		'meta' => 'WEMBLEY PARK',
+		'href' => '/classes/outdoor-class-north',
+	),
+	array(
+		'name' => 'Kids Class West (6–9s)',
+		'meta' => 'VAUXHALL',
+		'href' => '/classes/kids-class-west-6-9s',
+	),
+	array(
+		'name' => 'Teens Class West (10–14s)',
+		'meta' => 'VAUXHALL',
+		'href' => '/classes/teens-class-west-10-14s',
+	),
+	array(
+		'name' => 'Sunrise Session',
+		'meta' => 'PECKHAM RYE',
+		'href' => '/classes/sunrise-session',
+	),
+	array(
+		'name' => 'Kids Parkour 5–11',
+		'meta' => 'HACKNEY MARSHES',
+		'href' => '/classes/kids-parkour-5-11',
+	),
+	array(
+		'name' => 'Open Gym',
+		'meta' => 'STRATFORD EAST',
+		'href' => '/classes/open-gym',
+	),
+	array(
+		'name' => "Women's Session",
+		'meta' => 'SOUTHBANK',
+		'href' => '/classes/womens-session',
+	),
+	array(
+		'name' => 'Advanced Movement',
+		'meta' => 'VAUXHALL',
+		'href' => '/classes/advanced-movement',
+	),
+	array(
+		'name' => 'Family Session',
+		'meta' => 'WEMBLEY PARK',
+		'href' => '/classes/family-session',
+	),
+);
+$lp_default_classes_panel   = array(
 	'columns'   => array(
 		array(
-			'title' => 'CLASSES',
-			'note'  => '01–07',
+			'title' => 'FIND',
+			'note'  => '2',
 			'rows'  => array(
 				array(
-					'name' => 'Beginners Parkour',
-					'meta' => 'VAUXHALL',
-					'href' => '/classes/beginners-parkour',
+					'name' => 'Agenda',
+					'meta' => '18 SESSIONS',
+					'href' => '/classes',
 				),
 				array(
-					'name' => 'Outdoor Class — Vauxhall',
-					'meta' => 'VAUXHALL',
-					'href' => '/classes/outdoor-class-vauxhall',
-				),
-				array(
-					'name' => 'Evening Outdoor Class',
-					'meta' => 'SOUTHBANK',
-					'href' => '/classes/evening-outdoor-class',
-				),
-				array(
-					'name' => 'Outdoor Class — Southbank',
-					'meta' => 'SOUTHBANK',
-					'href' => '/classes/outdoor-class-southbank',
-				),
-				array(
-					'name' => 'Outdoor Class North',
-					'meta' => 'WEMBLEY PARK',
-					'href' => '/classes/outdoor-class-north',
-				),
-				array(
-					'name' => 'Kids Class West (6–9s)',
-					'meta' => 'VAUXHALL',
-					'href' => '/classes/kids-class-west-6-9s',
-				),
-				array(
-					'name' => 'Teens Class West (10–14s)',
-					'meta' => 'VAUXHALL',
-					'href' => '/classes/teens-class-west-10-14s',
-				),
-			),
-		),
-		array(
-			'title' => 'CLASSES',
-			'note'  => '08–13',
-			'rows'  => array(
-				array(
-					'name' => 'Sunrise Session',
-					'meta' => 'PECKHAM RYE',
-					'href' => '/classes/sunrise-session',
-				),
-				array(
-					'name' => 'Kids Parkour 5–11',
-					'meta' => 'HACKNEY MARSHES',
-					'href' => '/classes/kids-parkour-5-11',
-				),
-				array(
-					'name' => 'Open Gym',
-					'meta' => 'STRATFORD EAST',
-					'href' => '/classes/open-gym',
-				),
-				array(
-					'name' => "Women's Session",
-					'meta' => 'SOUTHBANK',
-					'href' => '/classes/womens-session',
-				),
-				array(
-					'name' => 'Advanced Movement',
-					'meta' => 'VAUXHALL',
-					'href' => '/classes/advanced-movement',
-				),
-				array(
-					'name' => 'Family Session',
-					'meta' => 'WEMBLEY PARK',
-					'href' => '/classes/family-session',
-				),
-			),
-		),
-		array(
-			'title' => 'THE MAP',
-			'note'  => '6 SITES',
-			'rows'  => array(
-				array(
-					'name' => 'Class map',
+					'name' => 'Map',
 					'meta' => '6 SITES',
 					'href' => '/classes-map',
 				),
 			),
+		),
+		array(
+			'title' => 'ALL CLASSES',
+			'note'  => '01–13',
+			'rows'  => $lp_default_class_type_rows,
 		),
 	),
 	'all_label' => 'ALL CLASSES →',
@@ -246,6 +248,27 @@ $lp_default_tutorials_panel = array(
 			),
 		),
 		array(
+			'title' => 'NEWEST SERIES',
+			'note'  => '3',
+			'rows'  => array(
+				array(
+					'name' => 'Flow Combinations',
+					'meta' => '9 EPISODES',
+					'href' => '/tutorials/flow',
+				),
+				array(
+					'name' => 'Strength Conditioning',
+					'meta' => '6 EPISODES',
+					'href' => '/tutorials/strength',
+				),
+				array(
+					'name' => 'Kids Curriculum',
+					'meta' => '3 EPISODES',
+					'href' => '/tutorials/kids',
+				),
+			),
+		),
+		array(
 			'title' => 'NEWEST TUTORIALS',
 			'note'  => '3',
 			'rows'  => array(
@@ -266,17 +289,6 @@ $lp_default_tutorials_panel = array(
 				),
 			),
 		),
-		array(
-			'title' => 'NEWEST SERIES',
-			'note'  => '1',
-			'rows'  => array(
-				array(
-					'name' => 'Kids Curriculum',
-					'meta' => '3 EPISODES',
-					'href' => '/tutorials/kids',
-				),
-			),
-		),
 	),
 	'all_label' => 'ALL TUTORIALS →',
 	'all_href'  => '/tutorials',
@@ -287,14 +299,20 @@ $lp_default_tutorials_panel = array(
 $lp_default_docs_panel = array(
 	'columns'   => array(
 		array(
-			'title' => 'DOCS',
-			'note'  => '2',
+			'title' => 'WIKI',
+			'note'  => '15 PAGES',
 			'rows'  => array(
 				array(
 					'name' => 'Wiki',
 					'meta' => '15 PAGES',
 					'href' => '/docs',
 				),
+			),
+		),
+		array(
+			'title' => 'BLOG',
+			'note'  => '12 STORIES',
+			'rows'  => array(
 				array(
 					'name' => 'Blog',
 					'meta' => '12 STORIES',
