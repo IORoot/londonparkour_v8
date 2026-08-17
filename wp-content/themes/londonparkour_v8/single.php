@@ -238,9 +238,9 @@ while ( have_posts() ) :
 								$lp_n           = str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT );
 								$lp_index_class = 0 === $lp_i
 									? 'font-label text-[10px] font-normal tracking-[0.8px] shrink-0 w-[20px] text-accent'
-									: 'font-label text-[10px] font-normal tracking-[0.8px] shrink-0 w-[20px] text-base-content/65';
+									: 'font-label text-[10px] font-normal tracking-[0.8px] shrink-0 w-[20px] text-base-content/65 group-hover:text-base-content/80 transition-colors duration-150';
 								?>
-								<a href="#<?php echo esc_attr( $lp_entry['id'] ); ?>" class="flex items-start gap-[14px] w-full py-[13px] border-b border-base-300 no-underline text-left">
+								<a href="#<?php echo esc_attr( $lp_entry['id'] ); ?>" class="group flex items-start gap-[14px] w-full py-[13px] border-b border-base-300 no-underline text-left hover:bg-base-100 transition-colors duration-150 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
 									<span class="<?php echo esc_attr( $lp_index_class ); ?>"><?php echo esc_html( $lp_n ); ?></span>
 									<span class="font-body text-[12px] font-normal tracking-[0.2px] leading-[1.4] text-base-content min-w-0 flex-1"><?php echo esc_html( $lp_entry['title'] ); ?></span>
 								</a>
