@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per state — Tailwind v4 scans source text.
 $lp_states = array(
 	'active'   => 'text-primary',
-	'inactive' => 'text-neutral-content hover:text-primary',
+	'inactive' => 'text-neutral-content hover:text-primary group-hover:text-primary',
 );
 
 $lp_label  = (string) ( $args['label'] ?? 'Classes' );

@@ -81,17 +81,22 @@ $lp_panel_positions = array(
 	'condensed' => 'absolute top-[58px]',
 );
 
-$lp_glyph_base   = 'w-[13px] h-[13px] flex-none';
+$lp_glyph_base    = 'w-4 h-4 flex-none';
+$lp_row_glyph_cls = 'w-4 h-4 flex-none text-neutral-content group-hover/row:text-primary transition-colors duration-150';
 $lp_glyph_states = array(
 	'active'   => 'text-primary',
 	'inactive' => 'text-neutral-content group-hover:text-primary',
 );
+$lp_item_borders = array(
+	'active'   => 'border-primary',
+	'inactive' => 'border-transparent group-hover:border-primary',
+);
 
 $lp_icon_from_label = array(
-	'classes'   => 'icon-users',
-	'tutorials' => 'icon-play',
-	'docs'      => 'icon-book-open',
-	'contact'   => 'icon-envelope',
+	'classes'   => 'glyph-vaulting',
+	'tutorials' => 'glyph-jumping',
+	'docs'      => 'glyph-rolling',
+	'contact'   => 'glyph-plyometrics',
 );
 
 $lp_panel_from_label = array(
@@ -330,24 +335,24 @@ if ( ! $lp_links ) {
 			'href'    => '/classes',
 			'active'  => true,
 			'panel'   => 'classes',
-			'icon_id' => 'icon-users',
+			'icon_id' => 'glyph-vaulting',
 		),
 		array(
 			'label'   => 'Tutorials',
 			'href'    => '/tutorials/series',
 			'panel'   => 'tutorials',
-			'icon_id' => 'icon-play',
+			'icon_id' => 'glyph-jumping',
 		),
 		array(
 			'label'   => 'Docs',
 			'href'    => '/docs',
 			'panel'   => 'docs',
-			'icon_id' => 'icon-book-open',
+			'icon_id' => 'glyph-rolling',
 		),
 		array(
 			'label'   => 'Contact',
 			'href'    => '/contact',
-			'icon_id' => 'icon-envelope',
+			'icon_id' => 'glyph-plyometrics',
 		),
 	);
 }
@@ -416,7 +421,7 @@ $lp_header_ground = $lp_over_hero
 					foreach ( $lp_resolved as $lp_i => $lp_link ) :
 						$lp_active     = ! empty( $lp_link['active'] );
 						$lp_glyph_cls  = $lp_active ? $lp_glyph_states['active'] : $lp_glyph_states['inactive'];
-						$lp_border_cls = $lp_active ? 'border-primary' : 'border-transparent';
+						$lp_border_cls = $lp_active ? $lp_item_borders['active'] : $lp_item_borders['inactive'];
 						$lp_panel_key  = (string) $lp_link['panel'];
 						$lp_group_cls  = $lp_group_classes[ $lp_panel_key ] ?? 'group';
 						?>
@@ -451,22 +456,35 @@ $lp_header_ground = $lp_over_hero
 													<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( (string) ( $lp_column['note'] ?? '' ) ); ?></span>
 												</div>
 												<div class="divide-y divide-neutral-content/10">
-													<?php foreach ( (array) ( $lp_column['rows'] ?? array() ) as $lp_row ) : ?>
+													<?php foreach ( (array) ( $lp_column['rows'] ?? array() ) as $lp_row_i => $lp_row ) : ?>
 														<?php
-														$lp_row_name = (string) ( $lp_row['name'] ?? '' );
-														$lp_row_meta = (string) ( $lp_row['meta'] ?? '' );
-														$lp_row_href = (string) ( $lp_row['href'] ?? '' );
+														$lp_row_name  = (string) ( $lp_row['name'] ?? '' );
+														$lp_row_meta  = (string) ( $lp_row['meta'] ?? '' );
+														$lp_row_href  = (string) ( $lp_row['href'] ?? '' );
+														$lp_row_glyph = (string) ( $lp_row['glyph_id'] ?? '' );
+														if ( '' === $lp_row_glyph && function_exists( 'lp_nav_row_glyph' ) ) {
+															$lp_row_glyph = lp_nav_row_glyph( $lp_row_name, $lp_row_meta, (int) $lp_row_i );
+														}
+														if ( '' === $lp_row_glyph ) {
+															$lp_row_glyph = 'glyph-vaulting';
+														}
 														?>
 														<?php if ( '' !== $lp_row_href ) : ?>
-															<a href="<?php echo esc_url( $lp_row_href ); ?>" class="<?php echo lp_classes( 'block hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
+															<a href="<?php echo esc_url( $lp_row_href ); ?>" class="<?php echo lp_classes( 'group/row block transition-colors duration-150', $lp_focus ); ?>">
 																<span class="flex items-center justify-between py-[13px] gap-[16px]">
-																	<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content"><?php echo esc_html( $lp_row_name ); ?></span>
-																	<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( $lp_row_meta ); ?></span>
+																	<span class="flex items-center gap-[10px] min-w-0">
+																		<?php lp_icon( $lp_row_glyph, $lp_row_glyph_cls ); ?>
+																		<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content group-hover/row:text-primary transition-colors duration-150"><?php echo esc_html( $lp_row_name ); ?></span>
+																	</span>
+																	<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 group-hover/row:text-neutral-content transition-colors duration-150"><?php echo esc_html( $lp_row_meta ); ?></span>
 																</span>
 															</a>
 														<?php else : ?>
 															<span class="flex items-center justify-between py-[13px] gap-[16px]">
-																<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content"><?php echo esc_html( $lp_row_name ); ?></span>
+																<span class="flex items-center gap-[10px] min-w-0">
+																	<?php lp_icon( $lp_row_glyph, $lp_row_glyph_cls ); ?>
+																	<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content"><?php echo esc_html( $lp_row_name ); ?></span>
+																</span>
 																<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( $lp_row_meta ); ?></span>
 															</span>
 														<?php endif; ?>

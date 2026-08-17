@@ -16,17 +16,123 @@ defined( 'ABSPATH' ) || exit;
  * Sprite id for a primary-nav label.
  *
  * @param string $label Menu item title.
- * @return string icon-* id, or empty when the label is not one of the four.
+ * @return string glyph-* id, or empty when the label is not one of the four.
  */
 function lp_nav_icon_id_from_label( string $label ): string {
 	$map = array(
-		'classes'   => 'icon-users',
-		'tutorials' => 'icon-play',
-		'docs'      => 'icon-book-open',
-		'contact'   => 'icon-envelope',
+		'classes'   => 'glyph-vaulting',
+		'tutorials' => 'glyph-jumping',
+		'docs'      => 'glyph-rolling',
+		'contact'   => 'glyph-plyometrics',
 	);
 
 	return $map[ strtolower( $label ) ] ?? '';
+}
+
+/**
+ * Movement glyph for a drop-panel row, from its name then family meta.
+ *
+ * @param string $name  Row label.
+ * @param string $meta  Optional family / location meta.
+ * @param int    $index Fallback cycle index.
+ * @return string glyph-* id.
+ */
+function lp_nav_row_glyph( string $name, string $meta = '', int $index = 0 ): string {
+	$key = strtolower( $name );
+	$map = array(
+		'by series'   => 'glyph-chaining',
+		'by category' => 'glyph-understanding',
+		'by tutorial' => 'glyph-jumping',
+		'wiki'        => 'glyph-rolling',
+		'blog'        => 'glyph-spirit',
+		'class map'   => 'glyph-traverse',
+		'kids'        => 'glyph-jumping',
+		'teen'        => 'glyph-climbing',
+		'youth'       => 'glyph-climbing',
+		'women'       => 'glyph-spirit',
+		'family'      => 'glyph-teamwork',
+		'beginner'    => 'glyph-step',
+		'advanced'    => 'glyph-chaining',
+		'sunrise'     => 'glyph-ascent',
+		'open gym'    => 'glyph-strengthening',
+		'evening'     => 'glyph-flowing',
+		'private'     => 'glyph-holistic',
+		'map'         => 'glyph-traverse',
+		'north'       => 'glyph-wall-run',
+		'southbank'   => 'glyph-passing',
+		'outdoor'     => 'glyph-vaulting',
+	);
+
+	foreach ( $map as $needle => $glyph ) {
+		if ( str_contains( $key, $needle ) ) {
+			return $glyph;
+		}
+	}
+
+	$family = lp_nav_family_glyph( $meta );
+	if ( '' !== $family ) {
+		return $family;
+	}
+
+	$cycle = array(
+		'glyph-vaulting',
+		'glyph-jumping',
+		'glyph-climbing',
+		'glyph-rolling',
+		'glyph-balancing',
+		'glyph-flowing',
+		'glyph-step',
+		'glyph-strengthening',
+	);
+
+	return $cycle[ $index % count( $cycle ) ];
+}
+
+/**
+ * Glyph for a tutorial movement family name.
+ *
+ * @param string $meta Family label, e.g. VAULTING.
+ * @return string glyph-* id, or empty.
+ */
+function lp_nav_family_glyph( string $meta ): string {
+	$map = array(
+		'vaulting'      => 'glyph-vaulting',
+		'climbing'      => 'glyph-climbing',
+		'jumping'       => 'glyph-jumping',
+		'rolling'       => 'glyph-rolling',
+		'balancing'     => 'glyph-balancing',
+		'swinging'      => 'glyph-swinging',
+		'crawling'      => 'glyph-crawling',
+		'passing'       => 'glyph-passing',
+		'spinning'      => 'glyph-spinning',
+		'strengthening' => 'glyph-strengthening',
+		'flowing'       => 'glyph-flowing',
+	);
+
+	return $map[ strtolower( $meta ) ] ?? '';
+}
+
+/**
+ * Stamp glyph_id onto each panel row.
+ *
+ * @param array<int, array<string, mixed>> $rows Rows with name/meta.
+ * @return array<int, array<string, mixed>>
+ */
+function lp_nav_with_glyphs( array $rows ): array {
+	$out = array();
+	foreach ( array_values( $rows ) as $i => $row ) {
+		$glyph = (string) ( $row['glyph_id'] ?? '' );
+		if ( '' === $glyph ) {
+			$glyph = lp_nav_row_glyph(
+				(string) ( $row['name'] ?? '' ),
+				(string) ( $row['meta'] ?? '' ),
+				$i
+			);
+		}
+		$row['glyph_id'] = $glyph;
+		$out[]           = $row;
+	}
+	return $out;
 }
 
 /**
@@ -213,28 +319,28 @@ function lp_nav_default_links(): array {
 			'href'    => function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' ),
 			'active'  => false,
 			'panel'   => 'classes',
-			'icon_id' => 'icon-users',
+			'icon_id' => 'glyph-vaulting',
 		),
 		array(
 			'label'   => 'Tutorials',
 			'href'    => function_exists( 'lp_tutorials_series_url' ) ? lp_tutorials_series_url() : home_url( '/tutorials/series/' ),
 			'active'  => false,
 			'panel'   => 'tutorials',
-			'icon_id' => 'icon-play',
+			'icon_id' => 'glyph-jumping',
 		),
 		array(
 			'label'   => 'Docs',
 			'href'    => function_exists( 'lp_docs_url' ) ? lp_docs_url() : home_url( '/docs/' ),
 			'active'  => false,
 			'panel'   => 'docs',
-			'icon_id' => 'icon-book-open',
+			'icon_id' => 'glyph-rolling',
 		),
 		array(
 			'label'   => 'Contact',
 			'href'    => $contact ? (string) get_permalink( $contact ) : home_url( '/contact/' ),
 			'active'  => false,
 			'panel'   => '',
-			'icon_id' => 'icon-envelope',
+			'icon_id' => 'glyph-plyometrics',
 		),
 	);
 }
@@ -364,7 +470,8 @@ function lp_nav_classes_panel(): array {
 		);
 	}
 
-	$split   = (int) ceil( count( $rows ) / 2 );
+	$rows   = lp_nav_with_glyphs( $rows );
+	$split  = (int) ceil( count( $rows ) / 2 );
 	$col_one = array_slice( $rows, 0, $split );
 	$col_two = array_slice( $rows, $split );
 
@@ -387,12 +494,14 @@ function lp_nav_classes_panel(): array {
 	$columns[] = array(
 		'title' => 'THE MAP',
 		'note'  => sprintf( '%d SITES', $sites ?: 6 ),
-		'rows'  => array(
+		'rows'  => lp_nav_with_glyphs(
 			array(
-				'name' => 'Class map',
-				'meta' => sprintf( '%d SITES', $sites ?: 6 ),
-				'href' => $map,
-			),
+				array(
+					'name' => 'Class map',
+					'meta' => sprintf( '%d SITES', $sites ?: 6 ),
+					'href' => $map,
+				),
+			)
 		),
 	);
 
@@ -455,10 +564,32 @@ function lp_nav_tutorials_panel(): array {
 		if ( ! $post instanceof WP_Post ) {
 			continue;
 		}
+		$family = lp_nav_tutorial_family( $post );
+		$glyph  = '';
+		if ( function_exists( 'lp_tutorial_category_glyph' ) ) {
+			$terms  = get_the_terms( $post, 'tutorial-category' );
+			$terms  = is_array( $terms ) ? $terms : array();
+			$child  = null;
+			$parent = null;
+			foreach ( $terms as $term ) {
+				if ( $term instanceof WP_Term && $term->parent ) {
+					$child = $term;
+					break;
+				}
+			}
+			foreach ( $terms as $term ) {
+				if ( $term instanceof WP_Term && ! $term->parent ) {
+					$parent = $term;
+					break;
+				}
+			}
+			$glyph = lp_tutorial_category_glyph( $child ?: $parent );
+		}
 		$newest_rows[] = array(
-			'name' => get_the_title( $post ),
-			'meta' => lp_nav_tutorial_family( $post ),
-			'href' => (string) get_permalink( $post ),
+			'name'     => get_the_title( $post ),
+			'meta'     => $family,
+			'href'     => (string) get_permalink( $post ),
+			'glyph_id' => $glyph,
 		);
 	}
 
@@ -516,33 +647,35 @@ function lp_nav_tutorials_panel(): array {
 			array(
 				'title' => 'BROWSE',
 				'note'  => '3',
-				'rows'  => array(
+				'rows'  => lp_nav_with_glyphs(
 					array(
-						'name' => 'By series',
-						'meta' => sprintf( '%d SERIES', $series_count ?: 12 ),
-						'href' => $series,
-					),
-					array(
-						'name' => 'By category',
-						'meta' => sprintf( '%d CATEGORIES', $category_count ?: 11 ),
-						'href' => $category,
-					),
-					array(
-						'name' => 'By tutorial',
-						'meta' => sprintf( '%d VIDEOS', $tutorial_count ?: 840 ),
-						'href' => $archive,
-					),
+						array(
+							'name' => 'By series',
+							'meta' => sprintf( '%d SERIES', $series_count ?: 12 ),
+							'href' => $series,
+						),
+						array(
+							'name' => 'By category',
+							'meta' => sprintf( '%d CATEGORIES', $category_count ?: 11 ),
+							'href' => $category,
+						),
+						array(
+							'name' => 'By tutorial',
+							'meta' => sprintf( '%d VIDEOS', $tutorial_count ?: 840 ),
+							'href' => $archive,
+						),
+					)
 				),
 			),
 			array(
 				'title' => 'NEWEST TUTORIALS',
 				'note'  => (string) count( $newest_rows ),
-				'rows'  => $newest_rows,
+				'rows'  => lp_nav_with_glyphs( $newest_rows ),
 			),
 			array(
 				'title' => 'NEWEST SERIES',
 				'note'  => (string) count( $series_rows ),
-				'rows'  => $series_rows,
+				'rows'  => lp_nav_with_glyphs( $series_rows ),
 			),
 		),
 		'all_label' => 'ALL TUTORIALS →',
@@ -568,17 +701,19 @@ function lp_nav_docs_panel(): array {
 			array(
 				'title' => 'DOCS',
 				'note'  => '2',
-				'rows'  => array(
+				'rows'  => lp_nav_with_glyphs(
 					array(
-						'name' => 'Wiki',
-						'meta' => sprintf( '%d PAGES', $pages ?: 15 ),
-						'href' => $wiki,
-					),
-					array(
-						'name' => 'Blog',
-						'meta' => sprintf( '%d STORIES', $stories ?: 12 ),
-						'href' => $blog,
-					),
+						array(
+							'name' => 'Wiki',
+							'meta' => sprintf( '%d PAGES', $pages ?: 15 ),
+							'href' => $wiki,
+						),
+						array(
+							'name' => 'Blog',
+							'meta' => sprintf( '%d STORIES', $stories ?: 12 ),
+							'href' => $blog,
+						),
+					)
 				),
 			),
 		),
