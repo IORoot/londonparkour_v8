@@ -78,18 +78,20 @@ $lp_classes = lp_class_dedupe_by_title( $lp_classes );
 $lp_is_filtered = (bool) array_filter( lp_class_filter_values() );
 
 $lp_featured_ids = $lp_is_filtered ? array() : get_posts(
-	lp_class_active_meta_query(
-		array(
-			'post_type'      => lp_class_post_type(),
-			'post_status'    => 'publish',
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				array(
-					'key'   => 'acf_is_featured',
-					'value' => '1',
+	lp_class_query_exclude_one_offs(
+		lp_class_active_meta_query(
+			array(
+				'post_type'      => lp_class_post_type(),
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					array(
+						'key'   => 'acf_is_featured',
+						'value' => '1',
+					),
 				),
-			),
+			)
 		)
 	)
 );

@@ -30,6 +30,11 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
+	if ( function_exists( 'lp_class_is_one_off' ) && lp_class_is_one_off( (int) get_the_ID() ) ) {
+		require get_theme_file_path( 'templates/workshop-detail.php' );
+		continue;
+	}
+
 	$lp_post_id = get_the_ID();
 	$lp_classes = lp_classes_page_url( 'classes' );
 

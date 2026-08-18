@@ -474,17 +474,19 @@ add_filter( 'acf/fields/post_object/query/name=location', 'lp_acf_location_post_
  * Session counts come from clasbpro via lp_class_upcoming_sessions().
  * Site counts are class sites only (not map-only spots).
  *
- * @param string $lp_active agenda|map.
+ * @param string $lp_active agenda|map|workshops.
  * @return array Tabs in view-rail.php's shape.
  */
 function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 	$lp_class_ids = get_posts(
-		lp_class_active_meta_query(
-			array(
-				'post_type'      => lp_class_post_type(),
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
+		lp_class_query_exclude_one_offs(
+			lp_class_active_meta_query(
+				array(
+					'post_type'      => lp_class_post_type(),
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				)
 			)
 		)
 	);
@@ -495,6 +497,21 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 	}
 
 	$lp_sites = count( lp_locations_by_kind( 'site' ) );
+
+	$lp_workshop_ids = get_posts(
+		lp_class_active_meta_query(
+			array(
+				'post_type'      => lp_class_post_type(),
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					lp_class_one_off_meta_clause(),
+				),
+			)
+		)
+	);
+	$lp_workshop_n = count( $lp_workshop_ids );
 
 	return array(
 		array(
@@ -510,6 +527,13 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 			'icon_id' => 'icon-map-pin',
 			'href'    => lp_classes_page_url( 'classes-map' ),
 			'active'  => 'map' === $lp_active,
+		),
+		array(
+			'label'   => 'WORKSHOPS',
+			'meta'    => sprintf( '%d DATES', $lp_workshop_n ),
+			'icon_id' => 'icon-academic-cap',
+			'href'    => lp_workshops_url(),
+			'active'  => 'workshops' === $lp_active,
 		),
 	);
 }

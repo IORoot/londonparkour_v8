@@ -650,6 +650,7 @@ function lp_seed_template_pages(): void {
 		'legal'            => array( 'Legal', 'templates/legal.php' ),
 		'classes'          => array( 'Classes', 'templates/classes-agenda.php' ),
 		'classes-map'      => array( 'Classes — Map', 'templates/classes-map.php' ),
+		'workshops'        => array( 'Workshops', 'templates/workshops-overview.php' ),
 		'contact'          => array( 'Contact', 'templates/contact.php' ),
 		'docs'             => array( 'Docs', 'templates/docs-faq.php' ),
 		'tutorials-series'   => array( 'Tutorials — Series', 'templates/tutorials-series.php' ),

@@ -15,13 +15,15 @@ $lp_sites = lp_locations_by_kind( 'site' );
 $lp_spots = lp_locations_by_kind( 'spot' );
 
 $lp_classes = get_posts(
-	lp_class_active_meta_query(
-		array(
-			'post_type'      => lp_class_post_type(),
-			'post_status'    => 'publish',
-			'posts_per_page' => 24,
-			'orderby'        => 'menu_order title',
-			'order'          => 'ASC',
+	lp_class_query_exclude_one_offs(
+		lp_class_active_meta_query(
+			array(
+				'post_type'      => lp_class_post_type(),
+				'post_status'    => 'publish',
+				'posts_per_page' => 24,
+				'orderby'        => 'menu_order title',
+				'order'          => 'ASC',
+			)
 		)
 	)
 );

@@ -130,6 +130,137 @@
             "placeholder": ""
         },
         {
+            "key": "field_lp_class_tab_workshop",
+            "label": "Workshop",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_lp_class_logline",
+            "label": "Logline",
+            "name": "acf_logline",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "One-line summary on the workshops overview row. Empty: hide the logline.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_lp_class_chips",
+            "label": "Chips",
+            "name": "acf_chips",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Max two. Empty: hide the chip row on the overview.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 2,
+            "collapsed": "",
+            "button_label": "Add chip",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_lp_class_chips_label",
+                    "label": "Label",
+                    "name": "label",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_lp_class_chips"
+                }
+            ]
+        },
+        {
+            "key": "field_lp_class_who",
+            "label": "Who",
+            "name": "acf_who",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "WHO fact on the workshop detail. Empty: hide the WHO cell.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "Coaches & near-coaches",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_lp_class_gallery",
+            "label": "Gallery",
+            "name": "acf_gallery",
+            "aria-label": "",
+            "type": "gallery",
+            "instructions": "From the Floor stills. Empty: hide the gallery band.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min": 0,
+            "max": 0,
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": "",
+            "insert": "append",
+            "preview_size": "medium"
+        },
+        {
             "key": "field_lp_class_tab_expect",
             "label": "What to expect",
             "name": "",
@@ -213,5 +344,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1786457671
+    "modified": 1786982400
 }

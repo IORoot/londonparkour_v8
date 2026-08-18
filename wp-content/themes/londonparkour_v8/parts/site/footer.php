@@ -65,6 +65,10 @@ $lp_default_columns = array(
 				'href'  => '/private-tuition',
 			),
 			array(
+				'label' => 'Workshops',
+				'href'  => '/workshops/',
+			),
+			array(
 				'label' => 'Tutorials',
 				'href'  => '/tutorials',
 			),

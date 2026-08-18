@@ -28,6 +28,7 @@
  * @param string $args['excerpt']
  * @param string $args['author']
  * @param string $args['date']
+ * @param string $args['cta_label']         lead only. Default 'READ ARTICLE'.
  * @param string $args['href']
  *
  * @package londonparkour_v8
@@ -149,7 +150,7 @@ $lp_author_row = static function () use ( $lp_v, $lp_author, $lp_date ) {
 					'elements/button',
 					array(
 						'variant'          => 'primary',
-						'label'            => 'READ ARTICLE',
+						'label'            => (string) ( $args['cta_label'] ?? 'READ ARTICLE' ),
 						'trailing_icon_id' => 'icon-arrow-right',
 						'href'             => $lp_href,
 					)

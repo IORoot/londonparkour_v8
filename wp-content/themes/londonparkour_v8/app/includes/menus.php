@@ -370,7 +370,7 @@ function lp_nav_is_private_class( string $name ): bool {
 }
 
 /**
- * Classes drop panel — Agenda / Map / Private 1:1, then every class type.
+ * Classes drop panel — Agenda / Map / Private 1:1 / Workshops, then every class type.
  *
  * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
  */
@@ -388,8 +388,10 @@ function lp_nav_classes_panel(): array {
 		}
 	}
 
-	$agenda_meta = '18 SESSIONS';
-	$map_meta    = sprintf( '%d SITES', $sites ?: 6 );
+	$agenda_meta    = '18 SESSIONS';
+	$map_meta       = sprintf( '%d SITES', $sites ?: 6 );
+	$workshop_meta  = '6 DATES';
+	$workshops      = function_exists( 'lp_workshops_url' ) ? lp_workshops_url() : home_url( '/workshops/' );
 	if ( function_exists( 'lp_classes_view_tabs' ) ) {
 		$tabs = lp_classes_view_tabs();
 		if ( isset( $tabs[0]['meta'], $tabs[0]['href'] ) ) {
@@ -399,6 +401,10 @@ function lp_nav_classes_panel(): array {
 		if ( isset( $tabs[1]['meta'], $tabs[1]['href'] ) ) {
 			$map_meta = (string) $tabs[1]['meta'];
 			$map      = (string) $tabs[1]['href'];
+		}
+		if ( isset( $tabs[2]['meta'], $tabs[2]['href'] ) ) {
+			$workshop_meta = (string) $tabs[2]['meta'];
+			$workshops     = (string) $tabs[2]['href'];
 		}
 	}
 
@@ -418,6 +424,11 @@ function lp_nav_classes_panel(): array {
 				'name' => 'Private 1:1',
 				'meta' => 'ANY SITE',
 				'href' => $private,
+			),
+			array(
+				'name' => 'Workshops',
+				'meta' => $workshop_meta,
+				'href' => $workshops,
 			),
 		)
 	);
@@ -447,6 +458,9 @@ function lp_nav_classes_panel(): array {
 			}
 			$title = get_the_title( $post );
 			if ( lp_nav_is_private_class( $title ) ) {
+				continue;
+			}
+			if ( function_exists( 'lp_class_is_one_off' ) && lp_class_is_one_off( (int) $post->ID ) ) {
 				continue;
 			}
 			$location = function_exists( 'lp_class_location_id' ) ? lp_class_location_id( (int) $post->ID ) : 0;
@@ -533,7 +547,7 @@ function lp_nav_classes_panel(): array {
 	$columns = array(
 		array(
 			'title' => 'FIND',
-			'note'  => '3',
+			'note'  => (string) count( $find ),
 			'rows'  => $find,
 		),
 		array(

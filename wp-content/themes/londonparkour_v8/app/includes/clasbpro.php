@@ -168,6 +168,207 @@ function lp_class_is_featured( int $class_id ): bool {
 }
 
 /**
+ * Public one-off clasbpro class — the Workshops identity.
+ *
+ * Clasbpro stores this as schedule_type = one_off, exposed on class_data as
+ * is_one_off_event. Prefer the plugin helper; fall back to the ACF field.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_is_one_off( int $class_id ): bool {
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw ) {
+		return ! empty( $raw['is_one_off_event'] );
+	}
+	if ( function_exists( 'get_field' ) ) {
+		return 'one_off' === (string) get_field( 'schedule_type', $class_id );
+	}
+	return 'one_off' === (string) get_post_meta( $class_id, 'schedule_type', true );
+}
+
+/**
+ * Meta query that keeps only one-off workshops.
+ *
+ * @return array<string,string>
+ */
+function lp_class_one_off_meta_clause(): array {
+	return array(
+		'key'   => 'schedule_type',
+		'value' => 'one_off',
+	);
+}
+
+/**
+ * Meta query that drops one-off workshops (recurring + appointments remain).
+ *
+ * @return array<string,mixed>
+ */
+function lp_class_not_one_off_meta_clause(): array {
+	return array(
+		'relation' => 'OR',
+		array(
+			'key'     => 'schedule_type',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => 'schedule_type',
+			'value'   => 'one_off',
+			'compare' => '!=',
+		),
+	);
+}
+
+/**
+ * AND a not-one-off clause onto existing query args.
+ *
+ * @param array $args WP_Query / get_posts args.
+ * @return array
+ */
+function lp_class_query_exclude_one_offs( array $args ): array {
+	$clause = lp_class_not_one_off_meta_clause();
+	if ( ! empty( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
+		$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'relation' => 'AND',
+			$args['meta_query'],
+			$clause,
+		);
+	} else {
+		$args['meta_query'] = $clause; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+	}
+	return $args;
+}
+
+/**
+ * True while a one-off sitting has not yet ended (end date + start time + duration).
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_one_off_is_upcoming( int $class_id ): bool {
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( ! $raw ) {
+		return false;
+	}
+	$start = (string) ( $raw['start_date'] ?? '' );
+	$end   = (string) ( $raw['end_date'] ?? '' );
+	$date  = '' !== $end ? $end : $start;
+	$time  = (string) ( $raw['start_time'] ?? '00:00' );
+	if ( strlen( $time ) > 5 ) {
+		$time = substr( $time, 0, 5 );
+	}
+	if ( '' === $date || '' === $time ) {
+		return false;
+	}
+	$dt = DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $date . ' ' . $time, wp_timezone() );
+	if ( ! $dt ) {
+		return false;
+	}
+	$mins = (int) ( $raw['duration'] ?? 0 );
+	if ( $mins > 0 ) {
+		$dt = $dt->modify( '+' . $mins . ' minutes' );
+	}
+	return $dt > current_datetime();
+}
+
+/**
+ * Workshops index URL (`/workshops/`).
+ */
+function lp_workshops_url(): string {
+	return lp_classes_page_url( 'workshops' );
+}
+
+/**
+ * Published one-off classes, split into lead / remaining upcoming / past.
+ *
+ * Lead is the soonest upcoming sitting and is not repeated in `$rest`.
+ *
+ * @return array{lead:?WP_Post, rest:WP_Post[], past:WP_Post[]}
+ */
+function lp_class_workshops_split(): array {
+	$posts = get_posts(
+		lp_class_active_meta_query(
+			array(
+				'post_type'      => lp_class_post_type(),
+				'post_status'    => 'publish',
+				'posts_per_page' => 50,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					lp_class_one_off_meta_clause(),
+				),
+			)
+		)
+	);
+
+	$upcoming = array();
+	$past     = array();
+	foreach ( $posts as $post ) {
+		if ( ! $post instanceof WP_Post ) {
+			continue;
+		}
+		if ( ! lp_class_is_one_off( (int) $post->ID ) ) {
+			continue;
+		}
+		if ( lp_class_one_off_is_upcoming( (int) $post->ID ) ) {
+			$upcoming[] = $post;
+		} else {
+			$past[] = $post;
+		}
+	}
+
+	$by_start = static function ( WP_Post $a, WP_Post $b ): int {
+		$raw_a = lp_clasbpro_raw( (int) $a->ID );
+		$raw_b = lp_clasbpro_raw( (int) $b->ID );
+		return strcmp( (string) ( $raw_a['start_date'] ?? '' ), (string) ( $raw_b['start_date'] ?? '' ) );
+	};
+	usort( $upcoming, $by_start );
+	usort( $past, $by_start );
+	$past = array_reverse( $past );
+
+	$lead = $upcoming[0] ?? null;
+	$rest = array_slice( $upcoming, 1 );
+
+	return array(
+		'lead' => $lead,
+		'rest' => $rest,
+		'past' => $past,
+	);
+}
+
+/**
+ * Uppercase sitting date for overview rows, e.g. SAT 12 SEP.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_workshop_date_label( int $class_id ): string {
+	$raw  = lp_clasbpro_raw( $class_id );
+	$date = $raw ? (string) ( $raw['start_date'] ?? '' ) : '';
+	$dt   = DateTimeImmutable::createFromFormat( 'Y-m-d', $date );
+	return $dt ? strtoupper( $dt->format( 'D j M' ) ) : '';
+}
+
+/**
+ * Duration for workshop chrome: "6 HOURS", "3 DAYS", or "45 MIN".
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_workshop_duration_label( int $class_id ): string {
+	$raw  = lp_clasbpro_raw( $class_id );
+	$mins = $raw ? (int) ( $raw['duration'] ?? 0 ) : 0;
+	if ( $mins <= 0 ) {
+		return '';
+	}
+	if ( $mins >= 1440 && 0 === $mins % 1440 ) {
+		$days = (int) ( $mins / 1440 );
+		return sprintf( '%d %s', $days, 1 === $days ? 'DAY' : 'DAYS' );
+	}
+	if ( $mins >= 60 && 0 === $mins % 60 ) {
+		$hours = (int) ( $mins / 60 );
+		return sprintf( '%d %s', $hours, 1 === $hours ? 'HOUR' : 'HOURS' );
+	}
+	return sprintf( '%d MIN', $mins );
+}
+
+/**
  * Spaces label from remaining seats.
  *
  * @param int $remaining Seats left.
@@ -373,6 +574,9 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 	foreach ( $class_ids as $class_id ) {
 		$class_id = (int) $class_id;
 		if ( ! lp_class_is_active( $class_id ) ) {
+			continue;
+		}
+		if ( lp_class_is_one_off( $class_id ) ) {
 			continue;
 		}
 

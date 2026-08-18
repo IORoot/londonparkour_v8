@@ -11,6 +11,7 @@
       "children": [
         { "label": "Classes", "url": "/classes" },
         { "label": "Private Tuition", "url": "/private-tuition" },
+        { "label": "Workshops", "url": "/workshops/" },
         { "label": "Tutorials", "url": "/tutorials" },
         { "label": "Timetable", "url": "/timetable" }
       ]

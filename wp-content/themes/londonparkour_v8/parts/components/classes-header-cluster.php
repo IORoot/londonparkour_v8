@@ -35,7 +35,7 @@
  * @param array  $args['crumbs']       breadcrumb-rail crumbs.
  * @param array  $args['action']       breadcrumb-rail's right-hand action.
  * @param array  $args['masthead']     title, note, media_id — page-masthead's args.
- * @param string $args['active']       agenda|map. Default 'agenda'.
+ * @param string $args['active']       agenda|map|workshops. Default 'agenda'.
  * @param bool   $args['show_filter']  Default true. Agenda and Map pass false.
  * @param array  $args['tabs']         Override the counted tabs entirely.
  * @param array  $args['cells']        Override the filter cells entirely.

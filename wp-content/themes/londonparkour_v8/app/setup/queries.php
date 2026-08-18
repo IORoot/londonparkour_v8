@@ -84,13 +84,27 @@ function lp_filter_class_archive( WP_Query $lp_query ): void {
 		),
 	);
 
+	$lp_not_one_off = function_exists( 'lp_class_not_one_off_meta_clause' )
+		? lp_class_not_one_off_meta_clause()
+		: array();
+
 	if ( $lp_meta ) {
+		$lp_and = array(
+			'relation' => 'AND',
+			$lp_meta,
+			$lp_active,
+		);
+		if ( $lp_not_one_off ) {
+			$lp_and[] = $lp_not_one_off;
+		}
+		$lp_query->set( 'meta_query', $lp_and ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+	} elseif ( $lp_not_one_off ) {
 		$lp_query->set(
 			'meta_query',
 			array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				'relation' => 'AND',
-				$lp_meta,
 				$lp_active,
+				$lp_not_one_off,
 			)
 		);
 	} else {

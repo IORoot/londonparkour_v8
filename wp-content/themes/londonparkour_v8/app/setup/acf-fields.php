@@ -695,6 +695,10 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 			continue;
 		}
 
+		if ( lp_class_post_type() === $post_type && function_exists( 'lp_class_is_one_off' ) && lp_class_is_one_off( $id ) ) {
+			continue;
+		}
+
 		if ( lp_class_post_type() === $post_type && function_exists( 'lp_class_board_fields' ) ) {
 			$fields = lp_class_board_fields( $id );
 			$extra  = function_exists( 'get_fields' ) ? get_fields( $id ) : array();
