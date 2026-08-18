@@ -20,6 +20,9 @@
  * @param int    $args['featured_series']
  * @param string $args['shelf_label']
  * @param array  $args['shelf_cta']
+ * @param array  $args['series_action']
+ * @param array  $args['category_action']
+ * @param array  $args['tutorial_action']
  *
  * @package londonparkour_v8
  */
@@ -120,6 +123,33 @@ if ( ! $lp_shelf_cta ) {
 		$lp_shelf_cta['href'] = lp_tutorials_series_url();
 	}
 }
+
+$lp_tutorial_index = (string) ( get_post_type_archive_link( 'lp_tutorial' ) ?: home_url( '/tutorials/' ) );
+$lp_browse         = array(
+	lp_action( $args['series_action'] ?? null ) ?: array(
+		'label'  => 'BY SERIES',
+		'href'   => lp_tutorials_series_url(),
+		'target' => '',
+	),
+	lp_action( $args['category_action'] ?? null ) ?: array(
+		'label'  => 'BY CATEGORY',
+		'href'   => lp_tutorials_category_url(),
+		'target' => '',
+	),
+	lp_action( $args['tutorial_action'] ?? null ) ?: array(
+		'label'  => 'BY TUTORIAL',
+		'href'   => $lp_tutorial_index,
+		'target' => '',
+	),
+);
+$lp_browse = array_values(
+	array_filter(
+		$lp_browse,
+		static function ( array $item ): bool {
+			return '' !== $item['label'] && '' !== $item['href'];
+		}
+	)
+);
 
 /**
  * Project a resolved term/manual row into a shelf card.
@@ -298,5 +328,23 @@ $lp_spacing = lp_section_spacing( $args );
 				</a>
 			<?php endforeach; ?>
 		</div>
+		<?php if ( $lp_browse ) : ?>
+			<div class="flex flex-wrap items-center gap-4 pt-8">
+				<?php
+				foreach ( $lp_browse as $lp_go ) :
+					lp_part(
+						'elements/button',
+						array(
+							'variant'          => 'primary',
+							'label'            => $lp_go['label'],
+							'href'             => $lp_go['href'],
+							'target'           => $lp_go['target'],
+							'trailing_icon_id' => 'icon-arrow-right',
+						)
+					);
+				endforeach;
+				?>
+			</div>
+		<?php endif; ?>
 	</div>
 </section>

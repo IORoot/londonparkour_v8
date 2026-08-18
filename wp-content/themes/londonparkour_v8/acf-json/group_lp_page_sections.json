@@ -4046,6 +4046,57 @@
                             "key": "field_6e70d6adae12e033"
                         },
                         {
+                            "name": "series_action",
+                            "label": "Series page",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_18cbf802ca7d7fdc"
+                                }
+                            ],
+                            "key": "field_80a3d29181c3a2b0"
+                        },
+                        {
+                            "name": "category_action",
+                            "label": "Category page",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_361012781e2ce178"
+                                }
+                            ],
+                            "key": "field_66160d663431a838"
+                        },
+                        {
+                            "name": "tutorial_action",
+                            "label": "Tutorial page",
+                            "type": "group",
+                            "layout": "block",
+                            "sub_fields": [
+                                {
+                                    "name": "link",
+                                    "label": "Link",
+                                    "type": "link",
+                                    "return_format": "array",
+                                    "instructions": "The link text is the button label.",
+                                    "key": "field_3e776f42abae34b8"
+                                }
+                            ],
+                            "key": "field_dbf78113bb9711e6"
+                        },
+                        {
                             "name": "tab_items",
                             "label": "Items",
                             "type": "tab",

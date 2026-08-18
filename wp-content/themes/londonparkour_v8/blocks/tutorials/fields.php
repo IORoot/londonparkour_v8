@@ -110,6 +110,9 @@ return array(
 				'type'  => 'text',
 			),
 			lp_field_action( 'shelf_cta', __( 'Shelf CTA', 'londonparkour_v8' ) ),
+			lp_field_action( 'series_action', __( 'Series page', 'londonparkour_v8' ) ),
+			lp_field_action( 'category_action', __( 'Category page', 'londonparkour_v8' ) ),
+			lp_field_action( 'tutorial_action', __( 'Tutorial page', 'londonparkour_v8' ) ),
 
 			lp_tab( __( 'Items', 'londonparkour_v8' ) ),
 		),

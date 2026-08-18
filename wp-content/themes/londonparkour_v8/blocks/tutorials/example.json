@@ -18,6 +18,15 @@
   "shelf_cta": {
     "link": { "title": "BROWSE ALL SERIES →", "url": "/tutorials/series/", "target": "" }
   },
+  "series_action": {
+    "link": { "title": "BY SERIES", "url": "/tutorials/series/", "target": "" }
+  },
+  "category_action": {
+    "link": { "title": "BY CATEGORY", "url": "/tutorials/category/", "target": "" }
+  },
+  "tutorial_action": {
+    "link": { "title": "BY TUTORIAL", "url": "/tutorials/", "target": "" }
+  },
   "source": "manual",
   "source_manual": [
     {
