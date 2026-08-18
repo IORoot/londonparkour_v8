@@ -43,7 +43,7 @@ $lp_panel_link = 'no-underline cursor-pointer transition-colors duration-150 hov
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-primary px-6 md:px-16 pt-[92px] pb-[96px]', $lp_spacing ); ?>" data-component="cta"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'bg-primary px-6 md:px-16 pt-[116px] pb-[120px]', $lp_spacing ); ?>" data-component="cta"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col gap-[60px]">
 		<div class="flex items-center justify-between gap-4">
 			<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary-content"><?php echo esc_html( $lp_kicker ); ?></span>

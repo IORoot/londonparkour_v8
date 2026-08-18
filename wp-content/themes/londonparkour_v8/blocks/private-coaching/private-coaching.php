@@ -155,7 +155,7 @@ if ( $lp_is_booking ) :
 
 	ob_start();
 	?>
-	<div class="flex-1 min-w-0 flex flex-col gap-8 p-8 lg:p-14">
+	<div class="flex-1 min-w-0 flex flex-col gap-8 p-8 lg:px-14 lg:py-[104px]">
 		<div class="flex items-baseline justify-between gap-4 flex-wrap">
 			<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-primary-content"><?php echo esc_html( $lp_eyebrow ); ?></span>
 			<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-primary-content/70"><?php echo esc_html( $lp_meta ); ?></span>
@@ -246,7 +246,7 @@ else :
 			?>
 		</div>
 
-		<div class="flex-1 min-w-0 flex flex-col px-6 py-[56px] lg:pt-[100px] lg:pr-[64px] lg:pb-[104px] lg:pl-[72px]">
+		<div class="flex-1 min-w-0 flex flex-col px-6 py-[80px] lg:pt-[124px] lg:pr-[64px] lg:pb-[128px] lg:pl-[72px]">
 			<div class="flex flex-col gap-[20px]">
 				<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-base-content/60"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<h2 class="font-heading text-step-3 font-semibold leading-none tracking-[-1.6px] text-base-content"><?php echo esc_html( $lp_headline ); ?></h2>

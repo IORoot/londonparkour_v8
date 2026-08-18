@@ -160,7 +160,7 @@ if ( ! $lp_logos ) {
 $lp_spacing = lp_section_spacing( $args );
 ?>
 <section
-	class="<?php echo lp_classes( 'w-full bg-accent px-6 py-[96px] lg:px-16', $lp_spacing ); ?>"
+	class="<?php echo lp_classes( 'w-full bg-accent px-6 py-[120px] lg:px-16', $lp_spacing ); ?>"
 	data-component="clients"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 >
 	<div class="flex flex-col gap-[36px]">

@@ -141,7 +141,7 @@ if ( 'grid' === $lp_layout ) {
 		$lp_coaches = $lp_default_grid_coaches;
 	}
 	?>
-<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[96px] lg:px-[72px]', $lp_spacing ); ?>" data-component="coaches" data-layout="grid"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[120px] lg:px-[72px]', $lp_spacing ); ?>" data-component="coaches" data-layout="grid"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col gap-12">
 		<header class="flex flex-col gap-[18px]">
 			<div class="flex items-baseline justify-between gap-4">
@@ -238,7 +238,7 @@ if ( ! $lp_roster ) {
 	$lp_roster = $lp_default_roster;
 }
 ?>
-<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[56px] lg:pt-[100px] lg:px-16 lg:pb-[104px]', $lp_spacing ); ?>" data-component="coaches" data-layout="lead"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[80px] lg:pt-[124px] lg:px-16 lg:pb-[128px]', $lp_spacing ); ?>" data-component="coaches" data-layout="lead"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div>
 		<div class="flex flex-wrap items-end justify-between gap-6">
 			<div class="flex flex-col gap-[20px] max-w-[700px]">

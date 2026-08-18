@@ -193,7 +193,7 @@ if ( ! $lp_shelf && ! $lp_from_cpt ) {
 $lp_spacing = lp_section_spacing( $args );
 ?>
 <section
-	class="<?php echo lp_classes( 'w-full bg-secondary px-6 pt-[96px] pb-[100px] lg:px-16', $lp_spacing ); ?>"
+	class="<?php echo lp_classes( 'w-full bg-secondary px-6 pt-[120px] pb-[124px] lg:px-16', $lp_spacing ); ?>"
 	data-component="tutorials"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 >
 	<header>
