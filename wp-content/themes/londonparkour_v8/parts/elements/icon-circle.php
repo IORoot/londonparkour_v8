@@ -16,9 +16,12 @@
  * with a w-3.5 h-3.5 glyph and the 78px disc with a w-[28px] h-[28px] glyph)
  * — $args['icon_id'] only swaps which glyph renders, not its size.
  *
- * @param string $args['icon_id']    Glyph id. Default 'icon-play' (both source instances).
- * @param string $args['variant']    '34'|'78'. Default '34'.
- * @param string $args['aria_label'] Required for variant '78' (interactive) — the button's accessible name.
+ * @param string $args['icon_id']     Glyph id. Default 'icon-play' (both source instances).
+ * @param string $args['variant']     '34'|'78'. Default '34'.
+ * @param string $args['aria_label']  Required for variant '78' (interactive) — the button's accessible name.
+ * @param string $args['command']     @tailwindplus/elements dialog trigger.
+ * @param string $args['command_for']
+ * @param array  $args['data_attrs']  Extra data-* attributes on the interactive button.
  *
  * @package londonparkour_v8
  */
@@ -46,9 +49,39 @@ $lp_variant   = $lp_variants[ $args['variant'] ?? '34' ] ?? $lp_variants['34'];
 $lp_icon_id   = (string) ( $args['icon_id'] ?? 'icon-play' );
 $lp_aria      = (string) ( $args['aria_label'] ?? '' );
 $lp_interactive = $lp_variant['interactive'];
+
+$lp_btn_attrs = array(
+	'type'            => 'button',
+	'class'           => $lp_variant['class'],
+	'data-component'  => 'icon-circle',
+);
+if ( '' !== $lp_aria ) {
+	$lp_btn_attrs['aria-label'] = $lp_aria;
+}
+foreach ( array( 'command', 'command_for' ) as $lp_pass ) {
+	if ( ! empty( $args[ $lp_pass ] ) ) {
+		$lp_btn_attrs[ str_replace( '_', '', $lp_pass ) ] = $args[ $lp_pass ];
+	}
+}
+if ( ! empty( $args['data_attrs'] ) && is_array( $args['data_attrs'] ) ) {
+	foreach ( $args['data_attrs'] as $lp_dk => $lp_dv ) {
+		$lp_dk = (string) $lp_dk;
+		if ( '' === $lp_dk ) {
+			continue;
+		}
+		if ( 'command_for' === $lp_dk ) {
+			$lp_dk = 'commandfor';
+		}
+		$lp_btn_attrs[ $lp_dk ] = (string) $lp_dv;
+	}
+}
 ?>
 <?php if ( $lp_interactive ) : ?>
-	<button type="button" class="<?php echo esc_attr( $lp_variant['class'] ); ?>" data-component="icon-circle"<?php echo '' !== $lp_aria ? ' aria-label="' . esc_attr( $lp_aria ) . '"' : ''; ?>>
+	<button
+		<?php foreach ( $lp_btn_attrs as $lp_k => $lp_v ) : ?>
+		<?php echo esc_attr( $lp_k ); ?>="<?php echo esc_attr( $lp_v ); ?>"
+		<?php endforeach; ?>
+	>
 		<?php lp_icon( $lp_icon_id, $lp_variant['icon_class'] ); ?>
 	</button>
 <?php else : ?>

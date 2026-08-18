@@ -28,6 +28,9 @@
  * @param string $args['time_label']
  * @param string $args['up_next_label']
  * @param string $args['play_aria_label'] Defaults to "Play: {title}".
+ * @param string $args['command']         Play control dialog trigger.
+ * @param string $args['command_for']
+ * @param array  $args['data_attrs']      Extra data-* on the play control.
  *
  * @package londonparkour_v8
  */
@@ -116,9 +119,12 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 				lp_part(
 					'elements/icon-circle',
 					array(
-						'variant'    => '78',
-						'icon_id'    => 'icon-play',
-						'aria_label' => $lp_play_aria,
+						'variant'     => '78',
+						'icon_id'     => 'icon-play',
+						'aria_label'  => $lp_play_aria,
+						'command'     => $args['command'] ?? '',
+						'command_for' => $args['command_for'] ?? '',
+						'data_attrs'  => is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array(),
 					)
 				);
 				?>

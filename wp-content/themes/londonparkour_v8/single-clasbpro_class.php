@@ -347,7 +347,17 @@ while ( have_posts() ) :
 						</ol>
 					</div>
 				<?php endif; ?>
-				<div class="w-full order-1 lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:order-none">
+				<div class="w-full order-1 lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:order-none flex flex-col gap-6">
+					<div class="text-base-content" aria-hidden="true">
+						<?php
+						$lp_card_svg = function_exists( 'lp_class_calendar_icon_svg' ) ? lp_class_calendar_icon_svg( $lp_post_id ) : '';
+						if ( '' !== $lp_card_svg && function_exists( 'lp_inline_svg' ) ) {
+							lp_inline_svg( $lp_card_svg, 'w-10 h-10' );
+						} else {
+							lp_icon( 'glyph-balancing', 'w-10 h-10' );
+						}
+						?>
+					</div>
 					<?php
 					lp_part(
 						'components/aside-panel',
@@ -384,7 +394,7 @@ while ( have_posts() ) :
 					</div>
 
 					<div class="flex flex-col lg:flex-row gap-12 items-start">
-						<div class="flex-1 min-w-0 flex flex-col gap-[28px] border-t border-base-content pt-[22px]">
+						<div class="w-full lg:w-1/2 min-w-0 flex flex-col gap-[28px] border-t border-base-content pt-[22px]">
 							<?php if ( '' !== $lp_meeting_kicker ) : ?>
 								<div class="flex items-center gap-[8px]">
 									<span class="text-base-content" aria-hidden="true"><?php lp_icon( 'icon-map-pin', 'w-[12px] h-[12px]' ); ?></span>
@@ -421,7 +431,7 @@ while ( have_posts() ) :
 						</div>
 
 						<?php if ( '' !== $lp_lat && '' !== $lp_lon && is_numeric( $lp_lat ) && is_numeric( $lp_lon ) ) : ?>
-							<div class="w-full lg:w-[560px] lg:shrink-0 flex flex-col gap-[12px]">
+							<div class="w-full lg:w-1/2 flex flex-col gap-[12px]">
 								<div
 									class="relative isolate w-full h-[360px] bg-base-300 border border-base-300 overflow-hidden"
 									data-component="class-detail-osm"

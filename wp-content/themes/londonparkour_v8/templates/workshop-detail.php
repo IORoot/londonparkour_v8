@@ -314,7 +314,17 @@ $lp_grid = $lp_show_book
 				</div>
 			<?php endif; ?>
 			<?php if ( $lp_show_book ) : ?>
-				<div class="w-full order-1 lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:order-none">
+				<div class="w-full order-1 lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:order-none flex flex-col gap-6">
+					<div class="text-base-content" aria-hidden="true">
+						<?php
+						$lp_card_svg = function_exists( 'lp_class_calendar_icon_svg' ) ? lp_class_calendar_icon_svg( $lp_post_id ) : '';
+						if ( '' !== $lp_card_svg && function_exists( 'lp_inline_svg' ) ) {
+							lp_inline_svg( $lp_card_svg, 'w-10 h-10' );
+						} else {
+							lp_icon( 'glyph-balancing', 'w-10 h-10' );
+						}
+						?>
+					</div>
 					<?php
 					lp_part(
 						'components/aside-panel',
@@ -352,7 +362,7 @@ $lp_grid = $lp_show_book
 				</div>
 
 				<div class="flex flex-col lg:flex-row gap-12 items-start">
-					<div class="flex-1 min-w-0 flex flex-col gap-[28px] border-t border-base-content pt-[22px]">
+					<div class="w-full lg:w-1/2 min-w-0 flex flex-col gap-[28px] border-t border-base-content pt-[22px]">
 						<?php if ( '' !== $lp_meeting_kicker ) : ?>
 							<div class="flex items-center gap-[8px]">
 								<span class="text-base-content" aria-hidden="true"><?php lp_icon( 'icon-map-pin', 'w-[12px] h-[12px]' ); ?></span>
@@ -389,7 +399,7 @@ $lp_grid = $lp_show_book
 					</div>
 
 					<?php if ( '' !== $lp_lat && '' !== $lp_lon && is_numeric( $lp_lat ) && is_numeric( $lp_lon ) ) : ?>
-						<div class="w-full lg:w-[560px] lg:shrink-0 flex flex-col gap-[12px]">
+						<div class="w-full lg:w-1/2 flex flex-col gap-[12px]">
 							<div
 								class="relative isolate w-full h-[360px] bg-base-300 border border-base-300 overflow-hidden"
 								data-component="class-detail-osm"
@@ -447,20 +457,15 @@ $lp_grid = $lp_show_book
 				</div>
 				<div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
 					<?php foreach ( $lp_gallery as $lp_still ) : ?>
-						<div class="relative aspect-[4/3] bg-secondary overflow-hidden">
-							<?php
-							lp_part(
-								'components/media-photo',
-								array(
-									'image_id' => $lp_still,
-									'layout'   => 'fill',
-									'size'     => 'lp_wide',
-									'sizes'    => '(min-width: 1024px) 25vw, 50vw',
-									'class'    => 'absolute inset-0 w-full h-full object-cover',
-								)
-							);
-							?>
-						</div>
+						<?php
+						lp_part(
+							'elements/dialog-image',
+							array(
+								'dialog_id' => 'workshop-gallery-' . (int) $lp_still,
+								'image_id'  => (int) $lp_still,
+							)
+						);
+						?>
 					<?php endforeach; ?>
 				</div>
 			</div>
@@ -471,28 +476,35 @@ $lp_grid = $lp_show_book
 		<section class="w-full bg-base-100" data-component="workshop-detail-film">
 			<div class="px-6 lg:px-16 py-scale-2xl">
 				<?php
-				lp_part(
-					'components/video-stage',
-					array(
-						'image_id'       => $lp_image_id,
-						'status_label'   => 'NOW PLAYING · THE DAY',
-						'quality_label'  => 'EN · HD',
-						'badge_label'    => strtoupper( get_the_title( $lp_post_id ) ) . ' · THE DAY',
-						'duration_label' => lp_class_workshop_duration_label( $lp_post_id ),
-						'title'          => get_the_title( $lp_post_id ),
-						'stage_meta'     => implode(
-							' · ',
-							array_filter(
-								array(
-									'WORKSHOP',
-									$lp_location_title ? strtoupper( $lp_location_title ) : '',
-									$lp_level_name ? strtoupper( $lp_level_name ) : '',
+					lp_part(
+						'components/video-stage',
+						array(
+							'image_id'        => $lp_image_id,
+							'status_label'    => 'NOW PLAYING · THE DAY',
+							'quality_label'   => 'EN · HD',
+							'badge_label'     => strtoupper( get_the_title( $lp_post_id ) ) . ' · THE DAY',
+							'duration_label'  => lp_class_workshop_duration_label( $lp_post_id ),
+							'title'           => get_the_title( $lp_post_id ),
+							'stage_meta'      => implode(
+								' · ',
+								array_filter(
+									array(
+										'WORKSHOP',
+										$lp_location_title ? strtoupper( $lp_location_title ) : '',
+										$lp_level_name ? strtoupper( $lp_level_name ) : '',
+									)
 								)
-							)
-						),
-						'play_aria_label' => 'Play: ' . get_the_title( $lp_post_id ),
-					)
-				);
+							),
+							'play_aria_label' => 'Play: ' . get_the_title( $lp_post_id ),
+							'command'         => 'show-modal',
+							'command_for'     => $lp_video_dlg,
+							'data_attrs'      => array(
+								'data-video-type' => 'youtube',
+								'data-video-id'   => $lp_video_id,
+								'data-autoplay'   => 'true',
+							),
+						)
+					);
 				?>
 			</div>
 		</section>
@@ -503,7 +515,7 @@ $lp_grid = $lp_show_book
 			<div class="px-6 lg:px-16 py-scale-2xl">
 				<div class="flex flex-col gap-10 border-t border-accent-content pt-[22px]">
 					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-accent-content">THE COACHES</span>
-					<div class="flex flex-col gap-10">
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 						<?php foreach ( $lp_coach_ids as $lp_coach_id ) : ?>
 							<?php
 							lp_part(
