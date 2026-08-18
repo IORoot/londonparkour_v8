@@ -328,23 +328,23 @@ $lp_spacing = lp_section_spacing( $args );
 				</a>
 			<?php endforeach; ?>
 		</div>
-		<?php if ( $lp_browse ) : ?>
-			<div class="flex flex-wrap items-center gap-4 pt-8">
-				<?php
-				foreach ( $lp_browse as $lp_go ) :
-					lp_part(
-						'elements/button',
-						array(
-							'variant'          => 'primary',
-							'label'            => $lp_go['label'],
-							'href'             => $lp_go['href'],
-							'target'           => $lp_go['target'],
-							'trailing_icon_id' => 'icon-arrow-right',
-						)
-					);
-				endforeach;
-				?>
-			</div>
-		<?php endif; ?>
 	</div>
+	<?php if ( $lp_browse ) : ?>
+		<div class="flex flex-wrap items-center gap-4 pt-8">
+			<?php
+			foreach ( $lp_browse as $lp_go ) :
+				lp_part(
+					'elements/button',
+					array(
+						'variant'          => 'primary',
+						'label'            => $lp_go['label'],
+						'href'             => $lp_go['href'],
+						'target'           => $lp_go['target'],
+						'trailing_icon_id' => 'icon-arrow-right',
+					)
+				);
+			endforeach;
+			?>
+		</div>
+	<?php endif; ?>
 </section>
