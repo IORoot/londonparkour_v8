@@ -147,38 +147,21 @@ function lp_seed_media(): array {
 
 	foreach ( (array) glob( $dir . '/*.jpeg' ) as $file ) {
 		$name = basename( $file );
-		$slug = sanitize_title( pathinfo( $name, PATHINFO_FILENAME ) );
 
-		$existing = get_posts(
-			array(
-				'post_type'      => 'attachment',
-				'post_status'    => 'inherit',
-				'name'           => $slug,
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-				'no_found_rows'  => true,
-			)
-		);
-
-		if ( ! empty( $existing[0] ) ) {
-			$map[ $name ] = (int) $existing[0];
+		$existing = lp_attachment_id_for_file( $file );
+		if ( $existing ) {
+			$map[ $name ] = $existing;
 			continue;
 		}
 
-		// Copy to a temp path — media_handle_sideload MOVES the file it is given.
-		$tmp = wp_tempnam( $name );
-		copy( $file, $tmp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_copy
-
-		$id = media_handle_sideload(
+		$id = lp_sideload_image_once(
+			$file,
 			array(
-				'name'     => $name,
-				'tmp_name' => $tmp,
-			),
-			0
+				'post_title' => pathinfo( $name, PATHINFO_FILENAME ),
+			)
 		);
 
 		if ( is_wp_error( $id ) ) {
-			wp_delete_file( $tmp );
 			WP_CLI::warning( "Could not import {$name}: " . $id->get_error_message() );
 			continue;
 		}

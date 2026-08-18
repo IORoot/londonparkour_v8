@@ -30,6 +30,7 @@ if ( ! defined( 'LONDONPARKOUR_V8_TYPOGRAPHY_CLASSES' ) ) {
 $lp_includes = array(
 	// Infrastructure.
 	'app/includes/html.php',
+	'app/includes/media.php',
 	'app/includes/menus.php',
 	'app/includes/modules.php',
 	'app/includes/clasbpro.php',
@@ -48,6 +49,7 @@ $lp_includes = array(
 	// acf-groups.php is NOT listed — it returns an array and is required by acf-build.php.
 	'app/setup/acf-build.php',
 	'app/setup/seed.php',
+	'app/setup/media-dedupe.php',
 	'app/setup/import-spots.php',
 	'app/setup/import-reviews.php',
 	// Admin hooks.

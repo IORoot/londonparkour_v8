@@ -117,10 +117,13 @@ trait LP_Thumbnail_Folders_Editor {
 			$dir = $dest_path;
 		}
 
-		$name    = wp_basename( $this->file, ".{$ext}" );
-		$new_ext = strtolower( $extension ? $extension : $ext );
+		$name       = wp_basename( $this->file, ".{$ext}" );
+		$new_ext    = strtolower( $extension ? $extension : $ext );
+		$folder_dir = trailingslashit( $dir ) . $folder;
+		wp_mkdir_p( $folder_dir );
 
-		return trailingslashit( $dir ) . "{$folder}/{$name}.{$new_ext}";
+		// Same basename every regenerate. Overwrite — do not unique-name.
+		return trailingslashit( $folder_dir ) . "{$name}.{$new_ext}";
 	}
 }
 
@@ -162,3 +165,40 @@ function lp_thumbnail_folders_metadata( $data, $attachment_id ) {
 
 	return $data;
 }
+
+/**
+ * Size folders reuse the original basename (`large/file.jpg`, not
+ * `file-1024x768.jpg`). Core's wp_unique_filename would otherwise mint
+ * `file-1.jpg` on regenerate. Always overwrite the size file.
+ *
+ * @param string        $filename                 Proposed unique name.
+ * @param string        $ext                      Extension including the dot.
+ * @param string        $dir                      Destination directory.
+ * @param callable|null $unique_filename_callback Unused.
+ * @param string[]      $alt_filenames            Unused.
+ * @param int|string    $number                   Increment appended by core.
+ * @return string
+ */
+function lp_thumbnail_folders_unique_filename( $filename, $ext, $dir, $unique_filename_callback = null, $alt_filenames = array(), $number = '' ) {
+	$folder = wp_basename( (string) $dir );
+	$sizes  = array_merge(
+		array( 'thumbnail', 'medium', 'medium_large', 'large' ),
+		array_keys( wp_get_registered_image_subsizes() )
+	);
+	if ( ! in_array( $folder, $sizes, true ) ) {
+		return $filename;
+	}
+	if ( '' === (string) $number ) {
+		return $filename;
+	}
+
+	$name   = pathinfo( (string) $filename, PATHINFO_FILENAME );
+	$suffix = '-' . $number;
+	if ( str_ends_with( $name, $suffix ) ) {
+		$name = substr( $name, 0, -strlen( $suffix ) );
+	}
+	$ext = $ext ? $ext : '.' . strtolower( (string) pathinfo( (string) $filename, PATHINFO_EXTENSION ) );
+
+	return $name . $ext;
+}
+add_filter( 'wp_unique_filename', 'lp_thumbnail_folders_unique_filename', 10, 6 );

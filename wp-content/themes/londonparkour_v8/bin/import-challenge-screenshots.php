@@ -133,49 +133,17 @@ function lp_ensure_in_rml_folder( int $attachment_id, int $folder_id ): void {
 }
 
 function lp_import_png( string $abs_path, string $title, string $alt, int $rml_folder ): int {
-	$basename = basename( $abs_path );
-	$existing = lp_find_attachment_by_basename( $basename );
-	if ( $existing ) {
-		wp_update_post(
-			array(
-				'ID'         => $existing,
-				'post_title' => $title,
-			)
-		);
-		if ( $alt !== '' ) {
-			update_post_meta( $existing, '_wp_attachment_image_alt', $alt );
-		}
-		lp_ensure_in_rml_folder( $existing, $rml_folder );
-		return $existing;
-	}
-
-	$tmp = wp_tempnam( $abs_path );
-	if ( ! $tmp || ! copy( $abs_path, $tmp ) ) {
-		throw new RuntimeException( 'Could not stage temp file for ' . $basename );
-	}
-
-	$file_array = array(
-		'name'     => $basename,
-		'tmp_name' => $tmp,
-	);
-
-	$id = media_handle_sideload(
-		$file_array,
-		0,
-		null,
+	$id = lp_sideload_image_once(
+		$abs_path,
 		array(
 			'post_title' => $title,
+			'alt'        => $alt,
 		)
 	);
-
 	if ( is_wp_error( $id ) ) {
-		@unlink( $tmp );
-		throw new RuntimeException( $basename . ': ' . $id->get_error_message() );
+		throw new RuntimeException( basename( $abs_path ) . ': ' . $id->get_error_message() );
 	}
 
-	if ( $alt !== '' ) {
-		update_post_meta( (int) $id, '_wp_attachment_image_alt', $alt );
-	}
 	lp_ensure_in_rml_folder( (int) $id, $rml_folder );
 
 	return (int) $id;

@@ -40,6 +40,7 @@ Site: http://localhost:8102 · admin `admin` / `admin` · QA page: `/blocks-qa/`
 | Verify a partial | `bin/wp lp part components/<name>` |
 | Parse Google reviews HTML | `php bin/parse-google-reviews.php` |
 | Import testimonials | `bin/wp lp import-reviews` |
+| Dedupe identical uploads | `bin/wp lp media:dedupe` (`--dry-run` first) |
 
 `docker compose down -v` destroys the database. That is the supported recovery
 path, not a disaster — bootstrap and seed rebuild it in under a minute.
