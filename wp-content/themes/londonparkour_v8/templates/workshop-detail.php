@@ -315,16 +315,6 @@ $lp_grid = $lp_show_book
 			<?php endif; ?>
 			<?php if ( $lp_show_book ) : ?>
 				<div class="w-full order-1 lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:order-none flex flex-col gap-6">
-					<div class="text-base-content w-full aspect-square" aria-hidden="true">
-						<?php
-						$lp_card_svg = function_exists( 'lp_class_calendar_icon_svg' ) ? lp_class_calendar_icon_svg( $lp_post_id ) : '';
-						if ( '' !== $lp_card_svg && function_exists( 'lp_inline_svg' ) ) {
-							lp_inline_svg( $lp_card_svg, 'w-full h-full' );
-						} else {
-							lp_icon( 'glyph-balancing', 'w-full h-full' );
-						}
-						?>
-					</div>
 					<?php
 					lp_part(
 						'components/aside-panel',

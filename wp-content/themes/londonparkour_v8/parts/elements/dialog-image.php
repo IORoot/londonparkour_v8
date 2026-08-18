@@ -4,6 +4,8 @@
  *
  * button.php has no image-tile variant. The invoker lives here so the
  * workshop gallery does not hand-roll an <a> + <img> pair in a template.
+ * Hover is Concourse inversion: a primary wash (`group-hover:bg-primary/45`)
+ * over the photo, matching EdXU4 Still 01 / Hover in the .pen.
  *
  * @param int    $args['image_id'] Attachment id.
  * @param string $args['alt']      Optional. Falls back to the attachment alt.
@@ -27,7 +29,7 @@ $lp_alt = array_key_exists( 'alt', $args )
 	href="<?php echo esc_url( $lp_href ); ?>"
 	target="_blank"
 	rel="noopener noreferrer"
-	class="relative aspect-[4/3] bg-secondary overflow-hidden w-full block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+	class="relative aspect-[4/3] bg-secondary overflow-hidden w-full block group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 >
 	<?php
 	lp_part(
@@ -42,4 +44,5 @@ $lp_alt = array_key_exists( 'alt', $args )
 		)
 	);
 	?>
+	<span class="absolute inset-0 bg-primary/0 group-hover:bg-primary/45 transition-colors duration-150" aria-hidden="true"></span>
 </a>

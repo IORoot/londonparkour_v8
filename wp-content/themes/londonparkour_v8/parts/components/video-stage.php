@@ -78,7 +78,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 		<span class="font-label text-[10px] font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_quality_label ); ?></span>
 	</div>
 
-	<div class="relative w-full aspect-[892/432] overflow-hidden bg-neutral">
+	<div class="relative w-full aspect-[892/432] overflow-hidden bg-neutral cursor-pointer">
 		<?php
 		if ( $lp_has_image ) {
 			lp_part( 'components/media-photo', $lp_photo );

@@ -4212,6 +4212,87 @@
                         }
                     ],
                     "key": "layout_3ab4c2079dc2e210"
+                },
+                "layout_28e519200e355e77": {
+                    "name": "workshop",
+                    "label": "Workshop Spotlight",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_f43fd910b222140d"
+                        },
+                        {
+                            "name": "eyebrow",
+                            "label": "Eyebrow",
+                            "type": "text",
+                            "instructions": "Short uppercase label above the heading.",
+                            "key": "field_b80cabf2312242f9"
+                        },
+                        {
+                            "name": "workshop_image",
+                            "label": "Background image override",
+                            "type": "image",
+                            "return_format": "id",
+                            "preview_size": "medium",
+                            "library": "all",
+                            "instructions": "Optional. Falls back to the upcoming workshop's featured image. Landscape photos with a clear sky or open space work best — the bottom third is covered by the content band.",
+                            "allow_null": 1,
+                            "key": "field_005ec1687e1c928a"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_844d79a546a78106"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_6daaa617f4d419cd"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_16251c6fc281e214"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_8b02915c9a269d46"
+                        }
+                    ],
+                    "key": "layout_28e519200e355e77"
                 }
             },
             "key": "field_39772494d940a47d"

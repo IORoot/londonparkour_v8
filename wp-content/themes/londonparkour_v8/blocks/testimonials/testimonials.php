@@ -117,7 +117,23 @@ $lp_last    = count( $lp_visible ) - 1;
 					<span class="font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1" data-quote-index><?php echo esc_html( $lp_index ); ?></span>
 					<div class="flex flex-col gap-6 min-w-0">
 						<p class="font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0" data-quote-text><?php echo esc_html( $lp_quote ); ?></p>
-						<footer class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65" data-quote-attr><?php echo esc_html( $lp_attribution ); ?></footer>
+						<?php
+						$lp_attr_parts = explode( ' / ', $lp_attribution, 2 );
+						$lp_name       = trim( (string) ( $lp_attr_parts[0] ?? '' ) );
+						$lp_note       = trim( (string) ( $lp_attr_parts[1] ?? '' ) );
+						?>
+						<footer class="flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65">
+							<span data-quote-name><?php echo esc_html( $lp_name ); ?></span>
+							<span class="w-px h-2.5 bg-base-300 shrink-0" aria-hidden="true"></span>
+							<span class="flex items-center gap-0.5" aria-label="5 out of 5 stars">
+								<?php
+								for ( $lp_star = 1; $lp_star <= 5; $lp_star++ ) {
+									lp_icon( 'icon-star', 'w-3 h-3 text-accent' );
+								}
+								?>
+							</span>
+							<span data-quote-note<?php echo '' === $lp_note ? ' hidden' : ''; ?>><?php echo '' === $lp_note ? '' : esc_html( '/ ' . $lp_note ); ?></span>
+						</footer>
 					</div>
 				</blockquote>
 				<?php if ( (int) $lp_i !== $lp_last ) : ?>
@@ -135,7 +151,18 @@ $lp_last    = count( $lp_visible ) - 1;
 						data-motion-decode-charset="board"
 						data-motion-decode-wrap="true"
 					></p>
-					<footer class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65" data-quote-attr></footer>
+					<footer class="flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65">
+						<span data-quote-name></span>
+						<span class="w-px h-2.5 bg-base-300 shrink-0" aria-hidden="true"></span>
+						<span class="flex items-center gap-0.5" aria-label="5 out of 5 stars">
+							<?php
+							for ( $lp_star = 1; $lp_star <= 5; $lp_star++ ) {
+								lp_icon( 'icon-star', 'w-3 h-3 text-accent' );
+							}
+							?>
+						</span>
+						<span data-quote-note hidden></span>
+					</footer>
 				</div>
 			</blockquote>
 		</template>

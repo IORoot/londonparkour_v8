@@ -12,7 +12,7 @@
  * only derivable by reading the .pen frame sequence again:
  *
  *   hero → marquee → classes → pricing → private_coaching → statement →
- *   tutorials → clients → testimonials → locations → coaches → cta
+ *   workshop → clients → tutorials → testimonials → locations → coaches → cta
  *
  * Nav and footer are NOT rows — they are get_header()/get_footer(), which is
  * also what keeps them outside <main>, the landmark contract the Storybook page

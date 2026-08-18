@@ -28,12 +28,29 @@ function parseQuotes(el) {
   }
 }
 
+function splitAttribution(raw) {
+  const text = raw || '';
+  const i = text.indexOf(' / ');
+  if (i === -1) return { name: text, note: '' };
+  return { name: text.slice(0, i), note: text.slice(i + 3) };
+}
+
+function fillAttribution(row, item, { blank = false } = {}) {
+  const nameEl = row.querySelector('[data-quote-name]');
+  const noteEl = row.querySelector('[data-quote-note]');
+  const { name, note } = blank ? { name: '', note: '' } : splitAttribution(item.attribution);
+  if (nameEl) nameEl.textContent = name;
+  if (noteEl) {
+    noteEl.textContent = note ? `/ ${note}` : '';
+    noteEl.hidden = !note;
+  }
+}
+
 function fillRow(row, item, slotIndex, { blank = false } = {}) {
   const idx = row.querySelector('[data-quote-index]');
   const text = row.querySelector('[data-quote-text]');
-  const attr = row.querySelector('[data-quote-attr]');
   if (idx) idx.textContent = padIndex(slotIndex);
-  if (attr) attr.textContent = blank ? '' : item.attribution || '';
+  fillAttribution(row, item, { blank });
   if (text) {
     const quote = item.quote || '';
     text.dataset.motionDecode = quote;
@@ -177,8 +194,7 @@ export const quoteBoardEffect = {
       el.style.height = '';
       el.style.overflow = '';
 
-      const attr = newRow.querySelector('[data-quote-attr]');
-      if (attr) attr.textContent = item.attribution || '';
+      fillAttribution(newRow, item);
 
       if (session?.play) await session.play();
       stopDecode = null;
