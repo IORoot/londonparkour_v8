@@ -634,6 +634,7 @@ function lp_seed_template_pages(): void {
 		'classes'          => array( 'Classes', 'templates/classes-agenda.php' ),
 		'classes-map'      => array( 'Classes — Map', 'templates/classes-map.php' ),
 		'workshops'        => array( 'Workshops', 'templates/workshops-overview.php' ),
+		'private-coaching' => array( 'Private 1:1', 'templates/private-coaching.php' ),
 		'contact'          => array( 'Contact', 'templates/contact.php' ),
 		'docs'             => array( 'Docs', 'templates/docs-faq.php' ),
 		'tutorials-series'   => array( 'Tutorials — Series', 'templates/tutorials-series.php' ),
@@ -720,6 +721,13 @@ function lp_seed_template_pages(): void {
 			WP_CLI::log( sprintf( '  + page %s (#%d) -> %s (%d sections)', $slug, $id, $template, count( $rows ) ) );
 		} else {
 			WP_CLI::log( sprintf( '  + page %s (#%d) -> %s', $slug, $id, $template ) );
+		}
+
+		if ( 'private-coaching' === $slug && function_exists( 'update_field' ) ) {
+			$appt = lp_seed_find( 'clasbpro_class', 'private-sessions' );
+			if ( $appt ) {
+				update_field( 'appointment_class', $appt, $id );
+			}
 		}
 	}
 }
