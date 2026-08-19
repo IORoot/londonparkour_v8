@@ -5,6 +5,47 @@
 import { lpBeginCheckout, lpSelectItem } from '../utils/analytics.js';
 
 const DRAWER_ID = 'lp-booking-drawer';
+const LOADING_HTML =
+  '<p class="px-[28px] py-[20px] font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Loading…</p>';
+const UNAVAILABLE_HTML =
+  '<p class="px-[28px] py-[20px] font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Booking unavailable</p>';
+const FAIL_HTML =
+  '<p class="px-[28px] py-[20px] font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Could not load form</p>';
+
+/**
+ * Plugin JS overwrites the submit label with "Book & pay with Stripe" when a
+ * coupon panel updates. Restore the Concourse CTA (data-cbfs-pay-label).
+ *
+ * @param {ParentNode} [root]
+ */
+function applyPayLabel(root = document) {
+  const buttons =
+    root instanceof Element && root.matches('.cbfs-form__button[data-cbfs-pay-label]')
+      ? [root]
+      : [...root.querySelectorAll('.cbfs-form__button[data-cbfs-pay-label]')];
+
+  buttons.forEach((btn) => {
+    const label = btn.querySelector('.cbfs-form__button-label');
+    if (!label) return;
+    const form = btn.closest('form');
+    const pack = form?.querySelector('[data-cbfs-pack-choice-pack]');
+    const usingPack = !!(pack && pack.checked && !pack.disabled);
+    const next = usingPack
+      ? btn.getAttribute('data-cbfs-pack-label') || 'Book with coupon'
+      : btn.getAttribute('data-cbfs-pay-label') || '';
+    if (next && label.textContent !== next) {
+      label.textContent = next;
+    }
+    if (label.dataset.lpPayWatch) return;
+    label.dataset.lpPayWatch = '1';
+    const obs = new MutationObserver(() => {
+      obs.disconnect();
+      applyPayLabel(btn);
+      obs.observe(label, { childList: true, characterData: true, subtree: true });
+    });
+    obs.observe(label, { childList: true, characterData: true, subtree: true });
+  });
+}
 
 function mountEl() {
   return document.querySelector('[data-lp-booking-mount]');
@@ -60,15 +101,13 @@ async function loadPanel(type, id, extra = {}) {
   const restUrl = cfg().panelFormUrl || cfg().restUrl;
   if (!mount || !restUrl) {
     if (mount) {
-      mount.innerHTML =
-        '<p class="font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Booking unavailable</p>';
+      mount.innerHTML = UNAVAILABLE_HTML;
     }
     return;
   }
 
   setTitle(type);
-  mount.innerHTML =
-    '<p class="font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Loading…</p>';
+  mount.innerHTML = LOADING_HTML;
 
   const url = new URL(restUrl, window.location.origin);
   if (cfg().panelFormUrl) {
@@ -95,8 +134,7 @@ async function loadPanel(type, id, extra = {}) {
     });
     const data = await res.json();
     if (!res.ok || !data?.html) {
-      mount.innerHTML =
-        '<p class="font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Could not load form</p>';
+      mount.innerHTML = FAIL_HTML;
       return;
     }
     mount.innerHTML = data.html;
@@ -110,6 +148,7 @@ async function loadPanel(type, id, extra = {}) {
     if (typeof window.CLASBOWPRO_initClassDateCalendars === 'function') {
       window.CLASBOWPRO_initClassDateCalendars(mount);
     }
+    applyPayLabel(mount);
 
     const itemType = type === 'coupon' ? 'pack' : 'class';
     lpBeginCheckout({
@@ -118,8 +157,7 @@ async function loadPanel(type, id, extra = {}) {
       name: extra.name || '',
     });
   } catch {
-    mount.innerHTML =
-      '<p class="font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Could not load form</p>';
+    mount.innerHTML = FAIL_HTML;
   }
 }
 
@@ -169,6 +207,7 @@ function onPanelClick(event) {
  */
 export function initBookingDrawer() {
   document.addEventListener('click', onPanelClick, true);
+  applyPayLabel(document);
 
   return {
     cleanup: () => document.removeEventListener('click', onPanelClick, true),

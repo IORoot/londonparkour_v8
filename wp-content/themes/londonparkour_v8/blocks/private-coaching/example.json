@@ -10,7 +10,7 @@
   "fare_label": "FROM",
   "amount": "£65",
   "unit": "PER SESSION",
-  "reassure": "No commitment. We'll confirm your booking by email within one working day.",
+  "reassure": "We'll confirm your booking by email within one working day.",
   "facts": [
     { "label": "DURATION", "value": "60 min" },
     { "label": "WHERE", "value": "Any site" },

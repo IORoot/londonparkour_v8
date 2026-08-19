@@ -9,6 +9,11 @@
  * (past start times drop out automatically). The multi-row sessions board
  * remains the master alternate. Scrim is media-photo `hero` → `bg-neutral/50`.
  *
+ * The primary CTA is a conversion shortcut: it opens the booking drawer on
+ * Adult Beginners East's next Saturday (see lp_hero_first_class_book_args()).
+ * The next-class board is independent — soonest session of any class —
+ * and the whole board is the reserve hit target (yellow fill hover).
+ *
  * @package londonparkour_v8
  */
 
@@ -305,16 +310,20 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 				<p class="font-body text-step--1 text-neutral-content/70 max-w-[470px] m-0"><?php echo esc_html( $lp_lead ); ?></p>
 				<div class="flex items-center gap-[28px] flex-wrap">
 					<?php
-					lp_part(
-						'elements/button',
-						array(
-							'variant'          => 'primary',
-							'label'            => $lp_primary['label'],
-							'href'             => $lp_primary['href'],
-							'target'           => $lp_primary['target'],
-							'trailing_icon_id' => 'icon-arrow-right',
-						)
+					$lp_primary_btn = array(
+						'variant'          => 'primary',
+						'label'            => $lp_primary['label'],
+						'href'             => $lp_primary['href'],
+						'target'           => $lp_primary['target'],
+						'trailing_icon_id' => 'icon-arrow-right',
 					);
+					if ( function_exists( 'lp_hero_first_class_book_args' ) ) {
+						$lp_first_book = lp_hero_first_class_book_args( (string) $lp_primary['label'] );
+						if ( is_array( $lp_first_book ) ) {
+							$lp_primary_btn = $lp_first_book;
+						}
+					}
+					lp_part( 'elements/button', $lp_primary_btn );
 					if ( $lp_secondary && '' !== $lp_secondary['label'] ) :
 						if ( '' !== $lp_secondary['href'] ) :
 							?>
@@ -329,57 +338,69 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 			</div>
 
 			<?php if ( 'next' === $lp_board_style && $lp_next && '' !== (string) ( $lp_next['name'] ?? '' ) ) : ?>
-				<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95" data-slot="next-class-board">
-					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10">
-						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary"><?php echo esc_html( (string) $lp_next['title'] ); ?></span>
-						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( (string) $lp_next['stamp'] ); ?></span>
+				<?php
+				$lp_next_id   = (int) ( $lp_next['class_id'] ?? 0 );
+				$lp_next_date = (string) ( $lp_next['date'] ?? '' );
+				$lp_next_lab  = (string) ( $lp_next['foot_label'] ?? 'Reserve a place' );
+				$lp_next_aria = implode(
+					' — ',
+					array_filter(
+						array(
+							$lp_next_lab,
+							(string) ( $lp_next['name'] ?? '' ),
+							(string) ( $lp_next['time'] ?? '' ),
+							(string) ( $lp_next['when'] ?? '' ),
+						)
+					)
+				);
+				$lp_board_cls = 'group block w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10 hover:bg-primary hover:border-neutral p-0 text-left no-underline cursor-pointer transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+				if ( $lp_next_id ) {
+					$lp_book       = lp_class_book_button_args( $lp_next_id, $lp_next_date, $lp_next_lab );
+					$lp_book_attrs = '';
+					foreach ( (array) ( $lp_book['data_attrs'] ?? array() ) as $lp_bk => $lp_bv ) {
+						$lp_book_attrs .= sprintf( ' %s="%s"', esc_attr( (string) $lp_bk ), esc_attr( (string) $lp_bv ) );
+					}
+					printf(
+						'<button type="button" class="%s" data-slot="next-class-board" aria-label="%s" command="%s" commandfor="%s"%s>',
+						esc_attr( $lp_board_cls ),
+						esc_attr( $lp_next_aria ),
+						esc_attr( (string) ( $lp_book['command'] ?? 'show-modal' ) ),
+						esc_attr( (string) ( $lp_book['command_for'] ?? 'lp-booking-drawer' ) ),
+						$lp_book_attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above.
+					);
+				} else {
+					echo '<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
+				}
+				?>
+					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10 group-hover:border-neutral/20">
+						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['title'] ); ?></span>
+						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50 group-hover:text-neutral transition-colors duration-150" data-slot="board-date"><?php echo esc_html( (string) ( $lp_next['when'] ?? '' ) ); ?></span>
 					</div>
 					<div class="flex items-start gap-4 px-5 py-5">
-						<div class="shrink-0 flex flex-col gap-1 min-w-[64px]">
-							<span class="font-heading text-[19px] font-semibold leading-none tracking-[-0.4px] text-neutral-content"><?php echo esc_html( (string) $lp_next['time'] ); ?></span>
-							<span class="font-label text-[10px] font-normal tracking-[0.6px] uppercase text-neutral-content/50"><?php echo esc_html( (string) $lp_next['when'] ); ?></span>
-						</div>
 						<div class="flex-1 min-w-0 flex flex-col gap-1.5">
-							<span class="font-heading text-[22px] font-semibold leading-none tracking-[-0.4px] text-neutral-content"><?php echo esc_html( (string) $lp_next['name'] ); ?></span>
-							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/50 truncate"><?php echo esc_html( (string) $lp_next['meta'] ); ?></span>
+							<span class="font-heading text-[22px] font-semibold leading-none tracking-[-0.4px] text-neutral-content group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['name'] ); ?></span>
+							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/50 truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['meta'] ); ?></span>
 						</div>
-						<span class="shrink-0 font-label text-[11px] font-semibold tracking-[0.6px] uppercase text-primary"><?php echo esc_html( (string) $lp_next['spaces'] ); ?></span>
+						<span class="shrink-0 flex items-center gap-2">
+							<span class="font-label text-[11px] font-semibold tracking-[0.6px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['spaces'] ); ?></span>
+							<?php lp_icon( 'icon-arrow-right', 'w-3.5 h-3.5 shrink-0 text-primary group-hover:text-neutral transition-colors duration-150' ); ?>
+						</span>
 					</div>
 					<?php if ( ! empty( $lp_next['facts'] ) && is_array( $lp_next['facts'] ) ) : ?>
-						<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 pb-5 border-b border-neutral-content/10">
+						<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 pb-5 border-b border-neutral-content/10 group-hover:border-neutral/20">
 							<?php foreach ( $lp_next['facts'] as $lp_fact ) : ?>
 								<div class="flex flex-col gap-1.5 min-w-0 pr-3">
-									<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
-									<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-neutral-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+									<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-neutral-content/50 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+									<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-neutral-content truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 								</div>
 							<?php endforeach; ?>
 						</div>
 					<?php endif; ?>
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px]">
-						<?php
-						$lp_next_id   = (int) ( $lp_next['class_id'] ?? 0 );
-						$lp_next_date = (string) ( $lp_next['date'] ?? '' );
-						$lp_next_lab  = (string) ( $lp_next['foot_label'] ?? 'Reserve a place' );
-						if ( $lp_next_id ) :
-							$lp_book = lp_class_book_button_args( $lp_next_id, $lp_next_date, $lp_next_lab );
-							$lp_book_attrs = '';
-							foreach ( (array) ( $lp_book['data_attrs'] ?? array() ) as $lp_bk => $lp_bv ) {
-								$lp_book_attrs .= sprintf( ' %s="%s"', esc_attr( (string) $lp_bk ), esc_attr( (string) $lp_bv ) );
-							}
-							?>
-							<button
-								type="button"
-								class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80 hover:text-primary transition-colors duration-150"
-								command="<?php echo esc_attr( (string) ( $lp_book['command'] ?? 'show-modal' ) ); ?>"
-								commandfor="<?php echo esc_attr( (string) ( $lp_book['command_for'] ?? 'lp-booking-drawer' ) ); ?>"
-								<?php echo $lp_book_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above. ?>
-							><?php echo esc_html( $lp_next_lab ); ?></button>
-						<?php else : ?>
-							<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80"><?php echo esc_html( $lp_next_lab ); ?></span>
-						<?php endif; ?>
-						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
+						<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary group-hover:text-neutral group-hover:font-semibold transition-colors duration-150"><?php echo esc_html( $lp_next_lab ); ?></span>
+						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
 					</div>
-				</div>
+				<?php echo $lp_next_id ? '</button>' : '</div>'; ?>
 			<?php elseif ( 'sessions' === $lp_board_style ) : ?>
 				<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95" data-slot="board">
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10">

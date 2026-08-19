@@ -100,7 +100,7 @@ if ( $lp_is_booking ) {
 	$lp_default_facts = $lp_default_facts_offer;
 }
 
-$lp_reassure = (string) ( $args['reassure'] ?? "No commitment. We'll confirm your booking by email within one working day." );
+$lp_reassure = (string) ( $args['reassure'] ?? "We'll confirm your booking by email within one working day." );
 
 $lp_facts = array();
 foreach ( is_array( $args['facts'] ?? null ) ? $args['facts'] : array() as $lp_row ) {

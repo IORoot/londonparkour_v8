@@ -716,6 +716,61 @@ function lp_class_book_button_args( int $class_id, string $preset_date = '', str
 }
 
 /**
+ * Clasbpro slug for Adult Beginners East (Saturday 10:30, Old Street).
+ *
+ * Title and slug diverge — pin the conversion shortcut to the slug.
+ */
+function lp_hero_first_class_slug(): string {
+	return 'adult-beginners-outdoor';
+}
+
+/**
+ * Post ID for the homepage hero first-class shortcut, or 0.
+ */
+function lp_hero_first_class_id(): int {
+	$type = function_exists( 'lp_class_post_type' ) ? lp_class_post_type() : 'clasbpro_class';
+	$post = get_page_by_path( lp_hero_first_class_slug(), OBJECT, $type );
+	if ( ! $post instanceof WP_Post ) {
+		return 0;
+	}
+	$id = (int) $post->ID;
+	if ( $id < 1 || ( function_exists( 'lp_class_is_active' ) && ! lp_class_is_active( $id ) ) ) {
+		return 0;
+	}
+	return $id;
+}
+
+/**
+ * Booking-drawer args for the hero primary CTA.
+ *
+ * Presets the next upcoming Saturday of Adult Beginners East. Returns null
+ * when that class is missing so the ACF link still works.
+ *
+ * @param string $label   Visible button text (from the design / ACF).
+ * @param string $variant Button variant.
+ * @return array<string,mixed>|null
+ */
+function lp_hero_first_class_book_args( string $label, string $variant = 'primary' ): ?array {
+	$id = lp_hero_first_class_id();
+	if ( $id < 1 ) {
+		return null;
+	}
+
+	$date = '';
+	foreach ( lp_class_upcoming_sessions( $id, 4 ) as $row ) {
+		if ( lp_class_session_is_future( $row ) ) {
+			$date = (string) ( $row['date'] ?? '' );
+			break;
+		}
+	}
+
+	$args                      = lp_class_book_button_args( $id, $date, $label, $variant );
+	$args['trailing_icon_id']  = 'icon-arrow-right';
+	$args['data_attrs']['data-lp-list'] = 'hero';
+	return $args;
+}
+
+/**
  * Args for elements/button.php that open the shared coupon drawer.
  *
  * @param int    $pack_id Pack post ID (clasbpro_pack).
@@ -969,27 +1024,16 @@ function lp_hero_next_class_board( ?array $session = null ): array {
 	$date     = (string) ( $session['date'] ?? '' );
 	$day      = (string) ( $session['date_label'] ?? '' );
 	$duration = $class_id ? lp_class_duration( $class_id ) : '';
-	$duration_ui = $duration
-		? strtoupper( str_replace( ' min', ' MIN', $duration ) )
-		: '';
-	$when = implode( ' · ', array_filter( array( $day, $duration_ui ) ) );
 
-	$meta_bits = array_filter(
-		array(
-			(string) ( $session['location'] ?? '' ),
-			(string) ( $session['level'] ?? '' ),
-			$class_id && (string) ( $session['coaches'] ?? '' )
-				? 'Coach ' . (string) $session['coaches']
-				: '',
-		)
-	);
-
-	$date_ui = '';
+	$when     = '';
 	if ( '' !== $date ) {
 		$dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $date, wp_timezone() );
 		if ( $dt ) {
-			$date_ui = strtoupper( $dt->format( 'D j M' ) );
+			$when = strtoupper( $dt->format( 'D' ) ) . ' - ' . $dt->format( 'jS' );
 		}
+	}
+	if ( '' === $when ) {
+		$when = $day;
 	}
 
 	$location = (string) ( $session['location'] ?? '' );
@@ -998,6 +1042,8 @@ function lp_hero_next_class_board( ?array $session = null ): array {
 	if ( '' === $price && $class_id ) {
 		$price = lp_class_price_display( $class_id );
 	}
+
+	$coach = trim( explode( ',', (string) ( $session['coaches'] ?? '' ) )[0] );
 
 	$spaces = (string) ( $session['spaces'] ?? '' );
 	// Hero pen uses sentence case ("4 left"); clasbpro labels are UPPER.
@@ -1010,10 +1056,10 @@ function lp_hero_next_class_board( ?array $session = null ): array {
 			'value' => $duration,
 		);
 	}
-	if ( '' !== $level ) {
+	if ( '' !== $time ) {
 		$facts[] = array(
-			'label' => 'LEVEL',
-			'value' => $level,
+			'label' => 'START TIME',
+			'value' => $time,
 		);
 	}
 	if ( '' !== $price ) {
@@ -1022,26 +1068,275 @@ function lp_hero_next_class_board( ?array $session = null ): array {
 			'value' => $price,
 		);
 	}
-	if ( '' !== $location ) {
+	if ( '' !== $coach ) {
 		$facts[] = array(
-			'label' => 'LOCATION',
-			'value' => $location,
+			'label' => 'COACH',
+			'value' => $coach,
 		);
 	}
 
 	return array(
 		'title'      => 'NEXT CLASS',
-		'stamp'      => lp_hero_board_stamp(),
 		'time'       => $time,
 		'when'       => $when,
 		'name'       => (string) ( $session['title'] ?? '' ),
-		'meta'       => implode( ' · ', $meta_bits ),
+		'meta'       => $location,
 		'spaces'     => $spaces_ui,
 		'facts'      => $facts,
 		'foot_label' => 'Reserve a place',
-		'foot_meta'  => trim( sprintf( 'NEXT · %s %s', $time, $date_ui ) ),
+		'foot_meta'  => $level,
 		'class_id'   => $class_id,
 		'date'       => $date,
 		'sold_out'   => ! empty( $session['sold_out'] ),
 	);
+}
+
+/**
+ * Normalise a clasbpro time string to 24-hour HH:MM (pen when-line uses 18:30).
+ *
+ * @param string $time Raw start_time (H:i, H:i:s, or already formatted).
+ */
+function lp_booking_form_hhmm( string $time ): string {
+	$time = trim( $time );
+	if ( '' === $time ) {
+		return '';
+	}
+	if ( preg_match( '/^(\d{1,2}):(\d{2})/', $time, $m ) ) {
+		return sprintf( '%02d:%02d', (int) $m[1], (int) $m[2] );
+	}
+
+	return $time;
+}
+
+/**
+ * CTA label for clasbpro booking submit (pen hoH6b: CONFIRM AND PAY £15).
+ *
+ * @param array<string,mixed> $class_data Plugin class_data.
+ */
+function lp_booking_form_pay_label( array $class_data ): string {
+	$id    = (int) ( $class_data['id'] ?? 0 );
+	$price = ( $id && function_exists( 'lp_class_price_display' ) )
+		? lp_class_price_display( $id )
+		: '';
+
+	if ( '' === $price && ! empty( $class_data['price'] ) ) {
+		$amount = (float) $class_data['price'];
+		$price  = '£' . ( ( floor( $amount ) === $amount )
+			? (string) (int) $amount
+			: number_format( $amount, 2, '.', '' ) );
+	}
+
+	return '' !== $price
+		? sprintf(
+			/* translators: %s: formatted price, e.g. £15 */
+			__( 'CONFIRM AND PAY %s', 'londonparkour_v8' ),
+			$price
+		)
+		: __( 'CONFIRM AND PAY', 'londonparkour_v8' );
+}
+
+/**
+ * Session header copy for clasbpro booking forms (pen AKJMB).
+ *
+ * Used by recurring classes, one-offs, and appointments. Does not replace
+ * the form fields — only the chrome above them.
+ *
+ * @param object $view Booking_Form_View.
+ * @return array{when:string,name:string,sub:string}
+ */
+function lp_booking_form_session( $view ): array {
+	$data = ( is_object( $view ) && isset( $view->class_data ) && is_array( $view->class_data ) )
+		? $view->class_data
+		: array();
+	$id   = (int) ( $data['id'] ?? 0 );
+
+	$date = '';
+	if ( is_object( $view ) ) {
+		$date = (string) ( $view->preset_date ?? '' );
+		if ( '' === $date && ! empty( $view->primary_date['date'] ) ) {
+			$date = (string) $view->primary_date['date'];
+		}
+		if ( '' === $date && ! empty( $data['is_one_off_event'] ) ) {
+			$date = (string) ( $data['start_date'] ?? '' );
+		}
+		if ( '' === $date && ! empty( $view->dates[0]['date'] ) ) {
+			$date = (string) $view->dates[0]['date'];
+		}
+	}
+
+	$time     = (string) ( $data['start_time'] ?? '' );
+	$duration = (int) ( $data['duration'] ?? 0 );
+	$location = '';
+	$level    = '';
+
+	if ( $id ) {
+		$board    = lp_class_board_fields( $id );
+		$location = (string) ( $board['location'] ?? '' );
+		$level    = (string) ( $board['level'] ?? '' );
+	}
+	if ( '' === $location ) {
+		$raw_location = trim( (string) ( $data['location'] ?? '' ) );
+		if ( '' !== $raw_location && ctype_digit( $raw_location ) ) {
+			$titled = get_the_title( (int) $raw_location );
+			$location = is_string( $titled ) ? $titled : $raw_location;
+		} else {
+			$location = $raw_location;
+		}
+	}
+
+	if ( ! empty( $view->is_appointments )
+		&& ! empty( $view->preset_slot_rule_id )
+		&& class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Slot_Rules' )
+	) {
+		$rule = \IOROOT_STRIPE_BOOKINGS_PRO\Slot_Rules::find_rule( $data, (string) $view->preset_slot_rule_id );
+		if ( is_array( $rule ) && '' !== $date ) {
+			$snap = \IOROOT_STRIPE_BOOKINGS_PRO\Slot_Rules::build_snapshot( $data, $rule, $date );
+			if ( ! empty( $snap['start_time'] ) ) {
+				$time = (string) $snap['start_time'];
+			}
+			if ( ! empty( $snap['duration_minutes'] ) ) {
+				$duration = (int) $snap['duration_minutes'];
+			}
+			if ( ! empty( $snap['location'] ) ) {
+				$location = (string) $snap['location'];
+			}
+		} elseif ( is_array( $rule ) ) {
+			if ( ! empty( $rule['start_time'] ) ) {
+				$time = (string) $rule['start_time'];
+			}
+			if ( ! empty( $rule['duration_minutes'] ) ) {
+				$duration = (int) $rule['duration_minutes'];
+			}
+		}
+	}
+
+	$when_bits = array();
+	if ( '' !== $date ) {
+		$dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $date, wp_timezone() );
+		if ( $dt ) {
+			$when_bits[] = strtoupper( $dt->format( 'D j M' ) );
+		}
+	}
+	$hhmm = lp_booking_form_hhmm( $time );
+	if ( '' !== $hhmm ) {
+		$when_bits[] = $hhmm;
+	}
+	if ( $duration > 0 ) {
+		$when_bits[] = $duration . ' MIN';
+	}
+
+	$sub_bits = array();
+	if ( '' !== $location ) {
+		$sub_bits[] = $location;
+	}
+	if ( '' !== $level ) {
+		$sub_bits[] = $level;
+	}
+
+	$remaining = null;
+	$show_seats = is_object( $view ) && ! empty( $view->show_seats_remaining );
+	if ( $show_seats && empty( $view->is_appointments ) && '' !== $date ) {
+		foreach ( (array) ( $view->dates ?? array() ) as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			if ( (string) ( $row['date'] ?? '' ) === $date && isset( $row['remaining'] ) ) {
+				$remaining = (int) $row['remaining'];
+				break;
+			}
+		}
+		if ( null === $remaining
+			&& $id
+			&& class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Bookings' )
+		) {
+			$remaining = (int) \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::seats_remaining( $data, $date );
+		}
+	}
+	if ( is_int( $remaining ) && $remaining > 0 ) {
+		$sub_bits[] = sprintf(
+			/* translators: %d: places remaining */
+			_n( '%d place left', '%d places left', $remaining, 'londonparkour_v8' ),
+			$remaining
+		);
+	}
+
+	$name = ( is_object( $view ) && method_exists( $view, 'get_title' ) )
+		? (string) $view->get_title()
+		: (string) ( $data['name'] ?? '' );
+
+	return array(
+		'when' => implode( ' · ', $when_bits ),
+		'name' => $name,
+		'sub'  => implode( ' · ', $sub_bits ),
+	);
+}
+
+/**
+ * Format a clasbpro pack price like the fare board ("£15", not "£15.00").
+ *
+ * @param float $price Major-unit amount.
+ */
+function lp_clasbpro_pack_price_display( float $price ): string {
+	if ( $price <= 0 ) {
+		return '';
+	}
+
+	$formatted = ( floor( $price ) === $price )
+		? (string) (int) $price
+		: number_format( $price, 2, '.', '' );
+
+	return '£' . $formatted;
+}
+
+/**
+ * Pricing-board glyph for a coupon size (pen k4hV1).
+ *
+ * @param int $uses Classes included.
+ */
+function lp_clasbpro_pack_glyph_id( int $uses ): string {
+	if ( $uses >= 10 ) {
+		return 'glyph-chaining';
+	}
+	if ( $uses >= 5 ) {
+		return 'glyph-flowing';
+	}
+
+	return 'glyph-step';
+}
+
+/**
+ * Physical gift-card SVG (pen ZSzpV): primary face, brand, glyph, amount.
+ *
+ * @param array<string,mixed> $pack Packs::get_pack_data() row.
+ */
+function lp_clasbpro_pack_gift_card( array $pack ): void {
+	$id     = (int) ( $pack['id'] ?? 0 );
+	$uses   = (int) ( $pack['uses'] ?? 1 );
+	$name   = (string) ( $pack['name'] ?? '' );
+	$price  = lp_clasbpro_pack_price_display( (float) ( $pack['price'] ?? 0 ) );
+	$glyph  = lp_clasbpro_pack_glyph_id( $uses );
+	$sprite = get_theme_file_uri( 'assets/img/glyphs.svg' );
+	$title  = $id ? 'cbfs-gift-' . $id : 'cbfs-gift';
+	$label  = '' !== $price
+		? sprintf(
+			/* translators: 1: pack name, 2: price */
+			__( '%1$s gift card, %2$s', 'londonparkour_v8' ),
+			$name !== '' ? $name : __( 'Coupon', 'londonparkour_v8' ),
+			$price
+		)
+		: ( $name !== '' ? $name : __( 'Gift card', 'londonparkour_v8' ) );
+	?>
+	<svg class="cbfs-packs__gift" viewBox="0 0 300 186" role="img" aria-labelledby="<?php echo esc_attr( $title ); ?>">
+		<title id="<?php echo esc_attr( $title ); ?>"><?php echo esc_html( $label ); ?></title>
+		<rect class="cbfs-packs__gift-face" width="300" height="186" rx="12" ry="12"/>
+		<text class="cbfs-packs__gift-ink cbfs-packs__gift-brand" x="22" y="44">LONDONPARKOUR</text>
+		<svg class="cbfs-packs__gift-glyph" x="252" y="22" width="26" height="26" viewBox="0 0 240 240" aria-hidden="true">
+			<use href="<?php echo esc_url( $sprite ); ?>#<?php echo esc_attr( $glyph ); ?>"/>
+		</svg>
+		<?php if ( '' !== $price ) : ?>
+			<text class="cbfs-packs__gift-ink cbfs-packs__gift-amount" x="22" y="164"><?php echo esc_html( $price ); ?></text>
+		<?php endif; ?>
+		<text class="cbfs-packs__gift-ink cbfs-packs__gift-label" x="278" y="160" text-anchor="end">GIFT CARD</text>
+	</svg>
+	<?php
 }

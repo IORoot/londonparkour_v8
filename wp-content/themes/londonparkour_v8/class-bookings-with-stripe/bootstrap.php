@@ -52,3 +52,21 @@ add_action(
 	},
 	1000
 );
+
+/**
+ * Overlay / inline booking CTA — pen hoH6b.
+ *
+ * @param array<string,string> $labels     Plugin labels.
+ * @param array<string,mixed>  $class_data Class payload.
+ * @param array<int,mixed>     $dates      Unused.
+ * @return array<string,string>
+ */
+function lp_clasbpro_concourse_booking_labels( array $labels, array $class_data, $dates = array() ): array {
+	unset( $dates );
+	if ( function_exists( 'lp_booking_form_pay_label' ) ) {
+		$labels['book_button'] = lp_booking_form_pay_label( $class_data );
+	}
+
+	return $labels;
+}
+add_filter( 'clasbpro_booking_labels', 'lp_clasbpro_concourse_booking_labels', 10, 3 );

@@ -75,9 +75,7 @@
 }
 
 .cbfs-form__surface,
-.cbfs-form.cbfs-form--layout-modern .cbfs-form__surface,
-.cbfs-form__card,
-.cbfs-form.cbfs-form--layout-modern .cbfs-form__card {
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__surface {
 	background: transparent !important;
 	border: 0 !important;
 	border-radius: 0 !important;
@@ -87,32 +85,105 @@
 
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__hero {
 	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	gap: 16px;
-	margin: 0 0 20px;
-	padding: 0 0 16px;
-	border-bottom: 1px solid color-mix(in srgb, var(--cbfs-fg) 18%, transparent);
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 7px;
+	margin: 0;
+	padding: 26px 28px;
+	border-bottom: 1px solid color-mix(in srgb, var(--cbfs-fg) 6%, transparent);
 	background: transparent;
 }
 
+/* Pen AKJMB: when 10/12, name 27/29, sub 12/15, gap 7.
+ * Unset heading text-box trim — global h3 `trim-both cap alphabetic` collapses
+ * only the middle line and makes the 7px gaps look uneven. */
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__hero > * {
+	margin: 0;
+	padding: 0;
+	text-box: normal;
+	text-box-trim: none;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__when,
+.cbfs-form__when {
+	margin: 0;
+	font-family: var(--cbfs-font-label);
+	font-size: 10px;
+	font-weight: 400;
+	letter-spacing: 0.9px;
+	line-height: 12px;
+	text-transform: uppercase;
+	color: var(--cbfs-accent);
+}
+
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__title,
+.cbfs-form .cbfs-form__title,
 .cbfs-form__title {
 	margin: 0;
 	font-family: var(--cbfs-font-heading);
-	font-size: 1.125rem;
+	font-size: 27px;
 	font-weight: 600;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	color: var(--cbfs-accent);
+	letter-spacing: -0.6px;
+	line-height: 29px;
+	text-transform: none;
+	text-box: normal;
+	text-box-trim: none;
+	color: var(--cbfs-fg);
 }
 
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__meta,
 .cbfs-form__meta,
 .cbfs-form__description {
-	margin: 6px 0 0;
+	margin: 0;
 	color: var(--cbfs-muted);
-	font-size: 0.8125rem;
+	font-size: 12px;
+	letter-spacing: 0.2px;
+	line-height: 15px;
+}
+
+.cbfs-form.cbfs-form--layout-modern .cbfs-form__steps,
+.cbfs-form__steps {
+	display: flex;
+	align-items: center;
+	list-style: none;
+	margin: 0;
+	padding: 14px 28px;
+	border-bottom: 1px solid color-mix(in srgb, var(--cbfs-fg) 6%, transparent);
+}
+
+.cbfs-form__step {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	list-style: none;
+}
+
+.cbfs-form__step-index {
+	font-family: var(--cbfs-font-label);
+	font-size: 10px;
+	font-weight: 400;
+	letter-spacing: 0.8px;
+	color: var(--cbfs-muted);
+}
+
+.cbfs-form__step-label {
+	font-family: var(--cbfs-font-label);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: var(--cbfs-muted);
+}
+
+.cbfs-form__step.is-active .cbfs-form__step-index {
+	color: var(--cbfs-accent);
+}
+
+.cbfs-form__step.is-active .cbfs-form__step-label {
+	color: var(--cbfs-fg);
 }
 
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__price-badge {
@@ -150,7 +221,7 @@
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__card {
 	background: transparent !important;
 	border: 0 !important;
-	padding: 0;
+	padding: 28px;
 }
 
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__date-fixed {
@@ -241,17 +312,17 @@
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 
-.cbfs-form__button,
-.cbfs-packs__button,
-.cbfs-form button[type='submit'],
-.cbfs-form .cbfs-form__button {
-	display: inline-flex;
+.cbfs-packs__button {
+	position: relative;
+	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
+	gap: 12px;
 	width: 100%;
-	min-height: 48px;
-	margin-top: 8px;
-	padding: 0 22px;
+	height: 64px;
+	min-height: 64px;
+	margin: 0;
+	padding: 0 28px;
 	border: 0;
 	border-radius: 0 !important;
 	background: var(--cbfs-accent) !important;
@@ -263,6 +334,51 @@
 	text-transform: uppercase;
 	cursor: pointer;
 	box-shadow: none !important;
+	transform: none;
+	transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cbfs-packs__button-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 14px;
+	height: 14px;
+	color: inherit;
+}
+
+.cbfs-packs__button-icon svg {
+	display: block;
+	width: 14px;
+	height: 14px;
+}
+
+.cbfs-form__button,
+.cbfs-form button[type='submit'],
+.cbfs-form .cbfs-form__button {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	width: 100%;
+	height: 64px;
+	min-height: 64px;
+	margin: 0;
+	padding: 0 28px;
+	border: 0;
+	border-radius: 0 !important;
+	background: var(--cbfs-accent) !important;
+	color: var(--cbfs-accent-ink) !important;
+	font-family: var(--cbfs-font-label);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	cursor: pointer;
+	box-shadow: none !important;
+	transform: none;
 	transition: background-color 150ms ease, color 150ms ease;
 }
 
@@ -272,6 +388,66 @@
 .cbfs-form .cbfs-form__button:hover {
 	background: var(--cbfs-panel) !important;
 	color: var(--cbfs-accent) !important;
+}
+
+.cbfs-form__button:active,
+.cbfs-form .cbfs-form__button:active {
+	transform: none;
+}
+
+.cbfs-form__button-logo {
+	display: none !important;
+}
+
+.cbfs-form__button-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 14px;
+	height: 14px;
+	color: inherit;
+}
+
+.cbfs-form__button-icon svg,
+.cbfs-form__button-svg {
+	display: block;
+	width: 14px;
+	height: 14px;
+}
+
+.cbfs-form__button.is-loading .cbfs-form__button-icon {
+	opacity: 0;
+}
+
+.cbfs-form .cbfs-form__spinner,
+.cbfs-form__button .cbfs-form__spinner {
+	border-color: color-mix(in srgb, var(--cbfs-accent-ink) 35%, transparent);
+	border-top-color: var(--cbfs-accent-ink);
+	left: 50%;
+	top: 50%;
+	margin: -9px 0 0 -9px;
+}
+
+.cbfs-form__note {
+	margin: 0;
+	padding: 16px 28px 22px;
+	font-family: var(--font-body, Inter, system-ui, sans-serif);
+	font-size: 10px;
+	font-weight: 400;
+	letter-spacing: 0.3px;
+	line-height: 1.65;
+	color: var(--cbfs-muted);
+}
+
+.cbfs-form--concourse .cbfs-form__notice,
+.cbfs-form--concourse .cbfs-form__error {
+	margin: 0;
+	padding: 12px 28px 0;
+}
+
+.cbfs-form--concourse .cbfs-form__hint {
+	display: none;
 }
 
 /* Secondary actions (e.g. coupon Apply) — not Stripe CTA / calendar chrome. */
@@ -315,50 +491,158 @@
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 0;
 }
 
 .cbfs-packs__item {
-	border: 1px solid var(--cbfs-border);
-	background: var(--cbfs-panel);
-	padding: 20px;
+	border: 0;
+	background: transparent;
+	padding: 0;
 	border-radius: 0;
+}
+
+.cbfs-packs__item + .cbfs-packs__item {
+	border-top: 1px solid var(--cbfs-border);
+}
+
+.cbfs-packs__gift-wrap {
+	display: flex;
+	justify-content: center;
+	padding: 26px 28px 8px;
+}
+
+.cbfs-packs__gift {
+	display: block;
+	width: 100%;
+	height: auto;
+	color: var(--cbfs-accent);
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.cbfs-packs__gift-face {
+	fill: currentColor;
+}
+
+.cbfs-packs__gift-ink {
+	fill: var(--cbfs-accent-ink);
+}
+
+.cbfs-packs__gift-brand {
+	font-family: var(--cbfs-font-heading);
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: 0.4px;
+}
+
+.cbfs-packs__gift-amount {
+	font-family: var(--cbfs-font-heading);
+	font-size: 32px;
+	font-weight: 600;
+	letter-spacing: -0.5px;
+}
+
+.cbfs-packs__gift-label {
+	font-family: var(--cbfs-font-label);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 1px;
+}
+
+.cbfs-packs__gift-glyph {
+	color: var(--cbfs-accent-ink);
+	fill: var(--cbfs-accent-ink);
+}
+
+.cbfs-packs__gift-glyph use {
+	fill: var(--cbfs-accent-ink);
+}
+
+.cbfs-packs__item-body {
+	padding: 16px 28px 0;
 }
 
 .cbfs-packs__title {
 	margin: 0 0 8px;
 	font-family: var(--cbfs-font-heading);
-	font-size: 1.125rem;
+	font-size: 27px;
 	font-weight: 600;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	color: var(--cbfs-accent);
+	letter-spacing: -0.6px;
+	line-height: 29px;
+	text-transform: none;
+	text-box: normal;
+	text-box-trim: none;
+	color: var(--cbfs-fg);
 }
 
 .cbfs-packs__description,
 .cbfs-packs__meta {
+	margin: 0 0 8px;
 	color: var(--cbfs-muted);
-	font-size: 0.75rem;
+	font-size: 12px;
+	letter-spacing: 0.2px;
+	line-height: 1.45;
 }
 
 .cbfs-packs__price {
-	margin: 12px 0 16px;
-	font-family: var(--cbfs-font-heading);
-	font-size: 1.75rem;
-	font-weight: 600;
-	color: var(--cbfs-fg);
+	display: none;
 }
 
 .cbfs-packs__form {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 0;
+	padding: 0;
+}
+
+.cbfs-packs__fields {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 20px 28px 24px;
 }
 
 .cbfs-packs__label {
 	display: flex;
 	flex-direction: column;
 	gap: 9px;
+}
+
+.cbfs-packs__error {
+	margin: 0;
+	padding: 0;
+	color: var(--cbfs-error-fg);
+	font-size: 12px;
+}
+
+.cbfs-packs__empty {
+	margin: 0;
+	padding: 28px;
+	color: var(--cbfs-muted);
+	font-size: 12px;
+}
+
+.cbfs-packs__button.is-loading .cbfs-packs__button-label,
+.cbfs-packs__button.is-loading .cbfs-packs__button-icon {
+	opacity: 0;
+}
+
+.cbfs-packs__spinner {
+	display: none;
+}
+
+.cbfs-packs__button.is-loading .cbfs-packs__spinner {
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 18px;
+	height: 18px;
+	margin: -9px 0 0 -9px;
+	border: 2px solid color-mix(in srgb, var(--cbfs-accent-ink) 35%, transparent);
+	border-top-color: var(--cbfs-accent-ink);
+	border-radius: 50%;
+	animation: cbfs-spin .7s linear infinite;
 }
 
 /* ── Calendars ───────────────────────────────────────────────────────────── */
@@ -656,4 +940,45 @@
 [data-component='private-coaching-booking-panel'] .cbfs-form,
 [data-component='private-coaching-booking-panel'] .cbfs-form.cbfs-form--layout-modern {
 	max-width: none;
+}
+
+[data-lp-booking-mount] .cbfs-form,
+[data-lp-booking-mount] .cbfs-form__surface,
+[data-component='private-coaching-booking-panel'] .cbfs-form,
+[data-component='private-coaching-booking-panel'] .cbfs-form__surface {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+[data-lp-booking-mount] .cbfs-form__body,
+[data-component='private-coaching-booking-panel'] .cbfs-form__body {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+[data-lp-booking-mount] .cbfs-form__form,
+[data-component='private-coaching-booking-panel'] .cbfs-form__form {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+[data-lp-booking-mount] .cbfs-form__card,
+[data-component='private-coaching-booking-panel'] .cbfs-form__card {
+	flex: 1;
+}
+
+[data-lp-booking-mount] .cbfs-packs,
+[data-lp-booking-mount] .cbfs-packs__list,
+[data-lp-booking-mount] .cbfs-packs__item,
+[data-lp-booking-mount] .cbfs-packs__form {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+[data-lp-booking-mount] .cbfs-packs__fields {
+	flex: 1;
 }

@@ -166,8 +166,8 @@ function lp_clasbpro_booking_drawer(): void {
 						<?php esc_html_e( 'Close', 'londonparkour_v8' ); ?>
 					</button>
 				</div>
-				<div class="flex-1 px-[22px] py-[20px]" data-lp-booking-mount>
-					<p class="font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50"><?php esc_html_e( 'Loading…', 'londonparkour_v8' ); ?></p>
+				<div class="flex-1 min-h-0" data-lp-booking-mount>
+					<p class="px-[28px] py-[20px] font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50"><?php esc_html_e( 'Loading…', 'londonparkour_v8' ); ?></p>
 				</div>
 			</el-dialog-panel>
 		</dialog>
