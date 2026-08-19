@@ -12,6 +12,45 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Layouts whose eyebrow/kicker is `NN — LABEL`. Marquee is not one of them.
+ *
+ * @return string[]
+ */
+function lp_numbered_section_layouts(): array {
+	return array(
+		'hero',
+		'classes',
+		'pricing',
+		'private-coaching',
+		'statement',
+		'workshop',
+		'clients',
+		'tutorials',
+		'testimonials',
+		'locations',
+		'coaches',
+		'cta',
+	);
+}
+
+/**
+ * Replace a leading `NN —` prefix with the homepage section index.
+ *
+ * @param string     $label  Existing eyebrow/kicker.
+ * @param int|string $number 1-based index, or empty to leave $label.
+ * @return string
+ */
+function lp_section_label( string $label, $number = null ): string {
+	if ( null === $number || '' === $number || '' === $label ) {
+		return $label;
+	}
+	if ( ! preg_match( '/^\d{2}(\s+—\s+)(.+)$/u', $label, $m ) ) {
+		return $label;
+	}
+	return str_pad( (string) absint( $number ), 2, '0', STR_PAD_LEFT ) . $m[1] . $m[2];
+}
+
+/**
  * Render every layout of a Flexible Content field, in order.
  *
  * @param string   $field Field name. Defaults to the site-wide sections field.
@@ -28,11 +67,18 @@ function lp_render_sections( string $field = 'page_sections', $post_id = null ):
 		return;
 	}
 
+	$section_n = 0;
 	foreach ( $rows as $index => $row ) {
 		$layout = $row['acf_fc_layout'] ?? null;
 
 		if ( ! $layout || ! is_array( $row ) ) {
 			continue;
+		}
+
+		$slug = str_replace( '_', '-', sanitize_key( (string) $layout ) );
+		if ( in_array( $slug, lp_numbered_section_layouts(), true ) ) {
+			++$section_n;
+			$row['_section_number'] = $section_n;
 		}
 
 		lp_render_block( $layout, $row, $index );

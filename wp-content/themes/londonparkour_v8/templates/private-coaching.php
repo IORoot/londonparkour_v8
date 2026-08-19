@@ -73,20 +73,20 @@ $lp_steps = array(
 
 $lp_faqs = array(
 	array(
-		'q' => 'Do I need experience?',
-		'a' => 'No minimum level. Add a note when booking to say where you are, and your coach builds the session from there.',
+		'q' => 'Who will this help?',
+		'a' => "Anyone. You don't need to be fit already — shy, old, overweight, uncoordinated or injured, none of it matters. We give you the coaching to become fit, healthy, mobile and functional.",
 	),
 	array(
-		'q' => 'Where do sessions happen?',
-		'a' => 'Outdoors, at the location shown in the booking slot. Each slot is tied to a specific venue — choose the one that works for you.',
+		'q' => 'What benefit is this to you?',
+		'a' => "Uninterrupted, face-to-face time with some of the most experienced parkour coaches in the world. We're not the best performers or competitors — we've taught many of those people.",
 	),
 	array(
-		'q' => 'Can I buy a block?',
-		'a' => "Yes — five sessions for the price of four. Email us after your first booking and we'll set it up.",
+		'q' => 'How experienced are the coaches?',
+		'a' => "Teaching since 2005: Olympic athletes, special forces, emergency services, people with disabilities, and everyone in between. Practical, functional movement — that's the qualification.",
 	),
 	array(
-		'q' => 'What if I need to cancel?',
-		'a' => '24 hours notice gets a full reschedule. Inside 24 hours is charged at the full rate.',
+		'q' => 'What will you get?',
+		'a' => 'Whatever you want to work on — fundamentals, strength, recovery, injury prevention, or how you live. No topic yet? The coach judges what you need and leads.',
 	),
 );
 
@@ -118,7 +118,6 @@ foreach ( $lp_coach_query->posts as $lp_coach_post ) {
 
 $lp_agenda    = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' );
 $lp_workshops = function_exists( 'lp_workshops_url' ) ? lp_workshops_url() : home_url( '/workshops/' );
-$lp_coaches_href = home_url( '/#coaches' );
 
 $lp_book_button = static function ( string $variant ) use ( $lp_appt_id, $lp_book_label ): void {
 	if ( $lp_appt_id > 0 && function_exists( 'lp_class_book_button_args' ) ) {
@@ -275,14 +274,13 @@ get_header();
 
 	<section class="w-full bg-accent" data-component="private-coaches">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
-			<header class="flex items-end justify-between gap-4 flex-wrap">
+			<header class="flex items-end">
 				<h2 class="font-heading text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-accent-content m-0">Coaches</h2>
-				<a href="<?php echo esc_url( $lp_coaches_href ); ?>" class="font-label text-[11px] font-semibold tracking-[1.3px] uppercase text-accent-content hover:opacity-70 transition-opacity duration-150">View all coaches ↗</a>
 			</header>
 			<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
 				<?php foreach ( $lp_coaches as $lp_coach ) : ?>
 					<article class="flex flex-col gap-3" data-component="private-coach-card">
-						<div class="relative w-full h-[320px] overflow-hidden bg-neutral">
+						<div class="relative w-full h-[444px] overflow-hidden bg-neutral">
 							<?php
 							if ( ! empty( $lp_coach['photo'] ) ) {
 								lp_part(

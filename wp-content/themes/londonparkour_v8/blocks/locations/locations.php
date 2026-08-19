@@ -45,7 +45,7 @@ $lp_default_flagship = array(
 $lp_row_base        = 'group relative flex items-center gap-[16px] w-full flex-1 h-auto lg:h-full py-[20px] lg:py-0 px-[16px] sm:px-[24px] hover:bg-accent-content/5 border-b border-accent-content/15 transition-colors duration-150 no-underline text-left';
 $lp_row_interactive = 'cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent-content';
 
-$lp_eyebrow = (string) ( $args['eyebrow'] ?? '08 — WHERE WE TRAIN' );
+$lp_eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '08 — WHERE WE TRAIN' ), $args['_section_number'] ?? null );
 $lp_heading = (string) ( $args['heading'] ?? 'Three spots across London.' );
 $lp_note    = (string) ( $args['note'] ?? 'Every site is next to a tube or overground station.' );
 $lp_tagline = (string) ( $args['tagline'] ?? '' );

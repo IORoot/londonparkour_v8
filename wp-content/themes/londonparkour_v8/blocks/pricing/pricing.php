@@ -142,7 +142,7 @@ $lp_default_tiers = array(
 	),
 );
 
-$lp_eyebrow    = (string) ( $args['eyebrow'] ?? '03 — COUPON SALE' );
+$lp_eyebrow    = lp_section_label( (string) ( $args['eyebrow'] ?? '03 — COUPON SALE' ), $args['_section_number'] ?? null );
 $lp_heading    = (string) ( $args['heading'] ?? 'No contract. Ever.' );
 $lp_note       = (string) ( $args['note'] ?? 'Coupons work at Vauxhall, Old Street and Kilburn Park. Buy once, book when you want.' );
 $lp_kicker     = (string) ( $args['kicker'] ?? 'COUPON SALE' );

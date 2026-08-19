@@ -1,6 +1,6 @@
 <?php
 /**
- * Statement — "02 — WHY WE DO IT": the manifesto section.
+ * Statement — "05 — WHY WE DO IT": the manifesto section.
  *
  * Ported from src/stories/Blocks/Statement/Statement.js.
  *
@@ -28,7 +28,7 @@ $lp_default_principles = array(
 	array(
 		'icon_id' => 'glyph-understanding',
 		'label'   => 'UNDERSTANDING FIRST',
-		'body'    => 'We teach you to read an obstacle before you ever touch it. The movement is the easy part.',
+		'body'    => 'You try the movement. A coach names what just happened, and why. That’s how it stays with you — not by copying a shape.',
 	),
 	array(
 		'icon_id' => 'glyph-challenge',
@@ -38,11 +38,11 @@ $lp_default_principles = array(
 	array(
 		'icon_id' => 'glyph-teamwork',
 		'label'   => 'NOBODY TRAINS ALONE',
-		'body'    => 'Every session is coached and capped at twelve, so the room learns at the pace of the room.',
+		'body'    => 'Every session is coached. The room learns together, at the pace of the room.',
 	),
 );
 
-$lp_eyebrow   = (string) ( $args['eyebrow'] ?? '02 — WHY WE DO IT' );
+$lp_eyebrow   = lp_section_label( (string) ( $args['eyebrow'] ?? '05 — WHY WE DO IT' ), $args['_section_number'] ?? null );
 $lp_since     = (string) ( $args['since'] ?? 'SINCE 2015' );
 $lp_statement = (string) ( $args['statement'] ?? "We don't teach tricks. We teach people to trust what their body can already do." );
 $lp_quote     = (string) ( $args['quote'] ?? "Most people arrive convinced they're not the athletic type. Six weeks later they're vaulting a rail they used to walk around. That shift — from avoiding obstacles to reading them — is the whole point." );

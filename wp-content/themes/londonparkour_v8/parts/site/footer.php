@@ -62,7 +62,7 @@ $lp_default_columns = array(
 			),
 			array(
 				'label' => 'Private Tuition',
-				'href'  => '/private-tuition',
+				'href'  => '/private-coaching',
 			),
 			array(
 				'label' => 'Workshops',
@@ -74,17 +74,13 @@ $lp_default_columns = array(
 			),
 			array(
 				'label' => 'Timetable',
-				'href'  => '/timetable',
+				'href'  => '/classes',
 			),
 		),
 	),
 	array(
 		'heading' => 'Explore',
 		'links'   => array(
-			array(
-				'label' => 'Community',
-				'href'  => '/community',
-			),
 			array(
 				'label' => 'Blog',
 				'href'  => '/blog',
@@ -125,7 +121,7 @@ $lp_default_columns = array(
 $lp_default_social = array(
 	array(
 		'platform' => 'Instagram',
-		'href'     => 'https://instagram.com/londonparkour',
+		'href'     => 'https://www.instagram.com/london_parkour',
 	),
 	array(
 		'platform' => 'YouTube',
@@ -133,7 +129,7 @@ $lp_default_social = array(
 	),
 	array(
 		'platform' => 'Facebook',
-		'href'     => 'https://facebook.com/londonparkour',
+		'href'     => 'https://www.facebook.com/ldnpk',
 	),
 );
 

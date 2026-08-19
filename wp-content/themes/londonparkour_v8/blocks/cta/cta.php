@@ -25,7 +25,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$lp_kicker      = (string) ( $args['kicker'] ?? '09 — START' );
+$lp_kicker      = lp_section_label( (string) ( $args['kicker'] ?? '09 — START' ), $args['_section_number'] ?? null );
 $lp_coordinates = (string) ( $args['coordinates'] ?? 'N 51.5074° / W 0.1278°' );
 $lp_headline    = (string) ( $args['headline'] ?? 'Walk through the door.' );
 $lp_subhead     = (string) ( $args['subhead'] ?? 'Beginners sessions run Tuesday and Thursday at 18:30 in Vauxhall. Fifteen pounds, kit included, and no prior experience of any kind.' );

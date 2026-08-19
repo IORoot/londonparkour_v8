@@ -72,7 +72,7 @@ if ( ! $bg_image_alt ) {
 }
 
 // Eyebrow (editor override or default).
-$eyebrow = (string) ( $args['eyebrow'] ?? '' ) ?: '06 — WORKSHOPS';
+$eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '' ) ?: '06 — WORKSHOPS', $args['_section_number'] ?? null );
 ?>
 
 <section

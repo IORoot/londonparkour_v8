@@ -12,7 +12,7 @@
  * font-normal. `surface` passes straight through to it, never patched at the
  * call site, and `tone` stays 'ink' on all three surfaces.
  *
- * @param string $args['left']    Default '02 — WHY WE DO IT'.
+ * @param string $args['left']    Default '05 — WHY WE DO IT'.
  * @param string $args['right']   Default 'SINCE 2015'.
  * @param string $args['icon']    Glyph id; composes elements/glyph-label on the left.
  * @param string $args['surface'] page|board|accent. Default 'page'.
@@ -31,7 +31,7 @@ $lp_surfaces = array(
 
 $lp_surface = (string) ( $args['surface'] ?? 'page' );
 $lp_label   = $lp_surfaces[ $lp_surface ] ?? $lp_surfaces['page'];
-$lp_left    = (string) ( $args['left'] ?? '02 — WHY WE DO IT' );
+$lp_left    = (string) ( $args['left'] ?? '05 — WHY WE DO IT' );
 $lp_right   = (string) ( $args['right'] ?? 'SINCE 2015' );
 $lp_icon_id = (string) ( $args['icon'] ?? '' );
 ?>

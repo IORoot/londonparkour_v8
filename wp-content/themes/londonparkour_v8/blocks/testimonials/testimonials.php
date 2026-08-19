@@ -35,7 +35,7 @@ $lp_default_quotes = array(
 	),
 );
 
-$lp_eyebrow = (string) ( $args['eyebrow'] ?? '07 — TESTIMONIALS / IN THEIR WORDS' );
+$lp_eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '07 — TESTIMONIALS / IN THEIR WORDS' ), $args['_section_number'] ?? null );
 
 $lp_quotes = array();
 if ( function_exists( 'lp_resolve_testimonial_quotes' ) ) {

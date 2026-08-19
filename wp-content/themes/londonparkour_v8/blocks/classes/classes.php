@@ -171,7 +171,7 @@ $lp_column_head = array(
 	),
 );
 
-$lp_eyebrow   = (string) ( $args['eyebrow'] ?? '02 — BOOK A SESSION' );
+$lp_eyebrow   = lp_section_label( (string) ( $args['eyebrow'] ?? '02 — BOOK A SESSION' ), $args['_section_number'] ?? null );
 $lp_heading   = (string) ( $args['heading'] ?? 'Coming up. Book a place.' );
 $lp_note      = (string) ( $args['note'] ?? 'Coach-led, no kit needed — just trainers and water. Book while the place is still open.' );
 $lp_board_ttl = (string) ( $args['board_title'] ?? 'LIVE TIMETABLE' );

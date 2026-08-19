@@ -110,7 +110,7 @@ $lp_logo_href = static function ( string $lp_href ): string {
 	return $lp_href;
 };
 
-$lp_eyebrow = (string) ( $args['eyebrow'] ?? '06 — CLIENTS / TRUSTED BY' );
+$lp_eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '06 — CLIENTS / TRUSTED BY' ), $args['_section_number'] ?? null );
 $lp_meta    = (string) ( $args['meta'] ?? '(12)' );
 
 $lp_logos = array();

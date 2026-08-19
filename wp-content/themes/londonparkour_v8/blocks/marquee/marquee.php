@@ -28,7 +28,7 @@ $lp_default_items = array(
 	'INDOOR + OUTDOOR',
 	'FIRST CLASS £15',
 	'NO CONTRACT',
-	'6 LONDON SITES',
+	'3 LONDON SITES',
 	'COACH-LED',
 );
 

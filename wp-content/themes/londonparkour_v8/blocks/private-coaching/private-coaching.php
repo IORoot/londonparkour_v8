@@ -83,7 +83,7 @@ if ( '' === (string) ( $args['anchor'] ?? '' ) ) {
 	$args['anchor'] = 'private-coaching';
 }
 
-$lp_eyebrow  = (string) ( $args['eyebrow'] ?? '04 — PRIVATE COACHING' );
+$lp_eyebrow  = lp_section_label( (string) ( $args['eyebrow'] ?? '04 — PRIVATE COACHING' ), $args['_section_number'] ?? null );
 $lp_headline = (string) ( $args['headline'] ?? 'One coach. Just you.' );
 
 if ( $lp_is_booking ) {

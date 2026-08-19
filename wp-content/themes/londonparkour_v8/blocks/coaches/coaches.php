@@ -105,7 +105,7 @@ $lp_link    = lp_action( $args['link_action'] ?? null );
 $lp_spacing = lp_section_spacing( $args );
 
 if ( 'grid' === $lp_layout ) {
-	$lp_eyebrow  = (string) ( $args['eyebrow'] ?? '09 — COACHES / THE TEAM' );
+	$lp_eyebrow  = lp_section_label( (string) ( $args['eyebrow'] ?? '09 — COACHES / THE TEAM' ), $args['_section_number'] ?? null );
 	$lp_meta     = (string) ( $args['meta'] ?? '(04)' );
 	$lp_headline = (string) ( $args['headline'] ?? 'The people who teach the practice.' );
 	$lp_lead     = (string) ( $args['lead'] ?? 'London-based coaches with decades of experience — teaching across the city since 2005.' );
@@ -201,7 +201,7 @@ if ( 'grid' === $lp_layout ) {
 
 /* ── Lead layout ─────────────────────────────────────────────────────────── */
 
-$lp_eyebrow    = (string) ( $args['eyebrow'] ?? '06 — THE COACHES' );
+$lp_eyebrow    = lp_section_label( (string) ( $args['eyebrow'] ?? '06 — THE COACHES' ), $args['_section_number'] ?? null );
 $lp_headline   = (string) ( $args['headline'] ?? 'Twelve people who started exactly where you are.' );
 $lp_note       = (string) ( $args['note'] ?? 'ALL UKC LEVEL 2 · DBS CHECKED' );
 $lp_intro_text = (string) ( $args['intro_text'] ?? 'Nine of our twelve coaches came up through our own beginner classes. They remember being the nervous one at the back, which is most of the qualification.' );

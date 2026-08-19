@@ -67,7 +67,7 @@ $lp_default_shelf = array(
 );
 
 $lp_source      = (string) ( $args['source'] ?? 'latest' );
-$lp_eyebrow     = (string) ( $args['eyebrow'] ?? '06 — TUTORIALS' );
+$lp_eyebrow     = lp_section_label( (string) ( $args['eyebrow'] ?? '06 — TUTORIALS' ), $args['_section_number'] ?? null );
 $lp_kicker      = (string) ( $args['kicker'] ?? 'NOW STREAMING' );
 $lp_title       = (string) ( $args['title'] ?? 'Series worth watching.' );
 $lp_note        = (string) ( $args['note'] ?? 'Taught progressions you can follow at home — then bring to class. Open a line and work the episodes in order.' );
