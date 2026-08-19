@@ -394,17 +394,20 @@ function lp_nav_classes_panel(): array {
 	$workshops      = function_exists( 'lp_workshops_url' ) ? lp_workshops_url() : home_url( '/workshops/' );
 	if ( function_exists( 'lp_classes_view_tabs' ) ) {
 		$tabs = lp_classes_view_tabs();
-		if ( isset( $tabs[0]['meta'], $tabs[0]['href'] ) ) {
-			$agenda_meta = (string) $tabs[0]['meta'];
-			$agenda      = (string) $tabs[0]['href'];
-		}
-		if ( isset( $tabs[1]['meta'], $tabs[1]['href'] ) ) {
-			$map_meta = (string) $tabs[1]['meta'];
-			$map      = (string) $tabs[1]['href'];
-		}
-		if ( isset( $tabs[2]['meta'], $tabs[2]['href'] ) ) {
-			$workshop_meta = (string) $tabs[2]['meta'];
-			$workshops     = (string) $tabs[2]['href'];
+		foreach ( $tabs as $tab ) {
+			$label = strtoupper( (string) ( $tab['label'] ?? '' ) );
+			if ( 'AGENDA' === $label && isset( $tab['meta'], $tab['href'] ) ) {
+				$agenda_meta = (string) $tab['meta'];
+				$agenda      = (string) $tab['href'];
+			}
+			if ( 'MAP' === $label && isset( $tab['meta'], $tab['href'] ) ) {
+				$map_meta = (string) $tab['meta'];
+				$map      = (string) $tab['href'];
+			}
+			if ( 'WORKSHOPS' === $label && isset( $tab['meta'], $tab['href'] ) ) {
+				$workshop_meta = (string) $tab['meta'];
+				$workshops     = (string) $tab['href'];
+			}
 		}
 	}
 

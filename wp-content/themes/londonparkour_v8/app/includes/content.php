@@ -469,12 +469,12 @@ add_filter( 'acf/fields/post_object/query/name=acf_location', 'lp_acf_location_p
 add_filter( 'acf/fields/post_object/query/name=location', 'lp_acf_location_post_object_sites_only' );
 
 /**
- * The Classes view-rail tabs, shared by Agenda and Map.
+ * The Classes view-rail tabs, shared by Agenda, Map, Private 1:1 and Workshops.
  *
  * Session counts come from clasbpro via lp_class_upcoming_sessions().
  * Site counts are class sites only (not map-only spots).
  *
- * @param string $lp_active agenda|map|workshops.
+ * @param string $lp_active agenda|map|private|workshops.
  * @return array Tabs in view-rail.php's shape.
  */
 function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
@@ -513,6 +513,15 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 	);
 	$lp_workshop_n = count( $lp_workshop_ids );
 
+	$lp_private = home_url( '/private-coaching/' );
+	foreach ( array( 'private-coaching', 'private-tuition' ) as $lp_slug ) {
+		$lp_page = get_page_by_path( $lp_slug );
+		if ( $lp_page instanceof WP_Post ) {
+			$lp_private = (string) get_permalink( $lp_page );
+			break;
+		}
+	}
+
 	return array(
 		array(
 			'label'   => 'AGENDA',
@@ -527,6 +536,13 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 			'icon_id' => 'icon-map-pin',
 			'href'    => lp_classes_page_url( 'classes-map' ),
 			'active'  => 'map' === $lp_active,
+		),
+		array(
+			'label'   => 'PRIVATE 1:1',
+			'meta'    => 'ANY SITE',
+			'icon_id' => 'icon-user',
+			'href'    => $lp_private,
+			'active'  => 'private' === $lp_active,
 		),
 		array(
 			'label'   => 'WORKSHOPS',

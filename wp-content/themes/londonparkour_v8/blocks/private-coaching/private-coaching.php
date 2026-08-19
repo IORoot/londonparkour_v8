@@ -131,13 +131,13 @@ if ( $lp_is_booking ) :
 
 	ob_start();
 	?>
-	<div class="relative w-full lg:w-[568px] lg:shrink-0 min-h-[320px] overflow-hidden bg-neutral flex flex-col justify-end">
+	<div class="relative w-full aspect-[568/720] min-h-[320px] overflow-hidden bg-neutral flex flex-col justify-end lg:w-1/2 lg:shrink-0">
 		<?php
 		if ( $lp_media_id ) {
 			$lp_photo = array(
 				'image_id' => $lp_media_id,
-				'size'     => 'lp_portrait',
-				'sizes'    => '(min-width: 1024px) 568px, 100vw',
+				'size'     => 'lp_portrait_lg',
+				'sizes'    => '(min-width: 1024px) 50vw, 100vw',
 			);
 			if ( '' !== (string) ( $args['media_alt'] ?? '' ) ) {
 				$lp_photo['alt'] = (string) $args['media_alt'];

@@ -166,6 +166,14 @@ get_header();
 			),
 		)
 	);
+	if ( function_exists( 'lp_classes_view_tabs' ) ) {
+		lp_part(
+			'components/view-rail',
+			array(
+				'tabs' => lp_classes_view_tabs( 'private' ),
+			)
+		);
+	}
 	?>
 
 	<section class="w-full bg-neutral" data-component="private-opening">
