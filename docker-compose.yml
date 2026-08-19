@@ -29,6 +29,8 @@ services:
       # writable layer and `wp` has nothing to operate on.
       - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content
+      # ACF Page Sections exceeds PHP's default max_input_vars (1000).
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/zz-custom.ini
 
   # WP-CLI sidecar, held open so commands run with `exec` rather than spawning
   # a fresh container each time (an order of magnitude faster, and quiet):
@@ -50,6 +52,7 @@ services:
     volumes:
       - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/zz-custom.ini
 
 volumes:
   db_data:
