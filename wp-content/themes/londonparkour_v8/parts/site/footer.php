@@ -136,7 +136,7 @@ $lp_default_social = array(
 $lp_brand_href  = (string) ( $args['brand_href'] ?? '/' );
 $lp_brand_label = (string) ( $args['brand_label'] ?? 'London Parkour' );
 $lp_logo_width  = (int) ( $args['logo_width'] ?? 210 );
-$lp_tagline     = (string) ( $args['tagline'] ?? 'Natural movement, coached across London since 2005. All ages, all levels — from first steps to advanced flow.' );
+$lp_tagline     = (string) ( $args['tagline'] ?? 'Natural movement, coached across London since 2018. All ages, all levels — from first steps to advanced flow.' );
 $lp_copyright   = (string) ( $args['copyright'] ?? '© 2026 LONDONPARKOUR — ALL RIGHTS RESERVED' );
 $lp_instance    = sanitize_html_class( (string) ( $args['instance_id'] ?? 'site-footer' ) );
 

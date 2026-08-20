@@ -3928,7 +3928,7 @@
                             "save_terms": 0,
                             "load_terms": 0,
                             "return_format": "id",
-                            "instructions": "Empty = the series tagged START HERE, else the first published series. Episode count, runtime and poster come from its tutorials.",
+                            "instructions": "Empty = the first chosen series (Choose), the series tagged START HERE, else the first published series. Episode count, runtime and poster come from its tutorials.",
                             "key": "field_74d6ecf97b41c071",
                             "conditional_logic": [
                                 [

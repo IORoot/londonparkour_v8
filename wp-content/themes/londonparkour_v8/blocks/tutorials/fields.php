@@ -48,7 +48,7 @@ return array(
 				'save_terms'     => 0,
 				'load_terms'     => 0,
 				'return_format'  => 'id',
-				'instructions'   => __( 'Empty = the series tagged START HERE, else the first published series. Episode count, runtime and poster come from its tutorials.', 'londonparkour_v8' ),
+				'instructions'   => __( 'Empty = the first chosen series (Choose), the series tagged START HERE, else the first published series. Episode count, runtime and poster come from its tutorials.', 'londonparkour_v8' ),
 				'lp_conditional' => array(
 					array( array( 'field' => 'source', 'operator' => '==', 'value' => 'latest' ) ),
 					array( array( 'field' => 'source', 'operator' => '==', 'value' => 'choose' ) ),

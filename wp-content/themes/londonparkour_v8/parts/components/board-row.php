@@ -47,7 +47,11 @@
  * @param bool   $args['sold_out']
  * @param string $args['tone']             available|sold_out|watched|new|now_playing. Overrides sold_out.
  * @param string $args['href']             default: whole-row link. sell: MORE DETAILS
- *                                         under the subtitle (class page); row stays a div.
+ *                                         under the subtitle (class page); that
+ *                                         link is joined by a stretched overlay
+ *                                         (`absolute inset-0 z-0`) so a click
+ *                                         anywhere except BOOK goes to the class
+ *                                         page. Row stays a div.
  * @param string $args['detail_label']     sell only. Default 'MORE DETAILS'.
  * @param string $args['book_href']        sell only. Ignored when book_class_id is set.
  * @param int    $args['book_class_id']    sell only. Opens the booking drawer (no href).
@@ -84,8 +88,8 @@ $lp_sizes = array(
 		'fare'       => 'hidden sm:flex flex-col items-end gap-[2px] w-[76px] sm:shrink-0',
 		'fare_price' => 'font-heading text-[19px] font-semibold tracking-[-0.4px] text-neutral-content',
 		'fare_label' => 'font-label text-[9px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
-		'book'       => 'shrink-0 w-[84px] flex justify-end',
-		'detail'     => 'w-fit',
+		'book'       => 'relative z-10 shrink-0 w-[84px] flex justify-end',
+		'detail'     => 'relative z-10 w-fit',
 	),
 	'lg'      => array(
 		'root'       => 'group relative flex flex-col gap-[12px] sm:flex-row sm:items-center sm:gap-[28px] w-full py-[16px] sm:py-[20px] px-[16px] sm:px-[32px] bg-secondary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
@@ -111,8 +115,8 @@ $lp_sizes = array(
 		'fare'       => 'hidden sm:flex flex-col items-end gap-[3px] w-[88px] sm:shrink-0',
 		'fare_price' => 'font-heading text-[24px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
 		'fare_label' => 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
-		'book'       => 'shrink-0 w-[96px] flex justify-end',
-		'detail'     => 'w-fit',
+		'book'       => 'relative z-10 shrink-0 w-[96px] flex justify-end',
+		'detail'     => 'relative z-10 w-fit',
 	),
 );
 
@@ -170,6 +174,9 @@ if ( ! isset( $lp_spaces_tones[ $lp_tone_key ] ) ) {
 $lp_spaces_tone = $lp_spaces_tones[ $lp_tone_key ];
 
 $lp_root = $lp_is_link ? $lp_ui['root'] . ' ' . $lp_root_interactive : $lp_ui['root'];
+if ( '' !== $lp_detail_href ) {
+	$lp_root .= ' cursor-pointer';
+}
 $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
 ?>
 <?php if ( $lp_is_link ) : ?>
@@ -177,6 +184,9 @@ $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
 <?php else : ?>
 <div class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?>>
 <?php endif; ?>
+	<?php if ( '' !== $lp_detail_href ) : ?>
+		<a class="absolute inset-0 z-0" href="<?php echo esc_url( $lp_detail_href ); ?>" aria-hidden="true" tabindex="-1" data-slot="row-details"></a>
+	<?php endif; ?>
 	<div class="flex items-center justify-between gap-3 sm:contents">
 		<?php if ( $lp_thumb ) : ?>
 			<div class="<?php echo esc_attr( $lp_ui['thumb'] ); ?>" data-slot="thumb">

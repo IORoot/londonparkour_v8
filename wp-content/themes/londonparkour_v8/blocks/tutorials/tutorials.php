@@ -78,7 +78,12 @@ $lp_featured      = array();
 $lp_from_cpt      = false;
 
 if ( 'manual' !== $lp_source ) {
-	$lp_featured_term = lp_tutorials_featured_series_id( lp_tutorials_term_id( $args['featured_series'] ?? 0 ) );
+	$lp_featured_pick = lp_tutorials_term_id( $args['featured_series'] ?? 0 );
+	if ( ! $lp_featured_pick && 'choose' === $lp_source ) {
+		$lp_chosen        = array_values( array_filter( array_map( 'intval', (array) ( $args['source_items'] ?? array() ) ) ) );
+		$lp_featured_pick = $lp_chosen[0] ?? 0;
+	}
+	$lp_featured_term = lp_tutorials_featured_series_id( $lp_featured_pick );
 	if ( $lp_featured_term ) {
 		$lp_projected = lp_series_project_featured( $lp_featured_term );
 		if ( is_array( $lp_projected ) && '' !== (string) ( $lp_projected['title'] ?? '' ) ) {

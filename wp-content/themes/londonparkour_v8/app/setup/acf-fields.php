@@ -469,6 +469,9 @@ function lp_resolve_term_source( array $args, string $taxonomy, array $opts = ar
 	$orderby    = (string) ( $opts['orderby'] ?? 'term_id' );
 	$order      = (string) ( $opts['order'] ?? 'ASC' );
 
+	$ids   = array();
+	$limit = 0;
+
 	if ( 'choose' === $source ) {
 		$ids = array_filter( array_map( 'intval', (array) ( $args['source_items'] ?? array() ) ) );
 	} else {
@@ -515,8 +518,7 @@ function lp_resolve_term_source( array $args, string $taxonomy, array $opts = ar
 			)
 		);
 
-		$limit = max( 1, (int) ( $args['source_limit'] ?? 4 ) );
-		if ( count( $items ) >= $limit ) {
+		if ( $limit && count( $items ) >= $limit ) {
 			break;
 		}
 	}

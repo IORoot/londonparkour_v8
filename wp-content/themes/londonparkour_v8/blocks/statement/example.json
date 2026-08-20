@@ -7,8 +7,8 @@
   "principles": [
     {
       "icon_id": "glyph-understanding",
-      "label": "UNDERSTANDING FIRST",
-      "body": "You try the movement. A coach names what just happened, and why. That’s how it stays with you — not by copying a shape."
+      "label": "SEE, HEAR, DO",
+      "body": "The coach shows you, tells you, then lets you try. They're with you the whole way. Learn the way you want to."
     },
     {
       "icon_id": "glyph-challenge",
@@ -18,7 +18,7 @@
     {
       "icon_id": "glyph-teamwork",
       "label": "NOBODY TRAINS ALONE",
-      "body": "Every session is coached. The room learns together, at the pace of the room."
+      "body": "Every session is coached. The class learns together, at the pace of the people in it."
     }
   ]
 }
