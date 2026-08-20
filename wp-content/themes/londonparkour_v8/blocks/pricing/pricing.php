@@ -41,7 +41,7 @@
  * @param array  $args['row_labels']  Rows of row_key/label.
  * @param array  $args['tiers']       The columns.
  * @param string $args['notice']
- * @param array  $args['guarantee']   kicker/copy.
+ * @param array  $args['guarantee']   kicker/copy plus FIND OUT MORE.
  * @param string $args['sites_lead']
  * @param string $args['sites_list']
  * @param string $args['kit_note']
@@ -156,6 +156,14 @@ $lp_kit_note   = (string) ( $args['kit_note'] ?? 'JUST TRAINERS — NO SPECIALIS
 $lp_guarantee   = is_array( $args['guarantee'] ?? null ) ? $args['guarantee'] : array();
 $lp_guar_kicker = (string) ( $lp_guarantee['kicker'] ?? 'HOW IT WORKS' );
 $lp_guar_copy   = (string) ( $lp_guarantee['copy'] ?? 'Buy a coupon, book any class at Vauxhall, Old Street or Kilburn Park. No membership required.' );
+$lp_guar_more   = (string) ( $lp_guarantee['more_label'] ?? 'FIND OUT MORE' );
+$lp_guar_href   = (string) ( $lp_guarantee['more_href'] ?? '' );
+if ( '' === $lp_guar_href ) {
+	$lp_coupons_page = get_page_by_path( 'coupons' );
+	$lp_guar_href    = $lp_coupons_page instanceof WP_Post
+		? (string) get_permalink( $lp_coupons_page )
+		: home_url( '/coupons/' );
+}
 
 $lp_row_labels = array();
 
@@ -331,13 +339,26 @@ $lp_spacing = lp_section_spacing( $args );
 				</div>
 			</div>
 
-			<div class="flex items-start gap-[20px] border-l-[3px] border-primary py-[8px] pl-[20px]">
+			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[20px] border-l-[3px] border-primary py-[8px] pl-[20px]">
 				<div class="flex flex-col gap-[8px]">
 					<?php if ( '' !== $lp_guar_kicker ) : ?>
 						<span class="font-label text-[10px] font-normal tracking-[0.7px] uppercase text-base-content/65"><?php echo esc_html( $lp_guar_kicker ); ?></span>
 					<?php endif; ?>
 					<p class="font-heading text-step-0 text-base-content"><?php echo esc_html( $lp_guar_copy ); ?></p>
 				</div>
+				<?php if ( '' !== $lp_guar_more ) : ?>
+					<?php
+					lp_part(
+						'elements/button',
+						array(
+							'variant'          => 'inverse',
+							'label'            => $lp_guar_more,
+							'href'             => $lp_guar_href,
+							'trailing_icon_id' => 'icon-arrow-right',
+						)
+					);
+					?>
+				<?php endif; ?>
 			</div>
 
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[10px] pt-[16px] border-t border-base-300/60">

@@ -58,6 +58,8 @@ function lp_nav_row_glyph( string $name, string $meta = '', int $index = 0 ): st
 		'open gym'    => 'glyph-strengthening',
 		'evening'     => 'glyph-flowing',
 		'private'     => 'glyph-holistic',
+		'workshop'    => 'glyph-holistic',
+		'coupon'      => 'glyph-chaining',
 		'map'         => 'glyph-traverse',
 		'north'       => 'glyph-wall-run',
 		'southbank'   => 'glyph-passing',
@@ -370,7 +372,8 @@ function lp_nav_is_private_class( string $name ): bool {
 }
 
 /**
- * Classes drop panel — Agenda / Map / Private 1:1 / Workshops, then every class type.
+ * Classes drop panel — Agenda / Map / Private 1:1 / Workshops / Coupons,
+ * then every class type.
  *
  * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
  */
@@ -392,6 +395,10 @@ function lp_nav_classes_panel(): array {
 	$map_meta       = sprintf( '%d SITES', $sites ?: 6 );
 	$workshop_meta  = '6 DATES';
 	$workshops      = function_exists( 'lp_workshops_url' ) ? lp_workshops_url() : home_url( '/workshops/' );
+	$coupons_page   = get_page_by_path( 'coupons' );
+	$coupons        = $coupons_page instanceof WP_Post
+		? (string) get_permalink( $coupons_page )
+		: home_url( '/coupons/' );
 	if ( function_exists( 'lp_classes_view_tabs' ) ) {
 		$tabs = lp_classes_view_tabs();
 		foreach ( $tabs as $tab ) {
@@ -432,6 +439,12 @@ function lp_nav_classes_panel(): array {
 				'name' => 'Workshops',
 				'meta' => $workshop_meta,
 				'href' => $workshops,
+			),
+			array(
+				'name' => 'Coupons',
+				'meta' => 'FROM £15',
+				'href' => $coupons,
+				'tone' => 'signal',
 			),
 		)
 	);

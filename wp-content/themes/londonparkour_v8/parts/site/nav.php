@@ -85,6 +85,9 @@ $lp_panel_positions = array(
 
 $lp_glyph_base    = 'w-4 h-4 flex-none';
 $lp_row_glyph_cls = 'w-4 h-4 flex-none text-neutral-content group-hover/row:text-primary transition-colors duration-150';
+$lp_signal_row    = 'mt-[12px] flex items-center justify-between gap-[12px] px-[16px] py-[14px] bg-primary text-primary-content hover:bg-primary/85 transition-colors duration-150';
+$lp_signal_name   = 'font-label text-[12px] font-semibold uppercase tracking-[1px]';
+$lp_signal_meta   = 'font-label text-[10px] font-semibold uppercase tracking-[0.8px]';
 $lp_glyph_states = array(
 	'active'   => 'text-primary',
 	'inactive' => 'text-neutral-content group-hover:text-primary',
@@ -198,7 +201,7 @@ $lp_default_classes_panel   = array(
 	'columns'   => array(
 		array(
 			'title' => 'FIND',
-			'note'  => '3',
+			'note'  => '5',
 			'rows'  => array(
 				array(
 					'name' => 'Agenda',
@@ -214,6 +217,17 @@ $lp_default_classes_panel   = array(
 					'name' => 'Private 1:1',
 					'meta' => 'ANY SITE',
 					'href' => '/private-coaching',
+				),
+				array(
+					'name' => 'Workshops',
+					'meta' => '6 DATES',
+					'href' => '/workshops/',
+				),
+				array(
+					'name' => 'Coupons',
+					'meta' => 'FROM £15',
+					'href' => '/coupons/',
+					'tone' => 'signal',
 				),
 			),
 		),
@@ -479,8 +493,17 @@ $lp_header_ground = $lp_over_hero
 													<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( (string) ( $lp_column['note'] ?? '' ) ); ?></span>
 												</div>
 												<div class="divide-y divide-neutral-content/10">
-													<?php foreach ( (array) ( $lp_column['rows'] ?? array() ) as $lp_row_i => $lp_row ) : ?>
-														<?php
+													<?php
+													$lp_regular_rows = array();
+													$lp_signal_rows  = array();
+													foreach ( (array) ( $lp_column['rows'] ?? array() ) as $lp_row ) {
+														if ( 'signal' === ( $lp_row['tone'] ?? '' ) ) {
+															$lp_signal_rows[] = $lp_row;
+														} else {
+															$lp_regular_rows[] = $lp_row;
+														}
+													}
+													foreach ( $lp_regular_rows as $lp_row_i => $lp_row ) :
 														$lp_row_name  = (string) ( $lp_row['name'] ?? '' );
 														$lp_row_meta  = (string) ( $lp_row['meta'] ?? '' );
 														$lp_row_href  = (string) ( $lp_row['href'] ?? '' );
@@ -513,6 +536,30 @@ $lp_header_ground = $lp_over_hero
 														<?php endif; ?>
 													<?php endforeach; ?>
 												</div>
+												<?php foreach ( $lp_signal_rows as $lp_row ) : ?>
+													<?php
+													$lp_row_name = (string) ( $lp_row['name'] ?? '' );
+													$lp_row_meta = (string) ( $lp_row['meta'] ?? '' );
+													$lp_row_href = (string) ( $lp_row['href'] ?? '' );
+													?>
+													<?php if ( '' !== $lp_row_href ) : ?>
+														<a href="<?php echo esc_url( $lp_row_href ); ?>" class="<?php echo lp_classes( 'group/row', $lp_signal_row, $lp_focus ); ?>">
+															<span class="<?php echo esc_attr( $lp_signal_name ); ?>"><?php echo esc_html( $lp_row_name ); ?></span>
+															<span class="flex items-center gap-[8px]">
+																<span class="<?php echo esc_attr( $lp_signal_meta ); ?>"><?php echo esc_html( $lp_row_meta ); ?></span>
+																<?php lp_icon( 'icon-arrow-right', 'w-[14px] h-[14px] flex-none' ); ?>
+															</span>
+														</a>
+													<?php else : ?>
+														<span class="<?php echo esc_attr( $lp_signal_row ); ?>">
+															<span class="<?php echo esc_attr( $lp_signal_name ); ?>"><?php echo esc_html( $lp_row_name ); ?></span>
+															<span class="flex items-center gap-[8px]">
+																<span class="<?php echo esc_attr( $lp_signal_meta ); ?>"><?php echo esc_html( $lp_row_meta ); ?></span>
+																<?php lp_icon( 'icon-arrow-right', 'w-[14px] h-[14px] flex-none' ); ?>
+															</span>
+														</span>
+													<?php endif; ?>
+												<?php endforeach; ?>
 											</div>
 										<?php endforeach; ?>
 									</div>
