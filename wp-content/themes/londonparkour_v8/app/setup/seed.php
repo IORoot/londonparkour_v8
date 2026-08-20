@@ -127,52 +127,14 @@ function lp_seed_find( string $post_type, string $slug ): int {
 }
 
 /**
- * Import bin/demo-media/*.jpeg into the media library, once.
+ * Media seeding removed — image import caused WordPress to regenerate
+ * all crops on every seed run, polluting uploads/ with duplicates.
+ * Image fields are left unset (0); set them manually in the WP admin.
  *
- * Keyed on filename, so re-running does not duplicate the library.
- *
- * @return array<string,int> Filename => attachment ID.
+ * @return array<string,int> Always empty.
  */
 function lp_seed_media(): array {
-	$dir = get_theme_file_path( 'bin/demo-media' );
-	$map = array();
-
-	if ( ! is_dir( $dir ) ) {
-		WP_CLI::warning( 'bin/demo-media is missing — every image field will be left unset.' );
-		return $map;
-	}
-
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-	require_once ABSPATH . 'wp-admin/includes/media.php';
-	require_once ABSPATH . 'wp-admin/includes/image.php';
-
-	foreach ( (array) glob( $dir . '/*.jpeg' ) as $file ) {
-		$name = basename( $file );
-
-		$existing = lp_attachment_id_for_file( $file );
-		if ( $existing ) {
-			$map[ $name ] = $existing;
-			continue;
-		}
-
-		$id = lp_sideload_image_once(
-			$file,
-			array(
-				'post_title' => pathinfo( $name, PATHINFO_FILENAME ),
-			)
-		);
-
-		if ( is_wp_error( $id ) ) {
-			WP_CLI::warning( "Could not import {$name}: " . $id->get_error_message() );
-			continue;
-		}
-
-		update_post_meta( $id, LP_SEED_MARKER, 1 );
-		$map[ $name ] = (int) $id;
-		WP_CLI::log( "  + media {$name} (#{$id})" );
-	}
-
-	return $map;
+	return array();
 }
 
 /**
@@ -636,6 +598,7 @@ function lp_seed_template_pages(): void {
 		'classes-map'      => array( 'Classes — Map', 'templates/classes-map.php' ),
 		'workshops'        => array( 'Workshops', 'templates/workshops-overview.php' ),
 		'private-coaching' => array( 'Private 1:1', 'templates/private-coaching.php' ),
+		'coupons'          => array( 'Coupons', 'templates/coupons.php' ),
 		'contact'          => array( 'Contact', 'templates/contact.php' ),
 		'docs'             => array( 'Docs', 'templates/docs-faq.php' ),
 		'tutorials-series'   => array( 'Tutorials — Series', 'templates/tutorials-series.php' ),
