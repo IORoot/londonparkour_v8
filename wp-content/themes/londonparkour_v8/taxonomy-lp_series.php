@@ -166,7 +166,7 @@ get_header();
 								: 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70';
 							$lp_tag_cls     = $lp_active
 								? 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral'
-								: 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-neutral-content/40 group-hover:text-neutral/70';
+								: 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70';
 							?>
 							<a
 								href="<?php echo esc_url( $lp_item_href ); ?>"

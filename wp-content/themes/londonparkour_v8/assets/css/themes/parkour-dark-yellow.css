@@ -13,8 +13,8 @@
  * in the light theme too. daisyUI defines neutral as exactly this: "always-dark,
  * not-saturated parts of UI".
  *
- * There is no `muted` token: the design's #8A897F resolves to base-content at
- * ~52% on this ground, so use `text-base-content/50`.
+ * There is no `muted` token: on the page ground use `text-base-content/65`;
+ * on the fixed dark board use `text-neutral-content/50`.
  */
 @plugin "daisyui/theme" {
   name: "parkour-dark-yellow";

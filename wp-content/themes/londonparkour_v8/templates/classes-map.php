@@ -145,7 +145,7 @@ get_header();
 						role="tab"
 						aria-selected="false"
 						data-map-list-tab="spots"
-						class="flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/50 border-b-2 border-transparent bg-transparent cursor-pointer"
+						class="flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/65 border-b-2 border-transparent bg-transparent cursor-pointer"
 					>
 						SPOTS · <?php echo esc_html( (string) $lp_spot_n ); ?>
 					</button>
@@ -188,7 +188,7 @@ get_header();
 						</li>
 					<?php endforeach; ?>
 					<?php if ( ! $lp_sites ) : ?>
-						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/50">No class locations yet.</li>
+						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/65">No class locations yet.</li>
 					<?php endif; ?>
 				</ul>
 
@@ -223,7 +223,7 @@ get_header();
 						</li>
 					<?php endforeach; ?>
 					<?php if ( ! $lp_spots ) : ?>
-						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/50">No training spots yet.</li>
+						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/65">No training spots yet.</li>
 					<?php endif; ?>
 				</ul>
 			</div>

@@ -6,8 +6,8 @@
  * `neutral` stays near-black here, same as the dark themes — the departure
  * boards and footer are dark bands on the light ground.
  *
- * No `muted` token: the design's #8C8A81 resolves to base-content at ~46% on
- * this ground, so use `text-base-content/50`.
+ * No `muted` token: on the page ground use `text-base-content/65`
+ * (`$v2_muted-page`); on the fixed dark board use `text-neutral-content/50`.
  */
 @plugin "daisyui/theme" {
   name: "parkour-light-yellow";

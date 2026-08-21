@@ -19,7 +19,7 @@ const TILE_ATTR =
 const TAB_ACTIVE =
   'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b-2 border-accent bg-transparent cursor-pointer';
 const TAB_IDLE =
-  'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/50 border-b-2 border-transparent bg-transparent cursor-pointer';
+  'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/65 border-b-2 border-transparent bg-transparent cursor-pointer';
 
 const highlightSite = (siteId) => {
   if (!siteId) return;

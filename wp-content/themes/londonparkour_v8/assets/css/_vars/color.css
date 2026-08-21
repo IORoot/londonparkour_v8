@@ -6,8 +6,10 @@
    * info, success, warning, error — plus their -content pairs.
    *
    * Deliberately NOT defined here:
-   *   muted  — the design's #8C8A81 / #8A897F is base-content at ~50% on each
-   *            ground, so it is `text-base-content/50`, not a token.
+ *   muted  — on the page ground use `text-base-content/65` (the design's
+ *            `$v2_muted-page`, ~5.8:1). On the fixed dark board use
+ *            `text-neutral-content/50`. Never `text-base-content/50` for
+ *            live copy — that pairing is 3.38:1.
    *   ink / paper — these are daisyUI's `neutral` / `neutral-content`, fixed
    *            near-black in every theme so departure boards stay dark on the
    *            light ground too.

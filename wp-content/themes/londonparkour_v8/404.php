@@ -141,14 +141,14 @@ get_header();
 					<div class="mt-[40px] flex flex-col gap-[9px]">
 						<div class="flex items-center justify-between gap-4 flex-wrap">
 							<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-neutral-content/50"><?php echo esc_html( $lp_search['label'] ); ?></span>
-							<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/40"><?php echo esc_html( $lp_search['hint'] ); ?></span>
+							<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php echo esc_html( $lp_search['hint'] ); ?></span>
 						</div>
 						<form class="flex items-stretch gap-3 flex-wrap" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 							<label class="sr-only" for="not-found-search"><?php echo esc_html( $lp_search['label'] ); ?></label>
 							<div class="flex-1 min-w-[220px] flex items-center gap-3 h-[52px] px-4 bg-neutral border border-neutral-content/[.14]">
-								<span class="text-neutral-content/40 shrink-0" aria-hidden="true"><?php lp_icon( 'icon-magnifying-glass', 'w-3.5 h-3.5' ); ?></span>
+								<span class="text-neutral-content/50 shrink-0" aria-hidden="true"><?php lp_icon( 'icon-magnifying-glass', 'w-3.5 h-3.5' ); ?></span>
 								<input id="not-found-search" name="s" type="search"
-									class="w-full bg-transparent border-0 p-0 font-body text-[13px] tracking-[0.2px] text-neutral-content placeholder:text-neutral-content/40 focus:outline-none"
+									class="w-full bg-transparent border-0 p-0 font-body text-[13px] tracking-[0.2px] text-neutral-content placeholder:text-neutral-content/50 focus:outline-none"
 									placeholder="<?php echo esc_attr( $lp_search['placeholder'] ); ?>" />
 							</div>
 							<button type="submit"
