@@ -10,8 +10,8 @@
  *
  * Repeater-only: two lists, `row_labels` (the left rail) and `tiers` (the
  * columns), plus `why_statements` — one or more lines, one picked at random
- * on each page load for the Why band (pen node `NGJpo`). Empty ACF falls back
- * to the built-in list in this file; do not seed the repeater.
+ * on each page load for the Why band (pen node `NGJpo`). Copy lives in ACF /
+ * example.json, not in this file.
  * Each tier carries a `values` repeater whose rows are keyed by
  * `row_key`, so a tier's cells stay attached to the right row when the rail is
  * reordered — the source's `values: { sessions: … }` map, expressed in ACF.
@@ -59,20 +59,6 @@ defined( 'ABSPATH' ) || exit;
 $lp_row_value       = 'font-label text-[11px] font-normal tracking-[0.4px] text-base-content';
 $lp_row_value_muted = 'font-label text-[11px] font-normal tracking-[0.4px] text-base-content/65';
 $lp_row_label       = 'font-label text-[10px] font-normal tracking-[0.9px] uppercase text-base-content/65';
-
-$lp_default_why_statements = array(
-	'Six sessions in, most people hit something they thought was physically off limits.',
-	'Train your body for the world you actually live in.',
-	"Build a body that's stronger, more capable and ready for anything.",
-	'Move better, feel stronger and discover what your body can really do.',
-	'Develop practical strength, confidence and movement skills for everyday life.',
-	'Become stronger, more capable and more confident in the way you move.',
-	'Train for life, not just for the gym.',
-	'Learn to move with strength, confidence and freedom in the world around you.',
-	'Build the strength and confidence to move through life with more freedom.',
-	'Turn movement into a skill you can use for life.',
-	'A different way to get stronger, move better and feel more capable every day.',
-);
 
 $lp_default_why_points = array(
 	array(
@@ -231,11 +217,9 @@ foreach ( is_array( $args['why_statements'] ?? null ) ? $args['why_statements'] 
 	}
 }
 
-if ( ! $lp_why_statements ) {
-	$lp_why_statements = $lp_default_why_statements;
-}
-
-$lp_why_statement = $lp_why_statements[ array_rand( $lp_why_statements ) ];
+$lp_why_statement = $lp_why_statements
+	? $lp_why_statements[ array_rand( $lp_why_statements ) ]
+	: '';
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
@@ -255,13 +239,15 @@ $lp_spacing = lp_section_spacing( $args );
 			<div class="h-px bg-base-300/60 w-full" aria-hidden="true"></div>
 			<div class="pt-[56px] pb-[80px] flex flex-col lg:flex-row lg:items-start gap-[40px] lg:gap-[80px]">
 				<div class="flex-1 min-w-0">
-					<p class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0" data-slot="why-statement"><?php echo esc_html( $lp_why_statement ); ?></p>
+					<?php if ( '' !== $lp_why_statement ) : ?>
+						<p class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0" data-slot="why-statement"><?php echo esc_html( $lp_why_statement ); ?></p>
+					<?php endif; ?>
 				</div>
-				<div class="w-full lg:w-[380px] shrink-0 flex flex-col gap-[32px]">
+				<div class="w-full lg:w-[520px] shrink-0 flex flex-col gap-[32px]">
 					<?php foreach ( $lp_default_why_points as $lp_point ) : ?>
 						<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
-							<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
-							<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
+							<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
+							<p class="font-body text-[16px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
 						</div>
 					<?php endforeach; ?>
 				</div>

@@ -13,6 +13,19 @@
   "sites_lead": "EVERY COUPON WORKS AT ALL THREE SITES",
   "sites_list": "VAUXHALL · OLD STREET · KILBURN PARK",
   "kit_note": "JUST TRAINERS — NO SPECIALIST KIT NEEDED",
+  "why_statements": [
+    { "line": "Six sessions in, most people hit something they thought was physically off limits." },
+    { "line": "Train your body for the world you actually live in." },
+    { "line": "Build a body that's stronger, more capable and ready for anything." },
+    { "line": "Move better, feel stronger and discover what your body can really do." },
+    { "line": "Develop practical strength, confidence and movement skills for everyday life." },
+    { "line": "Become stronger, more capable and more confident in the way you move." },
+    { "line": "Train for life, not just for the gym." },
+    { "line": "Learn to move with strength, confidence and freedom in the world around you." },
+    { "line": "Build the strength and confidence to move through life with more freedom." },
+    { "line": "Turn movement into a skill you can use for life." },
+    { "line": "A different way to get stronger, move better and feel more capable every day." }
+  ],
   "row_labels": [
     { "row_key": "sessions", "label": "SESSIONS" },
     { "row_key": "saving", "label": "SAVING" }

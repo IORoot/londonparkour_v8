@@ -2667,7 +2667,7 @@
                             "type": "repeater",
                             "layout": "table",
                             "button_label": "Add line",
-                            "instructions": "One line is picked at random on each page load. Leave empty to use the built-in lines.",
+                            "instructions": "One line is picked at random on each page load. Add, edit or remove lines here — an empty list hides the statement.",
                             "sub_fields": [
                                 {
                                     "name": "line",

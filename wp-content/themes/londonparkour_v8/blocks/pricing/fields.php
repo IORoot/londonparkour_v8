@@ -33,7 +33,7 @@ return array(
 				'type'         => 'repeater',
 				'layout'       => 'table',
 				'button_label' => __( 'Add line', 'londonparkour_v8' ),
-				'instructions' => __( 'One line is picked at random on each page load. Leave empty to use the built-in lines.', 'londonparkour_v8' ),
+				'instructions' => __( 'One line is picked at random on each page load. Add, edit or remove lines here — an empty list hides the statement.', 'londonparkour_v8' ),
 				'sub_fields'   => array(
 					array(
 						'name'      => 'line',
