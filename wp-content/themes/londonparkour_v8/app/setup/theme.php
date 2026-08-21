@@ -16,6 +16,7 @@ function lp_setup(): void {
 	add_theme_support( 'automatic-feed-links' );
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
+	add_post_type_support( 'page', 'excerpt' );
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'customize-selective-refresh-widgets' );
 	add_theme_support(
