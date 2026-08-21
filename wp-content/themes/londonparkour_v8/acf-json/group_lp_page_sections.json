@@ -60,6 +60,7 @@
                             "name": "foot_note",
                             "label": "Foot note",
                             "type": "text",
+                            "instructions": "Fallback only. When weekly classes exist, the board foot is built from their count and sites (e.g. “3 SITES · 5 CLASSES A WEEK”).",
                             "key": "field_2e8993fcac8e12cd"
                         },
                         {
@@ -2659,6 +2660,25 @@
                             "rows": 2,
                             "new_lines": "",
                             "key": "field_8b94372f02f958e5"
+                        },
+                        {
+                            "name": "why_statements",
+                            "label": "Why statements",
+                            "type": "repeater",
+                            "layout": "table",
+                            "button_label": "Add line",
+                            "instructions": "One line is picked at random on each page load. Leave empty to use the built-in lines.",
+                            "sub_fields": [
+                                {
+                                    "name": "line",
+                                    "label": "Line",
+                                    "type": "textarea",
+                                    "rows": 2,
+                                    "new_lines": "",
+                                    "key": "field_64d4c10a31881acc"
+                                }
+                            ],
+                            "key": "field_c12915242f25d26e"
                         },
                         {
                             "name": "kicker",

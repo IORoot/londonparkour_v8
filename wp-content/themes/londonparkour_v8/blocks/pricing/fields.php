@@ -3,7 +3,8 @@
  * Pricing — field definition.
  *
  * Storybook props (`Pricing.js`): coupon-sale rail (`kicker` / `subkicker` /
- * `axis`), comparison rows, and pack tiers. Repeater-only: two lists, the left
+ * `axis`), comparison rows, pack tiers, and `why_statements` (one line picked
+ * at random for the Why band). Repeater-only: two lists, the left
  * rail (`row_labels`) and the columns (`tiers`). Each tier's `values` repeater
  * is keyed by `row_key` so the cells follow the rail when it is reordered.
  *
@@ -26,6 +27,23 @@ return array(
 			lp_field_eyebrow(),
 			lp_field_heading(),
 			lp_field_note(),
+			array(
+				'name'         => 'why_statements',
+				'label'        => __( 'Why statements', 'londonparkour_v8' ),
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => __( 'Add line', 'londonparkour_v8' ),
+				'instructions' => __( 'One line is picked at random on each page load. Leave empty to use the built-in lines.', 'londonparkour_v8' ),
+				'sub_fields'   => array(
+					array(
+						'name'      => 'line',
+						'label'     => __( 'Line', 'londonparkour_v8' ),
+						'type'      => 'textarea',
+						'rows'      => 2,
+						'new_lines' => '',
+					),
+				),
+			),
 			array(
 				'name'         => 'kicker',
 				'label'        => __( 'Kicker', 'londonparkour_v8' ),

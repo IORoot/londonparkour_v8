@@ -9,7 +9,10 @@
  * The worked-out rate cell is a tight `gap-[7px]` pair, not `justify-between`.
  *
  * Repeater-only: two lists, `row_labels` (the left rail) and `tiers` (the
- * columns). Each tier carries a `values` repeater whose rows are keyed by
+ * columns), plus `why_statements` — one or more lines, one picked at random
+ * on each page load for the Why band (pen node `NGJpo`). Empty ACF falls back
+ * to the built-in list in this file; do not seed the repeater.
+ * Each tier carries a `values` repeater whose rows are keyed by
  * `row_key`, so a tier's cells stay attached to the right row when the rail is
  * reordered — the source's `values: { sessions: … }` map, expressed in ACF.
  * A row with no matching value renders the source's em dash.
@@ -38,6 +41,7 @@
  * @param string $args['kicker']      Left-rail head (SB `kicker`).
  * @param string $args['subkicker']   Left-rail second line (SB `subkicker`).
  * @param string $args['axis']        First rail row under the head (SB `axis`).
+ * @param array  $args['why_statements'] Rows of `line`. One is picked at random.
  * @param array  $args['row_labels']  Rows of row_key/label.
  * @param array  $args['tiers']       The columns.
  * @param string $args['notice']
@@ -55,6 +59,35 @@ defined( 'ABSPATH' ) || exit;
 $lp_row_value       = 'font-label text-[11px] font-normal tracking-[0.4px] text-base-content';
 $lp_row_value_muted = 'font-label text-[11px] font-normal tracking-[0.4px] text-base-content/65';
 $lp_row_label       = 'font-label text-[10px] font-normal tracking-[0.9px] uppercase text-base-content/65';
+
+$lp_default_why_statements = array(
+	'Six sessions in, most people hit something they thought was physically off limits.',
+	'Train your body for the world you actually live in.',
+	"Build a body that's stronger, more capable and ready for anything.",
+	'Move better, feel stronger and discover what your body can really do.',
+	'Develop practical strength, confidence and movement skills for everyday life.',
+	'Become stronger, more capable and more confident in the way you move.',
+	'Train for life, not just for the gym.',
+	'Learn to move with strength, confidence and freedom in the world around you.',
+	'Build the strength and confidence to move through life with more freedom.',
+	'Turn movement into a skill you can use for life.',
+	'A different way to get stronger, move better and feel more capable every day.',
+);
+
+$lp_default_why_points = array(
+	array(
+		'label' => 'EXPLORE',
+		'body'  => 'Discover new ways to move, play and interact with the world around you, building awareness, coordination and confidence as you go.',
+	),
+	array(
+		'label' => 'CHALLENGE',
+		'body'  => 'Push yourself at your own pace, developing strength, balance and new skills through challenges that are rewarding, achievable and fun.',
+	),
+	array(
+		'label' => 'OVERCOME',
+		'body'  => "Turn physical and mental obstacles into opportunities, building resilience and discovering that you're capable of more than you thought.",
+	),
+);
 
 $lp_default_row_labels = array(
 	array(
@@ -189,6 +222,21 @@ if ( ! $lp_tiers ) {
 	$lp_tiers = $lp_default_tiers;
 }
 
+$lp_why_statements = array();
+
+foreach ( is_array( $args['why_statements'] ?? null ) ? $args['why_statements'] : array() as $lp_row ) {
+	$lp_line = trim( (string) ( is_array( $lp_row ) ? ( $lp_row['line'] ?? '' ) : $lp_row ) );
+	if ( '' !== $lp_line ) {
+		$lp_why_statements[] = $lp_line;
+	}
+}
+
+if ( ! $lp_why_statements ) {
+	$lp_why_statements = $lp_default_why_statements;
+}
+
+$lp_why_statement = $lp_why_statements[ array_rand( $lp_why_statements ) ];
+
 $lp_spacing = lp_section_spacing( $args );
 ?>
 <section class="<?php echo lp_classes( 'bg-base-200 px-6 md:px-16 pt-[124px] pb-[128px]', $lp_spacing ); ?>" data-component="pricing"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
@@ -207,21 +255,15 @@ $lp_spacing = lp_section_spacing( $args );
 			<div class="h-px bg-base-300/60 w-full" aria-hidden="true"></div>
 			<div class="pt-[56px] pb-[80px] flex flex-col lg:flex-row lg:items-start gap-[40px] lg:gap-[80px]">
 				<div class="flex-1 min-w-0">
-					<p class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0">Six sessions in, most people hit something they thought was physically off limits.</p>
+					<p class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0" data-slot="why-statement"><?php echo esc_html( $lp_why_statement ); ?></p>
 				</div>
 				<div class="w-full lg:w-[380px] shrink-0 flex flex-col gap-[32px]">
-					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
-						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content">COACHED EVERY SESSION</span>
-						<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0">A Level 2 coach in every class. They watch how you move and find what actually needs work — not what the plan assumes.</p>
-					</div>
-					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
-						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content">NO EXPERIENCE NEEDED</span>
-						<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0">Beginners sessions start from the ground up. Nothing is compulsory and the coach sets the level to the person in front of them.</p>
-					</div>
-					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
-						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content">WORKS ALONGSIDE ANYTHING</span>
-						<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0">Once a week alongside running, climbing or lifting. It doesn't compete with what you already do. It makes the rest of it more useful.</p>
-					</div>
+					<?php foreach ( $lp_default_why_points as $lp_point ) : ?>
+						<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
+							<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
+							<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
+						</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>
