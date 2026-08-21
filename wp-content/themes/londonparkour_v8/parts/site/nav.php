@@ -210,7 +210,10 @@ $lp_default_classes_panel   = array(
 				),
 				array(
 					'name' => 'Map',
-					'meta' => '6 SITES',
+					'meta' => sprintf(
+						'%d SITES',
+						function_exists( 'lp_published_site_count' ) ? ( lp_published_site_count() ?: 3 ) : 3
+					),
 					'href' => '/classes-map',
 				),
 				array(

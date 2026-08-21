@@ -178,7 +178,10 @@ $lp_board_ttl = (string) ( $args['board_title'] ?? 'LIVE TIMETABLE' );
 $lp_stamp     = (string) ( $args['stamp'] ?? 'UPDATED 09:12 · THU 30 JUL' );
 $lp_foot_note = function_exists( 'lp_weekly_class_foot_note' ) ? lp_weekly_class_foot_note() : '';
 if ( '' === $lp_foot_note ) {
-	$lp_foot_note = (string) ( $args['foot_note'] ?? '6 SITES · 7 DAYS · 40+ SESSIONS A WEEK' );
+	$lp_foot_note = (string) ( $args['foot_note'] ?? sprintf(
+		'%d SITES · 7 DAYS · 40+ SESSIONS A WEEK',
+		function_exists( 'lp_published_site_count' ) ? ( lp_published_site_count() ?: 3 ) : 3
+	) );
 }
 
 // The source always renders this link, falling back to its own default copy.

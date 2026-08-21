@@ -416,6 +416,41 @@ function lp_contact_locations_inline(): string {
 }
 
 /**
+ * Number of published class sites.
+ */
+function lp_published_site_count(): int {
+	return count( lp_locations_by_kind( 'site' ) );
+}
+
+/**
+ * Spoken count of published class sites, e.g. "three".
+ *
+ * Falls back to "three" when none are published, matching the live site.
+ */
+function lp_sites_word( bool $capital = false ): string {
+	$n = lp_published_site_count();
+	if ( $n < 1 ) {
+		$n = 3;
+	}
+
+	$words = array(
+		1  => 'one',
+		2  => 'two',
+		3  => 'three',
+		4  => 'four',
+		5  => 'five',
+		6  => 'six',
+		7  => 'seven',
+		8  => 'eight',
+		9  => 'nine',
+		10 => 'ten',
+	);
+	$word = $words[ $n ] ?? (string) $n;
+
+	return $capital ? ucfirst( $word ) : $word;
+}
+
+/**
  * Contact FAQ answer for "Where exactly do you train?" from live class sites.
  */
 function lp_where_we_train_answer(): string {
@@ -428,19 +463,7 @@ function lp_where_we_train_answer(): string {
 		return 'We train at sites across London. Every one is next to a tube or overground station.';
 	}
 
-	$lp_words = array(
-		1  => 'One',
-		2  => 'Two',
-		3  => 'Three',
-		4  => 'Four',
-		5  => 'Five',
-		6  => 'Six',
-		7  => 'Seven',
-		8  => 'Eight',
-		9  => 'Nine',
-		10 => 'Ten',
-	);
-	$lp_lead  = ( $lp_words[ $lp_n ] ?? (string) $lp_n ) . ' ' . ( 1 === $lp_n ? 'site' : 'sites' ) . ' across London';
+	$lp_lead = lp_sites_word( true ) . ' ' . ( 1 === $lp_n ? 'site' : 'sites' ) . ' across London';
 
 	return $lp_lead . ' — ' . lp_join_and( $lp_names ) . '. Every one is next to a tube or overground station.';
 }
@@ -665,7 +688,7 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
  *
  * Ported from ClassesHeaderCluster.js's `DEFAULT_FILTER_CELLS`. SITE's empty
  * option label counts published `lp_location` posts so it stays accurate when
- * sites are added or removed (the pen's "All six sites" string is not fixed).
+ * sites are added or removed (the pen's "All six sites" string is not used).
  *
  * Options come from real records: CLASS TYPE from the `lp_level` taxonomy
  * (the design's kickers — ALL LEVELS, LEVEL 2 · IMPROVER, 6–9 AGE — are level

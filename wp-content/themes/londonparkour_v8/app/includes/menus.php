@@ -381,7 +381,7 @@ function lp_nav_classes_panel(): array {
 	$listings = function_exists( 'lp_classes_listings_url' ) ? lp_classes_listings_url() : home_url( '/all-classes/' );
 	$map      = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes-map' ) : home_url( '/classes-map/' );
 	$agenda   = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' );
-	$sites    = function_exists( 'lp_locations_by_kind' ) ? count( lp_locations_by_kind( 'site' ) ) : 6;
+	$sites    = function_exists( 'lp_locations_by_kind' ) ? count( lp_locations_by_kind( 'site' ) ) : 3;
 	$private  = home_url( '/#private-coaching' );
 	foreach ( array( 'private-coaching', 'private-tuition' ) as $slug ) {
 		$page = get_page_by_path( $slug );
@@ -392,7 +392,7 @@ function lp_nav_classes_panel(): array {
 	}
 
 	$agenda_meta    = '18 SESSIONS';
-	$map_meta       = sprintf( '%d SITES', $sites ?: 6 );
+	$map_meta       = sprintf( '%d SITES', $sites ?: 3 );
 	$workshop_meta  = '6 DATES';
 	$workshops      = function_exists( 'lp_workshops_url' ) ? lp_workshops_url() : home_url( '/workshops/' );
 	$coupons_page   = get_page_by_path( 'coupons' );

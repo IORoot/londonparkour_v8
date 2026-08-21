@@ -50,7 +50,10 @@ $lp_default_facts_offer = array(
 	),
 	array(
 		'label' => 'WHERE',
-		'value' => 'Any of six sites',
+		'value' => sprintf(
+			'Any of %s sites',
+			function_exists( 'lp_sites_word' ) ? lp_sites_word() : 'three'
+		),
 	),
 	array(
 		'label' => 'WHO',
@@ -93,7 +96,10 @@ if ( $lp_is_booking ) {
 	$lp_unit          = (string) ( $args['unit'] ?? 'PER SESSION' );
 	$lp_default_facts = $lp_default_facts_booking;
 } else {
-	$lp_body          = (string) ( $args['standfirst'] ?? "Private sessions move at your pace — whether that's a first wall you'd rather not meet in front of a group, a comeback after injury, or one specific line you've been stuck on for months. We come to any of our six sites, any day of the week." );
+	$lp_body          = (string) ( $args['standfirst'] ?? sprintf(
+		"Private sessions move at your pace — whether that's a first wall you'd rather not meet in front of a group, a comeback after injury, or one specific line you've been stuck on for months. We come to any of our %s sites, any day of the week.",
+		function_exists( 'lp_sites_word' ) ? lp_sites_word() : 'three'
+	) );
 	$lp_fare_label    = (string) ( $args['fare_label'] ?? 'FROM' );
 	$lp_amount        = (string) ( $args['amount'] ?? '£75' );
 	$lp_unit          = (string) ( $args['unit'] ?? 'PER SESSION · BLOCKS AVAILABLE' );

@@ -516,7 +516,10 @@ get_header();
 			),
 			'next' => array(
 				'keyword' => 'PRIVATE COACHING →',
-				'label'   => 'One coach, any of six sites',
+				'label'   => sprintf(
+					'One coach, any of %s sites',
+					function_exists( 'lp_sites_word' ) ? lp_sites_word() : 'three'
+				),
 				'href'    => $lp_coaching,
 			),
 		)

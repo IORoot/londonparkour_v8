@@ -75,7 +75,7 @@ $lp_panel = array(
 		),
 		array(
 			'label' => 'TUTORIALS',
-			'value' => 'Twelve free lessons',
+			'value' => 'Over 800+ videos',
 		),
 		array(
 			'label' => 'PRICING',
@@ -97,7 +97,10 @@ $lp_destinations = array(
 	array(
 		'kicker' => 'DESTINATION 01',
 		'title'  => "This week's board",
-		'meta'   => '40+ sessions · six sites · drop in from £15',
+		'meta'   => sprintf(
+			'40+ sessions · %s sites · drop in from £15',
+			function_exists( 'lp_sites_word' ) ? lp_sites_word() : 'three'
+		),
 		'href'   => '/classes',
 	),
 	array(

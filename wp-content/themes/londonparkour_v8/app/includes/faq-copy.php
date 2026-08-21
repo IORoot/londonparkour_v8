@@ -71,7 +71,10 @@ function lp_faq_default_groups(): array {
 				),
 				array(
 					'question' => 'Class was cancelled, what happens to my booking?',
-					'answer'   => "Your credit goes straight back onto your account, usually within the hour, and it spends on any session at any of the six sites. If you'd rather have the money back, reply to the cancellation email and we'll refund the card you paid with.",
+					'answer'   => sprintf(
+						"Your credit goes straight back onto your account, usually within the hour, and it spends on any session at any of the %s sites. If you'd rather have the money back, reply to the cancellation email and we'll refund the card you paid with.",
+						function_exists( 'lp_sites_word' ) ? lp_sites_word() : 'three'
+					),
 				),
 			),
 		),
@@ -83,7 +86,10 @@ function lp_faq_default_groups(): array {
 			'items'   => array(
 				array(
 					'question' => 'How much are private sessions?',
-					'answer'   => 'Private tuition starts at £65 for one hour, one-to-one, with a Level 2 coach. Two people sharing pay £40 each, and groups of three to six work out cheaper again. Sessions run at any of our six sites, or somewhere you choose inside London.',
+					'answer'   => sprintf(
+						'Private tuition starts at £65 for one hour, one-to-one, with a Level 2 coach. Two people sharing pay £40 each, and groups of three to six work out cheaper again. Sessions run at any of our %s sites, or somewhere you choose inside London.',
+						function_exists( 'lp_sites_word' ) ? lp_sites_word() : 'three'
+					),
 				),
 				array(
 					'question' => 'Can I book a party?',
