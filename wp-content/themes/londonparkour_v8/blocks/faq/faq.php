@@ -26,15 +26,17 @@ $lp_default_items = array(
 	),
 	array(
 		'question' => 'How much is a first class?',
-		'answer'   => "First class is £15 for 60 minutes. There's no contract and no membership. If your first session isn't for you, we refund it — nobody has asked yet.",
+		'answer'   => "First class is £15 for 90 minutes. There's no contract and no membership. If your first session isn't for you, we refund it — nobody has asked yet.",
 	),
 	array(
 		'question' => 'What should I bring?',
-		'answer'   => "Just trainers. All kit is provided, every session is coach-led and capped at twelve, and it's free to cancel up to 12 hours before.",
+		'answer'   => "Just trainers. Every session is coach-led, and it's free to cancel up to 12 hours before.",
 	),
 	array(
 		'question' => 'Where exactly do you train?',
-		'answer'   => 'Six sites across London — Vauxhall, Peckham Rye, Southbank, Stratford East, Hackney Marshes and Wembley Park. Every one is a ten-minute walk from a tube or overground station.',
+		'answer'   => function_exists( 'lp_where_we_train_answer' )
+			? lp_where_we_train_answer()
+			: 'Three sites across London — Vauxhall, Old Street and Kilburn Park. Every one is next to a tube or overground station.',
 	),
 );
 
@@ -206,6 +208,18 @@ foreach ( is_array( $args['items'] ?? null ) ? $args['items'] : array() as $lp_r
 if ( ! $lp_items ) {
 	$lp_items = $lp_default_items;
 }
+
+$lp_canonical_answers = array();
+foreach ( $lp_default_items as $lp_default_item ) {
+	$lp_canonical_answers[ $lp_default_item['question'] ] = $lp_default_item['answer'];
+}
+foreach ( $lp_items as &$lp_item ) {
+	$lp_question = (string) ( $lp_item['question'] ?? '' );
+	if ( isset( $lp_canonical_answers[ $lp_question ] ) ) {
+		$lp_item['answer'] = $lp_canonical_answers[ $lp_question ];
+	}
+}
+unset( $lp_item );
 
 $lp_still         = is_array( $args['still_stuck'] ?? null ) ? $args['still_stuck'] : array();
 $lp_still_title   = (string) ( $lp_still['title'] ?? 'STILL STUCK?' );

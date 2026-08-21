@@ -187,6 +187,112 @@ function lp_class_is_one_off( int $class_id ): bool {
 }
 
 /**
+ * Public appointment (1:1) clasbpro class — not a weekly group class.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_is_appointment( int $class_id ): bool {
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw ) {
+		return ! empty( $raw['is_appointments'] ) || 'appointments' === (string) ( $raw['schedule_type'] ?? '' );
+	}
+	if ( function_exists( 'get_field' ) ) {
+		return 'appointments' === (string) get_field( 'schedule_type', $class_id );
+	}
+	return 'appointments' === (string) get_post_meta( $class_id, 'schedule_type', true );
+}
+
+/**
+ * Published, active, recurring weekly group classes — not workshops, 1:1s, or
+ * external-link listings.
+ *
+ * @return int[]
+ */
+function lp_weekly_class_ids(): array {
+	$ids = get_posts(
+		lp_class_query_exclude_one_offs(
+			lp_class_active_meta_query(
+				array(
+					'post_type'              => lp_class_post_type(),
+					'post_status'            => 'publish',
+					'posts_per_page'         => -1,
+					'fields'                 => 'ids',
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => true,
+					'update_post_term_cache' => false,
+				)
+			)
+		)
+	);
+
+	$weekly = array();
+	foreach ( $ids as $id ) {
+		$id = (int) $id;
+		if ( $id <= 0 || lp_class_is_appointment( $id ) || lp_class_is_one_off( $id ) ) {
+			continue;
+		}
+		$raw = lp_clasbpro_raw( $id );
+		if ( $raw && 'external_link' === (string) ( $raw['schedule_type'] ?? '' ) ) {
+			continue;
+		}
+		$weekly[] = $id;
+	}
+
+	return $weekly;
+}
+
+/**
+ * Distinct `lp_location` sites that weekly classes actually run at.
+ *
+ * @param int[] $class_ids Weekly class post IDs. Defaults to lp_weekly_class_ids().
+ * @return int[] Location post IDs.
+ */
+function lp_weekly_class_location_ids( array $class_ids = array() ): array {
+	if ( ! $class_ids ) {
+		$class_ids = lp_weekly_class_ids();
+	}
+
+	$sites = array();
+	foreach ( $class_ids as $id ) {
+		$location_id = lp_class_location_id( (int) $id );
+		if ( $location_id > 0 ) {
+			$sites[ $location_id ] = $location_id;
+		}
+	}
+
+	return array_values( $sites );
+}
+
+/**
+ * Classes-board foot note from live weekly classes, e.g. "3 SITES · 5 CLASSES A WEEK".
+ *
+ * Empty when there are no weekly classes — callers keep their editor fallback.
+ */
+function lp_weekly_class_foot_note(): string {
+	$class_ids = lp_weekly_class_ids();
+	$n_class   = count( $class_ids );
+	if ( $n_class < 1 ) {
+		return '';
+	}
+
+	$n_site = count( lp_weekly_class_location_ids( $class_ids ) );
+
+	return sprintf(
+		'%s · %s',
+		sprintf(
+			/* translators: %d: number of weekly class sites */
+			_n( '%d SITE', '%d SITES', $n_site, 'londonparkour_v8' ),
+			$n_site
+		),
+		sprintf(
+			/* translators: %d: number of weekly classes */
+			_n( '%d CLASS A WEEK', '%d CLASSES A WEEK', $n_class, 'londonparkour_v8' ),
+			$n_class
+		)
+	);
+}
+
+/**
  * Meta query that keeps only one-off workshops.
  *
  * @return array<string,string>

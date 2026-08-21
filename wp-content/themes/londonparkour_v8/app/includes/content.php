@@ -340,6 +340,112 @@ function lp_locations_by_kind( string $lp_kind = 'site' ): array {
 }
 
 /**
+ * Join a list in English: "A", "A and B", "A, B and C".
+ *
+ * @param string[] $lp_items
+ */
+function lp_join_and( array $lp_items ): string {
+	$lp_items = array_values(
+		array_filter(
+			array_map( 'strval', $lp_items ),
+			static function ( string $lp_item ): bool {
+				return '' !== $lp_item;
+			}
+		)
+	);
+	$lp_n     = count( $lp_items );
+	if ( 0 === $lp_n ) {
+		return '';
+	}
+	if ( 1 === $lp_n ) {
+		return $lp_items[0];
+	}
+	if ( 2 === $lp_n ) {
+		return $lp_items[0] . ' and ' . $lp_items[1];
+	}
+
+	return implode( ', ', array_slice( $lp_items, 0, -1 ) ) . ' and ' . $lp_items[ $lp_n - 1 ];
+}
+
+/**
+ * UK postcode from a location's meta string, or empty.
+ *
+ * @param int $lp_id Location post ID.
+ */
+function lp_location_postcode( int $lp_id ): string {
+	$lp_meta = (string) get_field( 'meta', $lp_id );
+	if ( preg_match( '/\b([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})\b/i', $lp_meta, $lp_m ) ) {
+		return strtoupper( preg_replace( '/\s+/', ' ', $lp_m[1] ) );
+	}
+
+	return '';
+}
+
+/**
+ * Class-site lines for Contact, e.g. "Vauxhall — SW8 1SS".
+ *
+ * @return string[]
+ */
+function lp_contact_location_lines(): array {
+	$lp_lines = array();
+	foreach ( lp_locations_by_kind( 'site' ) as $lp_post ) {
+		$lp_code    = lp_location_postcode( (int) $lp_post->ID );
+		$lp_lines[] = '' !== $lp_code ? $lp_post->post_title . ' — ' . $lp_code : $lp_post->post_title;
+	}
+
+	return $lp_lines;
+}
+
+/**
+ * Multiline Locations block for Contact Other Ways.
+ */
+function lp_contact_locations_block(): string {
+	return implode( "\n", lp_contact_location_lines() );
+}
+
+/**
+ * Compact Locations value for the Contact reach aside.
+ */
+function lp_contact_locations_inline(): string {
+	$lp_names = array();
+	foreach ( lp_locations_by_kind( 'site' ) as $lp_post ) {
+		$lp_names[] = $lp_post->post_title;
+	}
+
+	return implode( ' · ', $lp_names );
+}
+
+/**
+ * Contact FAQ answer for "Where exactly do you train?" from live class sites.
+ */
+function lp_where_we_train_answer(): string {
+	$lp_names = array();
+	foreach ( lp_locations_by_kind( 'site' ) as $lp_post ) {
+		$lp_names[] = $lp_post->post_title;
+	}
+	$lp_n = count( $lp_names );
+	if ( $lp_n < 1 ) {
+		return 'We train at sites across London. Every one is next to a tube or overground station.';
+	}
+
+	$lp_words = array(
+		1  => 'One',
+		2  => 'Two',
+		3  => 'Three',
+		4  => 'Four',
+		5  => 'Five',
+		6  => 'Six',
+		7  => 'Seven',
+		8  => 'Eight',
+		9  => 'Nine',
+		10 => 'Ten',
+	);
+	$lp_lead  = ( $lp_words[ $lp_n ] ?? (string) $lp_n ) . ' ' . ( 1 === $lp_n ? 'site' : 'sites' ) . ' across London';
+
+	return $lp_lead . ' — ' . lp_join_and( $lp_names ) . '. Every one is next to a tube or overground station.';
+}
+
+/**
  * Street View / maps exit URL for a location.
  *
  * @param int $lp_id Location post ID.

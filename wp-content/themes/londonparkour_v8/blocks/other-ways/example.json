@@ -1,19 +1,13 @@
 {
   "meta_left": "OTHER WAYS TO REACH US",
-  "meta_right": "MON–SAT · 09:00–18:00",
+  "meta_right": "WED · SAT · SUN · 09:00–20:00",
   "columns": [
     {
       "icon_id": "icon-map-pin",
-      "label": "STUDIO ADDRESS",
-      "value": "24 Britannia Walk\nHoxton, London N1 7JR",
-      "link_label": "STREETVIEW ↗",
-      "link_href": "#"
-    },
-    {
-      "icon_id": "icon-phone",
-      "label": "PHONE",
-      "value": "+44 20 7946 0958",
-      "note": "MON–SAT, 9AM–6PM"
+      "label": "LOCATIONS",
+      "value": "Vauxhall — SW8 1SS\nOld Street — EC1Y 1BE\nKilburn Park — NW6 5AD",
+      "link_label": "OPEN THE MAP ↗",
+      "link_href": "/classes-map/"
     },
     {
       "icon_id": "icon-envelope",
@@ -24,7 +18,7 @@
     {
       "icon_id": "icon-clock",
       "label": "OPENING HOURS",
-      "value": "Mon–Fri — 07:00 to 21:00\nSat–Sun — 09:00 to 18:00"
+      "value": "Wed, Sat, Sun — 09:00 to 20:00"
     }
   ]
 }

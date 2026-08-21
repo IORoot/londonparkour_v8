@@ -30,7 +30,7 @@
  * @param string $args['board_title']
  * @param string $args['stamp']
  * @param array  $args['primary_action'] The board's foot link.
- * @param string $args['foot_note']
+ * @param string $args['foot_note'] Fallback only; live weekly class counts win.
  *
  * @package londonparkour_v8
  */
@@ -176,7 +176,10 @@ $lp_heading   = (string) ( $args['heading'] ?? 'Coming up. Book a place.' );
 $lp_note      = (string) ( $args['note'] ?? 'Coach-led, no kit needed — just trainers and water. Book while the place is still open.' );
 $lp_board_ttl = (string) ( $args['board_title'] ?? 'LIVE TIMETABLE' );
 $lp_stamp     = (string) ( $args['stamp'] ?? 'UPDATED 09:12 · THU 30 JUL' );
-$lp_foot_note = (string) ( $args['foot_note'] ?? '6 SITES · 7 DAYS · 40+ SESSIONS A WEEK' );
+$lp_foot_note = function_exists( 'lp_weekly_class_foot_note' ) ? lp_weekly_class_foot_note() : '';
+if ( '' === $lp_foot_note ) {
+	$lp_foot_note = (string) ( $args['foot_note'] ?? '6 SITES · 7 DAYS · 40+ SESSIONS A WEEK' );
+}
 
 // The source always renders this link, falling back to its own default copy.
 $lp_foot = lp_action( $args['primary_action'] ?? null ) ?? array(

@@ -29,9 +29,10 @@ return array(
 			),
 			lp_field_stamp(),
 			array(
-				'name'  => 'foot_note',
-				'label' => __( 'Foot note', 'londonparkour_v8' ),
-				'type'  => 'text',
+				'name'         => 'foot_note',
+				'label'        => __( 'Foot note', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'Fallback only. When weekly classes exist, the board foot is built from their count and sites (e.g. “3 SITES · 5 CLASSES A WEEK”).', 'londonparkour_v8' ),
 			),
 
 			lp_tab( __( 'Items', 'londonparkour_v8' ) ),

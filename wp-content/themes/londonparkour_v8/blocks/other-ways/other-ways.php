@@ -1,6 +1,6 @@
 <?php
 /**
- * Other Ways — Contact page 03 Other Ways: meta row + four glyph columns.
+ * Other Ways — Contact page 03 Other Ways: meta row + three glyph columns.
  *
  * Ported from src/stories/Pages/Contact/Contact.js (`data-component="contact-other-ways"`).
  *
@@ -13,19 +13,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$lp_locations_block = function_exists( 'lp_contact_locations_block' ) ? lp_contact_locations_block() : '';
+$lp_map_url         = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes-map' ) : home_url( '/classes-map/' );
+
 $lp_default_columns = array(
 	array(
 		'icon_id'    => 'icon-map-pin',
-		'label'      => 'STUDIO ADDRESS',
-		'value'      => "24 Britannia Walk\nHoxton, London N1 7JR",
-		'link_label' => 'STREETVIEW ↗',
-		'link_href'  => '#',
-	),
-	array(
-		'icon_id' => 'icon-phone',
-		'label'   => 'PHONE',
-		'value'   => '+44 20 7946 0958',
-		'note'    => 'MON–SAT, 9AM–6PM',
+		'label'      => 'LOCATIONS',
+		'value'      => $lp_locations_block ? $lp_locations_block : "Vauxhall — SW8 1SS\nOld Street — EC1Y 1BE\nKilburn Park — NW6 5AD",
+		'link_label' => 'OPEN THE MAP ↗',
+		'link_href'  => $lp_map_url,
 	),
 	array(
 		'icon_id' => 'icon-envelope',
@@ -36,22 +33,17 @@ $lp_default_columns = array(
 	array(
 		'icon_id' => 'icon-clock',
 		'label'   => 'OPENING HOURS',
-		'value'   => "Mon–Fri — 07:00 to 21:00\nSat–Sun — 09:00 to 18:00",
+		'value'   => 'Wed, Sat, Sun — 09:00 to 20:00',
 	),
 );
 
 $lp_meta_left  = (string) ( $args['meta_left'] ?? 'OTHER WAYS TO REACH US' );
-$lp_meta_right = (string) ( $args['meta_right'] ?? 'MON–SAT · 09:00–18:00' );
+$lp_meta_right = (string) ( $args['meta_right'] ?? 'WED · SAT · SUN · 09:00–20:00' );
+if ( false !== stripos( $lp_meta_right, 'mon' ) || false !== stripos( $lp_meta_right, 'phone' ) ) {
+	$lp_meta_right = 'WED · SAT · SUN · 09:00–20:00';
+}
 
-$lp_columns = array();
-foreach ( is_array( $args['columns'] ?? null ) ? $args['columns'] : array() as $lp_row ) {
-	if ( is_array( $lp_row ) && ( ! empty( $lp_row['label'] ) || ! empty( $lp_row['value'] ) ) ) {
-		$lp_columns[] = $lp_row;
-	}
-}
-if ( ! $lp_columns ) {
-	$lp_columns = $lp_default_columns;
-}
+$lp_columns = $lp_default_columns;
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
@@ -68,7 +60,7 @@ $lp_spacing = lp_section_spacing( $args );
 			);
 			lp_part( 'elements/rule', array( 'tone' => 'hairline' ) );
 			?>
-			<div class="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-14">
+			<div class="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14">
 				<?php foreach ( $lp_columns as $lp_col ) : ?>
 					<?php
 					$lp_value      = (string) ( $lp_col['value'] ?? '' );
