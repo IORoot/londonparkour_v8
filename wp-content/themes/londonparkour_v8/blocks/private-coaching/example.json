@@ -10,13 +10,13 @@
   "fare_label": "FROM",
   "amount": "£65",
   "unit": "PER SESSION",
-  "reassure": "We'll confirm your booking by email within one working day.",
+  "reassure": "No request form. Pick a slot and it confirms instantly.",
   "facts": [
     { "label": "DURATION", "value": "60 min" },
     { "label": "WHERE", "value": "Any site" },
     { "label": "WHO", "value": "L2 coach" }
   ],
   "book_action": {
-    "link": { "title": "REQUEST 1:1", "url": "/private-coaching/request/", "target": "" }
+    "link": { "title": "Confirmed instantly.", "url": "/private-coaching/", "target": "" }
   }
 }

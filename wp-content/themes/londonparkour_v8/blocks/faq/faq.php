@@ -77,7 +77,7 @@ $lp_default_groups = array(
 		'items'   => array(
 			array(
 				'question' => 'How much are private sessions?',
-				'answer'   => 'Private tuition starts at £70 for one hour, one-to-one, with a Level 2 coach. Two people sharing pay £45 each, and groups of three to six work out cheaper again. Sessions run at any of our six sites, or somewhere you choose inside London.',
+				'answer'   => 'Private tuition starts at £65 for one hour, one-to-one, with a Level 2 coach. Two people sharing pay £40 each, and groups of three to six work out cheaper again. Sessions run at any of our six sites, or somewhere you choose inside London.',
 			),
 			array(
 				'question' => 'Can I book a party?',
@@ -169,6 +169,28 @@ if ( 'groups' === $lp_mode ) :
 	if ( ! $lp_groups ) {
 		$lp_groups = $lp_default_groups;
 	}
+
+	$lp_group_answers = array();
+	foreach ( $lp_default_groups as $lp_default_group ) {
+		foreach ( (array) ( $lp_default_group['items'] ?? array() ) as $lp_default_item ) {
+			if ( ! empty( $lp_default_item['question'] ) ) {
+				$lp_group_answers[ $lp_default_item['question'] ] = $lp_default_item['answer'];
+			}
+		}
+	}
+	foreach ( $lp_groups as &$lp_group ) {
+		if ( empty( $lp_group['items'] ) || ! is_array( $lp_group['items'] ) ) {
+			continue;
+		}
+		foreach ( $lp_group['items'] as &$lp_group_item ) {
+			$lp_q = (string) ( $lp_group_item['question'] ?? '' );
+			if ( isset( $lp_group_answers[ $lp_q ] ) ) {
+				$lp_group_item['answer'] = $lp_group_answers[ $lp_q ];
+			}
+		}
+		unset( $lp_group_item );
+	}
+	unset( $lp_group );
 	?>
 <section class="<?php echo lp_classes( 'w-full bg-base-100', $lp_spacing ); ?>" data-component="docs-faq-body"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="px-6 lg:px-16 py-scale-xl flex flex-col gap-[48px]">
@@ -223,7 +245,10 @@ unset( $lp_item );
 
 $lp_still         = is_array( $args['still_stuck'] ?? null ) ? $args['still_stuck'] : array();
 $lp_still_title   = (string) ( $lp_still['title'] ?? 'STILL STUCK?' );
-$lp_still_body    = (string) ( $lp_still['body'] ?? 'Send the form above, or email us direct. A coach reads every message — usually the same working day.' );
+$lp_still_body    = (string) ( $lp_still['body'] ?? 'Send the form above, or email us direct. A coach reads every message — we reply within 36H.' );
+if ( false !== stripos( $lp_still_body, 'working day' ) || false !== stripos( $lp_still_body, '24h' ) ) {
+	$lp_still_body = 'Send the form above, or email us direct. A coach reads every message — we reply within 36H.';
+}
 $lp_still_email   = (string) ( $lp_still['email'] ?? 'hello@londonparkour.com' );
 $lp_still_mailto  = 'mailto:' . $lp_still_email;
 ?>

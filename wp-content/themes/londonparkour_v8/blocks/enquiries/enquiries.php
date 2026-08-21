@@ -37,8 +37,8 @@ $lp_default_reach_rows = array(
 
 $lp_title            = (string) ( $args['title'] ?? 'Send us a message' );
 $lp_lead             = (string) ( $args['lead'] ?? "Tell us what you're training for and we'll point you in the right direction." );
-$lp_note             = (string) ( $args['note'] ?? 'We reply within 1 working day.' );
-$lp_success_message  = (string) ( $args['success_message'] ?? 'Thanks — your message is on its way. We usually reply within one working day.' );
+$lp_note             = (string) ( $args['note'] ?? 'We reply within 36H.' );
+$lp_success_message  = (string) ( $args['success_message'] ?? 'Thanks — your message is on its way. We reply within 36H.' );
 $lp_error_message    = (string) ( $args['error_message'] ?? 'Something went wrong sending your message. Please try again or email us direct.' );
 
 $lp_reach       = is_array( $args['reach'] ?? null ) ? $args['reach'] : array();
@@ -46,7 +46,7 @@ $lp_reach_title = (string) ( $lp_reach['title'] ?? 'REACH US NOW' );
 $lp_reach_spots = (string) ( $lp_reach['spots_left'] ?? 'OPEN' );
 $lp_reach_cta   = (string) ( $lp_reach['cta_label'] ?? 'EMAIL US' );
 $lp_reach_href  = (string) ( $lp_reach['cta_href'] ?? 'mailto:hello@londonparkour.com' );
-$lp_reach_note  = (string) ( $lp_reach['note'] ?? 'We reply within 1 working day. Email is the fastest way to reach us.' );
+$lp_reach_note  = (string) ( $lp_reach['note'] ?? 'We reply within 36H. Email is the fastest way to reach us.' );
 $lp_reach_rows  = $lp_default_reach_rows;
 
 if ( false !== stripos( $lp_reach_cta, 'studio' ) || false !== stripos( $lp_reach_cta, 'call' ) || 0 === strpos( $lp_reach_href, 'tel:' ) ) {
@@ -56,8 +56,14 @@ if ( false !== stripos( $lp_reach_cta, 'studio' ) || false !== stripos( $lp_reac
 if ( '' === $lp_reach_href ) {
 	$lp_reach_href = 'mailto:hello@londonparkour.com';
 }
-if ( false !== stripos( $lp_reach_note, 'phone' ) ) {
-	$lp_reach_note = 'We reply within 1 working day. Email is the fastest way to reach us.';
+if ( false !== stripos( $lp_reach_note, 'phone' ) || false !== stripos( $lp_reach_note, 'working day' ) || false !== stripos( $lp_reach_note, '24h' ) ) {
+	$lp_reach_note = 'We reply within 36H. Email is the fastest way to reach us.';
+}
+if ( false !== stripos( $lp_note, 'working day' ) ) {
+	$lp_note = 'We reply within 36H.';
+}
+if ( false !== stripos( $lp_success_message, 'working day' ) ) {
+	$lp_success_message = 'Thanks — your message is on its way. We reply within 36H.';
 }
 
 $lp_field_defs = array(

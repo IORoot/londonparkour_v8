@@ -100,7 +100,10 @@ if ( $lp_is_booking ) {
 	$lp_default_facts = $lp_default_facts_offer;
 }
 
-$lp_reassure = (string) ( $args['reassure'] ?? "We'll confirm your booking by email within one working day." );
+$lp_reassure = (string) ( $args['reassure'] ?? 'No request form. Pick a slot and it confirms instantly.' );
+if ( false !== stripos( $lp_reassure, 'working day' ) || false !== stripos( $lp_reassure, 'confirm your booking by email' ) ) {
+	$lp_reassure = 'No request form. Pick a slot and it confirms instantly.';
+}
 
 $lp_facts = array();
 foreach ( is_array( $args['facts'] ?? null ) ? $args['facts'] : array() as $lp_row ) {
@@ -125,7 +128,7 @@ if ( $lp_is_booking ) :
 	}
 
 	$lp_book = lp_action( $args['book_action'] ?? null ) ?? array(
-		'label' => 'REQUEST 1:1',
+		'label' => 'Confirmed instantly.',
 		'href'  => '',
 	);
 
@@ -180,7 +183,10 @@ if ( $lp_is_booking ) :
 
 		<?php
 		$lp_appt_id   = absint( $args['appointment_class'] ?? 0 );
-		$lp_btn_label = $lp_book['label'] ?: 'REQUEST 1:1';
+		$lp_btn_label = $lp_book['label'] ?: 'Confirmed instantly.';
+		if ( false !== stripos( $lp_btn_label, 'request' ) ) {
+			$lp_btn_label = 'Confirmed instantly.';
+		}
 		?>
 		<div class="flex items-center justify-end gap-[14px] flex-wrap">
 			<?php

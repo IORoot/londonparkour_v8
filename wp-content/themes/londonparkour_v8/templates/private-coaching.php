@@ -49,7 +49,7 @@ $lp_audience = array(
 	),
 	array(
 		'label' => 'PAIRS',
-		'desc'  => 'Two people training together: same session price, split between you. Good if you both want focused coaching without going full group.',
+		'desc'  => 'SHARED (2 PEOPLE) £40 per person. Good if you both want focused coaching without going full group.',
 	),
 );
 

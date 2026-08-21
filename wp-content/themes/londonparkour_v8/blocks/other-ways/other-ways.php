@@ -28,7 +28,7 @@ $lp_default_columns = array(
 		'icon_id' => 'icon-envelope',
 		'label'   => 'EMAIL',
 		'value'   => 'hello@londonparkour.com',
-		'note'    => 'REPLIES WITHIN 24H',
+		'note'    => 'REPLIES WITHIN 36H',
 	),
 	array(
 		'icon_id' => 'icon-clock',

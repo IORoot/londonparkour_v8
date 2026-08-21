@@ -79,7 +79,7 @@ $lp_panel = array(
 		),
 		array(
 			'label' => 'PRICING',
-			'value' => 'From £8 a session',
+			'value' => 'From £15 a session',
 		),
 		array(
 			'label' => 'CONTACT',
@@ -97,7 +97,7 @@ $lp_destinations = array(
 	array(
 		'kicker' => 'DESTINATION 01',
 		'title'  => "This week's board",
-		'meta'   => '40+ sessions · six sites · drop in from £8',
+		'meta'   => '40+ sessions · six sites · drop in from £15',
 		'href'   => '/classes',
 	),
 	array(

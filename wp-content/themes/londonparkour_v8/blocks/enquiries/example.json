@@ -1,8 +1,8 @@
 {
   "title": "Send us a message",
   "lead": "Tell us what you're training for and we'll point you in the right direction.",
-  "note": "We reply within 1 working day.",
-  "success_message": "Thanks — your message is on its way. We usually reply within one working day.",
+  "note": "We reply within 36H.",
+  "success_message": "Thanks — your message is on its way. We reply within 36H.",
   "error_message": "Something went wrong sending your message. Please try again or email us direct.",
   "reach": {
     "title": "REACH US NOW",
@@ -14,6 +14,6 @@
     ],
     "cta_label": "EMAIL US",
     "cta_href": "mailto:hello@londonparkour.com",
-    "note": "We reply within 1 working day. Email is the fastest way to reach us."
+    "note": "We reply within 36H. Email is the fastest way to reach us."
   }
 }
