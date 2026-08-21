@@ -192,7 +192,7 @@ if ( ! $lp_tiers ) {
 $lp_spacing = lp_section_spacing( $args );
 ?>
 <section class="<?php echo lp_classes( 'bg-base-200 px-6 md:px-16 pt-[124px] pb-[128px]', $lp_spacing ); ?>" data-component="pricing"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
-	<div class="flex flex-col gap-[40px]">
+	<div class="flex flex-col">
 		<div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-[24px]">
 			<div class="flex flex-col gap-[16px]">
 				<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
@@ -201,6 +201,29 @@ $lp_spacing = lp_section_spacing( $args );
 			<?php if ( '' !== $lp_note ) : ?>
 				<p class="font-body text-step--2 text-base-content/65 max-w-[300px]"><?php echo esc_html( $lp_note ); ?></p>
 			<?php endif; ?>
+		</div>
+
+		<div class="mt-[64px]" data-component="pricing-why">
+			<div class="h-px bg-base-300/60 w-full" aria-hidden="true"></div>
+			<div class="pt-[56px] pb-[80px] flex flex-col lg:flex-row lg:items-start gap-[40px] lg:gap-[80px]">
+				<div class="flex-1 min-w-0">
+					<p class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0">Six sessions in, most people hit something they thought was physically off limits.</p>
+				</div>
+				<div class="w-full lg:w-[380px] shrink-0 flex flex-col gap-[32px]">
+					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
+						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content">COACHED EVERY SESSION</span>
+						<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0">A Level 2 coach in every class. They watch how you move and find what actually needs work — not what the plan assumes.</p>
+					</div>
+					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
+						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content">NO EXPERIENCE NEEDED</span>
+						<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0">Beginners sessions start from the ground up. Nothing is compulsory and the coach sets the level to the person in front of them.</p>
+					</div>
+					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
+						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-base-content">WORKS ALONGSIDE ANYTHING</span>
+						<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0">Once a week alongside running, climbing or lifting. It doesn't compete with what you already do. It makes the rest of it more useful.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<?php
