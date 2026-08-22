@@ -68,6 +68,7 @@ const LP_SEED_HOMEPAGE_ORDER = array(
 	'locations',
 	'coaches',
 	'cta',
+	'dispatch',
 );
 
 /**

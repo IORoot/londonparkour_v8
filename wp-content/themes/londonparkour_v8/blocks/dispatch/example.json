@@ -1,0 +1,16 @@
+{
+  "kicker": "The PathFinder",
+  "note": "A MONTHLY NOTE · NEVER A WEEKLY BLAST",
+  "headline": "Subscribe to the monthly dispatch.",
+  "standfirst": "One email. Unsubscribe any time.",
+  "consent": "By joining you agree we can email you.",
+  "privacy_label": "Privacy ↗",
+  "privacy_href": "/privacy",
+  "submit_label": "JOIN THE LIST",
+  "form_action": "",
+  "honeypot_name": "b_hp",
+  "success_kicker": "SENT",
+  "success_headline": "You're on the list.",
+  "success_body": "Check your inbox to confirm. We will not write again until you do.",
+  "anchor": "dispatch"
+}

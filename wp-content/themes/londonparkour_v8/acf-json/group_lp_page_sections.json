@@ -1097,6 +1097,167 @@
                     ],
                     "key": "layout_c8df9530d1835b5a"
                 },
+                "layout_e23987f950babfe6": {
+                    "name": "dispatch",
+                    "label": "Dispatch",
+                    "display": "block",
+                    "min": "",
+                    "max": "",
+                    "sub_fields": [
+                        {
+                            "name": "tab_content",
+                            "label": "Content",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_758db5f74088f941"
+                        },
+                        {
+                            "name": "kicker",
+                            "label": "Kicker",
+                            "type": "text",
+                            "instructions": "Product name above the headline, e.g. \"The PathFinder\".",
+                            "key": "field_116467b5cabd20bd"
+                        },
+                        {
+                            "name": "note",
+                            "label": "Note",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_b69088acc5884be1"
+                        },
+                        {
+                            "name": "headline",
+                            "label": "Headline",
+                            "type": "textarea",
+                            "rows": 2,
+                            "key": "field_aa7a365c5ab9753c"
+                        },
+                        {
+                            "name": "standfirst",
+                            "label": "Standfirst",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": "",
+                            "key": "field_6ee99a79306f4ec9"
+                        },
+                        {
+                            "name": "consent",
+                            "label": "Consent",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_30988fcdb5be954f"
+                        },
+                        {
+                            "name": "privacy_label",
+                            "label": "Privacy label",
+                            "type": "text",
+                            "key": "field_3b9bc8b48ec0b52c"
+                        },
+                        {
+                            "name": "privacy_href",
+                            "label": "Privacy link",
+                            "type": "url",
+                            "key": "field_52323c946ea18aa7"
+                        },
+                        {
+                            "name": "submit_label",
+                            "label": "Submit label",
+                            "type": "text",
+                            "key": "field_359ff1ddca33639c"
+                        },
+                        {
+                            "name": "success_kicker",
+                            "label": "Success kicker",
+                            "type": "text",
+                            "key": "field_fe8ae68678fcb29b"
+                        },
+                        {
+                            "name": "success_headline",
+                            "label": "Success headline",
+                            "type": "text",
+                            "key": "field_eb6c5c578402abb4"
+                        },
+                        {
+                            "name": "success_body",
+                            "label": "Success body",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": "",
+                            "key": "field_446db995b1e3b6ef"
+                        },
+                        {
+                            "name": "tab_actions",
+                            "label": "Actions",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_88824083e831e55a"
+                        },
+                        {
+                            "name": "form_action",
+                            "label": "Mailchimp form URL",
+                            "type": "url",
+                            "instructions": "The form action from the Mailchimp embed (subscribe/post?u=…&id=…). Thank-you page: this URL plus ?dispatch=sent.",
+                            "key": "field_b89b069d5f566a4c"
+                        },
+                        {
+                            "name": "honeypot_name",
+                            "label": "Honeypot field name",
+                            "type": "text",
+                            "instructions": "The hidden input name from the Mailchimp embed, usually b_{audience}_{list}.",
+                            "key": "field_238a2cc88a72b342"
+                        },
+                        {
+                            "name": "tab_settings",
+                            "label": "Settings",
+                            "type": "tab",
+                            "placement": "top",
+                            "endpoint": 0,
+                            "key": "field_12cf47576d3f81d2"
+                        },
+                        {
+                            "name": "anchor",
+                            "label": "Anchor ID",
+                            "type": "text",
+                            "instructions": "Optional. Lets a link jump to this section.",
+                            "key": "field_9cabaccf0177de57"
+                        },
+                        {
+                            "name": "spacing_top",
+                            "label": "Space above",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_25782294ab9095f8"
+                        },
+                        {
+                            "name": "spacing_bottom",
+                            "label": "Space below",
+                            "type": "select",
+                            "choices": {
+                                "default": "Default",
+                                "none": "None",
+                                "s": "Small",
+                                "m": "Medium",
+                                "l": "Large",
+                                "xl": "Extra large"
+                            },
+                            "default_value": "default",
+                            "key": "field_121e6b1981f18644"
+                        }
+                    ],
+                    "key": "layout_e23987f950babfe6"
+                },
                 "layout_c3cb0ff7d20a2750": {
                     "name": "enquiries",
                     "label": "Enquiries",
