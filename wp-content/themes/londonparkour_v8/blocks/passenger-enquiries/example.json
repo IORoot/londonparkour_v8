@@ -1,12 +1,12 @@
 {
   "kicker": "PASSENGER ENQUIRIES",
   "live_label": "OPEN NOW",
-  "note": "Coaches are on the floor during sessions, so email gets a faster answer than the phone.",
+  "note": "We reply within 36H. Email is the fastest way to reach us.",
   "facts": [
     { "label": "EMAIL", "value": "hello@londonparkour.com" },
-    { "label": "PHONE", "value": "020 3488 3854" },
-    { "label": "REPLY TIME", "value": "One working day" },
-    { "label": "IN PERSON", "value": "Vauxhall, Tue & Thu" }
+    { "label": "LOCATIONS", "value": "Vauxhall · Old Street · Kilburn Park" },
+    { "label": "HOURS", "value": "Wed, Sat, Sun · 09:00–20:00" },
+    { "label": "REPLY TIME", "value": "Within 36H" }
   ],
   "cta": {
     "link": {

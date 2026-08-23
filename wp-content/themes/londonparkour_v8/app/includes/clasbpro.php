@@ -242,6 +242,52 @@ function lp_weekly_class_ids(): array {
 }
 
 /**
+ * Weekly group classes that run at one lp_location site.
+ *
+ * @param int $location_id Location post ID.
+ * @return WP_Post[]
+ */
+function lp_classes_at_location( int $location_id ): array {
+	if ( $location_id <= 0 ) {
+		return array();
+	}
+
+	$posts = array();
+	foreach ( lp_weekly_class_ids() as $id ) {
+		$id = (int) $id;
+		if ( lp_class_location_id( $id ) !== $location_id ) {
+			continue;
+		}
+		$post = get_post( $id );
+		if ( $post instanceof WP_Post ) {
+			$posts[] = $post;
+		}
+	}
+
+	return function_exists( 'lp_class_dedupe_by_title' )
+		? lp_class_dedupe_by_title( $posts )
+		: $posts;
+}
+
+/**
+ * Board stamp for a site, e.g. "2 CLASSES". Empty when none run there.
+ *
+ * @param int $location_id Location post ID.
+ */
+function lp_location_class_count_label( int $location_id ): string {
+	$n = count( lp_classes_at_location( $location_id ) );
+	if ( $n < 1 ) {
+		return '';
+	}
+
+	return sprintf(
+		/* translators: %d: number of weekly classes at this site */
+		_n( '%d CLASS', '%d CLASSES', $n, 'londonparkour_v8' ),
+		$n
+	);
+}
+
+/**
  * Distinct `lp_location` sites that weekly classes actually run at.
  *
  * @param int[] $class_ids Weekly class post IDs. Defaults to lp_weekly_class_ids().

@@ -37,6 +37,28 @@
             "ui": 1,
             "instructions": "When set, BOOK 1:1 opens the shared booking overlay for this clasbpro appointment class.",
             "key": "field_1a0aba9b75aea44b"
+        },
+        {
+            "name": "tab_coaches",
+            "label": "Coaches",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0,
+            "key": "field_ff595ec9df469aad"
+        },
+        {
+            "name": "coaches",
+            "label": "Coaches",
+            "type": "relationship",
+            "post_type": [
+                "lp_coach"
+            ],
+            "return_format": "id",
+            "filters": [
+                "search"
+            ],
+            "instructions": "Coaches on this page, in this order. Leave empty to show every published coach.",
+            "key": "field_2e99d96fdfead0e7"
         }
     ]
 }

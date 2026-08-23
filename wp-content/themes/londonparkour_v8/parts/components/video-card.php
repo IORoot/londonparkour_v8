@@ -13,9 +13,11 @@
  * paper index, square play, WATCH foot.
  *
  * The play disc is elements/icon-circle.php variant '34' (§2a) — decorative
- * here, since the whole card is the control. Kicker and meta compose
- * elements/glyph-label.php; the badge is elements/badge.php; the CTA is
- * elements/button.php.
+ * here, since the whole card is the control. Compact media also carries that
+ * disc, centred, so the two demonstration stills read as videos (OsOLg had
+ * none; the overlay is the same atom as `full`, not a new control). Kicker
+ * and meta compose elements/glyph-label.php; the badge is elements/badge.php;
+ * the CTA is elements/button.php.
  *
  * `full`'s photo is media-photo's `video_full` scrim (absolute fill); the
  * `compact` figure holds a plain w-full/h-full image, so that one uses
@@ -205,7 +207,7 @@ if ( $lp_is_compact ) :
 	<?php else : ?>
 	<div class="<?php echo $lp_root; ?>" data-component="video-card" data-variant="compact">
 	<?php endif; ?>
-		<figure class="aspect-[12/5] w-full bg-base-300 overflow-hidden m-0">
+		<figure class="relative aspect-[12/5] w-full bg-base-300 overflow-hidden m-0">
 			<?php
 			lp_part(
 				'components/media-photo',
@@ -219,6 +221,9 @@ if ( $lp_is_compact ) :
 				)
 			);
 			?>
+			<span class="absolute inset-0 grid place-items-center pointer-events-none" aria-hidden="true">
+				<?php lp_part( 'elements/icon-circle', array( 'variant' => '34' ) ); ?>
+			</span>
 		</figure>
 		<div class="card-body p-0 pt-[19px] gap-[13px]">
 			<?php $lp_head_row( $lp_kicker, $lp_meta, $lp_glyph_id ); ?>

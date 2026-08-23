@@ -109,11 +109,11 @@ function lp_faq_default_groups(): array {
 			'items'   => array(
 				array(
 					'question' => 'I want to book something for a present, how can I do that?',
-					'answer'   => "A gift card is the easy answer: choose any amount and it arrives in your inbox as a code to print or forward. It spends on classes, courses and private sessions, and it doesn't expire.",
+					'answer'   => 'Buy a coupon on the coupons page — drop-in, 5-pack or 10-pack. Pay with Stripe and the code arrives in your inbox straight away. Forward that email if it is a present. Coupons cover standard classes only, not workshops or private 1:1.',
 				),
 				array(
 					'question' => 'How do I use my gift card code?',
-					'answer'   => "Enter the code at checkout when you book any session and the balance comes off the total. Anything left over stays on the code for next time — you don't have to spend it in one go.",
+					'answer'   => 'When you book a class, look for “Have a coupon?”, enter the code and press Apply. Choose “Use coupon (1 seat)” and finish the booking. One class comes off the pack each time.',
 				),
 			),
 		),

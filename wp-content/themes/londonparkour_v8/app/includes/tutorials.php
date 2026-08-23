@@ -336,6 +336,561 @@ function lp_tutorials_in_series( int $term_id, int $limit = 300 ): array {
 }
 
 /**
+ * Term ID for the 2020 Demonstration Library series, or 0.
+ */
+function lp_tutorial_demonstration_series_id(): int {
+	$term = get_term_by( 'slug', '2020-demonstrations', 'lp_series' );
+
+	return $term instanceof WP_Term ? (int) $term->term_id : 0;
+}
+
+/**
+ * Published demonstrations in the 2020 library, optionally in one category.
+ *
+ * @param int   $series_id   lp_series term ID.
+ * @param int   $category_id tutorial-category term ID. 0 = whole library.
+ * @param int[] $exclude     Post IDs to skip (the current tutorial).
+ * @param int   $limit       Max posts.
+ * @return WP_Post[]
+ */
+function lp_tutorial_demonstrations_in_library( int $series_id, int $category_id = 0, array $exclude = array(), int $limit = 80 ): array {
+	if ( $series_id <= 0 ) {
+		return array();
+	}
+
+	$tax = array(
+		array(
+			'taxonomy' => 'lp_series',
+			'field'    => 'term_id',
+			'terms'    => $series_id,
+		),
+		array(
+			'taxonomy' => 'tutorial-tag',
+			'field'    => 'slug',
+			'terms'    => 'demonstration',
+		),
+	);
+	if ( $category_id > 0 ) {
+		$tax[] = array(
+			'taxonomy'         => 'tutorial-category',
+			'field'            => 'term_id',
+			'terms'            => $category_id,
+			'include_children' => false,
+		);
+	}
+
+	$args = array(
+		'post_type'              => 'lp_tutorial',
+		'post_status'            => 'publish',
+		'posts_per_page'         => $limit,
+		'lp_natural_order'       => true,
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => true,
+		'tax_query'              => $tax,
+	);
+	$exclude = array_values( array_filter( array_map( 'intval', $exclude ) ) );
+	if ( $exclude ) {
+		$args['post__not_in'] = $exclude;
+	}
+
+	$q = new WP_Query( $args );
+
+	return $q->posts;
+}
+
+/**
+ * Strip view suffixes so "Box Jump – Front View" matches "Box Jump".
+ */
+function lp_tutorial_title_stem( string $title ): string {
+	$title = strtolower( $title );
+	$title = (string) preg_replace( '/\s*[–—-]\s*(front view|side view|front|side).*$/iu', '', $title );
+	$title = (string) preg_replace( '/[^a-z0-9]+/i', ' ', $title );
+
+	return trim( $title );
+}
+
+/**
+ * Rank demonstration titles against the current tutorial's topic.
+ *
+ * @param WP_Post[] $posts
+ * @return WP_Post[]
+ */
+function lp_tutorial_rank_demonstrations( array $posts, string $needle ): array {
+	$needle = lp_tutorial_title_stem( $needle );
+	usort(
+		$posts,
+		static function ( WP_Post $a, WP_Post $b ) use ( $needle ): int {
+			$sa = lp_tutorial_demonstration_score( $needle, lp_tutorial_title_stem( $a->post_title ) );
+			$sb = lp_tutorial_demonstration_score( $needle, lp_tutorial_title_stem( $b->post_title ) );
+			if ( $sa === $sb ) {
+				return strcasecmp( $a->post_title, $b->post_title );
+			}
+
+			return $sb <=> $sa;
+		}
+	);
+
+	return $posts;
+}
+
+/**
+ * Overlap + similar_text score. Higher is closer.
+ */
+function lp_tutorial_demonstration_score( string $needle, string $candidate ): int {
+	if ( '' === $needle || '' === $candidate ) {
+		return 0;
+	}
+
+	similar_text( $needle, $candidate, $percent );
+	$needle_tokens     = array_values( array_filter( explode( ' ', $needle ) ) );
+	$candidate_tokens  = array_values( array_filter( explode( ' ', $candidate ) ) );
+	$overlap           = count( array_intersect( $needle_tokens, $candidate_tokens ) );
+	$contained         = ( str_contains( $needle, $candidate ) || str_contains( $candidate, $needle ) ) ? 80 : 0;
+
+	return (int) round( (float) $percent + ( $overlap * 40 ) + $contained );
+}
+
+/**
+ * Two demonstrations from the 2020 library closest to this tutorial's topic.
+ *
+ * Prefers the same child category (Box Jump with Box Jump), then the parent
+ * family (Jumping), then the rest of the library. Ranked by title against
+ * the tutorial title plus its category names.
+ *
+ * @return WP_Post[]
+ */
+function lp_tutorial_related_demonstrations( int $post_id, int $limit = 2 ): array {
+	$series_id = lp_tutorial_demonstration_series_id();
+	if ( $series_id <= 0 || $post_id <= 0 ) {
+		return array();
+	}
+
+	list( $parent, $child ) = lp_tutorial_category_pair( $post_id );
+	$needle                 = trim(
+		get_the_title( $post_id ) . ' '
+		. ( $child instanceof WP_Term ? $child->name : '' ) . ' '
+		. ( $parent instanceof WP_Term ? $parent->name : '' )
+	);
+
+	$pools = array();
+	if ( $child instanceof WP_Term ) {
+		$pools[] = lp_tutorial_demonstrations_in_library( $series_id, (int) $child->term_id, array( $post_id ), 40 );
+	}
+	if ( $parent instanceof WP_Term ) {
+		$pools[] = lp_tutorial_demonstrations_in_library( $series_id, (int) $parent->term_id, array( $post_id ), 80 );
+	}
+	$pools[] = lp_tutorial_demonstrations_in_library( $series_id, 0, array( $post_id ), 120 );
+
+	$picked = array();
+	$seen   = array();
+	foreach ( $pools as $pool ) {
+		foreach ( lp_tutorial_rank_demonstrations( $pool, $needle ) as $post ) {
+			if ( isset( $seen[ $post->ID ] ) ) {
+				continue;
+			}
+			$seen[ $post->ID ] = true;
+			$picked[]          = $post;
+			if ( count( $picked ) >= $limit ) {
+				return $picked;
+			}
+		}
+	}
+
+	return $picked;
+}
+
+/**
+ * YouTube id for a tutorial: ACF `video_id`, then `video_url`.
+ *
+ * @param int $post_id Tutorial post ID.
+ */
+function lp_tutorial_youtube_id( int $post_id ): string {
+	if ( ! function_exists( 'get_field' ) ) {
+		return '';
+	}
+
+	$id = lp_youtube_id_from_url( (string) get_field( 'video_id', $post_id ) );
+	if ( '' === $id ) {
+		$id = lp_youtube_id_from_url( (string) get_field( 'video_url', $post_id ) );
+	}
+
+	return $id;
+}
+
+/**
+ * Parent and child tutorial-category terms for a tutorial.
+ *
+ * @param WP_Post|int $post Tutorial.
+ * @return array{0:?WP_Term,1:?WP_Term} Parent, child.
+ */
+function lp_tutorial_category_pair( $post ): array {
+	$id    = $post instanceof WP_Post ? (int) $post->ID : (int) $post;
+	$terms = get_the_terms( $id, 'tutorial-category' );
+	$terms = is_array( $terms ) ? $terms : array();
+
+	$child  = null;
+	$parent = null;
+	foreach ( $terms as $term ) {
+		if ( $term->parent ) {
+			$child = $term;
+			break;
+		}
+	}
+	foreach ( $terms as $term ) {
+		if ( ! $term->parent ) {
+			$parent = $term;
+			break;
+		}
+	}
+	if ( $child instanceof WP_Term && ! $parent instanceof WP_Term ) {
+		$maybe  = get_term( (int) $child->parent, 'tutorial-category' );
+		$parent = $maybe instanceof WP_Term ? $maybe : null;
+	}
+
+	return array( $parent, $child );
+}
+
+/**
+ * Published tutorials in one tutorial-category term, curriculum order.
+ *
+ * `include_children` is off so a child move (Box Jump) does not pull in
+ * the rest of the parent family. Pass `$series_id` to keep only tutorials
+ * that also belong to that series (the detail-page board).
+ *
+ * @param int $term_id   tutorial-category term ID.
+ * @param int $limit     Max posts. Default 300.
+ * @param int $series_id Optional lp_series term ID to AND with the category.
+ * @return WP_Post[]
+ */
+function lp_tutorials_in_category( int $term_id, int $limit = 300, int $series_id = 0 ): array {
+	if ( $term_id <= 0 ) {
+		return array();
+	}
+
+	$tax = array(
+		array(
+			'taxonomy'         => 'tutorial-category',
+			'field'            => 'term_id',
+			'terms'            => $term_id,
+			'include_children' => false,
+		),
+	);
+	if ( $series_id > 0 ) {
+		$tax[] = array(
+			'taxonomy' => 'lp_series',
+			'field'    => 'term_id',
+			'terms'    => $series_id,
+		);
+	}
+
+	$q = new WP_Query(
+		array(
+			'post_type'              => 'lp_tutorial',
+			'post_status'            => 'publish',
+			'posts_per_page'         => $limit,
+			'lp_natural_order'       => true,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => true,
+			'tax_query'              => $tax,
+		)
+	);
+
+	return $q->posts;
+}
+
+/**
+ * Raw transcript payload for download. Empty when the field is unset.
+ *
+ * @param int    $post_id Tutorial post ID.
+ * @param string $kind    json|srt.
+ */
+function lp_tutorial_transcript_body( int $post_id, string $kind ): string {
+	if ( ! function_exists( 'get_field' ) ) {
+		return '';
+	}
+
+	$field = 'json' === $kind ? 'video_transcript_json' : 'video_transcript_srt';
+	$raw   = get_field( $field, $post_id );
+	if ( is_array( $raw ) ) {
+		$encoded = wp_json_encode( $raw );
+		$raw     = is_string( $encoded ) ? $encoded : '';
+	}
+
+	return is_string( $raw ) ? $raw : '';
+}
+
+/**
+ * mm:ss clock for a transcript cue, matching the detail transcript rail.
+ */
+function lp_tutorial_cue_clock( float $seconds ): string {
+	$total = max( 0, (int) floor( $seconds ) );
+
+	return sprintf( '%02d:%02d', intdiv( $total, 60 ), $total % 60 );
+}
+
+/**
+ * Timed cues for on-page reading. JSON is the caption array; SRT is parsed
+ * into the same shape. Empty when the payload cannot be read as cues.
+ *
+ * @return array<int, array{clock: string, text: string}>
+ */
+function lp_tutorial_transcript_cues( string $raw, string $kind ): array {
+	$raw = trim( $raw );
+	if ( '' === $raw ) {
+		return array();
+	}
+
+	if ( 'srt' === $kind ) {
+		return lp_tutorial_parse_srt_cues( $raw );
+	}
+
+	$data = json_decode( $raw, true );
+	if ( ! is_array( $data ) ) {
+		return array();
+	}
+
+	$cues = $data;
+	foreach ( array( 'cues', 'transcript', 'events', 'items' ) as $key ) {
+		if ( isset( $data[ $key ] ) && is_array( $data[ $key ] ) ) {
+			$cues = $data[ $key ];
+			break;
+		}
+	}
+
+	$out = array();
+	foreach ( $cues as $cue ) {
+		if ( is_string( $cue ) && '' !== trim( $cue ) ) {
+			$out[] = array(
+				'clock' => '',
+				'text'  => trim( $cue ),
+			);
+			continue;
+		}
+		if ( ! is_array( $cue ) ) {
+			continue;
+		}
+		$text = $cue['text'] ?? $cue['content'] ?? $cue['transcript'] ?? '';
+		if ( ! is_string( $text ) || '' === trim( $text ) ) {
+			continue;
+		}
+		$start = 0.0;
+		if ( isset( $cue['tStartMs'] ) ) {
+			$start = (float) $cue['tStartMs'] / 1000;
+		} elseif ( isset( $cue['startMs'] ) ) {
+			$start = (float) $cue['startMs'] / 1000;
+		} else {
+			$start_raw = $cue['start'] ?? $cue['start_time'] ?? $cue['offset'] ?? 0;
+			if ( is_string( $start_raw ) && preg_match( '/(\d{1,2}):(\d{2}):(\d{2})/', $start_raw, $time ) ) {
+				$start = ( (int) $time[1] * 3600 ) + ( (int) $time[2] * 60 ) + (int) $time[3];
+			} else {
+				$start = (float) $start_raw;
+			}
+		}
+		$out[] = array(
+			'clock' => lp_tutorial_cue_clock( $start ),
+			'text'  => trim( $text ),
+		);
+	}
+
+	return $out;
+}
+
+/**
+ * SRT blocks → clock + text rows.
+ *
+ * @return array<int, array{clock: string, text: string}>
+ */
+function lp_tutorial_parse_srt_cues( string $raw ): array {
+	$raw    = str_replace( array( "\r\n", "\r" ), "\n", $raw );
+	$blocks = preg_split( '/\n\s*\n/', trim( $raw ) ) ?: array();
+	$out    = array();
+
+	foreach ( $blocks as $block ) {
+		$lines = preg_split( '/\n/', trim( (string) $block ) ) ?: array();
+		if ( count( $lines ) < 2 ) {
+			continue;
+		}
+		if ( isset( $lines[0] ) && preg_match( '/^\d+$/', $lines[0] ) ) {
+			array_shift( $lines );
+		}
+		$stamp = array_shift( $lines );
+		if ( ! is_string( $stamp ) || ! preg_match( '/(\d{2}):(\d{2}):(\d{2})[,.](\d+)/', $stamp, $match ) ) {
+			continue;
+		}
+		$secs = ( (int) $match[1] * 3600 ) + ( (int) $match[2] * 60 ) + (int) $match[3];
+		$text = trim( implode( ' ', $lines ) );
+		$text = wp_strip_all_tags( $text );
+		if ( '' === $text ) {
+			continue;
+		}
+		$out[] = array(
+			'clock' => lp_tutorial_cue_clock( (float) $secs ),
+			'text'  => $text,
+		);
+	}
+
+	return $out;
+}
+
+/**
+ * Pretty-print a transcript file for the raw accordion fallback.
+ */
+function lp_tutorial_transcript_pretty( string $raw, string $kind ): string {
+	$raw = str_replace( array( "\r\n", "\r" ), "\n", $raw );
+	if ( 'json' !== $kind ) {
+		return $raw;
+	}
+
+	$decoded = json_decode( $raw, true );
+	if ( ! is_array( $decoded ) ) {
+		return $raw;
+	}
+
+	$pretty = wp_json_encode( $decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+
+	return is_string( $pretty ) ? $pretty : $raw;
+}
+
+/**
+ * Split a ChatGPT video summary into body paragraphs and key points.
+ *
+ * The stored field is a multi-paragraph essay. Many entries end with a
+ * "Key Points" / "Highlights" / "Key Takeaways" list (markdown bold,
+ * numbered, or dashed). Those bullets belong in KEY TAKEAWAYS, not in
+ * the summary body. A trailing dash-list with no heading is treated
+ * the same way.
+ *
+ * @return array{paragraphs: string[], takeaways: string[]}
+ */
+function lp_tutorial_parse_chatgpt_summary( string $raw ): array {
+	$empty = array(
+		'paragraphs' => array(),
+		'takeaways'  => array(),
+	);
+
+	$raw = str_replace( array( "\r\n", "\r" ), "\n", $raw );
+	if ( ! str_contains( $raw, "\n" ) && str_contains( $raw, '\\n' ) ) {
+		$raw = str_replace( '\\n', "\n", $raw );
+	}
+	$raw = trim( $raw );
+	if ( '' === $raw ) {
+		return $empty;
+	}
+
+	$body      = $raw;
+	$takeaways = array();
+
+	$heading = '/(?:^|\n)\s*(?:\*\*)?\s*(?:Key\s*Points|Key\s*Takeaways(?:\s+include)?|Highlights|Takeaways)\s*(?:\*\*)?\s*:?\s*(?:\*\*)?\s*(?:\n|$)/iu';
+	if ( preg_match( $heading, $raw, $match, PREG_OFFSET_CAPTURE ) ) {
+		$body      = trim( substr( $raw, 0, (int) $match[0][1] ) );
+		$takeaways = lp_tutorial_parse_chatgpt_list( trim( substr( $raw, (int) $match[0][1] + strlen( $match[0][0] ) ) ) );
+	} elseif ( preg_match( '/\n[ \t]*\n((?:[ \t]*(?:[-•*]|\d+[.)])[ \t]+\S.*(?:\n|$))+)\s*$/u', $raw, $match ) ) {
+		$maybe = lp_tutorial_parse_chatgpt_list( trim( $match[1] ) );
+		if ( count( $maybe ) >= 2 ) {
+			$takeaways = $maybe;
+			$body      = trim( substr( $raw, 0, -strlen( $match[0] ) ) );
+		}
+	}
+
+	$chunks     = preg_split( '/\n{2,}/', $body ) ?: array();
+	$paragraphs = array();
+	foreach ( $chunks as $chunk ) {
+		$chunk = trim( (string) preg_replace( '/[ \t]*\n[ \t]*/', ' ', $chunk ) );
+		$chunk = trim( (string) preg_replace( '/^\*{1,2}|\*{1,2}$/', '', $chunk ) );
+		if ( '' !== $chunk ) {
+			$paragraphs[] = $chunk;
+		}
+	}
+
+	return array(
+		'paragraphs' => $paragraphs,
+		'takeaways'  => $takeaways,
+	);
+}
+
+/**
+ * Turn a ChatGPT list block into plain takeaway strings.
+ *
+ * @return string[]
+ */
+function lp_tutorial_parse_chatgpt_list( string $block ): array {
+	$items   = array();
+	$current = '';
+
+	foreach ( preg_split( '/\n/', $block ) ?: array() as $line ) {
+		$line = trim( (string) $line );
+		if ( '' === $line ) {
+			continue;
+		}
+		if ( preg_match( '/^(?:[-•*]|\d+[.)])\s+(.*)$/u', $line, $match ) ) {
+			if ( '' !== $current ) {
+				$items[] = $current;
+			}
+			$current = trim( $match[1] );
+			continue;
+		}
+		if ( '' !== $current ) {
+			$current .= ' ' . $line;
+			continue;
+		}
+		$items[] = $line;
+	}
+	if ( '' !== $current ) {
+		$items[] = $current;
+	}
+
+	$out = array();
+	foreach ( $items as $item ) {
+		$item = trim( str_replace( array( '**', '__' ), '', $item ) );
+		$item = trim( (string) preg_replace( '/^[\-*•]+\s*/u', '', $item ) );
+		if ( '' !== $item ) {
+			$out[] = $item;
+		}
+	}
+
+	return $out;
+}
+
+/**
+ * Serve JSON / SRT transcript downloads from the tutorial permalink.
+ */
+function lp_tutorial_serve_transcript(): void {
+	if ( ! is_singular( 'lp_tutorial' ) ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public file download.
+	$kind = isset( $_GET['lp_transcript'] ) ? sanitize_key( wp_unslash( $_GET['lp_transcript'] ) ) : '';
+	if ( ! in_array( $kind, array( 'json', 'srt' ), true ) ) {
+		return;
+	}
+
+	$post_id = get_queried_object_id();
+	$body    = lp_tutorial_transcript_body( $post_id, $kind );
+	if ( '' === trim( $body ) ) {
+		status_header( 404 );
+		nocache_headers();
+		exit;
+	}
+
+	$slug = sanitize_file_name( (string) get_post_field( 'post_name', $post_id ) );
+	if ( '' === $slug ) {
+		$slug = 'transcript';
+	}
+
+	nocache_headers();
+	if ( 'json' === $kind ) {
+		header( 'Content-Type: application/json; charset=utf-8' );
+	} else {
+		header( 'Content-Type: application/x-subrip; charset=utf-8' );
+	}
+	header( 'Content-Disposition: attachment; filename="' . $slug . '.' . $kind . '"' );
+	echo $body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- file download body.
+	exit;
+}
+add_action( 'template_redirect', 'lp_tutorial_serve_transcript' );
+
+/**
  * Parse YouTube ISO-8601 duration (PT1H2M3S) to seconds.
  *
  * @param string $iso Duration string.

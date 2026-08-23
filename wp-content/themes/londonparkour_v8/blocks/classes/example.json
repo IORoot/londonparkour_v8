@@ -7,7 +7,7 @@
   "foot_note": "3 SITES · 7 DAYS · 40+ SESSIONS A WEEK",
   "source": "manual",
   "source_manual": [
-    { "thumb_alt": "", "glyph_icon_id": "icon-sun", "time": "07:00", "date_label": "TODAY", "title": "Sunrise Session", "subtitle": "60 min · outdoor, rain or shine", "location": "Peckham Rye", "level": "Level 2 · Improver", "price": "£15", "price_label": "DROP-IN", "book_label": "WAITLIST", "sold_out": true },
+    { "thumb_alt": "", "glyph_icon_id": "icon-sun", "time": "07:00", "date_label": "TODAY", "title": "Sunrise Session", "subtitle": "60 min · outdoor, rain or shine", "location": "Peckham Rye", "level": "Level 2 · Intermediate", "price": "£15", "price_label": "DROP-IN", "book_label": "WAITLIST", "sold_out": true },
     { "thumb_alt": "", "glyph_icon_id": "icon-user-group", "time": "10:00", "date_label": "TODAY", "title": "Kids Parkour 5–11", "subtitle": "45 min · parents welcome to watch", "location": "Hackney Marshes", "level": "All levels", "price": "£12", "price_label": "PER CHILD", "book_label": "BOOK" },
     { "thumb_alt": "", "glyph_icon_id": "icon-academic-cap", "time": "18:30", "date_label": "TODAY", "title": "Beginners Parkour", "subtitle": "60 min · all kit provided", "location": "Vauxhall", "level": "Level 1 · Beginner", "price": "£15", "price_label": "DROP-IN", "book_label": "BOOK" },
     { "thumb_alt": "", "glyph_icon_id": "icon-building-library", "time": "19:45", "date_label": "TODAY", "title": "Open Gym", "subtitle": "90 min · unstructured, coach on floor", "location": "Stratford East", "level": "All levels", "price": "£8", "price_label": "DROP-IN", "book_label": "BOOK" },

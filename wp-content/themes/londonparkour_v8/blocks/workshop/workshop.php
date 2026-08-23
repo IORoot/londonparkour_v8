@@ -90,7 +90,7 @@ $eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '' ) ?: '06 — WORK
 	<?php endif; ?>
 
 	<div
-		class="absolute inset-0 bg-gradient-to-t from-neutral via-neutral/90 to-transparent"
+		class="absolute inset-0 bg-gradient-to-t from-neutral/80 via-neutral/70 to-transparent"
 		aria-hidden="true"
 	></div>
 

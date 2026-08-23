@@ -20,6 +20,9 @@
  * @param string $args['transport_bus']
  * @param string $args['code']
  * @param string $args['count']
+ * @param int    $args['image_id']   Attachment ID. Preferred — enables srcset.
+ * @param string $args['image_url']  Raw URL fallback when there is no attachment.
+ * @param string $args['image_alt']  Omit to inherit the attachment alt.
  *
  * @package londonparkour_v8
  */
@@ -49,6 +52,7 @@ if ( '' === $lp_glyph_icon ) {
 
 $lp_kicker            = (string) ( $args['kicker'] ?? 'INDOOR · FLAGSHIP' );
 $lp_name              = (string) ( $args['name'] ?? 'Vauxhall.' );
+$lp_href              = (string) ( $args['href'] ?? '' );
 $lp_streetview_href   = (string) ( $args['streetview_href'] ?? '' );
 $lp_streetview_label  = (string) ( $args['streetview_label'] ?? 'STREETVIEW ↗' );
 $lp_meeting_point     = (string) ( $args['meeting_point'] ?? 'Outside Tube station exit 2, next to metal pillars and open area.' );
@@ -56,15 +60,45 @@ $lp_transport_rail    = (string) ( $args['transport_rail'] ?? 'Victoria Undergro
 $lp_transport_bus     = (string) ( $args['transport_bus'] ?? 'Note: Oval Northern Line is walking distance. Buses — 2 · 36 · 87 · 88 · 156 · 185 · 196 · 344 · 436' );
 $lp_code              = (string) ( $args['code'] ?? 'SW8 1SR · 4 MIN FROM VAUXHALL' );
 $lp_count             = (string) ( $args['count'] ?? '3 CLASSES' );
+$lp_image_id          = (int) ( $args['image_id'] ?? 0 );
+$lp_image_url         = (string) ( $args['image_url'] ?? '' );
+$lp_has_photo         = $lp_image_id > 0 || '' !== $lp_image_url;
+
+$lp_root = $lp_has_photo
+	? 'flex flex-col gap-[22px] w-full bg-base-200 border-t border-base-300 pb-[34px]'
+	: 'flex flex-col gap-[22px] w-full bg-base-200 border-t border-base-300 pt-[22px] pb-[34px]';
 ?>
-<div class="flex flex-col gap-[22px] w-full bg-base-200 border-t border-base-300 pt-[22px] pb-[34px]" data-component="site-panel">
+<div class="<?php echo esc_attr( $lp_root ); ?>" data-component="site-panel">
+	<?php if ( $lp_has_photo ) : ?>
+		<div class="relative aspect-[16/9] w-full bg-base-300 overflow-hidden m-0" data-mount="photo">
+			<?php
+			$lp_photo = array(
+				'image_id'  => $lp_image_id,
+				'layout'    => 'fill',
+				'size'      => 'lp_wide',
+				'sizes'     => '(min-width: 1024px) 42vw, 100vw',
+			);
+			if ( $lp_image_id < 1 ) {
+				$lp_photo['image_url'] = $lp_image_url;
+			}
+			if ( array_key_exists( 'image_alt', $args ) ) {
+				$lp_photo['alt'] = (string) $args['image_alt'];
+			}
+			lp_part( 'components/media-photo', $lp_photo );
+			?>
+		</div>
+	<?php endif; ?>
 	<div class="flex flex-wrap items-end justify-between gap-[16px]">
 		<div class="flex flex-col gap-[9px]">
 			<div class="flex items-center gap-[8px]">
 				<?php lp_icon( $lp_glyph_icon, lp_classes( 'w-[12px] h-[12px]', $lp_glyph_class ) ); ?>
 				<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
 			</div>
-			<p class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></p>
+			<?php if ( '' !== $lp_href ) : ?>
+				<a href="<?php echo esc_url( $lp_href ); ?>" class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></a>
+			<?php else : ?>
+				<p class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></p>
+			<?php endif; ?>
 		</div>
 		<?php if ( '' !== $lp_streetview_href ) : ?>
 			<a href="<?php echo esc_url( $lp_streetview_href ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent whitespace-nowrap"><?php echo esc_html( $lp_streetview_label ); ?></a>

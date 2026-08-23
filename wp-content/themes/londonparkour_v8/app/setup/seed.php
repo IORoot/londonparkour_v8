@@ -693,6 +693,20 @@ function lp_seed_template_pages(): void {
 			if ( $appt ) {
 				update_field( 'appointment_class', $appt, $id );
 			}
+
+			$coaches = get_posts(
+				array(
+					'post_type'      => 'lp_coach',
+					'post_status'    => 'publish',
+					'numberposts'    => -1,
+					'orderby'        => 'menu_order title',
+					'order'          => 'ASC',
+					'fields'         => 'ids',
+				)
+			);
+			if ( $coaches ) {
+				update_field( 'coaches', array_map( 'intval', $coaches ), $id );
+			}
 		}
 	}
 }

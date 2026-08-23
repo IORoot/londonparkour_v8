@@ -173,6 +173,21 @@ if ( ! isset( $lp_spaces_tones[ $lp_tone_key ] ) ) {
 }
 $lp_spaces_tone = $lp_spaces_tones[ $lp_tone_key ];
 
+$lp_now_playing = 'now_playing' === $lp_tone_key && 'default' === $lp_size;
+if ( $lp_now_playing ) {
+	$lp_ui['root']        = 'group relative flex flex-col gap-[10px] sm:flex-row sm:items-center sm:gap-[24px] w-full py-[14px] sm:py-[18px] px-[16px] sm:px-[28px] bg-primary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left';
+	$lp_ui['time']        = 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content';
+	$lp_ui['date']        = 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-primary-content/70';
+	$lp_ui['title']       = 'font-heading text-[17px] font-medium tracking-[-0.2px] text-primary-content truncate';
+	$lp_ui['subtitle']    = 'font-label text-[11px] font-normal tracking-[0.2px] text-primary-content/70 truncate';
+	$lp_ui['site_pin']    = 'text-primary-content/70 transition-colors duration-150';
+	$lp_ui['site_label']  = 'font-label text-[12px] font-normal tracking-[0.2px] text-primary-content transition-colors duration-150 truncate';
+	$lp_ui['level_mark']  = 'text-primary-content';
+	$lp_ui['level_label'] = 'font-label text-[11px] font-normal tracking-[0.2px] text-primary-content truncate';
+	$lp_ui['glyph_wrap']  = 'hidden sm:inline-flex w-7 h-7 shrink-0 text-primary-content items-center justify-center';
+	$lp_spaces_tone       = 'text-primary-content';
+}
+
 $lp_root = $lp_is_link ? $lp_ui['root'] . ' ' . $lp_root_interactive : $lp_ui['root'];
 if ( '' !== $lp_detail_href ) {
 	$lp_root .= ' cursor-pointer';
@@ -286,7 +301,7 @@ $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
 				?>
 			</span>
 		<?php else : ?>
-			<?php lp_part( 'elements/chevron', array( 'variant' => 'board_row' ) ); ?>
+			<?php lp_part( 'elements/chevron', array( 'variant' => $lp_now_playing ? 'board_row_now_playing' : 'board_row' ) ); ?>
 		<?php endif; ?>
 	</div>
 <?php echo $lp_is_link ? '</a>' : '</div>'; ?>

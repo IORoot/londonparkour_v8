@@ -40,8 +40,12 @@ defined( 'ABSPATH' ) || exit;
  * source. Never assembled from fragments — Tailwind v4 scans source text.
  */
 $lp_variants = array(
-	'board_row'         => array(
+	'board_row'              => array(
 		'wrapper' => 'hidden sm:inline-flex text-neutral-content/50 group-hover:text-primary transition-colors duration-150 shrink-0',
+		'icon'    => 'w-3.5 h-3.5',
+	),
+	'board_row_now_playing'  => array(
+		'wrapper' => 'hidden sm:inline-flex text-primary-content/70 group-hover:text-primary-content transition-colors duration-150 shrink-0',
 		'icon'    => 'w-3.5 h-3.5',
 	),
 	'list_row_board'    => array(

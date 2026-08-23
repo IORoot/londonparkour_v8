@@ -29,7 +29,7 @@ function lp_post_types(): array {
 		'lp_location' => array(
 			'singular' => __( 'Location', 'londonparkour_v8' ),
 			'plural'   => __( 'Locations', 'londonparkour_v8' ),
-			'slug'     => 'locations',
+			'slug'     => 'classes/locations',
 			'icon'     => 'dashicons-location',
 			'supports' => array( 'title', 'editor', 'thumbnail', 'page-attributes' ),
 			'taxes'    => array(),

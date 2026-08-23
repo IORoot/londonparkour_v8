@@ -392,6 +392,8 @@ get_header();
 									'transport_rail'  => (string) get_field( 'transport_rail', $lp_site->ID ),
 									'transport_bus'   => (string) get_field( 'transport_bus', $lp_site->ID ),
 									'streetview_href' => $lp_sv,
+									'href'            => get_permalink( $lp_site ),
+									'image_id'        => has_post_thumbnail( $lp_site ) ? (int) get_post_thumbnail_id( $lp_site ) : 0,
 								)
 							);
 							?>

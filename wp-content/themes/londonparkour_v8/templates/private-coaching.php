@@ -9,6 +9,9 @@
  * template; copy defaults transcribed from the Storybook page (which itself
  * follows the pen after the £65 / £40 and appointment-booking corrections).
  * Coach cards read `lp_coach` records (the pen used placeholder names).
+ * Which coaches appear is the `coaches` relationship on this page
+ * (group_lp_private_coaching); an empty field falls back to every published
+ * coach in menu order.
  *
  * BOOK 1:1 opens the shared clasbpro appointment overlay when
  * `appointment_class` is set on this page (group_lp_private_coaching).
@@ -93,22 +96,30 @@ $lp_faqs = array(
 $lp_media_id = $lp_page_id ? (int) get_post_thumbnail_id( $lp_page_id ) : 0;
 $lp_appt_id  = $lp_page_id && function_exists( 'get_field' ) ? absint( get_field( 'appointment_class', $lp_page_id ) ) : 0;
 
-$lp_coach_query = new WP_Query(
-	array(
-		'post_type'      => 'lp_coach',
-		'post_status'    => 'publish',
-		'posts_per_page' => 3,
-		'orderby'        => 'menu_order title',
-		'order'          => 'ASC',
-		'no_found_rows'  => true,
-	)
-);
+$lp_coach_ids = array();
+if ( $lp_page_id && function_exists( 'get_field' ) ) {
+	$lp_coach_ids = array_values( array_filter( array_map( 'intval', (array) get_field( 'coaches', $lp_page_id ) ) ) );
+}
+if ( ! $lp_coach_ids ) {
+	$lp_coach_query = new WP_Query(
+		array(
+			'post_type'      => 'lp_coach',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'menu_order title',
+			'order'          => 'ASC',
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		)
+	);
+	$lp_coach_ids = array_map( 'intval', $lp_coach_query->posts );
+}
+
 $lp_coaches = array();
-foreach ( $lp_coach_query->posts as $lp_coach_post ) {
-	if ( ! $lp_coach_post instanceof WP_Post ) {
+foreach ( $lp_coach_ids as $lp_cid ) {
+	if ( $lp_cid < 1 || 'publish' !== get_post_status( $lp_cid ) ) {
 		continue;
 	}
-	$lp_cid       = (int) $lp_coach_post->ID;
 	$lp_coaches[] = array(
 		'name'  => get_the_title( $lp_cid ),
 		'role'  => function_exists( 'get_field' ) ? (string) get_field( 'role', $lp_cid ) : '',

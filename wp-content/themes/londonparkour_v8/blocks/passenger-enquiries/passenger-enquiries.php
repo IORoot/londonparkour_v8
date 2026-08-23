@@ -15,28 +15,33 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$lp_locations = function_exists( 'lp_contact_locations_inline' ) ? lp_contact_locations_inline() : '';
+
 $lp_default_facts = array(
 	array(
 		'label' => 'EMAIL',
 		'value' => 'hello@londonparkour.com',
 	),
 	array(
-		'label' => 'PHONE',
-		'value' => '020 3488 3854',
+		'label' => 'LOCATIONS',
+		'value' => $lp_locations ? $lp_locations : 'Vauxhall · Old Street · Kilburn Park',
+	),
+	array(
+		'label' => 'HOURS',
+		'value' => 'Wed, Sat, Sun · 09:00–20:00',
 	),
 	array(
 		'label' => 'REPLY TIME',
-		'value' => 'One working day',
-	),
-	array(
-		'label' => 'IN PERSON',
-		'value' => 'Vauxhall, Tue & Thu',
+		'value' => 'Within 36H',
 	),
 );
 
 $lp_kicker     = (string) ( $args['kicker'] ?? 'PASSENGER ENQUIRIES' );
 $lp_live_label = (string) ( $args['live_label'] ?? 'OPEN NOW' );
-$lp_note       = (string) ( $args['note'] ?? 'Coaches are on the floor during sessions, so email gets a faster answer than the phone.' );
+$lp_note       = (string) ( $args['note'] ?? 'We reply within 36H. Email is the fastest way to reach us.' );
+if ( false !== stripos( $lp_note, 'phone' ) || false !== stripos( $lp_note, 'working day' ) ) {
+	$lp_note = 'We reply within 36H. Email is the fastest way to reach us.';
+}
 
 $lp_cta = lp_action( $args['cta'] ?? null );
 if ( ! $lp_cta ) {
@@ -55,6 +60,11 @@ foreach ( is_array( $args['facts'] ?? null ) ? $args['facts'] : array() as $lp_r
 }
 if ( ! $lp_facts ) {
 	$lp_facts = $lp_default_facts;
+} else {
+	$lp_facts_blob = wp_json_encode( $lp_facts );
+	if ( is_string( $lp_facts_blob ) && ( false !== stripos( $lp_facts_blob, 'phone' ) || false !== stripos( $lp_facts_blob, '020' ) || false !== stripos( $lp_facts_blob, 'working day' ) || false !== stripos( $lp_facts_blob, 'tue' ) ) ) {
+		$lp_facts = $lp_default_facts;
+	}
 }
 
 $lp_spacing = lp_section_spacing( $args );

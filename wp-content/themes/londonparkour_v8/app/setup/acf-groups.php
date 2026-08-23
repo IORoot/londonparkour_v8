@@ -560,6 +560,16 @@ return array(
 				'ui'            => 1,
 				'instructions'  => __( 'When set, BOOK 1:1 opens the shared booking overlay for this clasbpro appointment class.', 'londonparkour_v8' ),
 			),
+			lp_tab( __( 'Coaches', 'londonparkour_v8' ) ),
+			array(
+				'name'          => 'coaches',
+				'label'         => __( 'Coaches', 'londonparkour_v8' ),
+				'type'          => 'relationship',
+				'post_type'     => array( 'lp_coach' ),
+				'return_format' => 'id',
+				'filters'       => array( 'search' ),
+				'instructions'  => __( 'Coaches on this page, in this order. Leave empty to show every published coach.', 'londonparkour_v8' ),
+			),
 		),
 	),
 

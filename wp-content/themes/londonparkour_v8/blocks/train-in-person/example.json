@@ -23,7 +23,7 @@
   "primary_action": {
     "link": {
       "title": "SEE ALL SITES →",
-      "url": "/locations/",
+      "url": "/classes/locations/",
       "target": ""
     }
   }

@@ -44,6 +44,7 @@ $lp_includes = array(
 	'app/setup/theme.php',
 	'app/setup/editor.php',
 	'app/setup/cpt.php',
+	'app/setup/locations.php',
 	'app/setup/clasbpro.php',
 	'app/setup/queries.php',
 	'app/setup/acf.php',
