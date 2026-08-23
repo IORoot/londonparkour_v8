@@ -78,14 +78,20 @@ return array(
 			array(
 				'name'         => 'form_action',
 				'label'        => __( 'Mailchimp form URL', 'londonparkour_v8' ),
-				'type'         => 'url',
-				'instructions' => __( 'The form action from the Mailchimp embed (subscribe/post?u=…&id=…). Thank-you page: this URL plus ?dispatch=sent.', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'The form action from the Mailchimp embed (subscribe/post?u=…&id=…). In Mailchimp, set the thank-you page to this WordPress page plus ?dispatch=sent.', 'londonparkour_v8' ),
 			),
 			array(
 				'name'         => 'honeypot_name',
 				'label'        => __( 'Honeypot field name', 'londonparkour_v8' ),
 				'type'         => 'text',
 				'instructions' => __( 'The hidden input name from the Mailchimp embed, usually b_{audience}_{list}.', 'londonparkour_v8' ),
+			),
+			array(
+				'name'         => 'gdpr_name',
+				'label'        => __( 'GDPR field name', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'Optional. From the Mailchimp embed checkbox, e.g. gdpr[10943]. Submitted as Y with the form — the design records consent in the copy, not a second checkbox.', 'londonparkour_v8' ),
 			),
 		),
 

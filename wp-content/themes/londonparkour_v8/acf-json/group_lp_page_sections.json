@@ -1199,8 +1199,8 @@
                         {
                             "name": "form_action",
                             "label": "Mailchimp form URL",
-                            "type": "url",
-                            "instructions": "The form action from the Mailchimp embed (subscribe/post?u=…&id=…). Thank-you page: this URL plus ?dispatch=sent.",
+                            "type": "text",
+                            "instructions": "The form action from the Mailchimp embed (subscribe/post?u=…&id=…). In Mailchimp, set the thank-you page to this WordPress page plus ?dispatch=sent.",
                             "key": "field_b89b069d5f566a4c"
                         },
                         {
@@ -1209,6 +1209,13 @@
                             "type": "text",
                             "instructions": "The hidden input name from the Mailchimp embed, usually b_{audience}_{list}.",
                             "key": "field_238a2cc88a72b342"
+                        },
+                        {
+                            "name": "gdpr_name",
+                            "label": "GDPR field name",
+                            "type": "text",
+                            "instructions": "Optional. From the Mailchimp embed checkbox, e.g. gdpr[10943]. Submitted as Y with the form — the design records consent in the copy, not a second checkbox.",
+                            "key": "field_cc83546daf4a079a"
                         },
                         {
                             "name": "tab_settings",

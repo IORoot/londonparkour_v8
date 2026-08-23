@@ -327,7 +327,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 					if ( $lp_secondary && '' !== $lp_secondary['label'] ) :
 						if ( '' !== $lp_secondary['href'] ) :
 							?>
-							<a href="<?php echo esc_url( $lp_secondary['href'] ); ?>" class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80 hover:text-primary transition-colors duration-150"><?php echo esc_html( $lp_secondary['label'] ); ?></a>
+							<a href="<?php echo esc_url( $lp_secondary['href'] ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80 hover:text-primary transition-colors duration-150"><?php echo esc_html( $lp_secondary['label'] ); ?></a>
 						<?php else : ?>
 							<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80"><?php echo esc_html( $lp_secondary['label'] ); ?></span>
 							<?php

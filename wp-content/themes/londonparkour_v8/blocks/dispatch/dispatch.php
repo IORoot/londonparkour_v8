@@ -22,6 +22,7 @@
  * @param string $args['submit_label']
  * @param string $args['form_action']
  * @param string $args['honeypot_name']
+ * @param string $args['gdpr_name']
  * @param string $args['success_kicker']
  * @param string $args['success_headline']
  * @param string $args['success_body']
@@ -41,6 +42,7 @@ $lp_privacy_href  = (string) ( $args['privacy_href'] ?? '/privacy' );
 $lp_submit_label  = (string) ( $args['submit_label'] ?? 'JOIN THE LIST' );
 $lp_form_action   = (string) ( $args['form_action'] ?? '' );
 $lp_honeypot_name = (string) ( $args['honeypot_name'] ?? 'b_hp' );
+$lp_gdpr_name     = (string) ( $args['gdpr_name'] ?? '' );
 $lp_success_kicker   = (string) ( $args['success_kicker'] ?? 'SENT' );
 $lp_success_headline = (string) ( $args['success_headline'] ?? "You're on the list." );
 $lp_success_body     = (string) ( $args['success_body'] ?? 'Check your inbox to confirm. We will not write again until you do.' );
@@ -82,6 +84,10 @@ $lp_spacing = lp_section_spacing( $args );
 					<div class="sr-only" aria-hidden="true">
 						<input id="<?php echo esc_attr( $lp_honeypot_id ); ?>" type="text" name="<?php echo esc_attr( $lp_honeypot_name ); ?>" tabindex="-1" autocomplete="off" value="">
 					</div>
+					<input type="hidden" name="subscribe" value="Subscribe">
+					<?php if ( '' !== $lp_gdpr_name ) : ?>
+						<input type="hidden" name="<?php echo esc_attr( $lp_gdpr_name ); ?>" value="Y">
+					<?php endif; ?>
 					<?php
 					lp_part(
 						'forms/field',

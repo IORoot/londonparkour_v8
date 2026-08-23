@@ -17,6 +17,6 @@
     "link": { "title": "BOOK YOUR FIRST CLASS — £15", "url": "/book/", "target": "" }
   },
   "secondary_action": {
-    "link": { "title": "Watch a session ↗", "url": "/watch/", "target": "" }
+    "link": { "title": "Watch a session ↗", "url": "/watch/", "target": "_blank" }
   }
 }
