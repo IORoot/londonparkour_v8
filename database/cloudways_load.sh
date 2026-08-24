@@ -141,8 +141,9 @@ wp_cmd db import "$TMP"
 log "search-replace $FROM_URL → $WP_HOME"
 wp_cmd search-replace "$FROM_URL" "$WP_HOME" --all-tables --report-changed-only
 
-wp_cmd rewrite flush >/dev/null
-wp_cmd cache flush >/dev/null 2>&1 || true
+# Load plugins/themes so CPT rewrite rules are registered (skip-* hides them).
+command wp --path="$WP_ROOT" rewrite flush >/dev/null
+command wp --path="$WP_ROOT" cache flush >/dev/null 2>&1 || true
 
 printf '%s\n' "$DUMP_SHA" >"$STAMP"
 log "done (sha $DUMP_SHA)"
