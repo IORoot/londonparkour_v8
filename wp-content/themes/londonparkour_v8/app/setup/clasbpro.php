@@ -254,3 +254,19 @@ function lp_clasbpro_purchase_marker( array $template_args, string $layout_path 
 	);
 }
 add_action( 'clasbpro_after_render_status_template', 'lp_clasbpro_purchase_marker', 10, 2 );
+
+/**
+ * Full-bleed template for Stripe return pages so the shortcode is not crushed
+ * inside page.php's 720px prose well.
+ *
+ * @param string $template Located template.
+ */
+function lp_clasbpro_status_template_include( string $template ): string {
+	if ( ! is_page( array( 'booking-confirmed', 'booking-cancelled', 'booking-error' ) ) ) {
+		return $template;
+	}
+
+	$lp_file = get_theme_file_path( 'templates/booking-status.php' );
+	return is_readable( $lp_file ) ? $lp_file : $template;
+}
+add_filter( 'template_include', 'lp_clasbpro_status_template_include' );

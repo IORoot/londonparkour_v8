@@ -1492,3 +1492,137 @@ function lp_clasbpro_pack_gift_card( array $pack ): void {
 	</svg>
 	<?php
 }
+
+/**
+ * Extra class context for the Concourse booking-status overlay.
+ *
+ * The shortcode booking payload has no class_id. We look it up from booking
+ * meta so meeting point, map, film and permalink can come from the class post.
+ *
+ * @param object $view Booking_Status_View.
+ * @return array<string,mixed>
+ */
+function lp_clasbpro_status_context( $view ): array {
+	$booking    = ( is_object( $view ) && isset( $view->booking ) && is_array( $view->booking ) ) ? $view->booking : array();
+	$booking_id = (int) ( $booking['booking_id'] ?? 0 );
+	$class_id   = (int) ( $booking['class_id'] ?? 0 );
+	if ( $class_id <= 0 && $booking_id > 0 ) {
+		$class_id = (int) get_post_meta( $booking_id, '_clasbpro_class_id', true );
+	}
+
+	$origin = ( is_object( $view ) && isset( $view->origin ) ) ? (string) $view->origin : '';
+	$origin = $origin ? $origin : home_url( '/' );
+
+	$class_name = (string) ( $booking['class_name'] ?? '' );
+	$class_href = $class_id ? (string) get_permalink( $class_id ) : $origin;
+	$location   = (string) ( $booking['location'] ?? '' );
+	$session    = trim( (string) ( $booking['class_date'] ?? '' ) . ' · ' . (string) ( $booking['class_time'] ?? '' ), ' ·' );
+	$note       = trim( implode( ', ', array_filter( array( $class_name, (string) ( $booking['class_date'] ?? '' ), (string) ( $booking['class_time'] ?? '' ) ) ) ) );
+
+	$location_id     = ( $class_id && function_exists( 'lp_class_location_id' ) ) ? lp_class_location_id( $class_id ) : 0;
+	$meeting_point   = $location_id ? (string) get_field( 'meeting_point', $location_id ) : '';
+	$transport_rail  = $location_id ? (string) get_field( 'transport_rail', $location_id ) : '';
+	$transport_bus   = $location_id ? (string) get_field( 'transport_bus', $location_id ) : '';
+	$lat             = $location_id ? trim( (string) get_field( 'latitude', $location_id ) ) : '';
+	$lon             = $location_id ? trim( (string) get_field( 'longitude', $location_id ) ) : '';
+	$maps_href       = ( $lat && $lon && function_exists( 'lp_osm_maps_url' ) ) ? lp_osm_maps_url( $lat, $lon ) : '';
+	$image_id        = ( $class_id && function_exists( 'lp_class_image_id' ) ) ? lp_class_image_id( $class_id ) : 0;
+	$whatsapp        = (string) apply_filters( 'lp_clasbpro_whatsapp_url', '', $class_id, $booking );
+	$private_href    = home_url( '/private-coaching/' );
+	$coupons_href    = home_url( '/coupons/' );
+	$contact_href    = home_url( '/contact/' );
+	$contact_mail    = 'mailto:hello@londonparkour.com';
+
+	$faqs = array(
+		array(
+			'index'    => '01',
+			'question' => 'Do I need experience?',
+			'answer'   => 'No. Outdoor class is built for adults of every level. Read the beginners wiki if it is your first session.',
+		),
+		array(
+			'index'    => '02',
+			'question' => 'What should I wear?',
+			'answer'   => 'Unrestrictive kit — tracksuit bottoms, a tee, trainers. Skip jeans and boots. What to wear is on the class page.',
+		),
+		array(
+			'index'    => '03',
+			'question' => 'What should I bring?',
+			'answer'   => 'A bottle of water. Leave jewellery, watches, phones and wallets out of the session. Full kit list sits in the wiki.',
+		),
+		array(
+			'index'    => '04',
+			'question' => 'Can I cancel?',
+			'answer'   => 'Free cancellation up to 24 hours before. After that we move you to another Saturday. Questions: contact page.',
+		),
+	);
+
+	return (array) apply_filters(
+		'lp_clasbpro_status_context',
+		array(
+			'booking'         => $booking,
+			'booking_id'      => $booking_id,
+			'class_id'        => $class_id,
+			'class_name'      => $class_name,
+			'class_href'      => $class_href,
+			'location'        => $location,
+			'session'         => $session,
+			'note'            => $note,
+			'seats'           => (string) ( $booking['seats'] ?? '' ),
+			'total'           => (string) ( $booking['amount_total'] ?? '' ),
+			'ref'             => $booking_id ? ( '#' . $booking_id ) : '',
+			'customer_name'   => (string) ( $booking['customer_name'] ?? '' ),
+			'origin'          => $origin,
+			'location_id'     => $location_id,
+			'meeting_point'   => $meeting_point,
+			'transport_rail'  => $transport_rail,
+			'transport_bus'   => $transport_bus,
+			'lat'             => $lat,
+			'lon'             => $lon,
+			'maps_href'       => $maps_href,
+			'image_id'        => $image_id,
+			'whatsapp_href'   => $whatsapp,
+			'private_href'    => $private_href,
+			'coupons_href'    => $coupons_href,
+			'contact_href'    => $contact_href,
+			'contact_mail'    => $contact_mail,
+			'faqs'            => $faqs,
+		),
+		$view
+	);
+}
+
+/**
+ * Receipt row used on confirmed + compact status boards.
+ *
+ * Whole class strings — Tailwind v4 scans source text.
+ *
+ * @param string $label   Term.
+ * @param string $value   Definition.
+ * @param string $surface page|board.
+ */
+function lp_clasbpro_status_ticket_row( string $label, string $value, string $surface = 'page' ): void {
+	if ( '' === $value ) {
+		return;
+	}
+	$rows = array(
+		'page'  => 'grid grid-cols-[110px_minmax(0,1fr)] gap-4 py-3 border-b border-base-content/15',
+		'board' => 'grid grid-cols-[110px_minmax(0,1fr)] gap-4 py-3 border-b border-neutral-content/20',
+	);
+	$dts  = array(
+		'page'  => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65 m-0',
+		'board' => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-neutral-content/70 m-0',
+	);
+	$dds  = array(
+		'page'  => 'font-body text-[15px] font-medium tracking-[-0.2px] text-base-content m-0',
+		'board' => 'font-body text-[15px] font-medium tracking-[-0.2px] text-neutral-content m-0',
+	);
+	$row = $rows[ $surface ] ?? $rows['page'];
+	$dt  = $dts[ $surface ] ?? $dts['page'];
+	$dd  = $dds[ $surface ] ?? $dds['page'];
+	?>
+	<div class="<?php echo esc_attr( $row ); ?>">
+		<dt class="<?php echo esc_attr( $dt ); ?>"><?php echo esc_html( $label ); ?></dt>
+		<dd class="<?php echo esc_attr( $dd ); ?>"><?php echo esc_html( $value ); ?></dd>
+	</div>
+	<?php
+}

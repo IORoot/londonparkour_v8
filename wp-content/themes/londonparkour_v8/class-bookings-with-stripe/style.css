@@ -982,3 +982,17 @@
 [data-lp-booking-mount] .cbfs-packs__fields {
 	flex: 1;
 }
+
+/* Concourse booking-status overlay — kill plugin card chrome so the
+ * composition can sit full-bleed inside templates/booking-status.php. */
+.cbfs-status.cbfs-status--concourse,
+.cbfs-status.cbfs-status--layout-modern.cbfs-status--concourse {
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	color: inherit;
+}
