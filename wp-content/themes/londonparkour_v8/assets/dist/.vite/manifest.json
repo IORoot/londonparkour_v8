@@ -1,0 +1,20 @@
+{
+  "assets/css/main.css": {
+    "file": "main-DfL2Jdas.css",
+    "src": "assets/css/main.css",
+    "isEntry": true
+  },
+  "assets/fonts/ScopeTrial-Variable.ttf": {
+    "file": "ScopeTrial-Variable-Cdy3xehk.ttf",
+    "src": "assets/fonts/ScopeTrial-Variable.ttf"
+  },
+  "assets/js/app.js": {
+    "file": "app-NlZD6ZB9.js",
+    "name": "app",
+    "src": "assets/js/app.js",
+    "isEntry": true,
+    "css": [
+      "app-CIGW-MKW.css"
+    ]
+  }
+}

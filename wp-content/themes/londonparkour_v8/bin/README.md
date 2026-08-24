@@ -22,7 +22,7 @@ definition, in files that merge.
 docker compose up -d          # from the repo root
 bin/bootstrap.sh              # install, activate, build field groups
 bin/wp lp seed                # demo content + the QA page
-npm install && npm run build  # assets — assets/dist is gitignored
+npm install && npm run build  # assets — commit assets/dist (Cloudways has no npm)
 ```
 
 Site: http://localhost:8102 · admin `admin` / `admin` · QA page: `/blocks-qa/`

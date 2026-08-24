@@ -1,4 +1,6 @@
 node_modules/
-assets/dist/
 .DS_Store
 *.log
+
+# assets/dist is tracked. Cloudways Git Pull has no npm step, so the Vite
+# production build has to live in the repo or staging has no CSS/JS.
