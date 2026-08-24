@@ -19,3 +19,7 @@ wp-content/plugins/classic-editor/
 .vscode
 .DS_Store
 docker-compose.override.yml
+
+# Cloudways staging import lock + last-imported dump stamp (server-only).
+.staging-import-enabled
+.staging-import-sha

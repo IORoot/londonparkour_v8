@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Cloudways Git Pull (reset --hard / checkout). Import backup.sql on staging when it changed.
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+[[ -f "$ROOT/.staging-import-enabled" ]] || exit 0
+exec "$ROOT/database/cloudways_load.sh"
