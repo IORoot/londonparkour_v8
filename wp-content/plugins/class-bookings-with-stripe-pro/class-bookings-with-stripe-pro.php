@@ -22,6 +22,7 @@ define( 'CLASBOWPRO_REST_NS', 'clasbpro/v1' );
 define( 'CLASBOWPRO_HOLD_SECONDS', 30 * MINUTE_IN_SECONDS );
 
 require_once CLASBOWPRO_DIR . 'includes/class-constants.php';
+require_once CLASBOWPRO_DIR . 'includes/class-secrets.php';
 require_once CLASBOWPRO_DIR . 'includes/class-migration.php';
 require_once CLASBOWPRO_DIR . 'includes/class-acf-dependency.php';
 \IOROOT_STRIPE_BOOKINGS_PRO\ACF_Dependency::init();

@@ -23,6 +23,7 @@ final class Plugin {
 	private function __construct() {}
 
 	public function init(): void {
+		Secrets::init();
 		CPT::init();
 		ACF_Fields::init();
 		Appointment_Admin::init();

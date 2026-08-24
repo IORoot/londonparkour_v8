@@ -481,10 +481,8 @@ abstract class Helpers {
 	 */
 	public static function stripe_secret_key(): string {
 		$mode = self::get_option( 'stripe_mode', 'test' );
-		$key  = 'live' === $mode
-			? self::get_option( 'stripe_secret_key_live', '' )
-			: self::get_option( 'stripe_secret_key_test', '' );
-		return is_string( $key ) ? trim( $key ) : '';
+		$field = 'live' === $mode ? 'stripe_secret_key_live' : 'stripe_secret_key_test';
+		return trim( Secrets::get( $field ) );
 	}
 
 	/**
@@ -499,8 +497,7 @@ abstract class Helpers {
 	}
 
 	public static function stripe_webhook_secret(): string {
-		$key = self::get_option( 'stripe_webhook_secret', '' );
-		return is_string( $key ) ? trim( $key ) : '';
+		return trim( Secrets::get( 'stripe_webhook_secret' ) );
 	}
 
 	/**

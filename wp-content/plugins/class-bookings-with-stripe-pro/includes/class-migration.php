@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Migration {
 
 	private const OPTION_VERSION = 'clasbpro_db_version';
-	private const DB_VERSION     = 8;
+	private const DB_VERSION     = 9;
 
 	public static function maybe_run(): void {
 		$current = (int) get_option( self::OPTION_VERSION, 0 );
@@ -50,6 +50,10 @@ abstract class Migration {
 
 		if ( $current < 8 ) {
 			self::migrate_stripe_currency_option();
+		}
+
+		if ( $current < 9 ) {
+			Secrets::encrypt_stored_plaintext();
 		}
 
 		update_option( self::OPTION_VERSION, self::DB_VERSION, false );

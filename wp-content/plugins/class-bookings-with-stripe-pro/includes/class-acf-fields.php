@@ -1141,10 +1141,11 @@ abstract class ACF_Fields {
 						],
 					],
 					[
-						'key'     => 'field_clasbpro_secret_test',
-						'label'   => __( 'Secret key (test)', 'class-bookings-with-stripe-pro' ),
-						'name'    => 'stripe_secret_key_test',
-						'type'    => 'password',
+						'key'          => 'field_clasbpro_secret_test',
+						'label'        => __( 'Secret key (test)', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'stripe_secret_key_test',
+						'type'         => 'password',
+						'instructions' => __( 'Leave blank to keep the saved key.', 'class-bookings-with-stripe-pro' ),
 						'wrapper' => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--test',
@@ -1173,10 +1174,11 @@ abstract class ACF_Fields {
 						],
 					],
 					[
-						'key'     => 'field_clasbpro_secret_live',
-						'label'   => __( 'Secret key (live)', 'class-bookings-with-stripe-pro' ),
-						'name'    => 'stripe_secret_key_live',
-						'type'    => 'password',
+						'key'          => 'field_clasbpro_secret_live',
+						'label'        => __( 'Secret key (live)', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'stripe_secret_key_live',
+						'type'         => 'password',
+						'instructions' => __( 'Leave blank to keep the saved key.', 'class-bookings-with-stripe-pro' ),
 						'wrapper' => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--live',
@@ -1187,7 +1189,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Webhook signing secret', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_webhook_secret',
 						'type'         => 'password',
-						'instructions' => __( 'Paste the signing secret from Stripe after you add the webhook endpoint (see Help → Stripe webhooks for full steps).', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Paste the signing secret from Stripe after you add the webhook endpoint (see Help → Stripe webhooks for full steps). Leave blank to keep the saved secret.', 'class-bookings-with-stripe-pro' ),
 						'wrapper'      => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-webhook-secret',
