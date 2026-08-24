@@ -22,6 +22,14 @@ abstract class Secrets {
 
 	private const PREFIX = 'clasbpro_enc:v1:';
 
+	/**
+	 * Character used to fill the password input — one per character of the
+	 * real key. Stripe keys are pure ASCII alphanumeric + underscore, so this
+	 * non-ASCII bullet (U+2022) can never appear in a real key and is safe to
+	 * use as a sentinel on save.
+	 */
+	private const MASK_CHAR = "\xE2\x80\xA2";
+
 	/** @var array<string, string> field name => wp-config constant */
 	private const FIELD_CONSTANTS = [
 		'stripe_secret_key_test' => 'CLASBPRO_STRIPE_SECRET_TEST',
@@ -126,8 +134,11 @@ abstract class Secrets {
 		}
 
 		$value = is_string( $value ) ? trim( $value ) : '';
-		if ( '' === $value ) {
+		if ( self::is_display_mask( $value ) ) {
 			return self::raw( $name );
+		}
+		if ( '' === $value ) {
+			return '';
 		}
 		if ( self::is_encrypted( $value ) ) {
 			return $value;
@@ -138,23 +149,32 @@ abstract class Secrets {
 	}
 
 	/**
-	 * Never put ciphertext or plaintext into ACF field HTML.
+	 * Return the display mask when a key is saved so the password input shows
+	 * as filled (dots). Return empty when no key is stored.
+	 * Never return the ciphertext or plaintext.
 	 *
 	 * @param mixed $value
 	 * @param mixed $post_id
 	 * @param mixed $field
-	 * @return mixed
+	 * @return string
 	 */
 	public static function filter_load_value( $value, $post_id, $field ) {
 		$name = is_array( $field ) ? (string) ( $field['name'] ?? '' ) : '';
 		if ( ! self::is_secret_field( $name ) ) {
 			return $value;
 		}
-		unset( $post_id );
-		return '';
+		unset( $value, $post_id );
+		$plaintext = self::get( $name );
+		if ( '' === $plaintext ) {
+			return '';
+		}
+		return str_repeat( self::MASK_CHAR, strlen( $plaintext ) );
 	}
 
 	/**
+	 * Append instructions and, for constant-backed keys, mark the field
+	 * disabled. Value display is handled by filter_load_value.
+	 *
 	 * @param array<string, mixed> $field
 	 * @return array<string, mixed>
 	 */
@@ -168,12 +188,12 @@ abstract class Secrets {
 			return $field;
 		}
 
-		$field['value'] = '';
-		$existing       = trim( (string) ( $field['instructions'] ?? '' ) );
-		$const          = self::constant_name( $name );
+		$has_key  = '' !== self::constant_value( $name ) || '' !== self::raw( $name );
+		$existing = trim( (string) ( $field['instructions'] ?? '' ) );
 
 		if ( '' !== self::constant_value( $name ) ) {
-			$note = sprintf(
+			$const = self::constant_name( $name );
+			$note  = sprintf(
 				/* translators: %s: wp-config.php constant name */
 				__( 'This key is loaded from %s in wp-config.php and is not stored in the database.', 'class-bookings-with-stripe-pro' ),
 				$const
@@ -183,9 +203,9 @@ abstract class Secrets {
 			return $field;
 		}
 
-		$note = '' !== self::raw( $name )
-			? __( 'A key is saved. Leave blank to keep it, or paste a new key to replace it. Keys are encrypted at rest and never shown here.', 'class-bookings-with-stripe-pro' )
-			: __( 'Paste your Stripe secret. It is encrypted at rest and will not be shown again.', 'class-bookings-with-stripe-pro' );
+		$note = $has_key
+			? __( 'A key is saved (shown as dots). Paste a new key to replace it, or clear the field to remove it. Stored encrypted.', 'class-bookings-with-stripe-pro' )
+			: __( 'Paste your Stripe secret. It is stored encrypted.', 'class-bookings-with-stripe-pro' );
 
 		$field['instructions'] = '' === $existing ? $note : $existing . ' ' . $note;
 		return $field;
@@ -208,8 +228,11 @@ abstract class Secrets {
 		}
 
 		$value = is_string( $value ) ? trim( $value ) : '';
+		if ( self::is_display_mask( $value ) ) {
+			return is_string( $old_value ) ? $old_value : '';
+		}
 		if ( '' === $value ) {
-			return is_string( $old_value ) ? $old_value : $value;
+			return '';
 		}
 		if ( self::is_encrypted( $value ) ) {
 			return $value;
@@ -266,6 +289,15 @@ abstract class Secrets {
 
 	public static function is_encrypted( string $value ): bool {
 		return str_starts_with( $value, self::PREFIX );
+	}
+
+	private static function is_display_mask( string $value ): bool {
+		if ( '' === $value ) {
+			return false;
+		}
+		// A mask is a non-empty string consisting entirely of MASK_CHAR bullets.
+		// Stripe keys are ASCII-only, so MASK_CHAR (U+2022) cannot appear in a real key.
+		return preg_match( '/^(?:' . self::MASK_CHAR . ')+$/', $value ) === 1;
 	}
 
 	private static function encrypt( string $plaintext ): string {

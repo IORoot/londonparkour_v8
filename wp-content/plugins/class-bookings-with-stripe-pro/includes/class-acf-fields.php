@@ -1131,11 +1131,12 @@ abstract class ACF_Fields {
 						],
 					],
 					[
-						'key'     => 'field_clasbpro_pub_test',
-						'label'   => __( 'Publishable key (test)', 'class-bookings-with-stripe-pro' ),
-						'name'    => 'stripe_pub_key_test',
-						'type'    => 'text',
-						'wrapper' => [
+						'key'          => 'field_clasbpro_pub_test',
+						'label'        => __( 'Publishable key (test)', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'stripe_pub_key_test',
+						'type'         => 'text',
+						'instructions' => __( 'Starts with pk_test_. This key is public and used in the booking form.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'      => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--test',
 						],
@@ -1145,7 +1146,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Secret key (test)', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_secret_key_test',
 						'type'         => 'password',
-						'instructions' => __( 'Leave blank to keep the saved key.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Shown as dots when a key is saved. Paste a new key to replace it, or clear the field to remove it.', 'class-bookings-with-stripe-pro' ),
 						'wrapper' => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--test',
@@ -1164,11 +1165,12 @@ abstract class ACF_Fields {
 						],
 					],
 					[
-						'key'     => 'field_clasbpro_pub_live',
-						'label'   => __( 'Publishable key (live)', 'class-bookings-with-stripe-pro' ),
-						'name'    => 'stripe_pub_key_live',
-						'type'    => 'text',
-						'wrapper' => [
+						'key'          => 'field_clasbpro_pub_live',
+						'label'        => __( 'Publishable key (live)', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'stripe_pub_key_live',
+						'type'         => 'text',
+						'instructions' => __( 'Starts with pk_live_. This key is public and used in the booking form.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'      => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--live',
 						],
@@ -1178,7 +1180,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Secret key (live)', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_secret_key_live',
 						'type'         => 'password',
-						'instructions' => __( 'Leave blank to keep the saved key.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Shown as dots when a key is saved. Paste a new key to replace it, or clear the field to remove it.', 'class-bookings-with-stripe-pro' ),
 						'wrapper' => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--live',
@@ -1189,7 +1191,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Webhook signing secret', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_webhook_secret',
 						'type'         => 'password',
-						'instructions' => __( 'Paste the signing secret from Stripe after you add the webhook endpoint (see Help → Stripe webhooks for full steps). Leave blank to keep the saved secret.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Paste the signing secret from Stripe after you add the webhook endpoint (see Help → Stripe webhooks for full steps). Shown as dots when saved; clear the field to remove it.', 'class-bookings-with-stripe-pro' ),
 						'wrapper'      => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-webhook-secret',
