@@ -237,13 +237,13 @@ $lp_spacing = lp_section_spacing( $args );
 
 		<div class="mt-[64px]" data-component="pricing-why">
 			<div class="h-px bg-base-300/60 w-full" aria-hidden="true"></div>
-			<div class="pt-[56px] pb-[80px] flex flex-col lg:flex-row lg:items-start gap-[40px] lg:gap-[80px]">
+			<div class="pt-[56px] pb-[40px] lg:pb-[80px] flex flex-col lg:flex-row lg:items-start gap-[40px] lg:gap-[80px]">
 				<div class="flex-1 min-w-0">
 					<?php if ( '' !== $lp_why_statement ) : ?>
 						<p class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0" data-slot="why-statement"><?php echo esc_html( $lp_why_statement ); ?></p>
 					<?php endif; ?>
 				</div>
-				<div class="w-full lg:w-[520px] shrink-0 flex flex-col gap-[32px]">
+				<div class="hidden lg:flex w-full lg:w-[520px] shrink-0 flex-col gap-[32px]" data-slot="why-points">
 					<?php foreach ( $lp_default_why_points as $lp_point ) : ?>
 						<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
 							<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
@@ -390,7 +390,7 @@ $lp_spacing = lp_section_spacing( $args );
 				</div>
 			</div>
 
-			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[20px] border-l-[3px] border-primary py-[8px] pl-[20px]">
+			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[20px] border-l-[3px] border-primary py-[8px] pl-[20px]" data-slot="pricing-note-strip">
 				<div class="flex flex-col gap-[8px]">
 					<?php if ( '' !== $lp_guar_kicker ) : ?>
 						<span class="font-label text-[10px] font-normal tracking-[0.7px] uppercase text-base-content/65"><?php echo esc_html( $lp_guar_kicker ); ?></span>
@@ -410,6 +410,15 @@ $lp_spacing = lp_section_spacing( $args );
 					);
 					?>
 				<?php endif; ?>
+			</div>
+
+			<div class="flex flex-col gap-[32px] lg:hidden" data-slot="why-points-mobile">
+				<?php foreach ( $lp_default_why_points as $lp_point ) : ?>
+					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
+						<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
+						<p class="font-body text-[16px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
+					</div>
+				<?php endforeach; ?>
 			</div>
 
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[10px] pt-[16px] border-t border-base-300/60">

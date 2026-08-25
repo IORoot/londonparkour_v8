@@ -314,7 +314,7 @@ $lp_spacing = lp_section_spacing( $args );
 			?>
 		</div>
 
-		<div class="hidden sm:flex items-center gap-[28px] py-[13px] border-b border-neutral-content/10" aria-hidden="true">
+		<div class="hidden lg:flex items-center gap-[28px] py-[13px] border-b border-neutral-content/10" aria-hidden="true">
 			<?php foreach ( $lp_column_head as $lp_cell ) : ?>
 				<span class="<?php echo lp_classes( $lp_cell['class'], 'font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-neutral-content/50' ); ?>"><?php echo esc_html( $lp_cell['label'] ); ?></span>
 			<?php endforeach; ?>
