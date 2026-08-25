@@ -604,19 +604,6 @@ $lp_header_ground = $lp_over_hero
 				?>
 			</a>
 			<div class="flex items-stretch">
-				<span class="flex items-center">
-					<?php
-					lp_part(
-						'elements/button',
-						array(
-							'variant'          => 'primary',
-							'label'            => $lp_cta_label,
-							'href'             => $lp_cta_href,
-							'trailing_icon_id' => 'icon-arrow-right',
-						)
-					);
-					?>
-				</span>
 				<button type="button" command="show-modal" commandfor="<?php echo esc_attr( $lp_menu_id ); ?>" aria-haspopup="dialog" aria-label="<?php esc_attr_e( 'Open menu', 'londonparkour_v8' ); ?>"
 					class="<?php echo lp_classes( 'inline-flex items-center justify-center w-[60px] border-l border-neutral-content/15 text-neutral-content hover:bg-primary hover:text-neutral transition-colors duration-150', $lp_focus_inset ); ?>">
 					<?php lp_icon( 'icon-bars-3', 'w-[20px] h-[20px]' ); ?>

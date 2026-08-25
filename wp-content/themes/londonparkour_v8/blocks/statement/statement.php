@@ -62,7 +62,7 @@ if ( ! $lp_principles ) {
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-base-100 pt-[128px] px-16 pb-[120px]', $lp_spacing ); ?>" data-component="statement"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'bg-base-100 px-6 pt-16 pb-16 lg:px-16 lg:pt-[128px] lg:pb-[120px]', $lp_spacing ); ?>" data-component="statement"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col">
 		<?php
 		lp_part(

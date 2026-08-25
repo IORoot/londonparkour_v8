@@ -290,7 +290,7 @@ foreach ( $lp_sessions as $lp_session ) {
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-neutral pt-[120px] px-16 pb-[124px]', $lp_spacing ); ?>" data-component="classes"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'bg-neutral px-6 pt-16 pb-16 lg:px-16 lg:pt-[120px] lg:pb-[124px]', $lp_spacing ); ?>" data-component="classes"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
 		<div class="flex flex-col gap-5 lg:w-[640px]">
 			<span class="font-label text-[12px] tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></span>

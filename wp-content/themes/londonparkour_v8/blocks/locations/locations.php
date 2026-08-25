@@ -42,7 +42,7 @@ $lp_default_flagship = array(
 );
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
-$lp_row_base        = 'group relative flex items-center gap-[16px] w-full flex-1 h-auto lg:h-full py-[20px] lg:py-0 px-[16px] sm:px-[24px] hover:bg-accent-content/5 border-b border-accent-content/15 transition-colors duration-150 no-underline text-left';
+$lp_row_base        = 'group relative flex items-center gap-[16px] w-full min-w-0 flex-1 h-auto lg:h-full py-[20px] lg:py-0 px-[16px] sm:px-[24px] hover:bg-accent-content/5 border-b border-accent-content/15 transition-colors duration-150 no-underline text-left';
 $lp_row_interactive = 'cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent-content';
 
 $lp_eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '08 — WHERE WE TRAIN' ), $args['_section_number'] ?? null );
@@ -96,9 +96,9 @@ $lp_spacing = lp_section_spacing( $args );
 
 		<div class="grid lg:grid-cols-2 gap-[56px] items-stretch">
 			<?php if ( $lp_flag_is_link ) : ?>
-			<a class="group relative flex flex-col justify-end overflow-hidden min-h-[300px] lg:min-h-[472px] no-underline" href="<?php echo esc_url( $lp_flag_link['href'] ); ?>" data-component="location-flagship">
+			<a class="group relative flex flex-col justify-end overflow-hidden w-full aspect-[552/472] min-h-[300px] lg:aspect-auto lg:min-h-[472px] lg:h-full no-underline" href="<?php echo esc_url( $lp_flag_link['href'] ); ?>" data-component="location-flagship">
 			<?php else : ?>
-			<div class="group relative flex flex-col justify-end overflow-hidden min-h-[300px] lg:min-h-[472px] no-underline" data-component="location-flagship">
+			<div class="group relative flex flex-col justify-end overflow-hidden w-full aspect-[552/472] min-h-[300px] lg:aspect-auto lg:min-h-[472px] lg:h-full no-underline" data-component="location-flagship">
 			<?php endif; ?>
 				<?php
 				if ( $lp_flag_image ) {
@@ -107,6 +107,8 @@ $lp_spacing = lp_section_spacing( $args );
 						'scrim'    => 'locations_flagship',
 						'size'     => 'lp_wide',
 						'sizes'    => '(min-width: 1024px) 50vw, 100vw',
+						// Defeat Tailwind preflight `img { max-width:100% }` so cover fill can track the card.
+						'class'    => 'max-w-none',
 					);
 					if ( array_key_exists( 'image_alt', $lp_flagship ) ) {
 						$lp_photo['alt'] = (string) $lp_flagship['image_alt'];
@@ -136,7 +138,7 @@ $lp_spacing = lp_section_spacing( $args );
 					$lp_site_href = (string) ( $lp_site['href'] ?? '' );
 					$lp_site_link = '' !== $lp_site_href;
 					?>
-					<li class="flex lg:flex-1 lg:min-h-0">
+					<li class="flex min-w-0 lg:flex-1 lg:min-h-0">
 						<?php if ( $lp_site_link ) : ?>
 						<a class="<?php echo lp_classes( $lp_row_base, $lp_row_interactive ); ?>" data-component="location-site-row" href="<?php echo esc_url( $lp_site_href ); ?>">
 						<?php else : ?>
@@ -144,8 +146,8 @@ $lp_spacing = lp_section_spacing( $args );
 						<?php endif; ?>
 							<span class="text-accent-content/70 shrink-0" aria-hidden="true"><?php lp_icon( 'icon-map-pin', 'w-3.5 h-3.5' ); ?></span>
 							<div class="flex-1 min-w-0 flex flex-col gap-[6px]">
-								<p class="font-heading text-[21px] font-medium tracking-[-0.4px] text-accent-content truncate"><?php echo esc_html( $lp_site['title'] ); ?></p>
-								<p class="font-label text-[11px] font-normal tracking-[0.3px] uppercase text-accent-content/70 truncate"><?php echo esc_html( $lp_site['meta'] ); ?></p>
+								<p class="font-heading text-[21px] font-medium tracking-[-0.4px] text-accent-content break-words"><?php echo esc_html( $lp_site['title'] ); ?></p>
+								<p class="font-label text-[11px] font-normal tracking-[0.3px] uppercase text-accent-content/70 break-words"><?php echo esc_html( $lp_site['meta'] ); ?></p>
 							</div>
 							<?php if ( '' !== $lp_site['type'] ) : ?>
 								<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-accent-content/70 shrink-0 hidden sm:inline"><?php echo esc_html( $lp_site['type'] ); ?></span>
