@@ -65,58 +65,60 @@ defined( 'ABSPATH' ) || exit;
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_sizes = array(
 	'default' => array(
-		'root'       => 'group relative flex flex-col gap-[10px] sm:flex-row sm:items-center sm:gap-[24px] w-full py-[14px] sm:py-[18px] px-[16px] sm:px-[28px] bg-secondary hover:bg-neutral border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
-		'thumb'      => 'hidden sm:block w-14 h-14 shrink-0 overflow-hidden bg-neutral',
-		'thumb_size' => 'lp_thumb',
-		'thumb_sizes'=> '56px',
-		'time_wrap'  => 'flex items-baseline gap-2 sm:w-[92px] sm:shrink-0 sm:flex-col sm:items-start sm:gap-[3px]',
-		'time'       => 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content',
-		'date'       => 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
-		'glyph_wrap' => 'hidden sm:inline-flex w-7 h-7 shrink-0 text-neutral-content items-center justify-center',
-		'glyph_icon' => 'w-7 h-7',
-		'pin_icon'   => 'w-3 h-3',
-		'level_icon' => 'w-3.5 h-3.5',
-		'session'    => 'flex-1 min-w-0 flex flex-col gap-[5px]',
-		'title'      => 'font-heading text-[17px] font-medium tracking-[-0.2px] text-neutral-content truncate',
-		'subtitle'   => 'font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/50 truncate',
-		'site'       => 'hidden md:flex items-center gap-2 sm:w-[150px] sm:shrink-0',
-		'site_pin'   => 'text-neutral-content/50 group-hover:text-neutral-content/80 transition-colors duration-150',
-		'site_label' => 'font-label text-[12px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral-content transition-colors duration-150 truncate',
-		'level'      => 'hidden lg:flex items-center gap-2 sm:w-[146px] sm:shrink-0',
-		'level_mark' => 'text-neutral-content/80',
-		'level_label'=> 'font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/80 truncate',
-		'fare'       => 'hidden sm:flex flex-col items-end gap-[2px] w-[76px] sm:shrink-0',
-		'fare_price' => 'font-heading text-[19px] font-semibold tracking-[-0.4px] text-neutral-content',
-		'fare_label' => 'font-label text-[9px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
-		'book'       => 'relative z-10 shrink-0 w-[84px] flex justify-end',
-		'detail'     => 'relative z-10 w-fit',
+		'root'        => 'group relative flex flex-col gap-[10px] sm:flex-row sm:items-center sm:gap-[24px] w-full py-[14px] sm:py-[18px] px-[16px] sm:px-[28px] bg-secondary hover:bg-neutral border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
+		'thumb'       => 'block w-14 h-14 shrink-0 overflow-hidden bg-neutral',
+		'thumb_size'  => 'lp_thumb',
+		'thumb_sizes' => '56px',
+		'time_wrap'   => 'flex flex-col items-start gap-[2px] shrink-0 sm:w-[92px] sm:gap-[3px]',
+		'time'        => 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content',
+		'date'        => 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
+		'glyph_wrap'  => 'hidden sm:inline-flex w-7 h-7 shrink-0 text-neutral-content items-center justify-center',
+		'glyph_icon'  => 'w-7 h-7',
+		'pin_icon'    => 'w-3 h-3',
+		'level_icon'  => 'w-3.5 h-3.5',
+		'session'     => 'flex-1 min-w-0 flex flex-col gap-[5px]',
+		'title'       => 'font-heading text-[17px] font-medium tracking-[-0.2px] text-neutral-content break-words sm:truncate',
+		'subtitle'    => 'font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/50 break-words sm:truncate',
+		'site'        => 'flex items-center gap-2 min-w-0 sm:w-[150px] sm:shrink-0',
+		'site_pin'    => 'text-neutral-content/50 group-hover:text-neutral-content/80 transition-colors duration-150',
+		'site_label'  => 'font-label text-[12px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral-content transition-colors duration-150 break-words sm:truncate',
+		'level'       => 'flex items-center gap-2 min-w-0 sm:w-[146px] sm:shrink-0',
+		'level_mark'  => 'text-neutral-content/80',
+		'level_label' => 'font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/80 break-words sm:truncate',
+		'fare_mobile' => 'flex flex-col items-end gap-[2px] shrink-0 sm:hidden',
+		'fare'        => 'hidden sm:flex flex-col items-end gap-[2px] w-[76px] sm:shrink-0',
+		'fare_price'  => 'font-heading text-[19px] font-semibold tracking-[-0.4px] text-neutral-content',
+		'fare_label'  => 'font-label text-[9px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
+		'book'        => 'relative z-10 shrink-0 sm:w-[84px] flex justify-end ml-auto sm:ml-0',
+		'detail'      => 'relative z-10 w-fit',
 	),
 	'lg'      => array(
-		'root'       => 'group relative flex flex-col gap-[12px] sm:flex-row sm:items-center sm:gap-[28px] w-full py-[16px] sm:py-[20px] px-[16px] sm:px-[32px] bg-secondary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
-		'thumb'      => 'hidden sm:block w-28 h-28 shrink-0 overflow-hidden bg-neutral',
-		'thumb_size' => 'lp_thumb_lg',
-		'thumb_sizes'=> '112px',
-		'time_wrap'  => 'flex items-baseline gap-2 sm:w-[112px] sm:shrink-0 sm:flex-col sm:items-start sm:gap-[4px]',
-		'time'       => 'font-heading text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
-		'date'       => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
-		'glyph_wrap' => 'hidden sm:inline-flex w-10 h-10 shrink-0 text-neutral-content group-hover:text-neutral items-center justify-center',
-		'glyph_icon' => 'w-10 h-10',
-		'pin_icon'   => 'w-4 h-4',
-		'level_icon' => 'w-4 h-4',
-		'session'    => 'flex-1 min-w-0 flex flex-col gap-2',
-		'title'      => 'font-heading text-[22px] font-medium tracking-[-0.4px] text-neutral-content group-hover:text-neutral truncate',
-		'subtitle'   => 'font-label text-[13px] font-normal tracking-[0.2px] text-neutral-content/50 group-hover:text-neutral truncate',
-		'site'       => 'hidden md:flex items-center gap-2.5 sm:w-[168px] sm:shrink-0',
-		'site_pin'   => 'text-neutral-content/50 group-hover:text-neutral transition-colors duration-150',
-		'site_label' => 'font-label text-[14px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral transition-colors duration-150 truncate',
-		'level'      => 'hidden lg:flex items-center gap-2.5 sm:w-[164px] sm:shrink-0',
-		'level_mark' => 'text-neutral-content/80 group-hover:text-neutral',
-		'level_label'=> 'font-label text-[13px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral truncate',
-		'fare'       => 'hidden sm:flex flex-col items-end gap-[3px] w-[88px] sm:shrink-0',
-		'fare_price' => 'font-heading text-[24px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
-		'fare_label' => 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
-		'book'       => 'relative z-10 shrink-0 w-[96px] flex justify-end',
-		'detail'     => 'relative z-10 w-fit',
+		'root'        => 'group relative flex flex-col gap-[12px] sm:flex-row sm:items-center sm:gap-[28px] w-full py-[16px] sm:py-[20px] px-[16px] sm:px-[32px] bg-secondary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
+		'thumb'       => 'block w-14 h-14 shrink-0 overflow-hidden bg-neutral sm:w-28 sm:h-28',
+		'thumb_size'  => 'lp_thumb_lg',
+		'thumb_sizes' => '(min-width: 640px) 112px, 56px',
+		'time_wrap'   => 'flex flex-col items-start gap-[2px] shrink-0 sm:w-[112px] sm:gap-[4px]',
+		'time'        => 'font-heading text-[22px] sm:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
+		'date'        => 'font-label text-[10px] sm:text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'glyph_wrap'  => 'hidden sm:inline-flex w-10 h-10 shrink-0 text-neutral-content group-hover:text-neutral items-center justify-center',
+		'glyph_icon'  => 'w-10 h-10',
+		'pin_icon'    => 'w-4 h-4',
+		'level_icon'  => 'w-4 h-4',
+		'session'     => 'flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2',
+		'title'       => 'font-heading text-[18px] sm:text-[22px] font-medium tracking-[-0.4px] text-neutral-content group-hover:text-neutral break-words sm:truncate',
+		'subtitle'    => 'font-label text-[12px] sm:text-[13px] font-normal tracking-[0.2px] text-neutral-content/50 group-hover:text-neutral break-words sm:truncate',
+		'site'        => 'flex items-center gap-2 sm:gap-2.5 min-w-0 sm:w-[168px] sm:shrink-0',
+		'site_pin'    => 'text-neutral-content/50 group-hover:text-neutral transition-colors duration-150',
+		'site_label'  => 'font-label text-[12px] sm:text-[14px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral transition-colors duration-150 break-words sm:truncate',
+		'level'       => 'flex items-center gap-2 sm:gap-2.5 min-w-0 sm:w-[164px] sm:shrink-0',
+		'level_mark'  => 'text-neutral-content/80 group-hover:text-neutral',
+		'level_label' => 'font-label text-[11px] sm:text-[13px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral break-words sm:truncate',
+		'fare_mobile' => 'flex flex-col items-end gap-[2px] shrink-0 sm:hidden',
+		'fare'        => 'hidden sm:flex flex-col items-end gap-[3px] w-[88px] sm:shrink-0',
+		'fare_price'  => 'font-heading text-[20px] sm:text-[24px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
+		'fare_label'  => 'font-label text-[9px] sm:text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'book'        => 'relative z-10 shrink-0 sm:w-[96px] flex justify-end ml-auto sm:ml-0',
+		'detail'      => 'relative z-10 w-fit',
 	),
 );
 
@@ -202,7 +204,7 @@ $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
 	<?php if ( '' !== $lp_detail_href ) : ?>
 		<a class="absolute inset-0 z-0" href="<?php echo esc_url( $lp_detail_href ); ?>" aria-hidden="true" tabindex="-1" data-slot="row-details"></a>
 	<?php endif; ?>
-	<div class="flex items-center justify-between gap-3 sm:contents">
+	<div class="flex items-start gap-3 sm:contents">
 		<?php if ( $lp_thumb ) : ?>
 			<div class="<?php echo esc_attr( $lp_ui['thumb'] ); ?>" data-slot="thumb">
 				<?php
@@ -221,52 +223,64 @@ $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
 				?>
 			</div>
 		<?php endif; ?>
-		<div class="<?php echo esc_attr( $lp_ui['time_wrap'] ); ?>">
-			<span class="<?php echo esc_attr( $lp_ui['time'] ); ?>"><?php echo esc_html( $lp_time ); ?></span>
-			<span class="<?php echo esc_attr( $lp_ui['date'] ); ?>"><?php echo esc_html( $lp_date_label ); ?></span>
-		</div>
-		<?php if ( '' !== $lp_glyph_svg || '' !== $lp_glyph_icon ) : ?>
-			<span class="<?php echo esc_attr( $lp_ui['glyph_wrap'] ); ?>" aria-hidden="true" data-slot="glyph">
+		<div class="flex-1 min-w-0 flex flex-col gap-2 sm:contents">
+			<div class="flex items-start justify-between gap-3 sm:contents">
+				<div class="<?php echo esc_attr( $lp_ui['time_wrap'] ); ?>">
+					<span class="<?php echo esc_attr( $lp_ui['time'] ); ?>"><?php echo esc_html( $lp_time ); ?></span>
+					<span class="<?php echo esc_attr( $lp_ui['date'] ); ?>"><?php echo esc_html( $lp_date_label ); ?></span>
+				</div>
+				<?php if ( $lp_is_sell ) : ?>
+					<div class="<?php echo esc_attr( $lp_ui['fare_mobile'] ); ?>" data-slot="fare-mobile">
+						<span class="<?php echo esc_attr( $lp_ui['fare_price'] ); ?>"><?php echo esc_html( $lp_price ); ?></span>
+						<span class="<?php echo esc_attr( $lp_ui['fare_label'] ); ?>"><?php echo esc_html( $lp_price_lbl ); ?></span>
+					</div>
+				<?php endif; ?>
+				<?php if ( '' !== $lp_glyph_svg || '' !== $lp_glyph_icon ) : ?>
+					<span class="<?php echo esc_attr( $lp_ui['glyph_wrap'] ); ?>" aria-hidden="true" data-slot="glyph">
+						<?php
+						if ( '' !== $lp_glyph_svg && function_exists( 'lp_inline_svg' ) ) {
+							lp_inline_svg( $lp_glyph_svg, $lp_ui['glyph_icon'] );
+						} else {
+							lp_icon( $lp_glyph_icon, $lp_ui['glyph_icon'] );
+						}
+						?>
+					</span>
+				<?php endif; ?>
+			</div>
+			<div class="<?php echo esc_attr( $lp_ui['session'] ); ?>">
+				<p class="<?php echo esc_attr( $lp_ui['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></p>
+				<p class="<?php echo esc_attr( $lp_ui['subtitle'] ); ?>"><?php echo esc_html( $lp_subtitle ); ?></p>
 				<?php
-				if ( '' !== $lp_glyph_svg && function_exists( 'lp_inline_svg' ) ) {
-					lp_inline_svg( $lp_glyph_svg, $lp_ui['glyph_icon'] );
-				} else {
-					lp_icon( $lp_glyph_icon, $lp_ui['glyph_icon'] );
+				if ( '' !== $lp_detail_href ) {
+					lp_part(
+						'elements/text-link',
+						array(
+							'label'   => $lp_detail_lbl,
+							'href'    => $lp_detail_href,
+							'variant' => ( 'lg' === $lp_size ) ? 'board_compact_on_fill' : 'board_compact',
+							'class'   => $lp_ui['detail'],
+						)
+					);
 				}
 				?>
-			</span>
-		<?php endif; ?>
-		<div class="<?php echo esc_attr( $lp_ui['session'] ); ?>">
-			<p class="<?php echo esc_attr( $lp_ui['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></p>
-			<p class="<?php echo esc_attr( $lp_ui['subtitle'] ); ?>"><?php echo esc_html( $lp_subtitle ); ?></p>
-			<?php
-			if ( '' !== $lp_detail_href ) {
-				lp_part(
-					'elements/text-link',
-					array(
-						'label'   => $lp_detail_lbl,
-						'href'    => $lp_detail_href,
-						'variant' => ( 'lg' === $lp_size ) ? 'board_compact_on_fill' : 'board_compact',
-						'class'   => $lp_ui['detail'],
-					)
-				);
-			}
-			?>
+			</div>
+			<div class="flex flex-wrap items-center gap-x-3 gap-y-1 sm:contents">
+				<div class="<?php echo esc_attr( $lp_ui['site'] ); ?>">
+					<span class="<?php echo esc_attr( $lp_ui['site_pin'] ); ?>" aria-hidden="true"><?php lp_icon( $lp_location_icon, $lp_ui['pin_icon'] ); ?></span>
+					<span class="<?php echo esc_attr( $lp_ui['site_label'] ); ?>"><?php echo esc_html( $lp_location ); ?></span>
+				</div>
+				<div class="<?php echo esc_attr( $lp_ui['level'] ); ?>">
+					<?php if ( '' !== $lp_level ) : ?>
+					<span class="<?php echo esc_attr( $lp_ui['level_mark'] ); ?>" aria-hidden="true"><?php lp_icon( $lp_level_icon, $lp_ui['level_icon'] ); ?></span>
+					<span class="<?php echo esc_attr( $lp_ui['level_label'] ); ?>"><?php echo esc_html( $lp_level ); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="flex items-center justify-between gap-3 sm:contents">
-		<div class="<?php echo esc_attr( $lp_ui['site'] ); ?>">
-			<span class="<?php echo esc_attr( $lp_ui['site_pin'] ); ?>" aria-hidden="true"><?php lp_icon( $lp_location_icon, $lp_ui['pin_icon'] ); ?></span>
-			<span class="<?php echo esc_attr( $lp_ui['site_label'] ); ?>"><?php echo esc_html( $lp_location ); ?></span>
-		</div>
-		<div class="<?php echo esc_attr( $lp_ui['level'] ); ?>">
-			<?php if ( '' !== $lp_level ) : ?>
-			<span class="<?php echo esc_attr( $lp_ui['level_mark'] ); ?>" aria-hidden="true"><?php lp_icon( $lp_level_icon, $lp_ui['level_icon'] ); ?></span>
-			<span class="<?php echo esc_attr( $lp_ui['level_label'] ); ?>"><?php echo esc_html( $lp_level ); ?></span>
-			<?php endif; ?>
-		</div>
+	<div class="flex items-center justify-end gap-3 pt-3 border-t border-neutral-content/10 sm:contents sm:border-0 sm:pt-0">
 		<?php if ( $lp_is_sell ) : ?>
-			<div class="<?php echo esc_attr( $lp_ui['fare'] ); ?>">
+			<div class="<?php echo esc_attr( $lp_ui['fare'] ); ?>" data-slot="fare">
 				<span class="<?php echo esc_attr( $lp_ui['fare_price'] ); ?>"><?php echo esc_html( $lp_price ); ?></span>
 				<span class="<?php echo esc_attr( $lp_ui['fare_label'] ); ?>"><?php echo esc_html( $lp_price_lbl ); ?></span>
 			</div>
