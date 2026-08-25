@@ -20,7 +20,8 @@ $lp_post_id = get_the_ID();
 $lp_classes = lp_classes_page_url( 'classes' );
 $lp_workshops = lp_workshops_url();
 
-$lp_about = trim( (string) get_the_content() );
+$lp_about_raw = trim( (string) get_the_content() );
+$lp_about     = $lp_about_raw ? apply_filters( 'the_content', $lp_about_raw ) : '';
 
 $lp_subtitle = lp_class_composed_subtitle( $lp_post_id );
 
@@ -77,6 +78,10 @@ $lp_show_book   = lp_class_one_off_is_upcoming( $lp_post_id );
 $lp_coach_ids = lp_class_coach_ids( $lp_post_id );
 
 $lp_expect = function_exists( 'get_field' ) ? get_field( 'acf_what_to_expect', $lp_post_id ) : null;
+$lp_expect_heading = function_exists( 'get_field' ) ? trim( (string) get_field( 'acf_what_to_expect_heading', $lp_post_id ) ) : '';
+if ( '' === $lp_expect_heading ) {
+	$lp_expect_heading = 'WHAT TO EXPECT';
+}
 $lp_expect = is_array( $lp_expect ) ? $lp_expect : array();
 
 $lp_gallery = function_exists( 'get_field' ) ? get_field( 'acf_gallery', $lp_post_id ) : array();
@@ -290,12 +295,12 @@ $lp_grid = $lp_show_book
 			<?php if ( $lp_about ) : ?>
 				<div class="flex flex-col gap-[22px] border-t border-base-content pt-[22px] order-3 lg:col-start-1 lg:order-none">
 					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">ABOUT THIS WORKSHOP</span>
-					<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80"><?php echo wp_kses_post( $lp_about ); ?></div>
+					<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_about ); ?></div>
 				</div>
 			<?php endif; ?>
 			<?php if ( $lp_expect ) : ?>
 				<div class="flex flex-col border-t border-base-content pt-[22px] order-4 lg:col-start-1 lg:order-none">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">WHAT TO EXPECT</span>
+					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content"><?php echo esc_html( $lp_expect_heading ); ?></span>
 					<ol class="flex flex-col m-0 p-0 list-none [&>li:last-child_[data-variant=expect]]:border-b-0">
 						<?php foreach ( $lp_expect as $lp_i => $lp_step ) : ?>
 							<li>

@@ -297,6 +297,26 @@
             "selected": 0
         },
         {
+            "key": "field_lp_class_what_to_expect_heading",
+            "label": "Heading",
+            "name": "acf_what_to_expect_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Section title on the class page. Empty: WHAT TO EXPECT. Rendered in uppercase.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "WHAT TO EXPECT",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_lp_class_what_to_expect",
             "label": "What to expect",
             "name": "acf_what_to_expect",
@@ -362,5 +382,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1786982400
+    "modified": 1787654400
 }

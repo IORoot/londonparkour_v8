@@ -39,16 +39,11 @@ while ( have_posts() ) :
 	$lp_classes = lp_classes_page_url( 'classes' );
 
 	/*
-	 * Raw, not `the_content` filtered: the design puts the About copy inside
-	 * ONE styled <p>, and running the filter would wrap it in <p> tags of its
-	 * own — a <p> nested in a <p>, which is invalid. A class body that grows
-	 * past one paragraph is the moment to drop the design's <p> and let the
-	 * filter own the markup.
-	 *
-	 * Guarded because the label and the paragraph are one group: without this
-	 * a class with an empty body renders "ABOUT THIS CLASS" over nothing.
+	 * Run `the_content` so Gutenberg blocks and classic paragraphs keep
+	 * their markup. The wrapper is a div (not a <p>) so nested <p>s are valid.
 	 */
-	$lp_about = trim( (string) get_the_content() );
+	$lp_about_raw = trim( (string) get_the_content() );
+	$lp_about     = $lp_about_raw ? apply_filters( 'the_content', $lp_about_raw ) : '';
 
 	$lp_subtitle = lp_class_composed_subtitle( $lp_post_id );
 
@@ -141,6 +136,10 @@ while ( have_posts() ) :
 
 	// What to expect.
 	$lp_expect = function_exists( 'get_field' ) ? get_field( 'acf_what_to_expect', $lp_post_id ) : null;
+	$lp_expect_heading = function_exists( 'get_field' ) ? trim( (string) get_field( 'acf_what_to_expect_heading', $lp_post_id ) ) : '';
+	if ( '' === $lp_expect_heading ) {
+		$lp_expect_heading = 'WHAT TO EXPECT';
+	}
 	$lp_expect = is_array( $lp_expect ) ? $lp_expect : array();
 
 	// Booking aside.
@@ -324,12 +323,12 @@ while ( have_posts() ) :
 					<div class="flex flex-col gap-[22px] border-t border-base-content pt-[22px] order-3 lg:col-start-1 lg:order-none">
 						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">ABOUT THIS CLASS</span>
 						<?php /* Div not <p>: post content may already contain block tags. */ ?>
-						<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80"><?php echo wp_kses_post( $lp_about ); ?></div>
+						<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_about ); ?></div>
 					</div>
 				<?php endif; ?>
 				<?php if ( $lp_expect ) : ?>
 					<div class="flex flex-col border-t border-base-content pt-[22px] order-4 lg:col-start-1 lg:order-none">
-						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">WHAT TO EXPECT</span>
+						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content"><?php echo esc_html( $lp_expect_heading ); ?></span>
 						<ol class="flex flex-col m-0 p-0 list-none [&>li:last-child_[data-variant=expect]]:border-b-0">
 							<?php foreach ( $lp_expect as $lp_i => $lp_step ) : ?>
 								<li>
