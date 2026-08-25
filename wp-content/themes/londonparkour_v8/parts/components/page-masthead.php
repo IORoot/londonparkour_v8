@@ -36,6 +36,12 @@ $lp_title = (string) ( $args['title'] ?? '' );
 $lp_note  = (string) ( $args['note'] ?? '' );
 $lp_pad   = $lp_has_media ? $lp_pads['media'] : $lp_pads['plain'];
 
+$lp_title_sizes = array(
+	'default' => 'w-full font-display font-bold text-neutral-content text-[64px] leading-[0.92] tracking-[-3px] [text-box:normal]',
+	'error'   => 'w-full font-display font-bold text-neutral-content text-[57px] leading-[0.92] tracking-[-3px] [text-box:normal]',
+);
+$lp_title_class = $lp_title_sizes[ $args['title_scale'] ?? 'default' ] ?? $lp_title_sizes['default'];
+
 $lp_photo = array(
 	'image_id'  => $lp_media_id,
 	'image_url' => $lp_media_url,
@@ -59,7 +65,7 @@ if ( array_key_exists( 'media_alt', $args ) ) {
 	}
 	?>
 	<div class="relative flex flex-col gap-[30px] items-end">
-		<h1 class="w-full font-display font-bold text-neutral-content text-[64px] leading-[0.92] tracking-[-3px]"><?php echo esc_html( $lp_title ); ?></h1>
+		<h1 class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></h1>
 		<?php if ( '' !== $lp_note ) : ?>
 			<p class="max-w-[400px] font-body text-[13px] leading-[1.65] tracking-[0.1px] text-neutral-content/80"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>

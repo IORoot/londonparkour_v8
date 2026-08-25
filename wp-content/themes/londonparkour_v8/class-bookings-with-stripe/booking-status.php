@@ -45,9 +45,11 @@ $lp_name     = $lp['class_name'] ? $lp['class_name'] : __( 'Class', 'londonparko
 $lp_href     = $lp['class_href'] ? $lp['class_href'] : $lp['origin'];
 $lp_crumb    = $lp_error ? 'ERROR' : ( $lp_compact ? 'CANCELLED' : 'CONFIRMED' );
 $lp_title    = $lp_error
-	? "We couldn't take the booking."
+	? 'We could not take the booking.'
 	: ( $lp_compact ? 'You left before paying.' : 'Booking confirmed.' );
-$lp_note     = $lp['note'] ? $lp['note'] : $lp_name;
+$lp_note     = $lp_error
+	? 'Your card has not been charged. Try the same session again, or write to us and we will book you in by hand.'
+	: ( $lp['note'] ? $lp['note'] : $lp_name );
 
 lp_part(
 	'components/breadcrumb-rail',
@@ -68,7 +70,7 @@ lp_part(
 			array( 'label' => $lp_crumb ),
 		),
 		'action' => array(
-			'label' => 'CLASS PAGE ↗',
+			'label' => $lp_error ? 'TRY AGAIN ↗' : 'CLASS PAGE ↗',
 			'href'  => $lp_href,
 		),
 	)
@@ -77,8 +79,9 @@ lp_part(
 lp_part(
 	'components/page-masthead',
 	array(
-		'title' => $lp_title,
-		'note'  => $lp_note,
+		'title'       => $lp_title,
+		'note'        => $lp_note,
+		'title_scale' => $lp_error ? 'error' : 'default',
 	)
 );
 
@@ -107,10 +110,27 @@ $lp_facts = $lp_compact
 		array( 'icon' => 'icon-hashtag', 'label' => 'REF', 'value' => $lp_ref ),
 	);
 ?>
-	<div class="w-full bg-neutral" data-component="booking-status-fact-rail">
-		<div class="px-6 lg:px-16 py-scale-s grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-[40px] gap-y-6" data-mount="rail">
-			<?php foreach ( $lp_facts as $lp_fact ) : ?>
-				<?php lp_part( 'components/fact-row', array_merge( $lp_fact, array( 'surface' => 'board' ) ) ); ?>
+	<div class="w-full bg-neutral border-y border-neutral-content/40" data-component="booking-status-fact-rail">
+		<div class="px-6 lg:px-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5" data-mount="rail">
+			<?php
+			$lp_fact_cells = array(
+				'first' => 'min-w-0 py-6 lg:pl-0 lg:pr-[26px]',
+				'next'  => 'min-w-0 py-6 lg:px-[26px] lg:border-l lg:border-neutral-content/40',
+			);
+			foreach ( $lp_facts as $lp_i => $lp_fact ) :
+				$lp_cell = 0 === (int) $lp_i ? $lp_fact_cells['first'] : $lp_fact_cells['next'];
+				?>
+				<div class="<?php echo esc_attr( $lp_cell ); ?>">
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center gap-2 font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">
+							<?php if ( ! empty( $lp_fact['icon'] ) ) : ?>
+								<span class="shrink-0" aria-hidden="true"><?php lp_icon( $lp_fact['icon'], 'w-[12px] h-[12px]' ); ?></span>
+							<?php endif; ?>
+							<?php echo esc_html( $lp_fact['label'] ); ?>
+						</div>
+						<div class="font-heading text-[16px] font-medium text-neutral-content"><?php echo esc_html( $lp_fact['value'] ); ?></div>
+					</div>
+				</div>
 			<?php endforeach; ?>
 		</div>
 	</div>
@@ -125,7 +145,7 @@ $lp_facts = $lp_compact
 	$lp_kicker      = $lp_error ? 'PAYMENT' : 'CHECKOUT';
 	$lp_headline    = $lp_error ? 'The payment did not complete.' : 'You left before paying.';
 	$lp_lede        = $lp_error
-		? ( $view->get_reason_message() ? $view->get_reason_message() : 'Stripe returned an error before the seat was held. Nothing has been charged. Retry the same session, or contact us and we will take the booking by hand.' )
+		? 'Stripe returned an error before the seat was held. Nothing has been charged. Retry the same session, or contact us and we will take the booking by hand.'
 		: 'Stripe was never charged. Nobody has your seat. Book again when you are ready.';
 	$lp_charge      = $lp_error ? ( $view->msg ? $view->msg : 'None · card declined' ) : 'None';
 	$lp_aside_kick  = $lp_error ? 'HELP' : 'NEXT';
@@ -134,30 +154,54 @@ $lp_facts = $lp_compact
 		? 'If this keeps happening, do not retry from the receipt email. Write to us with the class and the time — we will book you in by hand.'
 		: 'If you closed the tab by mistake, book the same session from the class page. Need a hand? Contact us and we will hold it.';
 	$lp_cta         = $lp_error ? 'TRY AGAIN' : 'BOOK THIS CLASS';
-	$lp_surface     = $lp_error ? 'board' : 'page';
-	$lp_band        = $lp_error ? 'bg-neutral' : 'bg-base-100';
-	$lp_kicker_c    = $lp_error ? 'font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content/70' : 'font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content';
-	$lp_heading_c   = $lp_error ? 'font-heading text-[36px] font-bold leading-none tracking-[-1.6px] text-neutral-content m-0' : 'font-heading text-[36px] font-bold leading-none tracking-[-1.6px] text-base-content m-0';
-	$lp_body_c      = $lp_error ? 'font-body text-[13px] leading-[1.65] tracking-[0.1px] text-neutral-content/80 m-0' : 'font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0';
-	$lp_ak_c        = $lp_error ? 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-neutral-content/70' : 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65';
-	$lp_at_c        = $lp_error ? 'font-heading text-[22px] font-medium tracking-[-0.3px] text-neutral-content m-0' : 'font-heading text-[22px] font-medium tracking-[-0.3px] text-base-content m-0';
-	$lp_ab_c        = $lp_error ? 'font-body text-[13px] leading-[1.65] tracking-[0.1px] text-neutral-content/80 m-0' : 'font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0';
-	$lp_rule        = $lp_error ? 'border-neutral-content/20' : 'border-base-300';
-	$lp_link_c      = $lp_error ? 'font-label text-[11px] font-semibold uppercase tracking-[1px] text-primary' : 'font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent';
 	?>
-	<div class="w-full <?php echo esc_attr( $lp_band ); ?>" data-component="booking-status-compact">
+	<div class="w-full <?php echo $lp_error ? 'bg-neutral' : 'bg-base-100'; ?>" data-component="booking-status-compact">
+		<?php if ( $lp_error ) : ?>
+		<div class="px-6 lg:px-16 py-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-6 items-start">
+			<article class="bg-neutral-content/5 border border-neutral-content/40 px-8 pt-8 pb-9 flex flex-col gap-4">
+				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-neutral-content/50"><?php echo esc_html( $lp_kicker ); ?></span>
+				<h2 class="font-display text-[32px] font-bold leading-[38px] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_headline ); ?></h2>
+				<p class="font-body text-[13px] font-normal leading-4 text-neutral-content/50 m-0"><?php echo esc_html( $lp_lede ); ?></p>
+				<dl class="m-0 border-t border-neutral-content/40">
+					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name, 'error' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'SESSION', $lp_when, 'error' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'AMOUNT', $lp_sum, 'error' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'CHARGE', $lp_charge, 'error' ); ?>
+				</dl>
+				<div class="pt-2">
+					<?php
+					lp_part(
+						'elements/button',
+						array(
+							'variant'          => 'primary',
+							'label'            => $lp_cta,
+							'href'             => $lp_href,
+							'trailing_icon_id' => 'icon-arrow-right',
+						)
+					);
+					?>
+				</div>
+			</article>
+			<aside class="bg-secondary border border-neutral-content/40 p-6 flex flex-col gap-4">
+				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-neutral-content/50"><?php echo esc_html( $lp_aside_kick ); ?></span>
+				<h3 class="font-display text-[22px] font-bold leading-[26px] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_aside_title ); ?></h3>
+				<p class="font-body text-[12px] font-normal leading-[15px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
+				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-[11px] font-semibold leading-[13px] text-primary">Write to hello@londonparkour.com ↗</a>
+			</aside>
+		</div>
+		<?php else : ?>
 		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-x-16 gap-y-12 items-start">
 			<div class="flex flex-col gap-6">
 				<div class="flex flex-col gap-3">
-					<span class="<?php echo esc_attr( $lp_kicker_c ); ?>"><?php echo esc_html( $lp_kicker ); ?></span>
-					<h2 class="<?php echo esc_attr( $lp_heading_c ); ?>"><?php echo esc_html( $lp_headline ); ?></h2>
-					<p class="<?php echo esc_attr( $lp_body_c ); ?>"><?php echo esc_html( $lp_lede ); ?></p>
+					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content"><?php echo esc_html( $lp_kicker ); ?></span>
+					<h2 class="font-heading text-[36px] font-bold leading-none tracking-[-1.6px] text-base-content m-0"><?php echo esc_html( $lp_headline ); ?></h2>
+					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_lede ); ?></p>
 				</div>
 				<dl class="m-0 max-w-[520px]">
-					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name, $lp_surface ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'SESSION', $lp_when, $lp_surface ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'AMOUNT', $lp_sum, $lp_surface ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'CHARGE', $lp_charge, $lp_surface ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name, 'page' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'SESSION', $lp_when, 'page' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'AMOUNT', $lp_sum, 'page' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'CHARGE', $lp_charge, 'page' ); ?>
 				</dl>
 				<?php
 				lp_part(
@@ -171,13 +215,14 @@ $lp_facts = $lp_compact
 				);
 				?>
 			</div>
-			<aside class="flex flex-col gap-3 border-t <?php echo esc_attr( $lp_rule ); ?> pt-[22px]">
-				<span class="<?php echo esc_attr( $lp_ak_c ); ?>"><?php echo esc_html( $lp_aside_kick ); ?></span>
-				<h3 class="<?php echo esc_attr( $lp_at_c ); ?>"><?php echo esc_html( $lp_aside_title ); ?></h3>
-				<p class="<?php echo esc_attr( $lp_ab_c ); ?>"><?php echo esc_html( $lp_aside_body ); ?></p>
-				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="<?php echo esc_attr( $lp_link_c ); ?>">Write to hello@londonparkour.com ↗</a>
+			<aside class="flex flex-col gap-3 border-t border-base-300 pt-[22px]">
+				<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_aside_kick ); ?></span>
+				<h3 class="font-heading text-[22px] font-medium tracking-[-0.3px] text-base-content m-0"><?php echo esc_html( $lp_aside_title ); ?></h3>
+				<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
+				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent">Write to hello@londonparkour.com ↗</a>
 			</aside>
 		</div>
+		<?php endif; ?>
 	</div>
 <?php else : ?>
 	<div class="w-full bg-base-100" data-component="booking-status-ticket-place">
@@ -428,7 +473,7 @@ lp_part(
 		),
 		'next' => array(
 			'keyword' => 'CONTACT →',
-			'label'   => $lp_compact ? 'Book by hand' : 'Questions before Saturday',
+			'label'   => $lp_error ? 'We will book you in by hand' : ( $lp_compact ? 'Book by hand' : 'Questions before Saturday' ),
 			'href'    => $lp['contact_href'],
 		),
 	)
