@@ -52,7 +52,7 @@ $lp_index    = (string) ( $args['index'] ?? '01' );
 $lp_question = (string) ( $args['question'] ?? 'Do I need any experience?' );
 $lp_answer   = (string) ( $args['answer'] ?? 'No. This is an outdoor parkour class built for adults of all abilities.' );
 $lp_title        = lp_classes( 'flex items-center gap-[18px] px-0 py-[10px] font-heading text-[20px] font-medium tracking-[-0.3px]', $lp_tone['question'] );
-$lp_title_static = lp_classes( 'flex items-center gap-[18px] px-0 font-heading text-[20px] font-medium tracking-[-0.3px]', $lp_tone['question'] );
+$lp_title_static = lp_classes( 'flex items-center gap-[18px] px-0 font-heading text-[20px] font-medium tracking-[-0.3px] leading-[22px]', $lp_tone['question'] );
 $lp_index_c      = lp_classes( 'font-label text-[10px] font-normal tracking-[0.9px] shrink-0', $lp_tone['index'] );
 $lp_answer_c     = lp_classes( 'font-body text-[13px] font-normal tracking-[0.1px] leading-[1.7]', $lp_tone['answer'] );
 

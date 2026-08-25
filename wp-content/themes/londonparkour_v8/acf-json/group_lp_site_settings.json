@@ -55,6 +55,13 @@
             "type": "email",
             "instructions": "Enquiry form recipient. Falls back to the WordPress admin email when empty.",
             "key": "field_35d385c220b75830"
+        },
+        {
+            "name": "whatsapp_url",
+            "label": "WhatsApp group URL",
+            "type": "url",
+            "instructions": "School-wide chat.whatsapp.com invite. Used on paid booking confirmations when the class and site have no URL of their own. Never output on an unconfirmed visit.",
+            "key": "field_54becc274fd82508"
         }
     ]
 }

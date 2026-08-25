@@ -545,6 +545,78 @@ function lp_osm_maps_url( string $lp_lat, string $lp_lon ): string {
 }
 
 /**
+ * Google Maps search URL for a lat/lon pin (OPEN IN MAPS exits).
+ *
+ * @param string $lp_lat Latitude.
+ * @param string $lp_lon Longitude.
+ * @return string Empty when coords are missing / non-numeric.
+ */
+function lp_google_maps_url( string $lp_lat, string $lp_lon ): string {
+	if ( '' === trim( $lp_lat ) || '' === trim( $lp_lon ) || ! is_numeric( $lp_lat ) || ! is_numeric( $lp_lon ) ) {
+		return '';
+	}
+
+	return sprintf(
+		'https://www.google.com/maps/search/?api=1&query=%s',
+		rawurlencode( $lp_lat . ',' . $lp_lon )
+	);
+}
+
+/**
+ * WhatsApp group invite URL — class, then site, then Site Settings.
+ *
+ * Only chat.whatsapp.com / wa.me / api.whatsapp.com hosts are accepted, so a
+ * pasted javascript: or tracking URL never reaches the confirmed page.
+ *
+ * @param int $class_id    clasbpro_class post ID.
+ * @param int $location_id lp_location post ID.
+ * @return string Empty when nothing valid is configured.
+ */
+function lp_whatsapp_invite_url( int $class_id = 0, int $location_id = 0 ): string {
+	$candidates = array();
+	if ( $class_id > 0 && function_exists( 'get_field' ) ) {
+		$candidates[] = (string) get_field( 'whatsapp_url', $class_id );
+	}
+	if ( $location_id > 0 && function_exists( 'get_field' ) ) {
+		$candidates[] = (string) get_field( 'whatsapp_url', $location_id );
+	}
+	if ( function_exists( 'get_field' ) ) {
+		$candidates[] = (string) get_field( 'whatsapp_url', 'option' );
+	}
+
+	foreach ( $candidates as $raw ) {
+		$url = lp_whatsapp_invite_url_sanitize( $raw );
+		if ( '' !== $url ) {
+			return $url;
+		}
+	}
+
+	return '';
+}
+
+/**
+ * @param string $raw Untrusted field value.
+ * @return string Sanitised https invite URL, or empty.
+ */
+function lp_whatsapp_invite_url_sanitize( string $raw ): string {
+	$raw = trim( $raw );
+	if ( '' === $raw ) {
+		return '';
+	}
+
+	$url = esc_url_raw( $raw, array( 'https', 'http' ) );
+	if ( '' === $url ) {
+		return '';
+	}
+
+	$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+	$host = preg_replace( '/^www\./', '', $host ) ?? $host;
+	$ok   = array( 'chat.whatsapp.com', 'wa.me', 'api.whatsapp.com', 'whatsapp.com' );
+
+	return in_array( $host, $ok, true ) ? $url : '';
+}
+
+/**
  * First N sentences of plain text, whitespace-normalised into one paragraph.
  * Used on Class Detail coach bios so the byline stays short.
  *

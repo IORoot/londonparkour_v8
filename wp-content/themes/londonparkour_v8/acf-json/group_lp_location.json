@@ -157,6 +157,22 @@
                     }
                 ]
             ]
+        },
+        {
+            "name": "whatsapp_url",
+            "label": "WhatsApp group URL",
+            "type": "url",
+            "instructions": "chat.whatsapp.com invite. Shown only on a paid booking confirmation for this site. Empty: fall back to Site Settings, or hide the block.",
+            "key": "field_2eb97d139431aa84",
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_bf653bc37d00c33e",
+                        "operator": "==",
+                        "value": "site"
+                    }
+                ]
+            ]
         }
     ]
 }

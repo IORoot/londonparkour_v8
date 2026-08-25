@@ -130,6 +130,24 @@
             "placeholder": ""
         },
         {
+            "key": "field_lp_class_whatsapp_url",
+            "label": "WhatsApp group URL",
+            "name": "whatsapp_url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "chat.whatsapp.com invite for this class. Shown only on a paid booking confirmation. Empty: use the location, then Site Settings.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": "https://chat.whatsapp.com/"
+        },
+        {
             "key": "field_lp_class_tab_workshop",
             "label": "Workshop",
             "name": "",

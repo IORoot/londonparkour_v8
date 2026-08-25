@@ -1525,9 +1525,35 @@ function lp_clasbpro_status_context( $view ): array {
 	$transport_bus   = $location_id ? (string) get_field( 'transport_bus', $location_id ) : '';
 	$lat             = $location_id ? trim( (string) get_field( 'latitude', $location_id ) ) : '';
 	$lon             = $location_id ? trim( (string) get_field( 'longitude', $location_id ) ) : '';
-	$maps_href       = ( $lat && $lon && function_exists( 'lp_osm_maps_url' ) ) ? lp_osm_maps_url( $lat, $lon ) : '';
+	$maps_href       = ( $lat && $lon && function_exists( 'lp_google_maps_url' ) ) ? lp_google_maps_url( $lat, $lon ) : '';
 	$image_id        = ( $class_id && function_exists( 'lp_class_image_id' ) ) ? lp_class_image_id( $class_id ) : 0;
-	$whatsapp        = (string) apply_filters( 'lp_clasbpro_whatsapp_url', '', $class_id, $booking );
+	$location_image  = ( $location_id && has_post_thumbnail( $location_id ) ) ? (int) get_post_thumbnail_id( $location_id ) : 0;
+	$location_type   = $location_id ? (string) get_field( 'type', $location_id ) : '';
+	$location_meta   = $location_id ? (string) get_field( 'meta', $location_id ) : '';
+	$site_kicker     = strtoupper( trim( implode( ' · ', array_filter( array( $location_type, $location ) ) ) ) );
+	$foot            = $location_meta;
+	if ( '' === $foot && $lat && $lon ) {
+		$foot = $lat . ' / ' . $lon;
+	}
+	$video_url       = ( $class_id && function_exists( 'get_field' ) ) ? (string) get_field( 'video_url', $class_id ) : '';
+	$video_id        = ( $video_url && function_exists( 'lp_youtube_id_from_url' ) ) ? lp_youtube_id_from_url( $video_url ) : '';
+	$ref             = $booking_id ? ( '#' . $booking_id ) : '';
+	$whatsapp_raw    = (string) apply_filters(
+		'lp_clasbpro_whatsapp_url',
+		function_exists( 'lp_whatsapp_invite_url' ) ? lp_whatsapp_invite_url( $class_id, $location_id ) : '',
+		$class_id,
+		$booking
+	);
+	$whatsapp        = function_exists( 'lp_whatsapp_invite_url_sanitize' )
+		? lp_whatsapp_invite_url_sanitize( $whatsapp_raw )
+		: '';
+	$show_whatsapp   = '' !== $ref;
+	$qr_src          = '';
+	if ( $show_whatsapp ) {
+		$qr_src = '' !== $whatsapp
+			? ( 'https://api.qrserver.com/v1/create-qr-code/?size=264x264&ecc=M&data=' . rawurlencode( $whatsapp ) )
+			: content_url( 'uploads/Page_images/londonparkour_com.png' );
+	}
 	$private_href    = home_url( '/private-coaching/' );
 	$coupons_href    = home_url( '/coupons/' );
 	$contact_href    = home_url( '/contact/' );
@@ -1536,8 +1562,8 @@ function lp_clasbpro_status_context( $view ): array {
 	$faqs = array(
 		array(
 			'index'    => '01',
-			'question' => 'Do I need experience?',
-			'answer'   => 'No. Outdoor class is built for adults of every level. Read the beginners wiki if it is your first session.',
+			'question' => 'Do I need any experience?',
+			'answer'   => "No. Outdoor class is built for adults of every level. Read the beginners wiki if it's your first session.",
 		),
 		array(
 			'index'    => '02',
@@ -1569,7 +1595,7 @@ function lp_clasbpro_status_context( $view ): array {
 			'note'            => $note,
 			'seats'           => (string) ( $booking['seats'] ?? '' ),
 			'total'           => (string) ( $booking['amount_total'] ?? '' ),
-			'ref'             => $booking_id ? ( '#' . $booking_id ) : '',
+			'ref'             => $ref,
 			'customer_name'   => (string) ( $booking['customer_name'] ?? '' ),
 			'origin'          => $origin,
 			'location_id'     => $location_id,
@@ -1580,7 +1606,13 @@ function lp_clasbpro_status_context( $view ): array {
 			'lon'             => $lon,
 			'maps_href'       => $maps_href,
 			'image_id'        => $image_id,
+			'location_image_id' => $location_image,
+			'site_kicker'     => $site_kicker,
+			'foot'            => $foot,
+			'video_id'        => $video_id,
+			'qr_src'          => $qr_src,
 			'whatsapp_href'   => $whatsapp,
+			'show_whatsapp'   => $show_whatsapp,
 			'private_href'    => $private_href,
 			'coupons_href'    => $coupons_href,
 			'contact_href'    => $contact_href,
@@ -1605,16 +1637,16 @@ function lp_clasbpro_status_ticket_row( string $label, string $value, string $su
 		return;
 	}
 	$rows = array(
-		'page'  => 'grid grid-cols-[110px_minmax(0,1fr)] gap-4 py-3 border-b border-base-content/15',
-		'board' => 'grid grid-cols-[110px_minmax(0,1fr)] gap-4 py-3 border-b border-neutral-content/20',
+		'page'  => 'flex items-center justify-between gap-4 py-[14px] border-t border-base-300',
+		'board' => 'flex items-center justify-between gap-4 py-[14px] border-t border-neutral-content/20',
 	);
 	$dts  = array(
-		'page'  => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65 m-0',
-		'board' => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-neutral-content/70 m-0',
+		'page'  => 'font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65 m-0',
+		'board' => 'font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 m-0',
 	);
 	$dds  = array(
-		'page'  => 'font-body text-[15px] font-medium tracking-[-0.2px] text-base-content m-0',
-		'board' => 'font-body text-[15px] font-medium tracking-[-0.2px] text-neutral-content m-0',
+		'page'  => 'font-heading text-[16px] font-medium text-base-content m-0 text-right',
+		'board' => 'font-heading text-[16px] font-medium text-neutral-content m-0 text-right',
 	);
 	$row = $rows[ $surface ] ?? $rows['page'];
 	$dt  = $dts[ $surface ] ?? $dts['page'];

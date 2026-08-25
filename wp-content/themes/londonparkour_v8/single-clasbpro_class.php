@@ -63,7 +63,7 @@ while ( have_posts() ) :
 	$lp_location_tag   = $lp_location_id ? (string) get_field( 'tag', $lp_location_id ) : '';
 	$lp_location_type  = $lp_location_id ? (string) get_field( 'type', $lp_location_id ) : '';
 	$lp_streetview     = $lp_location_id ? lp_location_streetview_url( (int) $lp_location_id ) : '';
-	$lp_osm_maps       = lp_osm_maps_url( $lp_lat, $lp_lon );
+	$lp_osm_maps       = lp_google_maps_url( $lp_lat, $lp_lon );
 	$lp_coords_label   = ( '' !== $lp_lat && '' !== $lp_lon ) ? sprintf( '%s / %s', $lp_lat, $lp_lon ) : '';
 	$lp_foot_parts     = array_filter(
 		array(

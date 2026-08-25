@@ -207,6 +207,13 @@ return array(
 				'instructions'   => __( 'e.g. "Buses — 2 · 36 · 87 · 88 · 156 · 185 · 196 · 344 · 436"', 'londonparkour_v8' ),
 				'lp_conditional' => array( array( array( 'field' => 'location_kind', 'operator' => '==', 'value' => 'site' ) ) ),
 			),
+			array(
+				'name'           => 'whatsapp_url',
+				'label'          => __( 'WhatsApp group URL', 'londonparkour_v8' ),
+				'type'           => 'url',
+				'instructions'   => __( 'chat.whatsapp.com invite. Shown only on a paid booking confirmation for this site. Empty: fall back to Site Settings, or hide the block.', 'londonparkour_v8' ),
+				'lp_conditional' => array( array( array( 'field' => 'location_kind', 'operator' => '==', 'value' => 'site' ) ) ),
+			),
 		),
 	),
 
@@ -885,6 +892,12 @@ return array(
 				'label'        => __( 'Contact email', 'londonparkour_v8' ),
 				'type'         => 'email',
 				'instructions' => __( 'Enquiry form recipient. Falls back to the WordPress admin email when empty.', 'londonparkour_v8' ),
+			),
+			array(
+				'name'         => 'whatsapp_url',
+				'label'        => __( 'WhatsApp group URL', 'londonparkour_v8' ),
+				'type'         => 'url',
+				'instructions' => __( 'School-wide chat.whatsapp.com invite. Used on paid booking confirmations when the class and site have no URL of their own. Never output on an unconfirmed visit.', 'londonparkour_v8' ),
 			),
 		),
 	),
