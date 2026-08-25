@@ -143,7 +143,7 @@ $lp_default_sessions = array(
 $lp_column_head = array(
 	array(
 		'label' => '',
-		'class' => 'hidden sm:block w-28 shrink-0',
+		'class' => 'hidden lg:block w-28 shrink-0',
 	),
 	array(
 		'label' => 'TIME',
@@ -151,23 +151,23 @@ $lp_column_head = array(
 	),
 	array(
 		'label' => '',
-		'class' => 'hidden sm:block w-10 shrink-0',
+		'class' => 'hidden min-[1680px]:block w-10 shrink-0',
 	),
 	array(
 		'label' => 'SESSION',
-		'class' => 'flex-1 min-w-0',
+		'class' => 'flex-1 min-w-[12rem]',
 	),
 	array(
 		'label' => 'SITE',
-		'class' => 'hidden md:block md:w-[168px] shrink-0',
+		'class' => 'hidden xl:block xl:w-[168px] shrink-0',
 	),
 	array(
 		'label' => 'LEVEL',
-		'class' => 'hidden lg:block lg:w-[164px] shrink-0',
+		'class' => 'hidden 2xl:block 2xl:w-[164px] shrink-0',
 	),
 	array(
 		'label' => 'FARE',
-		'class' => 'hidden sm:block w-[88px] shrink-0 text-right',
+		'class' => 'w-[88px] shrink-0 text-right',
 	),
 );
 
