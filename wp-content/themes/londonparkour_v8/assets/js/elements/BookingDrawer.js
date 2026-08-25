@@ -110,6 +110,15 @@ async function loadPanel(type, id, extra = {}) {
   mount.innerHTML = LOADING_HTML;
 
   const url = new URL(restUrl, window.location.origin);
+  // rest_url() is absolute and baked with the WP_SITEURL (often "localhost").
+  // When the page is opened via a LAN IP or tunnel the hostname won't match,
+  // so we normalise it to the current window's origin so the fetch always
+  // reaches the same host the browser is already talking to.
+  if (url.hostname !== window.location.hostname || url.port !== window.location.port) {
+    url.protocol = window.location.protocol;
+    url.hostname = window.location.hostname;
+    url.port = window.location.port;
+  }
   if (cfg().panelFormUrl) {
     url.searchParams.set('type', type);
     url.searchParams.set('id', String(id));
