@@ -107,7 +107,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 		data-variant="rich"
 	>
 	<?php endif; ?>
-		<span class="flex-1 flex items-center justify-between gap-5 px-[26px]">
+		<span class="flex-1 flex items-center justify-between gap-5 px-[26px] overflow-hidden">
 			<span class="<?php echo lp_classes( 'flex items-center gap-[11px]', $lp_rich['label'] ); ?>">
 				<?php lp_icon( $lp_icon_id, 'w-[14px] h-[14px] flex-none text-current' ); ?>
 				<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px]"><?php echo esc_html( $lp_label ); ?></span>

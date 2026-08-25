@@ -133,7 +133,7 @@ get_header();
 			);
 			?>
 		</form>
-		<div class="shrink-0 px-6 py-4 border-l border-base-300" data-component="kind-toggles">
+		<div class="shrink-0 max-w-full px-6 py-4 border-l border-base-300" data-component="kind-toggles">
 			<div class="flex flex-col gap-[13px]">
 				<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html__( 'Type', 'londonparkour_v8' ); ?></span>
 				<div class="flex flex-wrap items-center gap-2" role="group" aria-label="<?php echo esc_attr__( 'Video type', 'londonparkour_v8' ); ?>">
