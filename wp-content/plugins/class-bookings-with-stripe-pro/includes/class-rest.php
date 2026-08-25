@@ -353,7 +353,7 @@ abstract class REST {
 
 		$status_token = (string) get_post_meta( $booking_id, '_clasbpro_status_token', true );
 		$success_url  = Result_Pages::success_url( '{CHECKOUT_SESSION_ID}', $origin, $status_token );
-		$cancel_url   = Result_Pages::cancel_url( $origin );
+		$cancel_url   = Result_Pages::cancel_url( $origin, '{CHECKOUT_SESSION_ID}', $status_token );
 
 		try {
 			if ( $pack_promo ) {
@@ -451,7 +451,7 @@ abstract class REST {
 			Result_Pages::success_url( '{CHECKOUT_SESSION_ID}', $origin, $status_token ),
 			$purchase_id
 		);
-		$cancel_url = Result_Pages::cancel_url( $origin );
+		$cancel_url = Result_Pages::cancel_url( $origin, '{CHECKOUT_SESSION_ID}', $status_token );
 
 		try {
 			$session = Stripe_Service::create_pack_purchase_checkout_session(

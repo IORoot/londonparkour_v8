@@ -306,7 +306,7 @@ abstract class Shortcode {
 					$session_id = (string) get_post_meta( $purchase_id, '_clasbpro_stripe_session_id', true );
 				}
 			}
-		} elseif ( 'success' === $type && $session_id ) {
+		} elseif ( in_array( $type, [ 'success', 'cancelled' ], true ) && $session_id ) {
 			$booking_id = Bookings::find_by_stripe_session( $session_id );
 			$can_view   = $booking_id && (
 				current_user_can( 'manage_options' )
@@ -319,6 +319,7 @@ abstract class Shortcode {
 				$booking    = [
 					'status'        => $meta['status'],
 					'booking_id'    => $booking_id,
+					'class_id'      => (int) $meta['class_id'],
 					'class_name'    => $class_data['name'] ?? '',
 					'class_date'    => Helpers::format_date( $meta['class_date'] ),
 					'class_time'    => Helpers::format_time( $display['start_time'] ),

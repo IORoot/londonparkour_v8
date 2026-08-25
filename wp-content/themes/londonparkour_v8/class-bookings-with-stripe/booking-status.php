@@ -46,10 +46,12 @@ $lp_href     = $lp['class_href'] ? $lp['class_href'] : $lp['origin'];
 $lp_crumb    = $lp_error ? 'ERROR' : ( $lp_compact ? 'CANCELLED' : 'CONFIRMED' );
 $lp_title    = $lp_error
 	? 'We could not take the booking.'
-	: ( $lp_compact ? 'You left before paying.' : 'Booking confirmed.' );
+	: ( $lp_compact ? 'Booking cancelled.' : 'Booking confirmed.' );
 $lp_note     = $lp_error
 	? 'Your card has not been charged. Try the same session again, or write to us and we will book you in by hand.'
-	: ( $lp['note'] ? $lp['note'] : $lp_name );
+	: ( $lp_compact
+		? 'No charge. You left checkout before payment completed. The Saturday seat is still on the board.'
+		: ( $lp['note'] ? $lp['note'] : $lp_name ) );
 
 lp_part(
 	'components/breadcrumb-rail',
@@ -70,7 +72,7 @@ lp_part(
 			array( 'label' => $lp_crumb ),
 		),
 		'action' => array(
-			'label' => $lp_error ? 'TRY AGAIN ↗' : 'CLASS PAGE ↗',
+			'label' => $lp_compact ? 'TRY AGAIN ↗' : 'CLASS PAGE ↗',
 			'href'  => $lp_href,
 		),
 	)
@@ -81,7 +83,7 @@ lp_part(
 	array(
 		'title'       => $lp_title,
 		'note'        => $lp_note,
-		'title_scale' => $lp_error ? 'error' : 'default',
+		'title_scale' => $lp_compact ? 'error' : 'default',
 	)
 );
 
@@ -143,10 +145,10 @@ $lp_facts = $lp_compact
 <?php if ( $lp_compact ) : ?>
 	<?php
 	$lp_kicker      = $lp_error ? 'PAYMENT' : 'CHECKOUT';
-	$lp_headline    = $lp_error ? 'The payment did not complete.' : 'You left before paying.';
+	$lp_headline    = $lp_error ? 'The payment did not complete.' : 'You stopped before payment.';
 	$lp_lede        = $lp_error
 		? 'Stripe returned an error before the seat was held. Nothing has been charged. Retry the same session, or contact us and we will take the booking by hand.'
-		: 'Stripe was never charged. Nobody has your seat. Book again when you are ready.';
+		: 'Stripe was never charged. Nobody has your seat. Book again when you are ready — Saturday 11 July, 10:30, is still listed.';
 	$lp_charge      = $lp_error ? ( $view->msg ? $view->msg : 'None · card declined' ) : 'None';
 	$lp_aside_kick  = $lp_error ? 'HELP' : 'NEXT';
 	$lp_aside_title = $lp_error ? 'Still want Saturday?' : 'The seat is still open.';
@@ -190,36 +192,36 @@ $lp_facts = $lp_compact
 			</aside>
 		</div>
 		<?php else : ?>
-		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-x-16 gap-y-12 items-start">
-			<div class="flex flex-col gap-6">
-				<div class="flex flex-col gap-3">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content"><?php echo esc_html( $lp_kicker ); ?></span>
-					<h2 class="font-heading text-[36px] font-bold leading-none tracking-[-1.6px] text-base-content m-0"><?php echo esc_html( $lp_headline ); ?></h2>
-					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_lede ); ?></p>
-				</div>
-				<dl class="m-0 max-w-[520px]">
-					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name, 'page' ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'SESSION', $lp_when, 'page' ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'AMOUNT', $lp_sum, 'page' ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'CHARGE', $lp_charge, 'page' ); ?>
+		<div class="px-6 lg:px-16 py-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-6 items-start">
+			<article class="bg-neutral-content border border-base-300 px-8 pt-8 pb-9 flex flex-col gap-4">
+				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
+				<h2 class="font-display text-[32px] font-bold leading-[38px] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp_headline ); ?></h2>
+				<p class="font-body text-[13px] font-normal leading-4 text-base-content/65 m-0"><?php echo esc_html( $lp_lede ); ?></p>
+				<dl class="m-0 border-t border-base-300">
+					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name, 'cancelled' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'SESSION', $lp_when, 'cancelled' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'AMOUNT', $lp_sum, 'cancelled' ); ?>
+					<?php lp_clasbpro_status_ticket_row( 'CHARGE', $lp_charge, 'cancelled' ); ?>
 				</dl>
-				<?php
-				lp_part(
-					'elements/button',
-					array(
-						'variant'          => 'primary',
-						'label'            => $lp_cta,
-						'href'             => $lp_href,
-						'trailing_icon_id' => 'icon-arrow-right',
-					)
-				);
-				?>
-			</div>
-			<aside class="flex flex-col gap-3 border-t border-base-300 pt-[22px]">
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_aside_kick ); ?></span>
-				<h3 class="font-heading text-[22px] font-medium tracking-[-0.3px] text-base-content m-0"><?php echo esc_html( $lp_aside_title ); ?></h3>
-				<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
-				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent">Write to hello@londonparkour.com ↗</a>
+				<div class="pt-2">
+					<?php
+					lp_part(
+						'elements/button',
+						array(
+							'variant'          => 'primary',
+							'label'            => $lp_cta,
+							'href'             => $lp_href,
+							'trailing_icon_id' => 'icon-arrow-right',
+						)
+					);
+					?>
+				</div>
+			</article>
+			<aside class="bg-base-200 border border-base-300 p-6 flex flex-col gap-4">
+				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-base-content/65"><?php echo esc_html( $lp_aside_kick ); ?></span>
+				<h3 class="font-display text-[22px] font-bold leading-[26px] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp_aside_title ); ?></h3>
+				<p class="font-body text-[12px] font-normal leading-[15px] text-base-content/65 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
+				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-[11px] font-semibold leading-[13px] text-accent">Write to hello@londonparkour.com ↗</a>
 			</aside>
 		</div>
 		<?php endif; ?>
@@ -472,9 +474,11 @@ lp_part(
 			'href'    => $lp_href,
 		),
 		'next' => array(
-			'keyword' => 'CONTACT →',
-			'label'   => $lp_error ? 'We will book you in by hand' : ( $lp_compact ? 'Book by hand' : 'Questions before Saturday' ),
-			'href'    => $lp['contact_href'],
+			'keyword' => $lp_error ? 'CONTACT →' : ( $lp_compact ? 'ALL CLASSES →' : 'CONTACT →' ),
+			'label'   => $lp_error ? 'We will book you in by hand' : ( $lp_compact ? 'See what else is on the board' : 'Questions before Saturday' ),
+			'href'    => $lp_compact && ! $lp_error
+				? ( function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' ) )
+				: $lp['contact_href'],
 		),
 	)
 );

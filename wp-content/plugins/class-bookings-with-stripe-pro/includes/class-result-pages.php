@@ -184,8 +184,19 @@ abstract class Result_Pages {
 	}
 
 	public static function success_url( string $session_token = '{CHECKOUT_SESSION_ID}', string $origin = '', string $status_token = '' ): string {
-		$id   = self::success_page_id();
-		$base = $id ? get_permalink( $id ) : home_url( '/' );
+		return self::checkout_return_url( self::success_page_id(), $origin, $session_token, $status_token );
+	}
+
+	public static function cancel_url( string $origin = '', string $session_token = '{CHECKOUT_SESSION_ID}', string $status_token = '' ): string {
+		return self::checkout_return_url( self::cancel_page_id(), $origin, $session_token, $status_token );
+	}
+
+	/**
+	 * Success and cancel both need the Checkout Session id so the result page
+	 * can load the pending booking. Stripe substitutes {CHECKOUT_SESSION_ID}.
+	 */
+	private static function checkout_return_url( int $page_id, string $origin, string $session_token, string $status_token ): string {
+		$base = $page_id ? get_permalink( $page_id ) : home_url( '/' );
 
 		// Build with origin/token first so add_query_arg can url-encode safely, then append
 		// the Stripe placeholder literally so Stripe can substitute {CHECKOUT_SESSION_ID}.
@@ -199,13 +210,6 @@ abstract class Result_Pages {
 		$url = $query_args ? add_query_arg( $query_args, $base ) : $base;
 		$url .= ( false === strpos( $url, '?' ) ? '?' : '&' ) . 'booking=' . $session_token;
 		return $url;
-	}
-
-	public static function cancel_url( string $origin = '' ): string {
-		$id   = self::cancel_page_id();
-		$base = $id ? get_permalink( $id ) : home_url( '/' );
-		$args = $origin ? [ 'from' => $origin ] : [];
-		return $args ? add_query_arg( $args, $base ) : $base;
 	}
 
 	public static function error_url( string $reason, string $message = '', string $origin = '' ): string {
