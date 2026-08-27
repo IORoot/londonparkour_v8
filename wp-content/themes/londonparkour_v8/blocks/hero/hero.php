@@ -53,7 +53,7 @@ $lp_default_sessions = array(
 
 $lp_default_trust = array( '2,400+ TRAINED', '11 YEARS', '3 LONDON SITES' );
 
-$lp_eyebrow      = lp_section_label( (string) ( $args['eyebrow'] ?? '01 — PARKOUR CLASSES / LONDON / EST. 2015' ), $args['_section_number'] ?? null );
+$lp_eyebrow      = lp_section_label( (string) ( $args['eyebrow'] ?? '01 - PRACTICAL MOVEMENT CLASSES / EST 2018' ), $args['_section_number'] ?? null );
 $lp_headline     = (string) ( $args['headline'] ?? "the world is \nyour playground." );
 $lp_lead         = (string) ( $args['lead'] ?? 'Practical movement is the practice of getting where you want to go. We teach it across three London sites, to every age and every body. No experience needed.' );
 $lp_coordinates  = (string) ( $args['coordinates'] ?? 'N 51.5074° / W 0.1278°' );
