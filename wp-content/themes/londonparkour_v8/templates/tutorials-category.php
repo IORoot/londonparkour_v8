@@ -163,21 +163,21 @@ get_header();
 
 	<div class="w-full bg-neutral" data-section="categories">
 		<div class="px-6 lg:px-16 py-scale-2xl">
-			<div class="flex flex-col gap-[64px]">
+			<div class="flex flex-col gap-[64px] min-w-0">
 				<?php foreach ( $lp_shelves as $lp_shelf ) : ?>
-					<div class="flex flex-col gap-[24px]" data-component="series-category-shelf">
+					<div class="flex flex-col gap-[24px] min-w-0 w-full" data-component="series-category-shelf">
 						<div class="flex items-center justify-between gap-3">
 							<div class="flex items-center gap-3 min-w-0">
 								<?php if ( '' !== ( $lp_shelf['glyph_id'] ?? '' ) ) : ?>
 									<span class="w-7 h-7 shrink-0 text-primary" aria-hidden="true"><?php lp_icon( $lp_shelf['glyph_id'], 'w-7 h-7' ); ?></span>
 								<?php endif; ?>
-								<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
+								<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content min-w-0"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
 							</div>
 							<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 whitespace-nowrap"><?php echo esc_html( $lp_shelf['meta'] ); ?></span>
 						</div>
 						<?php lp_part( 'elements/rule', array( 'tone' => 'board' ) ); ?>
-						<div class="flex flex-col gap-4" data-component="series-card-shelf">
-							<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-shelf-scroller>
+						<div class="flex flex-col gap-4 min-w-0 w-full" data-component="series-card-shelf">
+							<div class="flex gap-4 overflow-x-auto min-w-0 w-full max-w-full snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-shelf-scroller>
 								<?php foreach ( $lp_shelf['posts'] as $lp_si => $lp_lesson ) : ?>
 									<div class="w-[248px] shrink-0 snap-start">
 										<?php lp_part( 'components/video-card', lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_si + 1 ) ); ?>

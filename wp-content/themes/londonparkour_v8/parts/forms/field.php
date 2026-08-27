@@ -3,8 +3,8 @@
  * Field — Concourse design system text input.
  *
  * Ported from src/stories/Forms/Field/Field.js. One partial for all 4 design
- * states (default/focus/error/disabled) across two shapes,
- * `variant: underline|boxed`, and two grounds, `surface: page|board` — see
+ * states (default/focus/error/disabled) across three shapes,
+ * `variant: underline|boxed|filled`, and two grounds, `surface: page|board` — see
  * the source docblock for the full colour rationale (boxed's `page` palette
  * intentionally matches Forms/Select's box, not the raw Figma numbers).
  *
@@ -26,7 +26,7 @@
  * server-rendered partial with no behaviour layer of its own.
  *
  * @param string $args['id']            Explicit id; auto-generated when omitted.
- * @param string $args['variant']       underline|boxed. Default underline.
+ * @param string $args['variant']       underline|boxed|filled. Default underline.
  * @param string $args['surface']       page|board. Default page.
  * @param string $args['label']         Default 'Label'.
  * @param string $args['name']
@@ -102,9 +102,26 @@ $lp_disabled_bg_boxed     = array(
 	'board' => 'disabled:bg-neutral',
 );
 
-$lp_variant  = ( 'boxed' === ( $args['variant'] ?? 'underline' ) ) ? 'boxed' : 'underline';
-$lp_surface  = ( 'board' === ( $args['surface'] ?? 'page' ) ) ? 'board' : 'page';
-$lp_is_boxed = 'boxed' === $lp_variant;
+// Filled — always a white chip with dark ink. `neutral` is the fixed near-black
+// in every theme, so typed text stays readable on `bg-white` on both grounds.
+$lp_state_filled = array(
+	'page'  => array(
+		'default'  => 'border-base-300 text-neutral focus:border-base-content bg-white',
+		'error'    => 'border-error text-neutral bg-white',
+		'disabled' => 'border-base-300 text-neutral/50 bg-white',
+	),
+	'board' => array(
+		'default'  => 'border-neutral-content/10 text-neutral focus:border-neutral-content/20 bg-white',
+		'error'    => 'border-error text-neutral bg-white',
+		'disabled' => 'border-neutral-content/10 text-neutral/50 bg-white',
+	),
+);
+
+$lp_variant_in = (string) ( $args['variant'] ?? 'underline' );
+$lp_variant    = in_array( $lp_variant_in, array( 'boxed', 'filled' ), true ) ? $lp_variant_in : 'underline';
+$lp_surface    = ( 'board' === ( $args['surface'] ?? 'page' ) ) ? 'board' : 'page';
+$lp_is_boxed   = 'boxed' === $lp_variant;
+$lp_is_filled  = 'filled' === $lp_variant;
 
 $lp_label         = (string) ( $args['label'] ?? 'Label' );
 $lp_name           = (string) ( $args['name'] ?? '' );
@@ -123,7 +140,7 @@ $lp_error_id = $lp_field_id . '-error';
 $lp_state    = $lp_disabled ? 'disabled' : ( $lp_error ? 'error' : 'default' );
 $lp_show_hint = '' !== $lp_error_message;
 
-$lp_state_map  = $lp_is_boxed ? $lp_state_boxed : $lp_state_underline;
+$lp_state_map  = $lp_is_filled ? $lp_state_filled : ( $lp_is_boxed ? $lp_state_boxed : $lp_state_underline );
 $lp_on_surface = $lp_state_map[ $lp_surface ] ?? $lp_state_map['page'];
 
 // Pick this surface's value from a shared literal map, page as the fallback.
@@ -131,7 +148,16 @@ $lp_pick = static function ( array $map ) use ( $lp_surface ) {
 	return $map[ $lp_surface ] ?? $map['page'];
 };
 
-$lp_input_class = $lp_is_boxed
+$lp_input_class = $lp_is_filled
+	? lp_classes(
+		'input validator w-full rounded-none border',
+		$lp_on_surface[ $lp_state ],
+		'h-[48px] px-4 font-body text-[16px] tracking-[0.1px] placeholder:text-neutral/50',
+		'user-invalid:border-error',
+		$lp_pick( $lp_disabled_border ),
+		'disabled:opacity-[.45]'
+	)
+	: ( $lp_is_boxed
 	? lp_classes(
 		'input input-sm validator w-full rounded-none border',
 		$lp_on_surface[ $lp_state ],
@@ -150,7 +176,7 @@ $lp_input_class = $lp_is_boxed
 		'disabled:bg-transparent',
 		$lp_pick( $lp_disabled_border ),
 		'disabled:opacity-[.45]'
-	);
+	) );
 ?>
 <div class="<?php echo lp_classes( 'group flex flex-col', $lp_error ? 'gap-[8px]' : 'gap-[13px]' ); ?>" data-component="field" data-state="<?php echo esc_attr( $lp_state ); ?>">
 	<div class="flex items-center justify-between">
@@ -161,8 +187,10 @@ $lp_input_class = $lp_is_boxed
 			<?php elseif ( 'error' === $lp_state ) : ?>
 				<span class="font-label text-[10px] tracking-[0.9px] uppercase text-error">INVALID</span>
 			<?php else : ?>
-				<span class="<?php echo lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted ), 'group-focus-within:hidden' ); ?>"><?php echo $lp_required ? 'REQUIRED' : ''; ?></span>
-				<span class="<?php echo lp_classes( 'hidden font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_label_class ), 'group-focus-within:inline' ); ?>">FOCUS</span>
+				<span class="<?php echo $lp_is_filled ? lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted ) ) : lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted ), 'group-focus-within:hidden' ); ?>"><?php echo $lp_required ? 'REQUIRED' : ''; ?></span>
+				<?php if ( ! $lp_is_filled ) : ?>
+					<span class="<?php echo lp_classes( 'hidden font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_label_class ), 'group-focus-within:inline' ); ?>">FOCUS</span>
+				<?php endif; ?>
 			<?php endif; ?>
 		</span>
 	</div>

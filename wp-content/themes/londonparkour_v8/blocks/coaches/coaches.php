@@ -118,7 +118,17 @@ if ( 'grid' === $lp_layout ) {
 		);
 	}
 
-	$lp_resolved = lp_resolve_source( $args, 'lp_coach' );
+	// Latest = published date, not menu_order (the default resolve sort).
+	$lp_resolved = lp_resolve_source(
+		$args,
+		'lp_coach',
+		array(
+			'orderby' => array(
+				'date'       => 'DESC',
+				'menu_order' => 'ASC',
+			),
+		)
+	);
 	$lp_coaches  = array();
 	$lp_i        = 0;
 
@@ -141,8 +151,8 @@ if ( 'grid' === $lp_layout ) {
 		$lp_coaches = $lp_default_grid_coaches;
 	}
 	?>
-<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[120px] lg:px-[72px]', $lp_spacing ); ?>" data-component="coaches" data-layout="grid"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
-	<div class="flex flex-col gap-12">
+<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-16 lg:py-[120px] lg:px-[72px]', $lp_spacing ); ?>" data-component="coaches" data-layout="grid"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+	<div class="flex flex-col gap-8 lg:gap-12">
 		<header class="flex flex-col gap-[18px]">
 			<div class="flex items-baseline justify-between gap-4">
 				<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
@@ -155,7 +165,7 @@ if ( 'grid' === $lp_layout ) {
 			<p class="font-body text-[15px] leading-[1.6] text-base-content/65 m-0 max-w-[560px]"><?php echo esc_html( $lp_lead ); ?></p>
 		</header>
 
-		<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
 			<?php foreach ( $lp_coaches as $lp_coach ) : ?>
 				<article class="flex flex-col" data-component="coach-grid-card">
 					<div class="relative aspect-[3/4] overflow-hidden bg-base-300">
@@ -166,19 +176,19 @@ if ( 'grid' === $lp_layout ) {
 								'image_id' => $lp_coach['photo'] ?? 0,
 								'alt'      => (string) ( $lp_coach['name'] ?? '' ),
 								'size'     => 'lp_portrait_lg',
-								'sizes'    => '(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw',
+								'sizes'    => '(min-width: 1024px) 25vw, 50vw',
 							)
 						);
 						?>
 					</div>
-					<div class="flex flex-col gap-2.5 pt-5">
+					<div class="flex flex-col gap-1.5 lg:gap-2.5 pt-3 lg:pt-5">
 						<div class="flex items-baseline justify-between gap-3">
 							<span class="font-label text-[11px] font-semibold tracking-[0.6px] text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
-							<span class="font-label text-[10px] font-normal tracking-[0.6px] uppercase text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['tag'] ?? '' ) ); ?></span>
+							<span class="hidden sm:inline font-label text-[10px] font-normal tracking-[0.6px] uppercase text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['tag'] ?? '' ) ); ?></span>
 						</div>
-						<h3 class="font-heading text-[22px] font-semibold tracking-[-0.4px] text-base-content m-0"><?php echo esc_html( (string) ( $lp_coach['name'] ?? '' ) ); ?></h3>
+						<h3 class="font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight text-base-content m-0"><?php echo esc_html( (string) ( $lp_coach['name'] ?? '' ) ); ?></h3>
 						<p class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-base-content/65 m-0"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
-						<p class="font-body text-[13px] leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) ( $lp_coach['bio'] ?? '' ) ); ?></p>
+						<p class="font-body text-[12px] lg:text-[13px] leading-[1.45] lg:leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) ( $lp_coach['bio'] ?? '' ) ); ?></p>
 					</div>
 				</article>
 			<?php endforeach; ?>
@@ -231,7 +241,17 @@ $lp_roster = array_map(
 			'location'  => (string) ( $item['location'] ?? '' ),
 		);
 	},
-	lp_resolve_source( $args, 'lp_coach', array( 'exclude_flag' => 'is_lead' ) )
+	lp_resolve_source(
+		$args,
+		'lp_coach',
+		array(
+			'exclude_flag' => 'is_lead',
+			'orderby'      => array(
+				'date'       => 'DESC',
+				'menu_order' => 'ASC',
+			),
+		)
+	)
 );
 
 if ( ! $lp_roster ) {

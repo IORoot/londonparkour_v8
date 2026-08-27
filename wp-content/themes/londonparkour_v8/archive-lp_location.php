@@ -87,7 +87,7 @@ get_header();
 					)
 				);
 				?>
-				<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-16">
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-24 lg:gap-y-16">
 					<?php
 					foreach ( $lp_sites as $lp_site ) :
 						$lp_sid   = (int) $lp_site->ID;

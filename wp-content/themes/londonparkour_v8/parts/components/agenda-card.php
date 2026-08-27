@@ -110,9 +110,9 @@ $lp_fare_card = array(
 );
 
 $lp_fact_val = array(
-	'featured' => 'font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content truncate',
-	'default'  => 'font-heading text-[15px] font-semibold tracking-[-0.3px] text-neutral-content truncate',
-	'past'     => 'font-heading text-[15px] font-semibold tracking-[-0.3px] text-neutral-content/50 truncate',
+	'featured' => 'font-heading text-[18px] font-semibold tracking-[-0.3px] leading-[1.15] text-neutral-content',
+	'default'  => 'font-heading text-[15px] font-semibold tracking-[-0.3px] leading-[1.15] text-neutral-content',
+	'past'     => 'font-heading text-[15px] font-semibold tracking-[-0.3px] leading-[1.15] text-neutral-content/50',
 );
 
 $lp_glyph_box = array(
@@ -254,9 +254,9 @@ if ( $lp_can_book ) {
 			<?php endif; ?>
 		</div>
 		<?php if ( $lp_facts ) : ?>
-			<div class="flex w-full">
+			<div class="grid grid-cols-2 md:grid-cols-4 w-full">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
-					<div class="flex-1 min-w-0 flex flex-col gap-[3px] pt-3 pr-3 border-t border-neutral-content/10">
+					<div class="min-w-0 flex flex-col gap-[3px] pt-3 pr-3 border-t border-neutral-content/10">
 						<span class="font-label text-[9px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( (string) ( $lp_fact['key'] ?? '' ) ); ?></span>
 						<span class="<?php echo lp_classes( $lp_fact_val[ $lp_tone ] ); ?>"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 					</div>

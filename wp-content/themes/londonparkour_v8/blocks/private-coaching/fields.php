@@ -139,7 +139,7 @@ return array(
 				__( 'Book action', 'londonparkour_v8' ),
 				array(
 					'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'booking' ) ) ),
-					'instructions'   => __( 'Button label. Link is used only when no appointment class is selected.', 'londonparkour_v8' ),
+					'instructions'   => __( 'Button label and link. Empty link falls back to the private coaching page.', 'londonparkour_v8' ),
 				)
 			),
 			array(
@@ -150,7 +150,7 @@ return array(
 				'return_format'  => 'id',
 				'allow_null'     => 1,
 				'ui'             => 1,
-				'instructions'   => __( 'When set, the book button opens the shared booking overlay for this clasbpro appointment class.', 'londonparkour_v8' ),
+				'instructions'   => __( 'Unused on this block — the CTA links to the private coaching page. Appointment class is set on that page.', 'londonparkour_v8' ),
 				'lp_conditional' => array( array( array( 'field' => 'layout', 'operator' => '==', 'value' => 'booking' ) ) ),
 			),
 		),

@@ -101,8 +101,8 @@ get_header();
 	?>
 
 	<div class="w-full bg-base-100 border-b border-base-300" data-component="agenda-week-controls">
-		<div class="flex items-center justify-between gap-6 flex-wrap px-6 lg:px-16 py-scale-s">
-			<span>
+		<div class="flex items-center justify-between gap-3 sm:gap-6 px-6 lg:px-16 py-scale-s">
+			<span class="shrink-0">
 				<?php
 				lp_part(
 					'elements/button',
@@ -115,7 +115,7 @@ get_header();
 				);
 				?>
 			</span>
-			<div class="flex flex-col items-center gap-[10px]">
+			<div class="flex flex-col items-center gap-[10px] min-w-0 flex-1">
 				<h2 class="font-heading text-[26px] font-semibold tracking-[-0.3px] text-base-content text-center"><?php echo esc_html( lp_agenda_week_label( $lp_week ) ); ?></h2>
 				<div class="flex items-center gap-[16px]">
 					<span>
@@ -146,7 +146,7 @@ get_header();
 					<?php endif; ?>
 				</div>
 			</div>
-			<span>
+			<span class="shrink-0">
 				<?php
 				lp_part(
 					'elements/button',

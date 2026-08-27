@@ -5,7 +5,7 @@
  * Ported from src/stories/Blocks/Dispatch/Dispatch.js (`giA1v` / homepage `bMeq5`).
  *
  * Page ground (`bg-base-100`) with a hairline top. Composes forms/field.php
- * (underline, page, name=EMAIL) and elements/button.php type=submit — never
+ * (filled, page, name=EMAIL) and elements/button.php type=submit — never
  * role=button on an anchor. Privacy ↗ is text-accent on this ground.
  *
  * Mailchimp: POST the form_action URL with name=EMAIL and the honeypot field
@@ -99,7 +99,7 @@ $lp_spacing = lp_section_spacing( $args );
 							'placeholder'   => 'you@email.com',
 							'required'      => true,
 							'surface'       => 'page',
-							'variant'       => 'underline',
+							'variant'       => 'filled',
 						)
 					);
 					lp_part(

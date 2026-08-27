@@ -13,6 +13,9 @@
  * @param string $args['kicker_icon_id'] Overrides the glyph chosen by `kind`.
  * @param string $args['kind']           indoor|outdoor. Unset uses the accent tone.
  * @param string $args['name']
+ * @param string $args['href']             Location page URL. Turns the name into
+ *                                         a link and mounts a MORE DETAILS button.
+ * @param string $args['action_label']     Button label. Default 'MORE DETAILS'.
  * @param string $args['streetview_href']  Renders the streetview link when set.
  * @param string $args['streetview_label']
  * @param string $args['meeting_point']
@@ -53,6 +56,7 @@ if ( '' === $lp_glyph_icon ) {
 $lp_kicker            = (string) ( $args['kicker'] ?? 'INDOOR · FLAGSHIP' );
 $lp_name              = (string) ( $args['name'] ?? 'Vauxhall.' );
 $lp_href              = (string) ( $args['href'] ?? '' );
+$lp_action_label      = (string) ( $args['action_label'] ?? 'MORE DETAILS' );
 $lp_streetview_href   = (string) ( $args['streetview_href'] ?? '' );
 $lp_streetview_label  = (string) ( $args['streetview_label'] ?? 'STREETVIEW ↗' );
 $lp_meeting_point     = (string) ( $args['meeting_point'] ?? 'Outside Tube station exit 2, next to metal pillars and open area.' );
@@ -95,7 +99,7 @@ $lp_root = $lp_has_photo
 				<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
 			</div>
 			<?php if ( '' !== $lp_href ) : ?>
-				<a href="<?php echo esc_url( $lp_href ); ?>" class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></a>
+				<a href="<?php echo esc_url( $lp_href ); ?>" class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0 hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_name ); ?></a>
 			<?php else : ?>
 				<p class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></p>
 			<?php endif; ?>
@@ -119,4 +123,19 @@ $lp_root = $lp_has_photo
 		<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_code ); ?></span>
 		<span class="font-label text-[10px] font-bold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_count ); ?></span>
 	</div>
+	<?php if ( '' !== $lp_href ) : ?>
+		<span class="self-start">
+			<?php
+			lp_part(
+				'elements/button',
+				array(
+					'variant'          => 'primary',
+					'label'            => $lp_action_label,
+					'href'             => $lp_href,
+					'trailing_icon_id' => 'icon-arrow-right',
+				)
+			);
+			?>
+		</span>
+	<?php endif; ?>
 </div>

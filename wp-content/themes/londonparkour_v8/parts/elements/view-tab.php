@@ -85,7 +85,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	$lp_rich       = $lp_rich_states[ $lp_active ? 'active' : 'inactive' ];
 	$lp_meta       = (string) ( $args['meta'] ?? '' );
 	$lp_icon_id    = (string) ( $args['icon_id'] ?? 'icon-squares-2x2' );
-	$lp_rich_class = 'group relative flex-1 min-w-[160px] h-[66px] flex flex-col text-left transition-colors duration-150 border-r border-neutral-content/10 last:border-r-0 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+	$lp_rich_class = 'group relative min-w-0 min-h-[66px] h-auto lg:h-[66px] flex flex-col text-left transition-colors duration-150 border-r border-b lg:border-b-0 border-neutral-content/10 last:border-r-0 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 	?>
 	<?php if ( '' !== $lp_href ) : ?>
 	<a
@@ -107,12 +107,12 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 		data-variant="rich"
 	>
 	<?php endif; ?>
-		<span class="flex-1 flex items-center justify-between gap-5 px-[26px] overflow-hidden">
-			<span class="<?php echo lp_classes( 'flex items-center gap-[11px]', $lp_rich['label'] ); ?>">
+		<span class="flex-1 flex flex-col justify-center gap-1 px-4 py-3 min-w-0 lg:flex-row lg:items-center lg:justify-between lg:gap-5 lg:px-[26px] lg:py-0">
+			<span class="<?php echo lp_classes( 'flex items-center gap-[11px] min-w-0', $lp_rich['label'] ); ?>">
 				<?php lp_icon( $lp_icon_id, 'w-[14px] h-[14px] flex-none text-current' ); ?>
-				<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px]"><?php echo esc_html( $lp_label ); ?></span>
+				<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px] leading-tight"><?php echo esc_html( $lp_label ); ?></span>
 			</span>
-			<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px]', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
+			<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px] leading-tight', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
 		</span>
 		<span class="<?php echo lp_classes( 'absolute inset-x-0 bottom-0', $lp_rich['bar'] ); ?>" aria-hidden="true"></span>
 	<?php echo '' !== $lp_href ? '</a>' : '</button>'; ?>

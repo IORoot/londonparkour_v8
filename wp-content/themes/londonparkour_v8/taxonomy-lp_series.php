@@ -138,7 +138,7 @@ get_header();
 
 	<div class="w-full bg-neutral" data-section="lessons">
 		<div class="px-6 lg:px-16 py-scale-2xl">
-			<div class="flex flex-col lg:flex-row gap-9 items-start">
+			<div class="flex flex-col lg:flex-row gap-9 items-stretch lg:items-start">
 				<aside class="w-full lg:w-[360px] shrink-0 flex flex-col bg-secondary border border-neutral-content/10 overflow-hidden" data-component="series-sidebar">
 					<div class="flex flex-col gap-2 px-4 pt-5 pb-4 border-b border-neutral-content/10">
 						<span class="font-label text-[10px] font-bold tracking-[1.2px] uppercase text-primary">SERIES</span>
@@ -159,8 +159,8 @@ get_header();
 							$lp_active      = (int) $lp_item->term_id === $lp_term_id;
 							$lp_item_poster = lp_series_poster_id( (int) $lp_item->term_id, $lp_item_fields );
 							$lp_item_cls    = $lp_active
-								? 'group flex h-[108px] overflow-hidden bg-neutral border border-primary no-underline text-left hover:bg-primary'
-								: 'group flex h-[108px] overflow-hidden bg-neutral border border-neutral-content/10 no-underline text-left hover:bg-primary';
+								? 'group flex min-h-[108px] h-auto lg:h-[108px] overflow-hidden bg-neutral border border-primary no-underline text-left hover:bg-primary'
+								: 'group flex min-h-[108px] h-auto lg:h-[108px] overflow-hidden bg-neutral border border-neutral-content/10 no-underline text-left hover:bg-primary';
 							$lp_no_cls      = $lp_active
 								? 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral'
 								: 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70';
@@ -198,7 +198,7 @@ get_header();
 											<span class="<?php echo esc_attr( $lp_tag_cls ); ?>"><?php echo esc_html( $lp_item_tag ); ?></span>
 										<?php endif; ?>
 									</span>
-									<span class="font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-neutral-content group-hover:text-neutral"><?php echo esc_html( $lp_item->name ); ?></span>
+									<span class="font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-neutral-content group-hover:text-neutral min-w-0"><?php echo esc_html( $lp_item->name ); ?></span>
 									<?php if ( $lp_item_eps ) : ?>
 										<span class="font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( sprintf( '%d EPISODES', $lp_item_eps ) ); ?></span>
 									<?php endif; ?>
@@ -208,7 +208,7 @@ get_header();
 					</nav>
 				</aside>
 
-				<div class="flex-1 min-w-0 flex flex-col gap-[64px]">
+				<div class="flex-1 min-w-0 w-full flex flex-col gap-[64px]">
 					<div class="flex flex-col gap-6" data-component="series-header">
 						<div class="flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-stretch">
 							<div class="w-full lg:w-1/2 flex flex-col gap-4 min-w-0 justify-center">
@@ -284,19 +284,19 @@ get_header();
 							</div>
 						<?php else : ?>
 							<?php foreach ( $lp_shelves as $lp_shelf ) : ?>
-								<div class="flex flex-col gap-[24px]" data-component="series-category-shelf">
+								<div class="flex flex-col gap-[24px] min-w-0 w-full" data-component="series-category-shelf">
 									<div class="flex items-center justify-between gap-3">
 										<div class="flex items-center gap-3 min-w-0">
 											<?php if ( '' !== ( $lp_shelf['glyph_id'] ?? '' ) ) : ?>
 												<span class="w-7 h-7 shrink-0 text-primary" aria-hidden="true"><?php lp_icon( $lp_shelf['glyph_id'], 'w-7 h-7' ); ?></span>
 											<?php endif; ?>
-											<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
+											<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content min-w-0"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
 										</div>
 										<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 whitespace-nowrap"><?php echo esc_html( $lp_shelf['meta'] ); ?></span>
 									</div>
 									<?php lp_part( 'elements/rule', array( 'tone' => 'board' ) ); ?>
-									<div class="flex flex-col gap-4" data-component="series-card-shelf">
-										<div class="flex gap-4 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-shelf-scroller>
+									<div class="flex flex-col gap-4 min-w-0 w-full" data-component="series-card-shelf">
+										<div class="flex gap-4 overflow-x-auto min-w-0 w-full max-w-full snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-shelf-scroller>
 											<?php foreach ( $lp_shelf['posts'] as $lp_si => $lp_lesson ) : ?>
 												<div class="w-[248px] shrink-0 snap-start">
 													<?php lp_part( 'components/video-card', lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_si + 1 ) ); ?>

@@ -31,15 +31,15 @@ $lp_action     = is_array( $args['action'] ?? null ) ? $args['action'] : array()
 $lp_aria_label = (string) ( $args['aria_label'] ?? 'Breadcrumb' );
 $lp_last       = count( $lp_crumbs ) - 1;
 ?>
-<nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center justify-between gap-4 bg-neutral border-b border-neutral-content/20 px-6 lg:px-16 py-4" data-component="breadcrumb-rail">
-	<ol class="flex items-center font-label text-[10px] font-normal uppercase tracking-[1px] text-neutral-content/80 m-0 p-0 list-none min-w-0">
+<nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center justify-between gap-4 flex-wrap bg-neutral border-b border-neutral-content/20 px-6 lg:px-16 py-4" data-component="breadcrumb-rail">
+	<ol class="flex flex-wrap items-center font-label text-[10px] font-normal uppercase tracking-[1px] text-neutral-content/80 m-0 p-0 list-none min-w-0">
 		<?php foreach ( $lp_crumbs as $lp_i => $lp_crumb ) : ?>
 		<li class="<?php echo $lp_i === $lp_last ? 'inline-flex items-center min-w-0' : 'inline-flex items-center shrink-0'; ?>">
 			<?php if ( $lp_i > 0 ) : ?>
 				<span aria-hidden="true" class="mx-2 text-neutral-content/50">/</span>
 			<?php endif; ?>
 			<?php if ( $lp_i === $lp_last ) : ?>
-				<span aria-current="page" class="truncate"><?php echo esc_html( (string) ( $lp_crumb['label'] ?? '' ) ); ?></span>
+				<span aria-current="page"><?php echo esc_html( (string) ( $lp_crumb['label'] ?? '' ) ); ?></span>
 			<?php else : ?>
 				<a href="<?php echo esc_url( (string) ( $lp_crumb['href'] ?? '#' ) ); ?>" class="hover:text-primary transition-colors duration-150 shrink-0"><?php echo esc_html( (string) ( $lp_crumb['label'] ?? '' ) ); ?></a>
 			<?php endif; ?>

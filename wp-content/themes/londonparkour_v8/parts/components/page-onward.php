@@ -71,7 +71,7 @@ $lp_side = static function ( $lp_item, $lp_default_keyword, $lp_align, $lp_surf,
 
 	$lp_keyword = (string) ( $lp_item['keyword'] ?? $lp_default_keyword );
 	?>
-	<a href="<?php echo esc_url( (string) ( $lp_item['href'] ?? '#' ) ); ?>" class="<?php echo lp_classes( 'group flex-1 flex flex-col gap-[10px]', $lp_aligns[ $lp_align ] ); ?>">
+	<a href="<?php echo esc_url( (string) ( $lp_item['href'] ?? '#' ) ); ?>" class="<?php echo lp_classes( 'group flex-1 min-w-0 flex flex-col gap-[10px]', $lp_aligns[ $lp_align ] ); ?>">
 		<span class="<?php echo lp_classes( 'font-label text-[10px] font-semibold uppercase tracking-[1px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_keyword ); ?></span>
 		<span class="<?php echo lp_classes( 'font-heading text-[19px] font-medium tracking-[-0.3px]', $lp_surf['ink'], 'group-hover:underline' ); ?>"><?php echo esc_html( $lp_label ); ?></span>
 	</a>
@@ -79,7 +79,7 @@ $lp_side = static function ( $lp_item, $lp_default_keyword, $lp_align, $lp_surf,
 };
 ?>
 <nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="<?php echo esc_attr( $lp_outer ); ?>" data-component="page-onward">
-	<div class="<?php echo lp_classes( 'flex items-start gap-14 pt-[26px] border-t', $lp_surf['rule'] ); ?>">
+	<div class="<?php echo lp_classes( 'flex items-start gap-6 sm:gap-14 pt-[26px] border-t', $lp_surf['rule'] ); ?>">
 		<?php $lp_side( $args['prev'] ?? null, '← Previous', 'left', $lp_surf, $lp_aligns ); ?>
 		<?php $lp_side( $args['next'] ?? null, 'Next →', 'right', $lp_surf, $lp_aligns ); ?>
 	</div>

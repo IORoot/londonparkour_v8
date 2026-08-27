@@ -201,6 +201,27 @@ function lp_filter_tutorial_archive( WP_Query $lp_query ): void {
 add_action( 'pre_get_posts', 'lp_filter_tutorial_archive' );
 
 /**
+ * Coach archive lists the full roster, same sort as the Coaches block.
+ *
+ * @param WP_Query $lp_query The query being prepared.
+ */
+function lp_filter_coach_archive( WP_Query $lp_query ): void {
+	if ( is_admin() || ! $lp_query->is_main_query() || ! $lp_query->is_post_type_archive( 'lp_coach' ) ) {
+		return;
+	}
+
+	$lp_query->set( 'posts_per_page', -1 );
+	$lp_query->set(
+		'orderby',
+		array(
+			'date'       => 'DESC',
+			'menu_order' => 'ASC',
+		)
+	);
+}
+add_action( 'pre_get_posts', 'lp_filter_coach_archive' );
+
+/**
  * SQL for category → series → curriculum order.
  *
  * Used by the public archive, series/category boards, and the admin list

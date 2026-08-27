@@ -41,6 +41,12 @@
  * ALL CLASSES in the panel foot goes to the listings archive (`/all-classes/`).
  * See PORT-FINDINGS §21.
  *
+ * The mobile drawer nests indented children under Classes, Tutorials and Docs
+ * from each drop panel's landing column (Agenda / Private 1:1 / Workshops;
+ * By series / By category / By tutorial; Wiki / Blog). Map stays on the
+ * desktop Classes panel only. Contact has none. Coupons stays on the
+ * desktop panel only.
+ *
  * `el-dialog` / `command` / `commandfor` are Tailwind Plus Elements, already
  * imported in assets/js/app.js. They carry over verbatim.
  *
@@ -637,35 +643,83 @@ $lp_header_ground = $lp_over_hero
 				</div>
 				<nav aria-label="<?php esc_attr_e( 'Primary', 'londonparkour_v8' ); ?>" class="mt-[32px] flex flex-col divide-y divide-neutral-content/10">
 					<?php
+					$lp_req_path = untrailingslashit( (string) ( wp_parse_url( (string) ( $_SERVER['REQUEST_URI'] ?? '' ), PHP_URL_PATH ) ?: '' ) );
 					foreach ( $lp_resolved as $lp_link ) :
 						$lp_active    = ! empty( $lp_link['active'] );
 						$lp_glyph_cls = $lp_active ? $lp_glyph_states['active'] : $lp_glyph_states['inactive'];
-						?>
-						<span class="group flex items-center gap-[12px] py-[16px]">
-							<?php
-							if ( '' !== $lp_link['icon_id'] ) {
-								lp_icon( $lp_link['icon_id'], lp_classes( $lp_glyph_base, $lp_glyph_cls ) );
+						$lp_panel_key = (string) $lp_link['panel'];
+						$lp_subrows   = array();
+						if ( $lp_panel_key && isset( $lp_panel_data[ $lp_panel_key ] ) ) {
+							$lp_sub_panel = $lp_panel_data[ $lp_panel_key ];
+							$lp_sub_cols  = (array) ( $lp_sub_panel['columns'] ?? array() );
+							if ( 'docs' === $lp_panel_key ) {
+								foreach ( $lp_sub_cols as $lp_sub_col ) {
+									foreach ( (array) ( $lp_sub_col['rows'] ?? array() ) as $lp_sub_row ) {
+										if ( 'signal' !== ( $lp_sub_row['tone'] ?? '' ) ) {
+											$lp_subrows[] = $lp_sub_row;
+											break;
+										}
+									}
+								}
+							} elseif ( $lp_sub_cols ) {
+								foreach ( (array) ( $lp_sub_cols[0]['rows'] ?? array() ) as $lp_sub_row ) {
+									if ( 'signal' === ( $lp_sub_row['tone'] ?? '' ) ) {
+										continue;
+									}
+									if ( 'classes' === $lp_panel_key && 'map' === strtolower( (string) ( $lp_sub_row['name'] ?? '' ) ) ) {
+										continue;
+									}
+									$lp_subrows[] = $lp_sub_row;
+								}
 							}
-							?>
-							<span class="flex-1">
+						}
+						?>
+						<div>
+							<span class="group flex items-center gap-[12px] py-[16px]">
 								<?php
-								lp_part(
-									'elements/nav-link',
-									array(
-										'label'  => (string) $lp_link['label'],
-										'href'   => (string) $lp_link['href'],
-										'active' => $lp_active,
-									)
-								);
+								if ( '' !== $lp_link['icon_id'] ) {
+									lp_icon( $lp_link['icon_id'], lp_classes( $lp_glyph_base, $lp_glyph_cls ) );
+								}
 								?>
+								<span class="flex-1">
+									<?php
+									lp_part(
+										'elements/nav-link',
+										array(
+											'label'  => (string) $lp_link['label'],
+											'href'   => (string) $lp_link['href'],
+											'active' => $lp_active,
+										)
+									);
+									?>
+								</span>
 							</span>
-						</span>
+							<?php if ( $lp_subrows ) : ?>
+								<ul role="list" class="pl-[28px] pb-[8px] flex flex-col list-none">
+									<?php foreach ( $lp_subrows as $lp_sub_row ) : ?>
+										<?php
+										$lp_child_href   = (string) ( $lp_sub_row['href'] ?? '' );
+										$lp_child_path   = untrailingslashit( (string) ( wp_parse_url( $lp_child_href, PHP_URL_PATH ) ?: $lp_child_href ) );
+										$lp_child_active = '' !== $lp_child_path && strtolower( $lp_req_path ) === strtolower( $lp_child_path );
+										?>
+										<li class="py-[8px]">
+											<?php
+											lp_part(
+												'elements/nav-link',
+												array(
+													'label'  => (string) ( $lp_sub_row['name'] ?? '' ),
+													'href'   => $lp_child_href,
+													'active' => $lp_child_active,
+												)
+											);
+											?>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+							<?php endif; ?>
+						</div>
 					<?php endforeach; ?>
 				</nav>
-				<a href="<?php echo esc_url( $lp_site_href ); ?>" class="<?php echo lp_classes( 'mt-[16px] inline-flex items-center gap-[8px] font-label text-[12px] font-normal uppercase tracking-[1px] text-neutral-content/70 hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
-					<?php lp_icon( 'icon-map-pin', 'w-[13px] h-[13px]' ); ?>
-					<?php echo esc_html( $lp_site_label ); ?>
-				</a>
 				<span class="mt-[24px]">
 					<?php
 					lp_part(

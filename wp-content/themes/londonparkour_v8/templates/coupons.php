@@ -210,7 +210,7 @@ get_header();
 			);
 			?>
 			<div
-				class="grid min-w-[700px] border border-base-300/60 grid-cols-[196px_repeat(3,minmax(0,1fr))]"
+				class="grid min-w-[900px] sm:min-w-0 border border-base-300/60 grid-cols-[repeat(var(--pricing-tiers),minmax(280px,1fr))] sm:grid-cols-[196px_repeat(var(--pricing-tiers),minmax(0,1fr))]"
 				style="<?php echo esc_attr( $lp_board_style ); ?>"
 				data-slot="coupons-board"
 			>
@@ -241,9 +241,9 @@ get_header();
 						? 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content'
 						: 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content/65';
 				?>
-				<div class="<?php echo lp_classes( 'row-span-full grid grid-rows-subgrid border-l border-base-300/60', $lp_wash ); ?>" data-component="coupon-tier" data-tier="<?php echo esc_attr( (string) $lp_tier['id'] ); ?>">
+				<div class="<?php echo lp_classes( 'row-span-full grid grid-rows-subgrid w-[280px] sm:w-auto border-l border-base-300/60', $lp_wash ); ?>" data-component="coupon-tier" data-tier="<?php echo esc_attr( (string) $lp_tier['id'] ); ?>">
 					<div class="<?php echo esc_attr( $lp_bar ); ?> h-[3px]" aria-hidden="true"></div>
-					<div class="flex flex-col pt-[20px] pb-[16px] px-[28px] min-h-[193px]">
+					<div class="flex flex-col pt-[20px] pb-[16px] px-[28px] min-h-[193px] min-w-0">
 						<div class="flex items-center gap-[10px] flex-wrap">
 							<span class="font-label text-[11px] font-semibold tracking-[1.2px] uppercase text-base-content"><?php echo esc_html( (string) $lp_tier['label'] ); ?></span>
 							<?php if ( '' !== $lp_tier['badge'] ) : ?>
@@ -251,24 +251,24 @@ get_header();
 							<?php endif; ?>
 						</div>
 						<div class="h-4" aria-hidden="true"></div>
-						<div class="flex items-end gap-2">
+						<div class="flex items-end gap-2 flex-wrap">
 							<span class="font-heading text-[57px] font-bold leading-[0.9] tracking-[-2.6px] text-base-content"><?php echo esc_html( (string) $lp_tier['price'] ); ?></span>
 							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-base-content/65 pb-[6px]"><?php echo esc_html( (string) $lp_tier['unit'] ); ?></span>
 						</div>
 						<div class="h-2.5" aria-hidden="true"></div>
 						<p class="font-label text-[11px] font-normal leading-[1.6] tracking-[0.2px] text-base-content/65 m-0"><?php echo esc_html( (string) $lp_tier['desc'] ); ?></p>
 					</div>
-					<div class="flex items-center gap-[7px] px-[28px] border-t border-base-300/60 h-[38px]">
+					<div class="flex items-center gap-[7px] px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
 						<span class="font-heading text-[17px] font-semibold tracking-[-0.3px] text-base-content"><?php echo esc_html( (string) $lp_tier['ppc'] ); ?></span>
 						<span class="font-label text-[11px] font-normal tracking-[0.2px] text-base-content/65">a class</span>
 					</div>
-					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px]">
+					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
 						<span class="<?php echo esc_attr( $lp_val ); ?>"><?php echo esc_html( (string) $lp_tier['sessions'] ); ?></span>
 					</div>
-					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px]">
+					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
 						<span class="<?php echo esc_attr( '—' !== $lp_tier['saving'] ? 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content' : 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content/65' ); ?>"><?php echo esc_html( (string) $lp_tier['saving'] ); ?></span>
 					</div>
-					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[80px]">
+					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[80px] min-w-0">
 						<?php $lp_buy_btn( (int) $lp_tier['pack_id'], (string) $lp_tier['cta'], (string) $lp_tier['variant'] ); ?>
 					</div>
 				</div>

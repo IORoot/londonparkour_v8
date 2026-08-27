@@ -6,8 +6,8 @@
  *
  * Layouts:
  *   - booking (default) — node TQ0ci: bg-primary band, media + caption,
- *     offer copy, single REQUEST 1:1 CTA. Homepage uses this. When an
- *     appointment class is set, the CTA opens the shared booking overlay.
+ *     offer copy, single Confirmed instantly. CTA to the private coaching
+ *     page. Homepage uses this. Booking overlay lives on that page.
  *   - offer — node jmalK: portrait + offer stack on bg-base-200.
  *
  * Offer fact rail: NOT components/fact-row.php. FactRow is a daisyUI stats
@@ -35,8 +35,7 @@
  * @param string $args['media_position']    start|end. Booking only.
  * @param array  $args['primary_action']    Offer.
  * @param array  $args['secondary_action']  Offer ghost.
- * @param array  $args['book_action']       Booking CTA label (+ link when no appointment class).
- * @param int    $args['appointment_class'] clasbpro_class ID — CTA opens the shared booking drawer.
+ * @param array  $args['book_action']       Booking CTA label + link (defaults to the private coaching page).
  *
  * @package londonparkour_v8
  */
@@ -188,30 +187,34 @@ if ( $lp_is_booking ) :
 		</div>
 
 		<?php
-		$lp_appt_id   = absint( $args['appointment_class'] ?? 0 );
 		$lp_btn_label = $lp_book['label'] ?: 'Confirmed instantly.';
 		if ( false !== stripos( $lp_btn_label, 'request' ) ) {
 			$lp_btn_label = 'Confirmed instantly.';
 		}
+
+		$lp_book_href = (string) ( $lp_book['href'] ?? '' );
+		if ( '' === $lp_book_href ) {
+			$lp_book_href = home_url( '/private-coaching/' );
+			foreach ( array( 'private-coaching', 'private-tuition' ) as $lp_slug ) {
+				$lp_page = get_page_by_path( $lp_slug );
+				if ( $lp_page instanceof WP_Post ) {
+					$lp_book_href = (string) get_permalink( $lp_page );
+					break;
+				}
+			}
+		}
 		?>
 		<div class="flex items-center justify-end gap-[14px] flex-wrap">
 			<?php
-			if ( $lp_appt_id > 0 ) {
-				$lp_btn                         = lp_class_book_button_args( $lp_appt_id, '', $lp_btn_label, 'inverse' );
-				$lp_btn['trailing_icon_id']     = 'icon-arrow-right';
-				$lp_btn['data_attrs']['data-lp-list'] = 'private-coaching';
-				lp_part( 'elements/button', $lp_btn );
-			} else {
-				lp_part(
-					'elements/button',
-					array(
-						'variant'          => 'inverse',
-						'label'            => $lp_btn_label,
-						'href'             => $lp_book['href'],
-						'trailing_icon_id' => 'icon-arrow-right',
-					)
-				);
-			}
+			lp_part(
+				'elements/button',
+				array(
+					'variant'          => 'inverse',
+					'label'            => $lp_btn_label,
+					'href'             => $lp_book_href,
+					'trailing_icon_id' => 'icon-arrow-right',
+				)
+			);
 			?>
 		</div>
 

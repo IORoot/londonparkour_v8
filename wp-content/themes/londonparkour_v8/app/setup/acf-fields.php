@@ -551,7 +551,9 @@ function lp_resolve_term_source( array $args, string $taxonomy, array $opts = ar
  *                          records are left out (the entity already featured
  *                          above the list);
  *                          'require_kind' => for lp_location, keep only
- *                          site|spot (missing kind counts as site).
+ *                          site|spot (missing kind counts as site);
+ *                          'orderby' => WP_Query orderby (string or array);
+ *                          'order' => ASC|DESC when orderby is a string.
  * @return array<int, array>
  */
 function lp_resolve_source( array $args, string $post_type, array $opts = array() ): array {
@@ -587,11 +589,15 @@ function lp_resolve_source( array $args, string $post_type, array $opts = array(
 			'posts_per_page'         => isset( $opts['expand'] )
 				? 100
 				: max( 1, (int) ( $args['source_limit'] ?? 4 ) ),
-			'orderby'                => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
+			'orderby'                => $opts['orderby'] ?? array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
 			'fields'                 => 'ids',
 			'no_found_rows'          => true,
 			'update_post_term_cache' => false,
 		);
+
+		if ( isset( $opts['order'] ) ) {
+			$query_args['order'] = $opts['order'];
+		}
 
 		$terms = array_filter( array_map( 'intval', (array) ( $args['source_terms'] ?? array() ) ) );
 		if ( $terms ) {
