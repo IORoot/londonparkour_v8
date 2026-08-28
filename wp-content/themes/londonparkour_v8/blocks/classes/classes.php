@@ -337,14 +337,16 @@ $lp_spacing = lp_section_spacing( $args );
 					);
 					?>
 				<?php endif; ?>
-				<?php foreach ( $lp_group['sessions'] as $lp_session ) : ?>
-					<?php
-					if ( $lp_show_day_bands ) {
-						$lp_session['date_label'] = '';
-					}
-					lp_part( 'components/board-row', $lp_session );
-					?>
-				<?php endforeach; ?>
+				<div class="flex flex-col gap-2 lg:gap-0" data-slot="day-rows">
+					<?php foreach ( $lp_group['sessions'] as $lp_session ) : ?>
+						<?php
+						if ( $lp_show_day_bands ) {
+							$lp_session['date_label'] = '';
+						}
+						lp_part( 'components/board-row', $lp_session );
+						?>
+					<?php endforeach; ?>
+				</div>
 			<?php endforeach; ?>
 		</div>
 

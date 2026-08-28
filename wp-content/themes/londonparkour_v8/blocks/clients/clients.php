@@ -10,6 +10,12 @@
  * (`accent-content`). The 1px channel is `gap-px` on an `accent-content/15`
  * track — same as the Storybook source.
  *
+ * Below `lg` the logos are a `data-motion-marquee` ticker so all twelve
+ * cycle continuously (same motion layer as the yellow Marquee band).
+ * `data-motion-marquee-mq` keeps the loop off the desktop grid. From `lg`
+ * it is the 6-col grid. Reduced motion skips the loop; the wrapper
+ * becomes swipeable.
+ *
  * @param string $args['eyebrow']
  * @param string $args['meta']
  * @param array  $args['logos'] Rows of array( 'label', 'href', 'image' ).
@@ -158,6 +164,50 @@ if ( ! $lp_logos ) {
 }
 
 $lp_spacing = lp_section_spacing( $args );
+
+$lp_item_classes = array(
+	'marquee' => 'min-w-0 w-[160px] shrink-0',
+	'grid'    => 'min-w-0',
+);
+
+$lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos, $lp_cell, $lp_cell_link, $lp_logo_img ): void {
+	foreach ( $lp_logos as $lp_logo ) :
+		?>
+		<div role="listitem" class="<?php echo esc_attr( $lp_item_class ); ?>">
+			<?php if ( '' !== $lp_logo['href'] ) : ?>
+				<a
+					href="<?php echo esc_url( $lp_logo['href'] ); ?>"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="<?php echo esc_attr( $lp_cell_link ); ?>"
+					data-component="clients-logo"
+				>
+			<?php else : ?>
+				<div
+					class="<?php echo esc_attr( $lp_cell ); ?>"
+					data-component="clients-logo"
+				>
+			<?php endif; ?>
+				<?php if ( '' !== $lp_logo['image_url'] ) : ?>
+					<?php
+					lp_part(
+						'components/media-photo',
+						array(
+							'image_url' => $lp_logo['image_url'],
+							'alt'       => $lp_logo['label'],
+							'layout'    => 'none',
+							'class'     => $lp_logo_img,
+						)
+					);
+					?>
+				<?php else : ?>
+					<span class="font-label text-[14px] sm:text-[16px] font-semibold tracking-[1.2px] uppercase text-accent-content text-center leading-none"><?php echo esc_html( $lp_logo['label'] ); ?></span>
+				<?php endif; ?>
+			<?php echo '' !== $lp_logo['href'] ? '</a>' : '</div>'; ?>
+		</div>
+		<?php
+	endforeach;
+};
 ?>
 <section
 	class="<?php echo lp_classes( 'w-full bg-accent px-6 py-[120px] lg:px-16', $lp_spacing ); ?>"
@@ -175,44 +225,29 @@ $lp_spacing = lp_section_spacing( $args );
 		</header>
 
 		<div
-			class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-accent-content/15"
+			class="overflow-hidden min-w-0 w-full lg:hidden motion-reduce:overflow-x-auto"
+			data-clients-track="marquee"
+		>
+			<div
+				class="flex w-max gap-px bg-accent-content/15"
+				role="list"
+				aria-label="<?php echo esc_attr__( 'Trusted by', 'londonparkour_v8' ); ?>"
+				data-motion-marquee
+				data-motion-marquee-direction="left"
+				data-motion-marquee-speed="50"
+				data-motion-marquee-mq="(max-width: 1023px)"
+			>
+				<?php $lp_emit_logo_items( $lp_item_classes['marquee'] ); ?>
+			</div>
+		</div>
+		<div
+			class="hidden lg:grid lg:grid-cols-6 gap-px bg-accent-content/15"
 			role="list"
 			aria-label="<?php echo esc_attr__( 'Trusted by', 'londonparkour_v8' ); ?>"
+			data-clients-track="grid"
 		>
-			<?php foreach ( $lp_logos as $lp_logo ) : ?>
-				<div role="listitem" class="min-w-0">
-					<?php if ( '' !== $lp_logo['href'] ) : ?>
-						<a
-							href="<?php echo esc_url( $lp_logo['href'] ); ?>"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="<?php echo esc_attr( $lp_cell_link ); ?>"
-							data-component="clients-logo"
-						>
-					<?php else : ?>
-						<div
-							class="<?php echo esc_attr( $lp_cell ); ?>"
-							data-component="clients-logo"
-						>
-					<?php endif; ?>
-						<?php if ( '' !== $lp_logo['image_url'] ) : ?>
-							<?php
-							lp_part(
-								'components/media-photo',
-								array(
-									'image_url' => $lp_logo['image_url'],
-									'alt'       => $lp_logo['label'],
-									'layout'    => 'none',
-									'class'     => $lp_logo_img,
-								)
-							);
-							?>
-						<?php else : ?>
-							<span class="font-label text-[14px] sm:text-[16px] font-semibold tracking-[1.2px] uppercase text-accent-content text-center leading-none"><?php echo esc_html( $lp_logo['label'] ); ?></span>
-						<?php endif; ?>
-					<?php echo '' !== $lp_logo['href'] ? '</a>' : '</div>'; ?>
-				</div>
-			<?php endforeach; ?>
+			<?php $lp_emit_logo_items( $lp_item_classes['grid'] ); ?>
 		</div>
 	</div>
 </section>
+

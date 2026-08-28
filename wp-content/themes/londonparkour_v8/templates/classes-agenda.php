@@ -88,7 +88,7 @@ get_header();
 				'href'  => lp_classes_page_url( 'classes-map' ),
 			),
 			'masthead'    => array(
-				'title'     => 'Departures, day by day.',
+				'title'     => "This week's sessions.",
 				'note'      => 'Every session on the board for the week ahead. Coach-led, capped at twelve, £15 to drop in. Spaces update live — take the slot while it is there.',
 				'media_id'  => $lp_mast_media,
 				'media_url' => $lp_mast_url,
@@ -236,7 +236,7 @@ get_header();
 						</div>
 					</div>
 
-					<div class="flex flex-col gap-0">
+					<div class="flex flex-col gap-4">
 						<?php
 						foreach ( $lp_day_group['sessions'] as $lp_session ) :
 							$lp_is_past = ! empty( $lp_session['past'] );

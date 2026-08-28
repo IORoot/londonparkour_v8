@@ -93,7 +93,7 @@ $lp_sizes = array(
 		'detail'      => 'relative z-10 w-fit',
 	),
 	'lg'      => array(
-		'root'        => 'group relative flex flex-col gap-[12px] lg:flex-row lg:items-center lg:gap-[28px] w-full py-[16px] lg:py-[20px] px-[16px] lg:px-[32px] bg-secondary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
+		'root'        => 'group relative flex flex-col gap-[12px] lg:flex-row lg:items-center lg:gap-[28px] w-full py-[16px] lg:py-[20px] px-[16px] lg:px-[32px] bg-neutral-content/20 lg:bg-secondary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
 		'thumb'       => 'block w-14 h-14 shrink-0 overflow-hidden bg-neutral lg:w-28 lg:h-28',
 		'thumb_size'  => 'lp_thumb_lg',
 		'thumb_sizes' => '(min-width: 1024px) 112px, 56px',
