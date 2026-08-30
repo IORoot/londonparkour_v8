@@ -198,6 +198,8 @@ while ( have_posts() ) :
 			'part' => 'components/board-row',
 			'args' => array(
 				'variant'          => 'sell',
+				'date_lead'        => true,
+				'show_spaces'      => false,
 				'time'             => (string) ( $lp_row['time'] ?? '' ),
 				'date_label'       => $lp_row_date_label( (string) ( $lp_row['date'] ?? '' ) ),
 				'title'            => get_the_title( $lp_post_id ),
@@ -216,7 +218,7 @@ while ( have_posts() ) :
 	}
 
 	$lp_board_title = strtoupper( trim( get_the_title( $lp_post_id ) . ( $lp_location_title ? ' — ' . $lp_location_title : '' ) ) );
-	$lp_live_label  = sprintf( 'AVAILABILITY UPDATED %s', current_datetime()->format( 'H:i' ) );
+	$lp_live_label  = sprintf( 'UPDATED %s', current_datetime()->format( 'H:i' ) );
 	$lp_foot_left   = '';
 	$lp_foot_href   = '';
 	$lp_foot_right  = '' !== $lp_price ? sprintf( '%s PER %s · FREE CANCELLATION UP TO 24 HOURS BEFORE', $lp_price, strtoupper( $lp_price_label ) ) : '';
@@ -490,7 +492,36 @@ while ( have_posts() ) :
 					array(
 						'board_title' => $lp_board_title,
 						'live_label'  => $lp_live_label,
-						'columns'     => array( 'TIME', 'SESSION', 'LOCATION', 'LEVEL', 'AVAILABILITY' ),
+						'columns'     => array(
+							array(
+								'label' => 'TIME',
+								'cls'   => 'w-[140px] shrink-0',
+							),
+							array(
+								'label' => '',
+								'cls'   => 'hidden min-[1680px]:block w-7 shrink-0',
+							),
+							array(
+								'label' => 'SESSION',
+								'cls'   => 'flex-1 min-w-[10rem]',
+							),
+							array(
+								'label' => 'LOCATION',
+								'cls'   => 'hidden xl:block xl:w-[150px] shrink-0',
+							),
+							array(
+								'label' => 'LEVEL',
+								'cls'   => 'hidden 2xl:block 2xl:w-[146px] shrink-0',
+							),
+							array(
+								'label' => 'FARE',
+								'cls'   => 'w-[76px] shrink-0 text-right',
+							),
+							array(
+								'label' => '',
+								'cls'   => 'w-[84px] shrink-0',
+							),
+						),
 						'rows'        => $lp_board_rows,
 						'foot_left'   => $lp_foot_left,
 						'foot_href'   => $lp_foot_href,

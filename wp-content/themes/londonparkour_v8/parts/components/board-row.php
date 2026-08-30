@@ -28,6 +28,7 @@
  * @param string $args['variant']          default|sell. `sell` swaps the chevron for a BOOK button.
  * @param string $args['time']
  * @param string $args['date_label']
+ * @param bool   $args['date_lead']        Date first in heading type. Class-detail upcoming only.
  * @param string $args['title']
  * @param string $args['subtitle']
  * @param string $args['location']
@@ -69,9 +70,12 @@ $lp_sizes = array(
 		'thumb'       => 'block w-14 h-14 shrink-0 overflow-hidden bg-neutral',
 		'thumb_size'  => 'lp_thumb',
 		'thumb_sizes' => '56px',
-		'time_wrap'   => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[92px] lg:gap-[3px]',
-		'time'        => 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content',
-		'date'        => 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
+		'time_wrap'       => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[92px] lg:gap-[3px]',
+		'time'            => 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content',
+		'date'            => 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
+		'date_lead_wrap'  => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[140px] lg:gap-[3px]',
+		'date_lead_date'  => 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content whitespace-nowrap',
+		'date_lead_time'  => 'font-label text-[12px] font-normal tracking-[0.8px] text-neutral-content/50',
 		'glyph_wrap'  => 'hidden min-[1680px]:inline-flex w-7 h-7 shrink-0 text-neutral-content items-center justify-center',
 		'glyph_icon'  => 'w-7 h-7',
 		'pin_icon'    => 'w-3 h-3',
@@ -97,9 +101,12 @@ $lp_sizes = array(
 		'thumb'       => 'block w-14 h-14 shrink-0 overflow-hidden bg-neutral lg:w-28 lg:h-28',
 		'thumb_size'  => 'lp_thumb_lg',
 		'thumb_sizes' => '(min-width: 1024px) 112px, 56px',
-		'time_wrap'   => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[112px] lg:gap-[4px]',
-		'time'        => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
-		'date'        => 'font-label text-[10px] lg:text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'time_wrap'       => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[112px] lg:gap-[4px]',
+		'time'            => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
+		'date'            => 'font-label text-[10px] lg:text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'date_lead_wrap'  => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[168px] lg:gap-[4px]',
+		'date_lead_date'  => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral whitespace-nowrap',
+		'date_lead_time'  => 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral',
 		'glyph_wrap'  => 'hidden min-[1680px]:inline-flex w-10 h-10 shrink-0 text-neutral-content group-hover:text-neutral items-center justify-center',
 		'glyph_icon'  => 'w-10 h-10',
 		'pin_icon'    => 'w-4 h-4',
@@ -143,6 +150,7 @@ $lp_detail_href = $lp_is_sell ? $lp_href : '';
 $lp_detail_lbl  = (string) ( $args['detail_label'] ?? 'MORE DETAILS' );
 $lp_sold_out    = ! empty( $args['sold_out'] );
 $lp_show_spaces = ! isset( $args['show_spaces'] ) || (bool) $args['show_spaces'];
+$lp_date_lead   = ! empty( $args['date_lead'] );
 
 $lp_time       = (string) ( $args['time'] ?? '18:30' );
 $lp_date_label = (string) ( $args['date_label'] ?? 'TODAY' );
@@ -175,11 +183,21 @@ if ( ! isset( $lp_spaces_tones[ $lp_tone_key ] ) ) {
 }
 $lp_spaces_tone = $lp_spaces_tones[ $lp_tone_key ];
 
+if ( $lp_date_lead ) {
+	$lp_ui['time_wrap'] = $lp_ui['date_lead_wrap'];
+	$lp_ui['time']      = $lp_ui['date_lead_time'];
+	$lp_ui['date']      = $lp_ui['date_lead_date'];
+}
+
 $lp_now_playing = 'now_playing' === $lp_tone_key && 'default' === $lp_size;
 if ( $lp_now_playing ) {
 	$lp_ui['root']        = 'group relative flex flex-col gap-[10px] lg:flex-row lg:items-center lg:gap-[24px] w-full py-[14px] lg:py-[18px] px-[16px] lg:px-[28px] bg-primary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left';
-	$lp_ui['time']        = 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content';
-	$lp_ui['date']        = 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-primary-content/70';
+	$lp_ui['time']        = $lp_date_lead
+		? 'font-label text-[12px] font-normal tracking-[0.8px] text-primary-content/70'
+		: 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content';
+	$lp_ui['date']        = $lp_date_lead
+		? 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content whitespace-nowrap'
+		: 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-primary-content/70';
 	$lp_ui['title']       = 'font-heading text-[17px] font-medium tracking-[-0.2px] text-primary-content truncate';
 	$lp_ui['subtitle']    = 'font-label text-[11px] font-normal tracking-[0.2px] text-primary-content/70 truncate';
 	$lp_ui['site_pin']    = 'text-primary-content/70 transition-colors duration-150';
@@ -225,9 +243,14 @@ $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
 				</div>
 			<?php endif; ?>
 			<div class="flex flex-1 min-w-0 items-start justify-between gap-3 lg:contents">
-				<div class="<?php echo esc_attr( $lp_ui['time_wrap'] ); ?>">
-					<span class="<?php echo esc_attr( $lp_ui['time'] ); ?>"><?php echo esc_html( $lp_time ); ?></span>
-					<span class="<?php echo esc_attr( $lp_ui['date'] ); ?>"><?php echo esc_html( $lp_date_label ); ?></span>
+				<div class="<?php echo esc_attr( $lp_ui['time_wrap'] ); ?>" data-slot="time">
+					<?php if ( $lp_date_lead ) : ?>
+						<span class="<?php echo esc_attr( $lp_ui['date'] ); ?>"><?php echo esc_html( $lp_date_label ); ?></span>
+						<span class="<?php echo esc_attr( $lp_ui['time'] ); ?>"><?php echo esc_html( $lp_time ); ?></span>
+					<?php else : ?>
+						<span class="<?php echo esc_attr( $lp_ui['time'] ); ?>"><?php echo esc_html( $lp_time ); ?></span>
+						<span class="<?php echo esc_attr( $lp_ui['date'] ); ?>"><?php echo esc_html( $lp_date_label ); ?></span>
+					<?php endif; ?>
 				</div>
 				<?php if ( $lp_is_sell ) : ?>
 					<div class="<?php echo esc_attr( $lp_ui['fare_mobile'] ); ?>" data-slot="fare-mobile">

@@ -66,7 +66,7 @@ $lp_has_foot = '' !== $lp_foot_left || '' !== $lp_foot_right;
 		</div>
 	<?php endif; ?>
 	<?php if ( $lp_columns ) : ?>
-		<div class="hidden lg:flex items-center gap-[24px] py-[13px] border-b border-neutral-content/10" aria-hidden="true">
+		<div class="hidden lg:flex items-center gap-[24px] py-[13px] px-[16px] lg:px-[28px] border-b border-neutral-content/10" aria-hidden="true" data-slot="columns">
 			<?php
 			foreach ( $lp_columns as $lp_col ) :
 				$lp_col_label = is_array( $lp_col ) ? (string) ( $lp_col['label'] ?? '' ) : (string) $lp_col;
