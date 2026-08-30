@@ -103,24 +103,29 @@ function lp_blog_listing_posts( int $lp_count = 4 ): array {
 }
 
 /**
- * Split a markdown (or plain) article into intro paragraphs + ## sections.
+ * Split a markdown (or plain) article into intro blocks + ## sections.
  *
  * v7 blog bodies are markdown. Structured ACF repeaters, when present, take
  * precedence in the template — this is the imported-content path.
  *
+ * Only ATX `##` headings become TOC sections. `###` and below stay inside the
+ * current section so a long guide does not flatten every subhead into the rail.
+ *
  * @param string $lp_content Raw post_content.
- * @return array{intro: string[], sections: array<int, array{id: string, heading: string, paragraphs: string[]}>}
+ * @return array{intro: array<int, array>, sections: array<int, array{id: string, heading: string, blocks: array}>}
  */
 function lp_blog_parse_markdown( string $lp_content ): array {
 	$lp_content = str_replace( array( "\r\n", "\r" ), "\n", trim( $lp_content ) );
+	$lp_content = html_entity_decode( $lp_content, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 	$lp_content = (string) preg_replace( '/\A#\s+[^\n]+\n+/', '', $lp_content, 1 );
 
-	$lp_parts = preg_split( '/^#{2,6}\s+(.+)$/m', $lp_content, -1, PREG_SPLIT_DELIM_CAPTURE );
+	$lp_parts = preg_split( '/^##\s+(.+)$/m', $lp_content, -1, PREG_SPLIT_DELIM_CAPTURE );
 	if ( ! is_array( $lp_parts ) ) {
 		$lp_parts = array( $lp_content );
 	}
 
-	$lp_intro    = lp_blog_split_paragraphs( (string) ( $lp_parts[0] ?? '' ) );
+	$lp_used     = array();
+	$lp_intro    = lp_blog_parse_blocks( (string) ( $lp_parts[0] ?? '' ), $lp_used );
 	$lp_sections = array();
 	$lp_count    = count( $lp_parts );
 
@@ -130,9 +135,9 @@ function lp_blog_parse_markdown( string $lp_content ): array {
 			continue;
 		}
 		$lp_sections[] = array(
-			'id'         => sanitize_title( $lp_heading ),
-			'heading'    => $lp_heading,
-			'paragraphs' => lp_blog_split_paragraphs( (string) ( $lp_parts[ $lp_i + 1 ] ?? '' ) ),
+			'id'      => lp_blog_heading_id( $lp_heading, $lp_used ),
+			'heading' => $lp_heading,
+			'blocks'  => lp_blog_parse_blocks( (string) ( $lp_parts[ $lp_i + 1 ] ?? '' ), $lp_used ),
 		);
 	}
 
@@ -140,6 +145,447 @@ function lp_blog_parse_markdown( string $lp_content ): array {
 		'intro'    => $lp_intro,
 		'sections' => $lp_sections,
 	);
+}
+
+/**
+ * Stable, unique fragment id for a heading.
+ *
+ * @param string   $lp_heading Heading text (entities already decoded).
+ * @param string[] $lp_used    Ids already emitted, keyed by id.
+ */
+function lp_blog_heading_id( string $lp_heading, array &$lp_used ): string {
+	$lp_base = sanitize_title( wp_strip_all_tags( $lp_heading ) );
+	if ( '' === $lp_base ) {
+		$lp_base = 'section';
+	}
+
+	$lp_id = $lp_base;
+	$lp_n  = 2;
+	while ( isset( $lp_used[ $lp_id ] ) ) {
+		$lp_id = $lp_base . '-' . $lp_n;
+		++$lp_n;
+	}
+	$lp_used[ $lp_id ] = true;
+
+	return $lp_id;
+}
+
+/**
+ * Classify a markdown body into typed blocks (paragraph, heading, video, quote, list, image).
+ *
+ * @param string   $lp_text Markdown fragment (one section or the intro).
+ * @param string[] $lp_used Heading ids already used, for inner ### anchors.
+ * @return array<int, array>
+ */
+function lp_blog_parse_blocks( string $lp_text, array &$lp_used = array() ): array {
+	$lp_text = trim( $lp_text );
+	if ( '' === $lp_text ) {
+		return array();
+	}
+
+	$lp_lines  = explode( "\n", $lp_text );
+	$lp_n      = count( $lp_lines );
+	$lp_i      = 0;
+	$lp_blocks = array();
+
+	while ( $lp_i < $lp_n ) {
+		$lp_trim = trim( $lp_lines[ $lp_i ] );
+		if ( '' === $lp_trim ) {
+			++$lp_i;
+			continue;
+		}
+
+		if ( preg_match( '/^(#{3,6})\s+(.+)$/', $lp_trim, $lp_m ) ) {
+			$lp_heading    = trim( $lp_m[2] );
+			$lp_blocks[]   = array(
+				'type'    => 'heading',
+				'level'   => strlen( $lp_m[1] ),
+				'text'    => $lp_heading,
+				'id'      => lp_blog_heading_id( $lp_heading, $lp_used ),
+			);
+			++$lp_i;
+			continue;
+		}
+
+		if ( str_starts_with( $lp_trim, '>' ) ) {
+			$lp_quoted = array();
+			while ( $lp_i < $lp_n ) {
+				$lp_line = trim( $lp_lines[ $lp_i ] );
+				if ( '' === $lp_line ) {
+					$lp_j = $lp_i + 1;
+					while ( $lp_j < $lp_n && '' === trim( $lp_lines[ $lp_j ] ) ) {
+						++$lp_j;
+					}
+					if ( $lp_j < $lp_n && str_starts_with( trim( $lp_lines[ $lp_j ] ), '>' ) ) {
+						$lp_quoted[] = '';
+						++$lp_i;
+						continue;
+					}
+					break;
+				}
+				if ( ! str_starts_with( $lp_line, '>' ) ) {
+					break;
+				}
+				$lp_quoted[] = (string) preg_replace( '/^>\s?/', '', $lp_line, 1 );
+				++$lp_i;
+			}
+			$lp_inner = lp_blog_parse_blocks( implode( "\n", $lp_quoted ), $lp_used );
+			if ( $lp_inner ) {
+				$lp_blocks[] = array(
+					'type'   => 'quote',
+					'blocks' => $lp_inner,
+				);
+			}
+			continue;
+		}
+
+		if ( preg_match( '/^[-*]\s+/', $lp_trim ) ) {
+			$lp_items = array();
+			while ( $lp_i < $lp_n ) {
+				$lp_line = $lp_lines[ $lp_i ];
+				$lp_item = trim( $lp_line );
+				if ( preg_match( '/^[-*]\s+(.*)$/', $lp_item, $lp_m ) ) {
+					$lp_items[] = $lp_m[1];
+					++$lp_i;
+					continue;
+				}
+				if ( $lp_items && preg_match( '/^\s{2,}\S/', $lp_line ) && ! preg_match( '/^[-*]\s+/', $lp_item ) && ! preg_match( '/^\d+[.)]\s+/', $lp_item ) ) {
+					$lp_items[ count( $lp_items ) - 1 ] .= ' ' . $lp_item;
+					++$lp_i;
+					continue;
+				}
+				break;
+			}
+			$lp_blocks[] = array(
+				'type'  => 'ul',
+				'items' => $lp_items,
+			);
+			continue;
+		}
+
+		if ( preg_match( '/^\d+[.)]\s+/', $lp_trim ) ) {
+			$lp_items = array();
+			while ( $lp_i < $lp_n ) {
+				$lp_line = $lp_lines[ $lp_i ];
+				$lp_item = trim( $lp_line );
+				if ( preg_match( '/^\d+[.)]\s+(.*)$/', $lp_item, $lp_m ) ) {
+					$lp_items[] = $lp_m[1];
+					++$lp_i;
+					continue;
+				}
+				if ( $lp_items && preg_match( '/^\s{2,}\S/', $lp_line ) && ! preg_match( '/^[-*]\s+/', $lp_item ) && ! preg_match( '/^\d+[.)]\s+/', $lp_item ) ) {
+					$lp_items[ count( $lp_items ) - 1 ] .= ' ' . $lp_item;
+					++$lp_i;
+					continue;
+				}
+				break;
+			}
+			$lp_blocks[] = array(
+				'type'  => 'ol',
+				'items' => $lp_items,
+			);
+			continue;
+		}
+
+		if ( preg_match( '/^(?:-{3,}|\*{3,}|_{3,})$/', $lp_trim ) ) {
+			$lp_blocks[] = array( 'type' => 'hr' );
+			++$lp_i;
+			continue;
+		}
+
+		$lp_para_lines = array();
+		while ( $lp_i < $lp_n ) {
+			$lp_line = trim( $lp_lines[ $lp_i ] );
+			if ( '' === $lp_line ) {
+				break;
+			}
+			if ( preg_match( '/^#{3,6}\s+/', $lp_line ) || str_starts_with( $lp_line, '>' ) ) {
+				break;
+			}
+			if ( preg_match( '/^[-*]\s+/', $lp_line ) || preg_match( '/^\d+[.)]\s+/', $lp_line ) ) {
+				break;
+			}
+			if ( preg_match( '/^(?:-{3,}|\*{3,}|_{3,})$/', $lp_line ) ) {
+				break;
+			}
+			$lp_para_lines[] = $lp_line;
+			++$lp_i;
+		}
+
+		$lp_para = trim( implode( "\n", $lp_para_lines ) );
+		if ( '' === $lp_para ) {
+			continue;
+		}
+
+		$lp_video = lp_blog_video_block_from_markdown( $lp_para );
+		if ( $lp_video ) {
+			$lp_blocks[] = $lp_video;
+			continue;
+		}
+
+		$lp_image = lp_blog_image_block_from_markdown( $lp_para );
+		if ( $lp_image ) {
+			$lp_blocks[] = $lp_image;
+			continue;
+		}
+
+		$lp_blocks[] = array(
+			'type' => 'p',
+			'text' => $lp_para,
+		);
+	}
+
+	return $lp_blocks;
+}
+
+/**
+ * A standalone markdown link (or bare URL) that should render as an embed.
+ *
+ * @param string $lp_text One paragraph.
+ * @return array|null
+ */
+function lp_blog_video_block_from_markdown( string $lp_text ): ?array {
+	$lp_text  = preg_replace( '/^[\s\x{00A0}]+|[\s\x{00A0}]+$/u', '', trim( $lp_text ) ) ?? trim( $lp_text );
+	$lp_url   = '';
+	$lp_label = '';
+
+	if ( preg_match( '/^\[([^\]]+)\]\((https?:[^)\s]+)(?:\s+"[^"]*")?\)$/', $lp_text, $lp_m ) ) {
+		$lp_label = trim( $lp_m[1] );
+		$lp_url   = trim( $lp_m[2] );
+	} elseif ( preg_match( '/^(https?:\/\/\S+)$/', $lp_text, $lp_m ) ) {
+		$lp_url = $lp_m[1];
+	} else {
+		return null;
+	}
+
+	$lp_yt = function_exists( 'lp_youtube_id_from_url' ) ? lp_youtube_id_from_url( $lp_url ) : '';
+	if ( '' !== $lp_yt ) {
+		return array(
+			'type'     => 'video',
+			'provider' => 'youtube',
+			'id'       => $lp_yt,
+			'title'    => $lp_label,
+		);
+	}
+
+	$lp_list = function_exists( 'lp_youtube_playlist_id_from_url' ) ? lp_youtube_playlist_id_from_url( $lp_url ) : '';
+	if ( '' !== $lp_list ) {
+		return array(
+			'type'     => 'video',
+			'provider' => 'youtube-playlist',
+			'id'       => $lp_list,
+			'title'    => $lp_label,
+		);
+	}
+
+	$lp_vm = function_exists( 'lp_vimeo_id_from_url' ) ? lp_vimeo_id_from_url( $lp_url ) : '';
+	if ( '' !== $lp_vm ) {
+		return array(
+			'type'     => 'video',
+			'provider' => 'vimeo',
+			'id'       => $lp_vm,
+			'title'    => $lp_label,
+		);
+	}
+
+	return null;
+}
+
+/**
+ * A paragraph that is only `![alt](src)`.
+ *
+ * @param string $lp_text One paragraph.
+ * @return array|null
+ */
+function lp_blog_image_block_from_markdown( string $lp_text ): ?array {
+	$lp_text = trim( $lp_text );
+	if ( ! preg_match( '/^!\[([^\]]*)\]\((https?:[^)\s]+)(?:\s+"[^"]*")?\)$/', $lp_text, $lp_m ) ) {
+		return null;
+	}
+
+	return array(
+		'type' => 'img',
+		'alt'  => $lp_m[1],
+		'src'  => $lp_m[2],
+	);
+}
+
+/**
+ * Whole-literal class strings for markdown article blocks.
+ *
+ * @param string $lp_key Lookup key.
+ */
+function lp_blog_markdown_class( string $lp_key ): string {
+	$lp_map = array(
+		'p'           => 'font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content',
+		'p_lead'      => 'font-body text-[16px] leading-[1.75] tracking-[0.1px] text-base-content',
+		'heading_3'   => 'font-heading text-[18px] font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
+		'heading_4'   => 'font-heading text-[16px] font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
+		'heading_5'   => 'font-heading text-[16px] font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
+		'quote'       => 'border-l-2 border-accent pl-[24px] flex flex-col gap-[12px]',
+		'quote_title' => 'font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-accent m-0',
+		'quote_p'     => 'font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content m-0',
+		'ul'          => 'list-disc pl-5 m-0 flex flex-col gap-[12px] font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content',
+		'ol'          => 'list-decimal pl-5 m-0 flex flex-col gap-[12px] font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content',
+		'embed'       => 'relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full m-0',
+		'caption'     => 'font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65',
+		'figure'      => 'm-0 flex flex-col gap-[12px]',
+		'img'         => 'w-full h-auto',
+		'hr'          => 'w-full h-px bg-base-300 border-0',
+	);
+
+	return $lp_map[ $lp_key ] ?? '';
+}
+
+/**
+ * Class attribute for a markdown block. Trusted literals — `esc_attr` would
+ * encode `[&>iframe]` and miss the compiled Tailwind selector.
+ *
+ * @param string $lp_key Lookup key.
+ */
+function lp_blog_markdown_class_attr( string $lp_key ): string {
+	$lp_class = lp_blog_markdown_class( $lp_key );
+	if ( str_contains( $lp_class, '>' ) || str_contains( $lp_class, '<' ) ) {
+		return $lp_class;
+	}
+
+	return esc_attr( $lp_class );
+}
+
+/**
+ * Echo typed markdown blocks. `$lp_lead` is consumed by the first paragraph.
+ *
+ * @param array $lp_blocks Parse tree from lp_blog_parse_blocks().
+ * @param array $lp_args   {
+ *   @type bool   $lead          First paragraph uses the standfirst size.
+ *   @type string $heading_start Inner ### tag: 'h3' (docs) or 'h4' (blog).
+ *   @type bool   $in_quote      Nested quote pass — skip lead, use quote type.
+ * }
+ */
+function lp_blog_render_blocks( array $lp_blocks, array $lp_args = array() ): void {
+	$lp_lead          = ! empty( $lp_args['lead'] );
+	$lp_heading_start = (string) ( $lp_args['heading_start'] ?? 'h4' );
+	$lp_in_quote      = ! empty( $lp_args['in_quote'] );
+	$lp_tags          = array( 'h3', 'h4', 'h5', 'h6' );
+	if ( ! in_array( $lp_heading_start, $lp_tags, true ) ) {
+		$lp_heading_start = 'h4';
+	}
+
+	foreach ( $lp_blocks as $lp_block ) {
+		$lp_type = (string) ( $lp_block['type'] ?? '' );
+
+		if ( 'p' === $lp_type ) {
+			$lp_class = ( $lp_lead && ! $lp_in_quote ) ? lp_blog_markdown_class( 'p_lead' ) : ( $lp_in_quote ? lp_blog_markdown_class( 'quote_p' ) : lp_blog_markdown_class( 'p' ) );
+			$lp_lead  = false;
+			echo '<p class="' . esc_attr( $lp_class ) . '">' . wp_kses_post( lp_blog_inline_markdown( (string) ( $lp_block['text'] ?? '' ) ) ) . '</p>';
+			continue;
+		}
+
+		if ( 'heading' === $lp_type ) {
+			$lp_level = (int) ( $lp_block['level'] ?? 3 );
+			$lp_index = max( 0, $lp_level - 3 );
+			$lp_tag   = $lp_tags[ array_search( $lp_heading_start, $lp_tags, true ) + $lp_index ] ?? 'h6';
+			if ( ! in_array( $lp_tag, $lp_tags, true ) ) {
+				$lp_tag = 'h4';
+			}
+			$lp_text = (string) ( $lp_block['text'] ?? '' );
+			$lp_id   = (string) ( $lp_block['id'] ?? '' );
+
+			if ( $lp_in_quote ) {
+				echo '<p class="' . lp_blog_markdown_class_attr( 'quote_title' ) . '">' . esc_html( $lp_text ) . '</p>';
+				continue;
+			}
+
+			$lp_h_class = lp_blog_markdown_class( $lp_level >= 4 ? 'heading_4' : 'heading_3' );
+			echo '<' . $lp_tag . ' id="' . esc_attr( $lp_id ) . '" class="' . esc_attr( $lp_h_class ) . '">' . esc_html( $lp_text ) . '</' . $lp_tag . '>';
+			continue;
+		}
+
+		if ( 'quote' === $lp_type ) {
+			echo '<blockquote class="' . lp_blog_markdown_class_attr( 'quote' ) . '" data-component="blog-annotation">';
+			lp_blog_render_blocks(
+				(array) ( $lp_block['blocks'] ?? array() ),
+				array(
+					'lead'          => false,
+					'heading_start' => $lp_heading_start,
+					'in_quote'      => true,
+				)
+			);
+			echo '</blockquote>';
+			continue;
+		}
+
+		if ( 'ul' === $lp_type || 'ol' === $lp_type ) {
+			$lp_tag = 'ul' === $lp_type ? 'ul' : 'ol';
+			echo '<' . $lp_tag . ' class="' . lp_blog_markdown_class_attr( $lp_tag ) . '">';
+			foreach ( (array) ( $lp_block['items'] ?? array() ) as $lp_item ) {
+				echo '<li>' . wp_kses_post( lp_blog_inline_markdown( (string) $lp_item ) ) . '</li>';
+			}
+			echo '</' . $lp_tag . '>';
+			continue;
+		}
+
+		if ( 'video' === $lp_type ) {
+			lp_blog_render_video_block( $lp_block );
+			continue;
+		}
+
+		if ( 'img' === $lp_type ) {
+			$lp_src = esc_url( (string) ( $lp_block['src'] ?? '' ), array( 'http', 'https' ) );
+			if ( '' === $lp_src ) {
+				continue;
+			}
+			echo '<figure class="' . lp_blog_markdown_class_attr( 'figure' ) . '">';
+			echo '<img class="' . lp_blog_markdown_class_attr( 'img' ) . '" src="' . esc_url( $lp_src ) . '" alt="' . esc_attr( (string) ( $lp_block['alt'] ?? '' ) ) . '" loading="lazy">';
+			echo '</figure>';
+			continue;
+		}
+
+		if ( 'hr' === $lp_type ) {
+			echo '<hr class="' . lp_blog_markdown_class_attr( 'hr' ) . '">';
+		}
+	}
+}
+
+/**
+ * Responsive YouTube / Vimeo iframe. Src hosts are hardcoded, ids are encoded.
+ *
+ * @param array $lp_block Video block from lp_blog_video_block_from_markdown().
+ */
+function lp_blog_render_video_block( array $lp_block ): void {
+	$lp_provider = (string) ( $lp_block['provider'] ?? '' );
+	$lp_id       = (string) ( $lp_block['id'] ?? '' );
+	$lp_title    = trim( (string) ( $lp_block['title'] ?? '' ) );
+	$lp_src      = '';
+	$lp_iframe_title = $lp_title;
+
+	if ( 'youtube' === $lp_provider && preg_match( '/^[A-Za-z0-9_-]{11}$/', $lp_id ) ) {
+		$lp_src          = 'https://www.youtube-nocookie.com/embed/' . rawurlencode( $lp_id );
+		$lp_iframe_title = ( '' === $lp_title || 0 === strcasecmp( $lp_title, 'YouTube' ) ) ? 'YouTube video' : $lp_title;
+	} elseif ( 'youtube-playlist' === $lp_provider && preg_match( '/^[\w-]+$/', $lp_id ) ) {
+		$lp_src          = 'https://www.youtube-nocookie.com/embed/videoseries?list=' . rawurlencode( $lp_id );
+		$lp_iframe_title = ( '' === $lp_title ) ? 'YouTube playlist' : $lp_title;
+	} elseif ( 'vimeo' === $lp_provider && preg_match( '/^\d+$/', $lp_id ) ) {
+		$lp_src          = 'https://player.vimeo.com/video/' . rawurlencode( $lp_id );
+		$lp_iframe_title = ( '' === $lp_title || str_ends_with( strtolower( $lp_title ), 'on vimeo' ) )
+			? ( preg_replace( '/\s+on vimeo$/i', '', $lp_title ) ?: 'Vimeo video' )
+			: $lp_title;
+	}
+
+	if ( '' === $lp_src ) {
+		return;
+	}
+
+	$lp_show_caption = ( '' !== $lp_title && 0 !== strcasecmp( $lp_title, 'YouTube' ) );
+
+	echo '<figure class="' . lp_blog_markdown_class_attr( 'figure' ) . '" data-component="blog-embed">';
+	echo '<div class="' . lp_blog_markdown_class_attr( 'embed' ) . '">';
+	echo '<iframe src="' . esc_url( $lp_src ) . '" title="' . esc_attr( $lp_iframe_title ) . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+	echo '</div>';
+	if ( $lp_show_caption ) {
+		echo '<figcaption class="' . lp_blog_markdown_class_attr( 'caption' ) . '">' . esc_html( $lp_title ) . '</figcaption>';
+	}
+	echo '</figure>';
 }
 
 /**
@@ -170,16 +616,30 @@ function lp_blog_split_paragraphs( string $lp_text ): array {
  * @return string
  */
 function lp_blog_inline_markdown( string $lp_text ): string {
+	$lp_text = html_entity_decode( $lp_text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 	$lp_text = esc_html( $lp_text );
-	$lp_text = (string) preg_replace( '/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $lp_text );
-	$lp_text = (string) preg_replace( '/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/s', '<em>$1</em>', $lp_text );
 	$lp_text = (string) preg_replace_callback(
-		'/\[([^\]]+)\]\(([^)]+)\)/',
+		'/!\[([^\]]*)\]\(([^)]+)\)/',
 		static function ( array $lp_m ): string {
-			return '<a class="text-accent hover:text-accent/70" href="' . esc_url( $lp_m[2] ) . '">' . $lp_m[1] . '</a>';
+			$lp_src = esc_url( html_entity_decode( $lp_m[2], ENT_QUOTES | ENT_HTML5, 'UTF-8' ), array( 'http', 'https' ) );
+			if ( '' === $lp_src ) {
+				return $lp_m[0];
+			}
+			return '<img class="inline-block max-w-full h-auto" src="' . esc_url( $lp_src ) . '" alt="' . $lp_m[1] . '">';
 		},
 		$lp_text
 	);
+	$lp_text = (string) preg_replace_callback(
+		'/\[([^\]]+)\]\(([^)]+)\)/',
+		static function ( array $lp_m ): string {
+			$lp_href = html_entity_decode( $lp_m[2], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+			return '<a class="text-accent hover:text-accent/70" href="' . esc_url( $lp_href ) . '">' . $lp_m[1] . '</a>';
+		},
+		$lp_text
+	);
+	$lp_text = (string) preg_replace( '/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $lp_text );
+	$lp_text = (string) preg_replace( '/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/s', '<em>$1</em>', $lp_text );
+	$lp_text = (string) preg_replace( '/(?<![A-Za-z0-9])_(?!_)(.+?)(?<!_)_(?![A-Za-z0-9])/s', '<em>$1</em>', $lp_text );
 
 	return nl2br( $lp_text, false );
 }

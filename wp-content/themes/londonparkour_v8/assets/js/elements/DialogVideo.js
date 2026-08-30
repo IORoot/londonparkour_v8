@@ -186,6 +186,7 @@ class APILoader {
               if (iframe) {
                 iframe.setAttribute('tabindex', '0');
                 iframe.setAttribute('title', 'YouTube video player');
+                this.constrainFrame(iframe);
               }
               resolve();
             }
@@ -207,6 +208,7 @@ class APILoader {
       iframe.style.border = 'none';
       iframe.setAttribute('tabindex', '0');
       iframe.setAttribute('title', 'Vimeo video player');
+      this.constrainFrame(iframe);
   
       this.playerContainer.appendChild(iframe);
   
@@ -214,10 +216,20 @@ class APILoader {
       this.isPlayerReady = true;
     }
   
+    constrainFrame(frame) {
+      if (!frame) return;
+      frame.style.position = 'absolute';
+      frame.style.inset = '0';
+      frame.style.width = '100%';
+      frame.style.height = '100%';
+      frame.style.maxWidth = '100%';
+      frame.style.border = '0';
+    }
+
     async initHTML5Player() {
       const video = document.createElement('video');
       video.controls = true;
-      video.className = 'w-full h-full';
+      video.className = 'absolute inset-0 size-full';
       video.preload = 'metadata';
   
       if (this.autoplay) {

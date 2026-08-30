@@ -48,6 +48,9 @@ $lp_term_url    = is_wp_error( $lp_term_link ) ? $lp_archive_url : (string) $lp_
 
 $lp_all_series      = lp_series_terms_nonempty();
 $lp_total_tutorials = (int) ( wp_count_posts( 'lp_tutorial' )->publish ?? 0 );
+$lp_trigger_tag     = (string) ( $lp_fields['tag'] ?? '' );
+$lp_trigger_eps     = lp_series_published_count( $lp_term_id );
+$lp_trigger_poster  = lp_series_poster_id( $lp_term_id, $lp_fields );
 
 $lp_current_lessons = lp_tutorials_in_series( $lp_term_id );
 $lp_poster_id       = lp_series_poster_id( $lp_term_id, $lp_fields, $lp_current_lessons[0] ?? null );
@@ -134,77 +137,156 @@ get_header();
 			'tabs'       => lp_tutorials_view_tabs( 'series' ),
 		)
 	);
+
+	$lp_series_rows = array();
+	$lp_idx         = 0;
+	foreach ( $lp_all_series as $lp_item ) {
+		++$lp_idx;
+		$lp_item_fields = function_exists( 'get_fields' ) ? get_fields( 'term_' . $lp_item->term_id ) : array();
+		$lp_item_fields = is_array( $lp_item_fields ) ? $lp_item_fields : array();
+		$lp_item_link   = get_term_link( $lp_item );
+		$lp_series_rows[] = array(
+			'no'     => sprintf( 'S%02d', $lp_idx ),
+			'name'   => $lp_item->name,
+			'tag'    => (string) ( $lp_item_fields['tag'] ?? '' ),
+			'eps'    => lp_series_published_count( (int) $lp_item->term_id ),
+			'href'   => is_wp_error( $lp_item_link ) ? '#' : (string) $lp_item_link,
+			'active' => (int) $lp_item->term_id === $lp_term_id,
+			'poster' => lp_series_poster_id( (int) $lp_item->term_id, $lp_item_fields ),
+		);
+	}
+
+	$lp_series_tone = array(
+		'board' => array(
+			'row_active' => 'group flex min-h-[108px] h-auto lg:h-[108px] overflow-hidden bg-neutral border border-primary no-underline text-left hover:bg-primary',
+			'row'        => 'group flex min-h-[108px] h-auto lg:h-[108px] overflow-hidden bg-neutral border border-neutral-content/10 no-underline text-left hover:bg-primary',
+			'no_active'  => 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral',
+			'no'         => 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70',
+			'tag_active' => 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral',
+			'tag'        => 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70',
+			'title'      => 'font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-neutral-content group-hover:text-neutral min-w-0',
+			'episodes'   => 'font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70',
+			'poster'     => 'relative h-[108px] aspect-[16/9] shrink-0 bg-neutral overflow-hidden',
+			'wash'       => 'absolute inset-0 bg-gradient-to-r from-transparent to-neutral group-hover:to-primary',
+		),
+		'page'  => array(
+			'row_active' => 'group flex min-h-[108px] h-auto overflow-hidden bg-base-100 border border-primary no-underline text-left hover:bg-primary',
+			'row'        => 'group flex min-h-[108px] h-auto overflow-hidden bg-base-100 border border-base-300 no-underline text-left hover:bg-primary',
+			'no_active'  => 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-accent group-hover:text-neutral',
+			'no'         => 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-base-content/65 group-hover:text-neutral/70',
+			'tag_active' => 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-accent group-hover:text-neutral',
+			'tag'        => 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-base-content/65 group-hover:text-neutral/70',
+			'title'      => 'font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-base-content group-hover:text-neutral min-w-0',
+			'episodes'   => 'font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-base-content/65 group-hover:text-neutral/70',
+			'poster'     => 'relative h-[108px] aspect-[16/9] shrink-0 bg-base-300 overflow-hidden',
+			'wash'       => '',
+		),
+	);
+
+	$lp_echo_series_items = static function ( array $lp_rows, array $lp_tone ) {
+		foreach ( $lp_rows as $lp_row ) {
+			$lp_item_cls = $lp_row['active'] ? $lp_tone['row_active'] : $lp_tone['row'];
+			$lp_no_cls   = $lp_row['active'] ? $lp_tone['no_active'] : $lp_tone['no'];
+			$lp_tag_cls  = $lp_row['active'] ? $lp_tone['tag_active'] : $lp_tone['tag'];
+			?>
+			<a
+				href="<?php echo esc_url( $lp_row['href'] ); ?>"
+				class="<?php echo esc_attr( $lp_item_cls ); ?>"
+				data-component="series-sidebar-item"
+				<?php echo $lp_row['active'] ? ' aria-current="page"' : ''; ?>
+			>
+				<span class="<?php echo esc_attr( $lp_tone['poster'] ); ?>" aria-hidden="true">
+					<?php
+					if ( $lp_row['poster'] ) {
+						lp_part(
+							'components/media-photo',
+							array(
+								'image_id' => $lp_row['poster'],
+								'alt'      => '',
+								'layout'   => 'fill',
+								'size'     => 'lp_thumb',
+								'sizes'    => '192px',
+							)
+						);
+					}
+					if ( '' !== $lp_tone['wash'] ) :
+						?>
+					<span class="<?php echo esc_attr( $lp_tone['wash'] ); ?>"></span>
+						<?php
+					endif;
+					?>
+				</span>
+				<span class="flex flex-col gap-1.5 min-w-0 flex-1 justify-center px-4 py-3.5">
+					<span class="flex items-center gap-2">
+						<span class="<?php echo esc_attr( $lp_no_cls ); ?>"><?php echo esc_html( $lp_row['no'] ); ?></span>
+						<?php if ( '' !== $lp_row['tag'] ) : ?>
+							<span class="<?php echo esc_attr( $lp_tag_cls ); ?>"><?php echo esc_html( $lp_row['tag'] ); ?></span>
+						<?php endif; ?>
+					</span>
+					<span class="<?php echo esc_attr( $lp_tone['title'] ); ?>"><?php echo esc_html( $lp_row['name'] ); ?></span>
+					<?php if ( $lp_row['eps'] ) : ?>
+						<span class="<?php echo esc_attr( $lp_tone['episodes'] ); ?>"><?php echo esc_html( sprintf( '%d EPISODES', $lp_row['eps'] ) ); ?></span>
+					<?php endif; ?>
+				</span>
+			</a>
+			<?php
+		}
+	};
 	?>
+
+	<details class="group/picker lg:hidden bg-base-100 border-b border-base-300" data-component="series-picker">
+		<summary class="list-none cursor-pointer px-6 py-4 [&::-webkit-details-marker]:hidden" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: series name */ __( 'Series: %s', 'londonparkour_v8' ), $lp_term->name ) ); ?>">
+			<span class="flex flex-col gap-2">
+				<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html__( 'Series', 'londonparkour_v8' ); ?></span>
+				<span class="flex min-h-[108px] h-auto overflow-hidden bg-base-100 border border-primary text-left w-full">
+					<span class="relative h-[108px] aspect-[16/9] shrink-0 bg-base-300 overflow-hidden" aria-hidden="true">
+						<?php
+						if ( $lp_trigger_poster ) {
+							lp_part(
+								'components/media-photo',
+								array(
+									'image_id' => $lp_trigger_poster,
+									'alt'      => '',
+									'layout'   => 'fill',
+									'size'     => 'lp_thumb',
+									'sizes'    => '192px',
+								)
+							);
+						}
+						?>
+					</span>
+					<span class="flex flex-col gap-1.5 min-w-0 flex-1 justify-center px-4 py-3.5">
+						<span class="flex items-center gap-2">
+							<span class="font-label text-[10px] font-bold tracking-[0.7px] uppercase text-accent"><?php echo esc_html( sprintf( 'S%02d', $lp_series_index ) ); ?></span>
+							<?php if ( '' !== $lp_trigger_tag ) : ?>
+								<span class="font-label text-[9px] font-bold tracking-[0.7px] uppercase text-accent"><?php echo esc_html( $lp_trigger_tag ); ?></span>
+							<?php endif; ?>
+						</span>
+						<span class="font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-base-content min-w-0"><?php echo esc_html( $lp_term->name ); ?></span>
+						<?php if ( $lp_trigger_eps ) : ?>
+							<span class="font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-base-content/65"><?php echo esc_html( sprintf( '%d EPISODES', $lp_trigger_eps ) ); ?></span>
+						<?php endif; ?>
+					</span>
+					<span class="flex items-center pr-4 shrink-0" aria-hidden="true"><?php lp_icon( 'icon-chevron-down', 'w-5 h-5 shrink-0 text-accent transition-transform duration-200 group-open/picker:rotate-180' ); ?></span>
+				</span>
+			</span>
+		</summary>
+		<nav class="flex flex-col gap-3 px-6 pb-4" aria-label="<?php echo esc_attr__( 'Series list', 'londonparkour_v8' ); ?>">
+			<?php $lp_echo_series_items( $lp_series_rows, $lp_series_tone['page'] ); ?>
+		</nav>
+	</details>
 
 	<div class="w-full bg-neutral" data-section="lessons">
 		<div class="px-6 lg:px-16 py-scale-2xl">
 			<div class="flex flex-col lg:flex-row gap-9 items-stretch lg:items-start">
-				<aside class="w-full lg:w-[360px] shrink-0 flex flex-col bg-secondary border border-neutral-content/10 overflow-hidden" data-component="series-sidebar">
+				<aside class="hidden lg:flex lg:w-[360px] shrink-0 flex-col bg-secondary border border-neutral-content/10 overflow-hidden" data-component="series-sidebar">
 					<div class="flex flex-col gap-2 px-4 pt-5 pb-4 border-b border-neutral-content/10">
 						<span class="font-label text-[10px] font-bold tracking-[1.2px] uppercase text-primary">SERIES</span>
 						<h2 class="font-heading text-[22px] font-semibold tracking-[-0.4px] text-neutral-content m-0">Every line.</h2>
 						<p class="font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/50 m-0"><?php echo esc_html( sprintf( '%d episodes · pick a series', $lp_total_tutorials ) ); ?></p>
 					</div>
-					<nav class="flex flex-col gap-3 p-3.5" aria-label="<?php echo esc_attr__( 'Series list', 'londonparkour_v8' ); ?>">
-						<?php
-						$lp_idx = 0;
-						foreach ( $lp_all_series as $lp_item ) :
-							++$lp_idx;
-							$lp_item_fields = function_exists( 'get_fields' ) ? get_fields( 'term_' . $lp_item->term_id ) : array();
-							$lp_item_fields = is_array( $lp_item_fields ) ? $lp_item_fields : array();
-							$lp_item_tag    = (string) ( $lp_item_fields['tag'] ?? '' );
-							$lp_item_eps    = lp_series_published_count( (int) $lp_item->term_id );
-							$lp_item_link   = get_term_link( $lp_item );
-							$lp_item_href   = is_wp_error( $lp_item_link ) ? '#' : (string) $lp_item_link;
-							$lp_active      = (int) $lp_item->term_id === $lp_term_id;
-							$lp_item_poster = lp_series_poster_id( (int) $lp_item->term_id, $lp_item_fields );
-							$lp_item_cls    = $lp_active
-								? 'group flex min-h-[108px] h-auto lg:h-[108px] overflow-hidden bg-neutral border border-primary no-underline text-left hover:bg-primary'
-								: 'group flex min-h-[108px] h-auto lg:h-[108px] overflow-hidden bg-neutral border border-neutral-content/10 no-underline text-left hover:bg-primary';
-							$lp_no_cls      = $lp_active
-								? 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral'
-								: 'font-label text-[10px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70';
-							$lp_tag_cls     = $lp_active
-								? 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-primary group-hover:text-neutral'
-								: 'font-label text-[9px] font-bold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70';
-							?>
-							<a
-								href="<?php echo esc_url( $lp_item_href ); ?>"
-								class="<?php echo esc_attr( $lp_item_cls ); ?>"
-								data-component="series-sidebar-item"
-								<?php echo $lp_active ? ' aria-current="page"' : ''; ?>
-							>
-								<span class="relative h-full aspect-[16/9] shrink-0 bg-neutral overflow-hidden" aria-hidden="true">
-									<?php
-									if ( $lp_item_poster ) {
-										lp_part(
-											'components/media-photo',
-											array(
-												'image_id' => $lp_item_poster,
-												'alt'      => '',
-												'layout'   => 'fill',
-												'size'     => 'lp_thumb',
-												'sizes'    => '192px',
-											)
-										);
-									}
-									?>
-									<span class="absolute inset-0 bg-gradient-to-r from-transparent to-neutral group-hover:to-primary"></span>
-								</span>
-								<span class="flex flex-col gap-1.5 min-w-0 flex-1 justify-center px-4 py-3.5">
-									<span class="flex items-center gap-2">
-										<span class="<?php echo esc_attr( $lp_no_cls ); ?>"><?php echo esc_html( sprintf( 'S%02d', $lp_idx ) ); ?></span>
-										<?php if ( '' !== $lp_item_tag ) : ?>
-											<span class="<?php echo esc_attr( $lp_tag_cls ); ?>"><?php echo esc_html( $lp_item_tag ); ?></span>
-										<?php endif; ?>
-									</span>
-									<span class="font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-neutral-content group-hover:text-neutral min-w-0"><?php echo esc_html( $lp_item->name ); ?></span>
-									<?php if ( $lp_item_eps ) : ?>
-										<span class="font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( sprintf( '%d EPISODES', $lp_item_eps ) ); ?></span>
-									<?php endif; ?>
-								</span>
-							</a>
-						<?php endforeach; ?>
+					<nav class="hidden lg:flex flex-col gap-3 p-3.5" aria-label="<?php echo esc_attr__( 'Series list', 'londonparkour_v8' ); ?>">
+						<?php $lp_echo_series_items( $lp_series_rows, $lp_series_tone['board'] ); ?>
 					</nav>
 				</aside>
 

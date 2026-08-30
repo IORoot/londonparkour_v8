@@ -48,7 +48,7 @@ $lp_is_link = '' !== $lp_href;
 
 $lp_image_id  = ! empty( $args['image_id'] ) ? (int) $args['image_id'] : 0;
 $lp_image_url = (string) ( $args['image_url'] ?? '' );
-$lp_kicker    = (string) ( $args['kicker'] ?? 'Adults (14+)' );
+$lp_kicker    = (string) ( $args['kicker'] ?? 'Adults (15+)' );
 $lp_meta      = (string) ( $args['meta'] ?? 'Vauxhall' );
 $lp_title     = (string) ( $args['title'] ?? 'Outdoor Class' );
 $lp_note      = (string) ( $args['note'] ?? '' );

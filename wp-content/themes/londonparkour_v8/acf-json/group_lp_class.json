@@ -26,7 +26,7 @@
             "name": "acf_subtitle",
             "aria-label": "",
             "type": "text",
-            "instructions": "Trailing note only — duration comes from clasbpro duration_minutes. e.g. \"all kit provided\"",
+            "instructions": "Trailing note only — duration comes from clasbpro duration_minutes. e.g. \"Jump. Climb. Vault. Swing.\"",
             "required": 0,
             "conditional_logic": false,
             "wrapper": {
@@ -39,6 +39,35 @@
             "placeholder": "",
             "prepend": "",
             "append": ""
+        },
+        {
+            "key": "field_lp_class_age_range",
+            "label": "Age range",
+            "name": "acf_age_range",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Shown above Level on the class booking panel. Youth notes (ethos, spectators, etc.) appear above the FAQ for 6 to 9s and 10 to 14s only.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "6-9": "6 to 9s",
+                "10-14": "10 to 14s",
+                "14-plus": "15+ Adults"
+            },
+            "default_value": "14-plus",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
         },
         {
             "key": "field_48ccd04f8506deb0",
@@ -382,5 +411,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787654400
+    "modified": 1787912400
 }

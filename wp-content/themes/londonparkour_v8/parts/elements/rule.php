@@ -12,8 +12,9 @@
  *   board    neutral-content on the fixed dark band, where a base-content line
  *            is invisible in both light themes
  *   accent   accent-content on a bg-accent band
+ *   fill     primary-content on a bg-primary signal band
  *
- * @param string $args['tone']    ink|hairline|board|accent.
+ * @param string $args['tone']    ink|hairline|board|accent|fill.
  * @param string $args['caption'] Optional trailing label.
  *
  * @package londonparkour_v8
@@ -37,6 +38,10 @@ $lp_tones = array(
 	'accent'   => array(
 		'line'    => 'flex-1 h-px bg-accent-content/15',
 		'caption' => 'font-label text-[10px] font-normal tracking-[0.8px] text-accent-content/70 whitespace-nowrap',
+	),
+	'fill'     => array(
+		'line'    => 'flex-1 h-px bg-primary-content/15',
+		'caption' => 'font-label text-[10px] font-normal tracking-[0.8px] text-primary-content/70 whitespace-nowrap',
 	),
 );
 

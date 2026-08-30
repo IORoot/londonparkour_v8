@@ -813,6 +813,8 @@ function lp_seo_faq_pairs(): array {
 			}
 		} elseif ( false !== strpos( $template, 'contact' ) ) {
 			$rows = lp_faq_default_items();
+		} elseif ( is_singular( 'clasbpro_class' ) && function_exists( 'lp_class_faq_items' ) ) {
+			$rows = lp_class_faq_items();
 		}
 	}
 

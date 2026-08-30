@@ -78,7 +78,7 @@ $lp_title      = (string) ( $args['title'] ?? 'TAKE A SLOT' );
 $lp_spots_left = (string) ( $args['spots_left'] ?? '' );
 $lp_rows       = is_array( $args['rows'] ?? null ) ? $args['rows'] : $lp_default_rows;
 $lp_cta_label  = (string) ( $args['cta_label'] ?? 'BOOK THIS SESSION' );
-$lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours before. All kit provided.' );
+$lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours before.' );
 ?>
 <div class="<?php echo lp_classes( 'flex flex-col w-full max-w-none lg:max-w-[380px]', $lp_surf['root'] ); ?>" data-component="aside-panel">
 	<div class="<?php echo lp_classes( 'flex items-center justify-between border-b', $lp_surf['header_border'], 'px-[22px] py-[16px]' ); ?>">

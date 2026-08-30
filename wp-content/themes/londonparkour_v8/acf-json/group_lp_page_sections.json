@@ -3370,7 +3370,7 @@
                                     "key": "field_3bc1f92a12f9fe92"
                                 }
                             ],
-                            "instructions": "Button label. Link is used only when no appointment class is selected.",
+                            "instructions": "Button label and link. Empty link falls back to the private coaching page.",
                             "key": "field_11f877efaef122f3",
                             "conditional_logic": [
                                 [
@@ -3392,7 +3392,7 @@
                             "return_format": "id",
                             "allow_null": 1,
                             "ui": 1,
-                            "instructions": "When set, the book button opens the shared booking overlay for this clasbpro appointment class.",
+                            "instructions": "Unused on this block — the CTA links to the private coaching page. Appointment class is set on that page.",
                             "key": "field_9cb790e4acc205ef",
                             "conditional_logic": [
                                 [

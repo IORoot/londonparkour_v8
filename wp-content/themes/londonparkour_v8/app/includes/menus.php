@@ -124,6 +124,13 @@ function lp_nav_family_glyph( string $meta ): string {
 function lp_nav_with_glyphs( array $rows ): array {
 	$out = array();
 	foreach ( array_values( $rows ) as $i => $row ) {
+		$svg = (string) ( $row['glyph_svg'] ?? '' );
+		if ( '' !== $svg ) {
+			$row['glyph_svg'] = $svg;
+			$row['glyph_id']  = (string) ( $row['glyph_id'] ?? '' );
+			$out[]            = $row;
+			continue;
+		}
 		$glyph = (string) ( $row['glyph_id'] ?? '' );
 		if ( '' === $glyph ) {
 			$glyph = lp_nav_row_glyph(
@@ -480,10 +487,13 @@ function lp_nav_classes_panel(): array {
 				continue;
 			}
 			$location = function_exists( 'lp_class_location_id' ) ? lp_class_location_id( (int) $post->ID ) : 0;
+			$glyph    = function_exists( 'lp_class_glyph' ) ? lp_class_glyph( (int) $post->ID ) : array( 'svg' => '', 'icon_id' => '' );
 			$rows[]   = array(
-				'name' => $title,
-				'meta' => $location ? strtoupper( get_the_title( $location ) ) : '',
-				'href' => (string) get_permalink( $post ),
+				'name'      => $title,
+				'meta'      => $location ? strtoupper( get_the_title( $location ) ) : '',
+				'href'      => (string) get_permalink( $post ),
+				'glyph_svg' => (string) ( $glyph['svg'] ?? '' ),
+				'glyph_id'  => (string) ( $glyph['icon_id'] ?? '' ),
 			);
 		}
 	}

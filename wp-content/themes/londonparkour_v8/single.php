@@ -58,7 +58,7 @@ while ( have_posts() ) :
 	$lp_caption_credit = function_exists( 'get_field' ) ? (string) get_field( 'caption_credit', $lp_post_id ) : '';
 	$lp_caption_credit = $lp_caption_credit ?: 'PHOTO: LONDONPARKOUR';
 
-	$lp_intro_paras     = array();
+	$lp_intro_blocks    = array();
 	$lp_sections        = array();
 	$lp_sections_after  = array();
 	$lp_pull_quote      = null;
@@ -67,9 +67,14 @@ while ( have_posts() ) :
 		$lp_heading = (string) ( $lp_row['heading'] ?? '' );
 		$lp_body    = (string) ( $lp_row['body'] ?? '' );
 		return array(
-			'id'         => sanitize_title( $lp_heading ),
-			'heading'    => $lp_heading,
-			'paragraphs' => '' === $lp_body ? array() : array( $lp_body ),
+			'id'      => sanitize_title( $lp_heading ),
+			'heading' => $lp_heading,
+			'blocks'  => '' === $lp_body ? array() : array(
+				array(
+					'type' => 'p',
+					'text' => $lp_body,
+				),
+			),
 		);
 	};
 
@@ -79,7 +84,10 @@ while ( have_posts() ) :
 	if ( $lp_has_acf_body ) {
 		$lp_body_intro = function_exists( 'get_field' ) ? (string) get_field( 'body_intro', $lp_post_id ) : '';
 		if ( '' !== $lp_body_intro ) {
-			$lp_intro_paras[] = $lp_body_intro;
+			$lp_intro_blocks[] = array(
+				'type' => 'p',
+				'text' => $lp_body_intro,
+			);
 		}
 		$lp_sections = array_map( $lp_project_section, $lp_sections_field );
 
@@ -96,9 +104,9 @@ while ( have_posts() ) :
 			);
 		}
 	} elseif ( $lp_post ) {
-		$lp_parsed      = lp_blog_parse_markdown( (string) $lp_post->post_content );
-		$lp_intro_paras = $lp_parsed['intro'];
-		$lp_sections    = $lp_parsed['sections'];
+		$lp_parsed       = lp_blog_parse_markdown( (string) $lp_post->post_content );
+		$lp_intro_blocks = $lp_parsed['intro'];
+		$lp_sections     = $lp_parsed['sections'];
 	}
 
 	$lp_toc = array();
@@ -251,14 +259,26 @@ while ( have_posts() ) :
 					<a href="#" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content hover:text-base-content/70 transition-colors duration-150">SHARE THIS ↗</a>
 				</aside>
 				<article class="w-full max-w-[720px] flex flex-col gap-[28px]">
-					<?php foreach ( $lp_intro_paras as $lp_i => $lp_para ) : ?>
-						<p class="<?php echo esc_attr( 0 === $lp_i ? 'font-body text-[16px] leading-[1.75] tracking-[0.1px] text-base-content' : 'font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content' ); ?>"><?php echo wp_kses_post( lp_blog_inline_markdown( $lp_para ) ); ?></p>
-					<?php endforeach; ?>
+					<?php
+					lp_blog_render_blocks(
+						$lp_intro_blocks,
+						array(
+							'lead'          => true,
+							'heading_start' => 'h4',
+						)
+					);
+					?>
 					<?php foreach ( $lp_sections as $lp_section ) : ?>
 						<h3 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h3>
-						<?php foreach ( $lp_section['paragraphs'] as $lp_para ) : ?>
-							<p class="font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content"><?php echo wp_kses_post( lp_blog_inline_markdown( $lp_para ) ); ?></p>
-						<?php endforeach; ?>
+						<?php
+						lp_blog_render_blocks(
+							(array) ( $lp_section['blocks'] ?? array() ),
+							array(
+								'lead'          => false,
+								'heading_start' => 'h4',
+							)
+						);
+						?>
 					<?php endforeach; ?>
 					<?php if ( $lp_pull_quote ) : ?>
 						<blockquote class="border-l-2 border-accent pl-[24px] flex flex-col gap-[12px]" data-component="blog-detail-pull-quote">
@@ -268,9 +288,15 @@ while ( have_posts() ) :
 					<?php endif; ?>
 					<?php foreach ( $lp_sections_after as $lp_section ) : ?>
 						<h3 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h3>
-						<?php foreach ( $lp_section['paragraphs'] as $lp_para ) : ?>
-							<p class="font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content"><?php echo wp_kses_post( lp_blog_inline_markdown( $lp_para ) ); ?></p>
-						<?php endforeach; ?>
+						<?php
+						lp_blog_render_blocks(
+							(array) ( $lp_section['blocks'] ?? array() ),
+							array(
+								'lead'          => false,
+								'heading_start' => 'h4',
+							)
+						);
+						?>
 					<?php endforeach; ?>
 				</article>
 			</div>

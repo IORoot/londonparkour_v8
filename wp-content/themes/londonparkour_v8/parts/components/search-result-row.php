@@ -25,7 +25,7 @@ $lp_root = 'group flex items-center gap-6 py-[22px] border-b border-base-300 foc
 $lp_index    = (string) ( $args['index'] ?? '01' );
 $lp_category = (string) ( $args['category'] ?? 'CLASS' );
 $lp_title    = (string) ( $args['title'] ?? 'Beginners Parkour — Vauxhall' );
-$lp_snippet  = (string) ( $args['snippet'] ?? 'Our entry-level session. Sixty minutes, all kit provided, capped at twelve. No experience needed.' );
+$lp_snippet  = (string) ( $args['snippet'] ?? 'Our entry-level session. Sixty minutes, capped at twelve. No experience needed.' );
 $lp_meta     = (string) ( $args['meta'] ?? 'CLASSES · £15' );
 $lp_href     = (string) ( $args['href'] ?? '' );
 $lp_is_link  = '' !== $lp_href;

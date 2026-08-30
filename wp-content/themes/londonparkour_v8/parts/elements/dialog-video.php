@@ -37,7 +37,7 @@ $lp_title      = (string) ( $args['title'] ?? '' );
 			class="absolute inset-0 z-0 cursor-default bg-neutral/70 backdrop-blur-[7px]"
 			aria-label="<?php esc_attr_e( 'Close video', 'londonparkour_v8' ); ?>"
 		></button>
-		<el-dialog-panel class="relative z-10 block w-full max-w-5xl overflow-hidden bg-neutral border border-neutral-content/10 shadow-xl">
+		<el-dialog-panel class="relative z-10 block w-full min-w-0 max-w-5xl overflow-hidden bg-neutral border border-neutral-content/10 shadow-xl">
 			<button
 				type="button"
 				command="close"
@@ -45,8 +45,8 @@ $lp_title      = (string) ( $args['title'] ?? '' );
 				class="absolute right-2 top-2 z-20 btn btn-sm btn-circle btn-ghost text-neutral-content"
 				aria-label="<?php esc_attr_e( 'Close video', 'londonparkour_v8' ); ?>"
 			>✕</button>
-			<div class="relative bg-secondary aspect-video">
-				<div class="video-player w-full h-full"></div>
+			<div class="relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full">
+				<div class="video-player absolute inset-0 size-full"></div>
 			</div>
 			<?php if ( '' !== $lp_title ) : ?>
 				<div class="px-[22px] py-[16px]">

@@ -56,6 +56,21 @@ $lp_title_static = lp_classes( 'flex items-center gap-[18px] px-0 font-heading t
 $lp_index_c      = lp_classes( 'font-label text-[10px] font-normal tracking-[0.9px] shrink-0', $lp_tone['index'] );
 $lp_answer_c     = lp_classes( 'font-body text-[13px] font-normal tracking-[0.1px] leading-[1.7]', $lp_tone['answer'] );
 
+$lp_answer_paras = array_values(
+	array_filter(
+		array_map( 'trim', preg_split( '/\R\s*\R/u', $lp_answer ) ?: array() )
+	)
+);
+if ( ! $lp_answer_paras ) {
+	$lp_answer_paras = array( $lp_answer );
+}
+
+$lp_render_answer = static function () use ( $lp_answer_paras, $lp_answer_c ) {
+	foreach ( $lp_answer_paras as $lp_para ) {
+		echo '<p class="' . $lp_answer_c . '">' . esc_html( $lp_para ) . '</p>';
+	}
+};
+
 if ( isset( $args['collapsible'] ) && false === $args['collapsible'] ) :
 	?>
 <div class="flex flex-col gap-4 py-[26px]" data-component="faq-item" data-collapsible="false" data-surface="<?php echo esc_attr( $lp_surface ); ?>">
@@ -63,8 +78,8 @@ if ( isset( $args['collapsible'] ) && false === $args['collapsible'] ) :
 		<span class="<?php echo $lp_index_c; ?>"><?php echo esc_html( $lp_index ); ?></span>
 		<span class="min-w-0"><?php echo esc_html( $lp_question ); ?></span>
 	</div>
-	<div class="pl-7 pr-[60px]">
-		<p class="<?php echo $lp_answer_c; ?>"><?php echo esc_html( $lp_answer ); ?></p>
+	<div class="pl-7 pr-[60px] flex flex-col gap-3">
+		<?php $lp_render_answer(); ?>
 	</div>
 </div>
 	<?php
@@ -76,7 +91,7 @@ endif;
 		<span class="<?php echo $lp_index_c; ?>"><?php echo esc_html( $lp_index ); ?></span>
 		<span class="min-w-0"><?php echo esc_html( $lp_question ); ?></span>
 	</summary>
-	<div class="collapse-content px-0">
-		<p class="<?php echo $lp_answer_c; ?>"><?php echo esc_html( $lp_answer ); ?></p>
+	<div class="collapse-content px-0 flex flex-col gap-3">
+		<?php $lp_render_answer(); ?>
 	</div>
 </details>

@@ -334,7 +334,7 @@ while ( have_posts() ) :
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-[26px]">
 			<?php lp_part( 'elements/rule', array( 'tone' => 'hairline' ) ); ?>
 			<div class="flex flex-col lg:flex-row gap-[32px] items-start">
-				<div class="flex-1 min-w-0">
+				<div class="flex-1 min-w-0 self-stretch">
 					<?php
 					lp_part(
 						'components/video-stage',

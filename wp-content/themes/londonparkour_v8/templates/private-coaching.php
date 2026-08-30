@@ -288,10 +288,10 @@ get_header();
 			<header class="flex items-end">
 				<h2 class="font-heading text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-accent-content m-0">Coaches</h2>
 			</header>
-			<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+			<div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
 				<?php foreach ( $lp_coaches as $lp_coach ) : ?>
 					<article class="flex flex-col gap-3" data-component="private-coach-card">
-						<div class="relative w-full h-[444px] overflow-hidden bg-neutral">
+						<div class="relative w-full aspect-[3/4] overflow-hidden bg-neutral">
 							<?php
 							if ( ! empty( $lp_coach['photo'] ) ) {
 								lp_part(
@@ -301,7 +301,7 @@ get_header();
 										'alt'      => (string) $lp_coach['name'],
 										'layout'   => 'fill',
 										'size'     => 'lp_portrait_lg',
-										'sizes'    => '(min-width: 640px) 33vw, 100vw',
+										'sizes'    => '(min-width: 1024px) 33vw, 50vw',
 										'class'    => 'absolute inset-0 h-full w-full object-cover',
 									)
 								);

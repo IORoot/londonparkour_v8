@@ -284,7 +284,7 @@ get_header();
 							'command'     => $lp_f_book['command'] ?? '',
 							'command_for' => $lp_f_book['command_for'] ?? '',
 							'data_attrs'  => $lp_f_book['data_attrs'] ?? array(),
-							'note'        => 'Free to cancel up to 12 hours before. All kit provided.',
+							'note'        => 'Free to cancel up to 12 hours before.',
 							'surface'     => 'board',
 						)
 					);

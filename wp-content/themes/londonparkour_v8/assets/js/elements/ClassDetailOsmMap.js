@@ -7,9 +7,9 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTR =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 const enableModifierWheelZoom = (map) => {
   const el = map.getContainer();
@@ -56,8 +56,7 @@ const initOne = (root) => {
 
     L.tileLayer(TILE_URL, {
       attribution: TILE_ATTR,
-      maxZoom: 20,
-      subdomains: 'abcd',
+      maxZoom: 19,
     }).addTo(map);
 
     const icon = L.divIcon({

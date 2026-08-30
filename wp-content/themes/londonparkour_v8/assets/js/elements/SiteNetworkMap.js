@@ -1,5 +1,5 @@
 /**
- * SiteNetworkMap — Leaflet + Carto Voyager for Classes / Map.
+ * SiteNetworkMap — Leaflet + OpenStreetMap for Classes / Map.
  * Reads pin templates from `[data-site-pin]` children inside a <template>.
  *
  * Wheel zoom only with ⌘/Ctrl (and trackpad pinch, which browsers send as
@@ -12,9 +12,9 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTR =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 const TAB_ACTIVE =
   'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b-2 border-accent bg-transparent cursor-pointer';
@@ -194,8 +194,7 @@ export function initSiteNetworkMap(root = document) {
 
       L.tileLayer(TILE_URL, {
         attribution: TILE_ATTR,
-        maxZoom: 20,
-        subdomains: 'abcd',
+        maxZoom: 19,
       }).addTo(map);
 
       const layers = {

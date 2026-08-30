@@ -24,6 +24,7 @@ $lp_about_raw = trim( (string) get_the_content() );
 $lp_about     = $lp_about_raw ? apply_filters( 'the_content', $lp_about_raw ) : '';
 
 $lp_subtitle = lp_class_composed_subtitle( $lp_post_id );
+$lp_glyph    = function_exists( 'lp_class_glyph' ) ? lp_class_glyph( $lp_post_id ) : array( 'svg' => '', 'icon_id' => '' );
 
 $lp_location_id    = lp_class_location_id( $lp_post_id );
 $lp_location_title = $lp_location_id ? get_the_title( $lp_location_id ) : '';
@@ -123,6 +124,10 @@ if ( '' !== $lp_location_title ) {
 		'value' => $lp_location_title,
 	);
 }
+$lp_aside_rows[] = array(
+	'label' => 'AGE RANGE',
+	'value' => lp_class_age_range_label( $lp_post_id ),
+);
 if ( '' !== $lp_level_name ) {
 	$lp_aside_rows[] = array(
 		'label' => 'LEVEL',
@@ -225,8 +230,10 @@ $lp_grid = $lp_show_book
 	lp_part(
 		'components/page-masthead',
 		array(
-			'title' => get_the_title( $lp_post_id ),
-			'note'  => $lp_about ? lp_first_sentences( wp_strip_all_tags( $lp_about ), 2 ) : $lp_subtitle,
+			'title'         => get_the_title( $lp_post_id ),
+			'note'          => $lp_about ? lp_first_sentences( wp_strip_all_tags( $lp_about ), 2 ) : $lp_subtitle,
+			'glyph_svg'     => (string) ( $lp_glyph['svg'] ?? '' ),
+			'glyph_icon_id' => (string) ( $lp_glyph['icon_id'] ?? '' ),
 		)
 	);
 	?>
@@ -295,7 +302,7 @@ $lp_grid = $lp_show_book
 			<?php if ( $lp_about ) : ?>
 				<div class="flex flex-col gap-[22px] border-t border-base-content pt-[22px] order-3 lg:col-start-1 lg:order-none">
 					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">ABOUT THIS WORKSHOP</span>
-					<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_about ); ?></div>
+					<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&>p]:m-0 [&>p:first-of-type]:font-heading [&>p:first-of-type]:text-step-1 [&>p:first-of-type]:font-semibold [&>p:first-of-type]:text-base-content [&>p:nth-of-type(2)]:font-body [&>p:nth-of-type(2)]:text-step-0 [&>p:nth-of-type(2)]:font-medium [&>p:nth-of-type(2)]:text-base-content [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_about ); ?></div>
 				</div>
 			<?php endif; ?>
 			<?php if ( $lp_expect ) : ?>
@@ -331,7 +338,7 @@ $lp_grid = $lp_show_book
 							'command'     => $lp_book['command'] ?? '',
 							'command_for' => $lp_book['command_for'] ?? '',
 							'data_attrs'  => $lp_book['data_attrs'] ?? array(),
-							'note'        => 'Free cancellation up to 24 hours before the day. All kit provided.',
+							'note'        => 'Free cancellation up to 24 hours before the day.',
 							'surface'     => 'page',
 						)
 					);
@@ -503,6 +510,15 @@ $lp_grid = $lp_show_book
 			</div>
 		</section>
 	<?php endif; ?>
+
+	<?php
+	if ( function_exists( 'lp_render_class_youth_notes' ) ) {
+		lp_render_class_youth_notes( $lp_post_id );
+	}
+	if ( function_exists( 'lp_render_class_faq' ) ) {
+		lp_render_class_faq();
+	}
+	?>
 
 	<?php if ( $lp_coach_ids ) : ?>
 		<section class="w-full bg-accent" data-component="workshop-detail-coaches">

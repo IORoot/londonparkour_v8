@@ -32,6 +32,10 @@
  * @param string $args['command_for']
  * @param array  $args['data_attrs']      Extra data-* on the play control.
  *
+ * Mobile: the stage is `aspect-video` (16:9) with `object-contain`, matching
+ * Storybook VideoStage.js. A min-height on a different ratio either overflows
+ * the viewport or crops the still.
+ *
  * @package londonparkour_v8
  */
 
@@ -61,6 +65,7 @@ $lp_photo = array(
 	'image_id'  => $lp_image_id,
 	'image_url' => $lp_image_url,
 	'scrim'     => 'video_stage',
+	'layout'    => 'contain',
 	'size'      => 'lp_wide_lg',
 	'sizes'     => '100vw',
 );
@@ -78,7 +83,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 		<span class="font-label text-[10px] font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_quality_label ); ?></span>
 	</div>
 
-	<div class="relative w-full aspect-[892/432] overflow-hidden bg-neutral cursor-pointer">
+	<div class="relative w-full min-w-0 max-w-full aspect-video overflow-hidden bg-neutral cursor-pointer">
 		<?php
 		if ( $lp_has_image ) {
 			lp_part( 'components/media-photo', $lp_photo );
@@ -89,7 +94,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 			<?php
 		}
 		?>
-		<div class="relative z-10 flex h-full flex-col justify-between p-[26px]">
+		<div class="relative z-10 flex h-full flex-col justify-between p-4 lg:p-[26px]">
 			<div class="flex items-center justify-between gap-2">
 				<span>
 					<?php

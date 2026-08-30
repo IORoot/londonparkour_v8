@@ -335,3 +335,61 @@ function lp_youtube_id_from_url( string $url ): string {
 
 	return '';
 }
+
+/**
+ * Numeric Vimeo id from a vimeo.com or player.vimeo.com URL.
+ *
+ * @param string $url Full Vimeo URL.
+ * @return string
+ */
+function lp_vimeo_id_from_url( string $url ): string {
+	$url = trim( $url );
+	if ( '' === $url ) {
+		return '';
+	}
+
+	$parts = wp_parse_url( $url );
+	if ( ! is_array( $parts ) ) {
+		return '';
+	}
+
+	$host = strtolower( (string) ( $parts['host'] ?? '' ) );
+	if ( ! str_contains( $host, 'vimeo.com' ) ) {
+		return '';
+	}
+
+	$path = trim( (string) ( $parts['path'] ?? '' ), '/' );
+	if ( preg_match( '#^(?:video/)?(\d+)$#', $path, $matches ) ) {
+		return $matches[1];
+	}
+
+	return '';
+}
+
+/**
+ * YouTube playlist id (`list=` / `/playlist`) when there is no video `v=`.
+ *
+ * @param string $url Full YouTube URL.
+ * @return string
+ */
+function lp_youtube_playlist_id_from_url( string $url ): string {
+	$url = trim( $url );
+	if ( '' === $url ) {
+		return '';
+	}
+
+	$parts = wp_parse_url( $url );
+	if ( ! is_array( $parts ) ) {
+		return '';
+	}
+
+	$host = strtolower( (string) ( $parts['host'] ?? '' ) );
+	if ( ! str_contains( $host, 'youtube.com' ) && ! str_contains( $host, 'youtube-nocookie.com' ) ) {
+		return '';
+	}
+
+	parse_str( (string) ( $parts['query'] ?? '' ), $query );
+	$list = (string) ( $query['list'] ?? '' );
+
+	return preg_match( '/^[\w-]+$/', $list ) ? $list : '';
+}

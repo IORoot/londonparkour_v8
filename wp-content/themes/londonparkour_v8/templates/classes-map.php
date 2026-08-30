@@ -3,7 +3,7 @@
  * Template Name: Classes — Map
  *
  * Class sites and map-only training spots from `lp_location`. The Network map
- * is Leaflet + Carto Voyager (`assets/js/elements/SiteNetworkMap.js`).
+ * is Leaflet + OpenStreetMap (`assets/js/elements/SiteNetworkMap.js`).
  * Meeting Points lists sites only.
  *
  * @package londonparkour_v8

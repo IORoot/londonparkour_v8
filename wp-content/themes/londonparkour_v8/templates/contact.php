@@ -39,7 +39,7 @@ get_header();
 		'components/page-masthead',
 		array(
 			'title' => "Let's talk movement.",
-			'note'  => 'Questions about classes, private coaching, gift cards or partnerships — we reply within 36H.',
+			'note'  => 'Questions about classes, private coaching, gift cards or partnerships.',
 		)
 	);
 

@@ -89,7 +89,53 @@ function lp_class_subtitle_note( int $class_id ): string {
 }
 
 /**
- * Composed subtitle: "60 min · all kit provided".
+ * Age-range choice keys for acf_age_range.
+ *
+ * @return array<string, string> value => label
+ */
+function lp_class_age_range_choices(): array {
+	return array(
+		'6-9'     => '6 to 9s',
+		'10-14'   => '10 to 14s',
+		'14-plus' => '15+ Adults',
+	);
+}
+
+/**
+ * Stored age-range value. Empty / unknown falls back to 15+ Adults.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_age_range( int $class_id ): string {
+	$choices = lp_class_age_range_choices();
+	$value   = '';
+	if ( function_exists( 'get_field' ) ) {
+		$value = (string) get_field( 'acf_age_range', $class_id );
+	}
+	return isset( $choices[ $value ] ) ? $value : '14-plus';
+}
+
+/**
+ * Human label for the class age-range selector.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_age_range_label( int $class_id ): string {
+	$choices = lp_class_age_range_choices();
+	return $choices[ lp_class_age_range( $class_id ) ];
+}
+
+/**
+ * Youth classes: 6 to 9s and 10 to 14s. 15+ Adults is not youth.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_is_youth( int $class_id ): bool {
+	return in_array( lp_class_age_range( $class_id ), array( '6-9', '10-14' ), true );
+}
+
+/**
+ * Composed subtitle: duration plus optional ACF note, e.g. "60 min · Jump. Climb. Vault. Swing.".
  *
  * @param int $class_id Post ID.
  */
@@ -830,6 +876,21 @@ function lp_class_calendar_icon_svg( int $class_id ): string {
 	}
 
 	return $custom;
+}
+
+/**
+ * Board / masthead / nav glyph for a class — Card icon SVG, else sprite fallback.
+ *
+ * @param int $class_id Post ID.
+ * @return array{svg:string, icon_id:string}
+ */
+function lp_class_glyph( int $class_id ): array {
+	$svg = lp_class_calendar_icon_svg( $class_id );
+
+	return array(
+		'svg'     => $svg,
+		'icon_id' => '' === $svg ? 'glyph-balancing' : '',
+	);
 }
 
 /**

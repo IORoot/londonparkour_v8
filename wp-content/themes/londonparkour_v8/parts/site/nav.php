@@ -91,6 +91,13 @@ $lp_panel_positions = array(
 
 $lp_glyph_base    = 'w-4 h-4 flex-none';
 $lp_row_glyph_cls = 'w-4 h-4 flex-none text-neutral-content group-hover/row:text-primary transition-colors duration-150';
+$lp_emit_row_glyph = static function ( string $svg, string $id, string $classes ): void {
+	if ( '' !== $svg && function_exists( 'lp_inline_svg' ) ) {
+		lp_inline_svg( $svg, $classes );
+		return;
+	}
+	lp_icon( '' !== $id ? $id : 'glyph-vaulting', $classes );
+};
 $lp_signal_row    = 'mt-[12px] flex items-center justify-between gap-[12px] px-[16px] py-[14px] bg-primary text-primary-content hover:bg-primary/85 transition-colors duration-150';
 $lp_signal_name   = 'font-label text-[12px] font-semibold uppercase tracking-[1px]';
 $lp_signal_meta   = 'font-label text-[10px] font-semibold uppercase tracking-[0.8px]';
@@ -516,11 +523,12 @@ $lp_header_ground = $lp_over_hero
 														$lp_row_name  = (string) ( $lp_row['name'] ?? '' );
 														$lp_row_meta  = (string) ( $lp_row['meta'] ?? '' );
 														$lp_row_href  = (string) ( $lp_row['href'] ?? '' );
+														$lp_row_svg   = (string) ( $lp_row['glyph_svg'] ?? '' );
 														$lp_row_glyph = (string) ( $lp_row['glyph_id'] ?? '' );
-														if ( '' === $lp_row_glyph && function_exists( 'lp_nav_row_glyph' ) ) {
+														if ( '' === $lp_row_svg && '' === $lp_row_glyph && function_exists( 'lp_nav_row_glyph' ) ) {
 															$lp_row_glyph = lp_nav_row_glyph( $lp_row_name, $lp_row_meta, (int) $lp_row_i );
 														}
-														if ( '' === $lp_row_glyph ) {
+														if ( '' === $lp_row_svg && '' === $lp_row_glyph ) {
 															$lp_row_glyph = 'glyph-vaulting';
 														}
 														?>
@@ -528,7 +536,7 @@ $lp_header_ground = $lp_over_hero
 															<a href="<?php echo esc_url( $lp_row_href ); ?>" class="<?php echo lp_classes( 'group/row block transition-colors duration-150', $lp_focus ); ?>">
 																<span class="flex items-center justify-between py-[13px] gap-[16px]">
 																	<span class="flex items-center gap-[10px] min-w-0">
-																		<?php lp_icon( $lp_row_glyph, $lp_row_glyph_cls ); ?>
+																		<?php $lp_emit_row_glyph( $lp_row_svg, $lp_row_glyph, $lp_row_glyph_cls ); ?>
 																		<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content group-hover/row:text-primary transition-colors duration-150"><?php echo esc_html( $lp_row_name ); ?></span>
 																	</span>
 																	<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 group-hover/row:text-neutral-content transition-colors duration-150"><?php echo esc_html( $lp_row_meta ); ?></span>
@@ -537,7 +545,7 @@ $lp_header_ground = $lp_over_hero
 														<?php else : ?>
 															<span class="flex items-center justify-between py-[13px] gap-[16px]">
 																<span class="flex items-center gap-[10px] min-w-0">
-																	<?php lp_icon( $lp_row_glyph, $lp_row_glyph_cls ); ?>
+																	<?php $lp_emit_row_glyph( $lp_row_svg, $lp_row_glyph, $lp_row_glyph_cls ); ?>
 																	<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content"><?php echo esc_html( $lp_row_name ); ?></span>
 																</span>
 																<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( $lp_row_meta ); ?></span>

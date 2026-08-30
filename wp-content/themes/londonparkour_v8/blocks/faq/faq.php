@@ -159,9 +159,9 @@ unset( $lp_item );
 
 $lp_still         = is_array( $args['still_stuck'] ?? null ) ? $args['still_stuck'] : array();
 $lp_still_title   = (string) ( $lp_still['title'] ?? 'STILL STUCK?' );
-$lp_still_body    = (string) ( $lp_still['body'] ?? 'Send the form above, or email us direct. A coach reads every message — we reply within 36H.' );
-if ( false !== stripos( $lp_still_body, 'working day' ) || false !== stripos( $lp_still_body, '24h' ) ) {
-	$lp_still_body = 'Send the form above, or email us direct. A coach reads every message — we reply within 36H.';
+$lp_still_body    = (string) ( $lp_still['body'] ?? 'Send the form above, or email us direct. A coach reads every message.' );
+if ( false !== stripos( $lp_still_body, 'working day' ) || false !== stripos( $lp_still_body, '24h' ) || false !== stripos( $lp_still_body, '36h' ) ) {
+	$lp_still_body = 'Send the form above, or email us direct. A coach reads every message.';
 }
 $lp_still_email   = (string) ( $lp_still['email'] ?? 'hello@londonparkour.com' );
 $lp_still_mailto  = 'mailto:' . $lp_still_email;
