@@ -566,46 +566,23 @@ sets `s` from `pre_get_posts` instead, which filters without touching the
 conditional flags. No nonce: these are public read-only navigation parameters
 on published content, and a nonce on a shareable URL would break the sharing.
 
-## 19. ClassesListings: the featured class, and the one spec the model cannot carry
+## 19. ClassesListings: featured band removed; card excerpts still transcribed
 
-**`is_featured` is new on lp_class**, mirroring `is_lead` on Coach and
-`is_flagship` on Location for the reason §13 records — the page shows one class
-above the grid and the rest below, so the grid query must know which is already
-on show. No ordering picks it; the design's featured class is neither first nor
-newest.
+**The featured-class band is gone.** Owner request 2026-08-30: drop `ZlCME`,
+the `acf_is_featured` toggle, and `lp_class_is_featured()`. Every published
+class sits in the MediaCard grid. Do not restore the band from Storybook.
 
-It heroes the UNFILTERED page only. The design draws no filtered state, so this
-is a judgement call: the alternative leads a filtered page with a class that
-does not match what was asked for.
+The grid MetaRow right-hand count is the class total (`12`), not the source's
+`12 MORE` — MORE only made sense against a lead class above.
 
-**`SITES` does not fit the data model.** The design's featured strip reads
-PRICE `£15` / SITES `6` / DURATION `60 min` / RUNS `Tue + Thu`. Three come from
-real fields. `SITES` cannot: a class here has ONE `location` (an ACF
-post_object), so the honest count is 1, and 1 is what renders.
-
-Do not paper over this with a literal `6`. The fix is a `locations`
-relationship field in place of the single `location` — a data-model change for
-the repo owner to approve, not a port decision. There are two readings of the
-design's `6` (this class runs at six sites / the org has six sites) and
-resolving that is part of the same decision.
-
-Two smaller derivations, both from a field's own documented format:
-
-- **DURATION** is the first ` · ` segment of `subtitle`, whose ACF instructions
-  give exactly that format (`e.g. "60 min · all kit provided"`).
-- **RUNS** joins the session `date_label`s, so it reads `TODAY + THU` where the
-  design reads `Tue + Thu`. The field holds a board label, not a weekday.
+**`SITES` lived only on that band** (PRICE `£15` / SITES `6` / DURATION
+`60 min` / RUNS `Tue + Thu`) and is now moot. A class still has one `location`;
+that gap does not need solving unless the band comes back.
 
 The seven seeded classes gained `excerpt` values **transcribed from the design**
-— `CLASS_CARDS`' per-card notes (`YV0EG/*`) and the featured lead note
-(`xWBih/CDivu`) in ClassesListings.js. None is authored. Without them the cards
-render note-less, which is not what the design shows.
-
-The featured photo's figure gains `relative` over the source's class string.
-The source draws an empty box because the Storybook has no media library; with
-a real image, media-photo's `fill` layout needs a positioned ancestor. Nothing
-else about the box changes, and with no thumbnail the bare source figure renders
-unaltered.
+— `CLASS_CARDS`' per-card notes (`YV0EG/*`) in ClassesListings.js. None is
+authored. Without them the cards render note-less, which is not what the
+design shows.
 
 ## 20. The sessions repeater had no date, so the Agenda was unbuildable
 

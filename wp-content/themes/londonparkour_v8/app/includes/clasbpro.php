@@ -202,18 +202,6 @@ function lp_class_coach_ids( int $class_id ): array {
 }
 
 /**
- * Featured flag.
- *
- * @param int $class_id Post ID.
- */
-function lp_class_is_featured( int $class_id ): bool {
-	if ( ! function_exists( 'get_field' ) ) {
-		return false;
-	}
-	return (bool) get_field( 'acf_is_featured', $class_id );
-}
-
-/**
  * Public one-off clasbpro class — the Workshops identity.
  *
  * Clasbpro stores this as schedule_type = one_off, exposed on class_data as

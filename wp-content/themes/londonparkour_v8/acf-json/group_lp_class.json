@@ -121,26 +121,6 @@
             "bidirectional_target": []
         },
         {
-            "key": "field_lp_class_is_featured",
-            "label": "Featured class",
-            "name": "acf_is_featured",
-            "aria-label": "",
-            "type": "true_false",
-            "instructions": "Shown above the Classes grid, and left out of it.",
-            "required": false,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "ui": 1,
-            "default_value": 0,
-            "message": "",
-            "ui_on_text": "",
-            "ui_off_text": ""
-        },
-        {
             "key": "field_6a7b2de285f19",
             "label": "Video URL",
             "name": "video_url",
@@ -411,5 +391,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1787912400
+    "modified": 1788078131
 }
