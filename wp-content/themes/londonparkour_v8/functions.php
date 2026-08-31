@@ -36,6 +36,7 @@ $lp_includes = array(
 	'app/includes/clasbpro.php',
 	'app/includes/content.php',
 	'app/includes/faq-copy.php',
+	'app/includes/waiver-copy.php',
 	'app/includes/seo.php',
 	'app/includes/docs.php',
 	'app/includes/contact.php',

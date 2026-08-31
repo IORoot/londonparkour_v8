@@ -664,8 +664,9 @@ return array(
 
 	/* ── Support (wiki / legal docs) ─────────────────────────────────────
 	 * Column in the Docs Index, and whether /docs/{slug} uses wiki chrome
-	 * or the Legal (Terms) template. Only Terms of service is Legal; every
-	 * other support post is a wiki article. Unset values read as Classes + Wiki.
+	 * or the Legal template. Terms of service and the student waiver are
+	 * Legal; every other support post is a wiki article unless an editor
+	 * sets Template = Legal. Unset values read as Classes + Wiki.
 	 */
 	array(
 		'key'             => 'group_lp_support',

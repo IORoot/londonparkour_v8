@@ -2,20 +2,19 @@
 /**
  * Template Name: Legal
  *
- * Legal — the Terms of service page. Breadcrumb rail → page masthead → doc
- * meta → body (index rail + clauses) → onward.
+ * Legal — Terms of service and the student waiver. Breadcrumb rail → page
+ * masthead → doc meta → body (index rail + clauses) → onward.
  *
  * Ported from src/stories/Pages/Legal/Legal.js. Read that file's docblock in
- * full before touching this one — it records binding decisions (Terms only,
- * no Privacy/Cookies variant; the pager's hrefs are deliberately omitted).
+ * full before touching this one — it records binding decisions (the pager's
+ * hrefs are deliberately omitted until an editor sets them).
  *
- * The ten clauses, the doc facts and the doc actions are the `clauses`,
- * `doc_facts` and `doc_actions` ACF repeaters (group_lp_legal in
- * app/setup/acf-groups.php) — the index rail is keyed to clause numbers and
- * jumps to per-clause ids, so they have to be structured data, not
- * the_content(). Copy defaults below are transcribed verbatim from the
- * source's own DOC_FACTS / DOC_ACTIONS / CLAUSES constants and used only when
- * an editor has not populated the fields — never duplicated into ACF
+ * Clauses, doc facts and doc actions are the `clauses`, `doc_facts` and
+ * `doc_actions` ACF repeaters (group_lp_legal in app/setup/acf-groups.php) —
+ * the index rail is keyed to clause numbers and jumps to per-clause ids, so
+ * they have to be structured data, not the_content(). Copy defaults below
+ * (Terms) and in app/includes/waiver-copy.php (waiver) are used only when an
+ * editor has not populated the fields — never duplicated into ACF
  * `default_value`s.
  *
  * Doc meta and the body (index rail + clauses) are Legal-only shapes that
@@ -30,10 +29,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$lp_support = is_singular( 'support' ) ? get_post() : null;
+$lp_support   = is_singular( 'support' ) ? get_post() : null;
+$lp_is_waiver = $lp_support instanceof WP_Post && function_exists( 'lp_docs_is_waiver' ) && lp_docs_is_waiver( $lp_support );
 
 $lp_title = 'Terms of service.';
 $lp_note  = 'The rules that apply when you book and train with us, written in plain English. Ten clauses, no small print — if anything here is unclear, ask us and we will explain it.';
+$lp_clause_prefix = 'terms-clause-';
+$lp_index_title   = $lp_support instanceof WP_Post ? get_the_title( $lp_support ) : 'Terms of service';
 
 $lp_crumbs       = array(
 	array(
@@ -155,6 +157,17 @@ $lp_default_clauses = array(
 	),
 );
 
+if ( $lp_is_waiver ) {
+	$lp_title         = lp_waiver_masthead_title();
+	$lp_note          = lp_waiver_masthead_note();
+	$lp_crumbs[2]     = array( 'label' => 'STUDENT WAIVER' );
+	$lp_clause_prefix = 'waiver-clause-';
+	$lp_index_title   = $lp_support instanceof WP_Post ? get_the_title( $lp_support ) : 'Student Waiver';
+	$lp_default_doc_facts   = lp_waiver_default_doc_facts();
+	$lp_default_doc_actions = lp_waiver_default_doc_actions();
+	$lp_default_clauses     = lp_waiver_default_clauses();
+}
+
 /* -- Resolve ACF, falling back to the source's own defaults. -------------- */
 
 $lp_doc_facts_field = function_exists( 'get_field' ) ? get_field( 'doc_facts' ) : null;
@@ -221,6 +234,29 @@ if ( ! empty( $lp_next_link['href'] ) ) {
 	$lp_next['href'] = $lp_next_link['href'];
 }
 
+if ( $lp_is_waiver ) {
+	if ( ! is_array( $lp_prev_link ) ) {
+		$lp_terms_post = lp_docs_find_support( array( 'terms', 'terms-of-service' ) );
+		$lp_prev       = array(
+			'keyword' => '← PREVIOUS',
+			'label'   => 'Terms of service',
+		);
+		if ( $lp_terms_post ) {
+			$lp_prev['href'] = (string) get_permalink( $lp_terms_post );
+		}
+	}
+	if ( ! is_array( $lp_next_link ) ) {
+		$lp_privacy_post = lp_docs_find_support( array( 'privacy', 'privacy-policy' ) );
+		$lp_next         = array(
+			'keyword' => 'NEXT →',
+			'label'   => 'Privacy policy',
+		);
+		if ( $lp_privacy_post ) {
+			$lp_next['href'] = (string) get_permalink( $lp_privacy_post );
+		}
+	}
+}
+
 get_header();
 ?>
 
@@ -244,7 +280,7 @@ get_header();
 
 	lp_docs_render_wiki_nav(
 		'wiki',
-		$lp_support instanceof WP_Post ? get_the_title( $lp_support ) : 'Terms of service'
+		$lp_index_title
 	);
 	?>
 
@@ -290,7 +326,7 @@ get_header();
 				<ul role="list" class="flex flex-col m-0 p-0 list-none">
 					<?php foreach ( $lp_clauses as $lp_i => $lp_clause ) : ?>
 						<li>
-							<a href="#terms-clause-<?php echo esc_attr( $lp_clause['n'] ); ?>" class="flex items-center gap-[14px] py-[13px] group">
+							<a href="#<?php echo esc_attr( $lp_clause_prefix . $lp_clause['n'] ); ?>" class="flex items-center gap-[14px] py-[13px] group">
 								<span class="font-label text-[10px] font-normal tracking-[0.6px] text-base-content/65 w-[22px] shrink-0"><?php echo esc_html( $lp_clause['n'] ); ?></span>
 								<span class="<?php echo lp_classes( 'font-label text-[11px] font-normal tracking-[0.2px]', 0 === $lp_i ? 'text-base-content' : 'text-base-content/65', 'group-hover:text-base-content transition-colors duration-150' ); ?>"><?php echo esc_html( $lp_clause['title'] ); ?></span>
 							</a>
@@ -300,7 +336,7 @@ get_header();
 			</nav>
 			<div class="flex-1 min-w-0 flex flex-col gap-[46px]">
 				<?php foreach ( $lp_clauses as $lp_clause ) : ?>
-					<section id="terms-clause-<?php echo esc_attr( $lp_clause['n'] ); ?>" class="flex flex-col gap-4">
+					<section id="<?php echo esc_attr( $lp_clause_prefix . $lp_clause['n'] ); ?>" class="flex flex-col gap-4">
 						<div class="flex items-center gap-4">
 							<span class="font-label text-[11px] font-semibold tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_clause['n'] ); ?></span>
 							<h2 class="font-heading text-[23px] font-medium tracking-[-0.5px] text-base-content m-0"><?php echo esc_html( $lp_clause['title'] ); ?></h2>

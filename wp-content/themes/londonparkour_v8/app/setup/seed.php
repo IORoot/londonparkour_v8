@@ -873,6 +873,12 @@ WP_CLI::add_command(
 
 		if ( post_type_exists( 'support' ) ) {
 			WP_CLI::log( 'Support docs fields' );
+			if ( function_exists( 'lp_docs_ensure_waiver_post' ) ) {
+				$lp_waiver_id = lp_docs_ensure_waiver_post();
+				if ( $lp_waiver_id ) {
+					WP_CLI::log( sprintf( '  waiver support post #%d', $lp_waiver_id ) );
+				}
+			}
 			$lp_n = lp_docs_seed_support_fields();
 			WP_CLI::log( sprintf( '  updated %d support post(s)', $lp_n ) );
 		}

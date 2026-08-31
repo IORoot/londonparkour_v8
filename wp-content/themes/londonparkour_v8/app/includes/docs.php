@@ -113,12 +113,37 @@ function lp_docs_is_terms( ?WP_Post $lp_post ): bool {
 }
 
 /**
+ * Whether this support post is the student waiver.
+ *
+ * @param WP_Post|null $lp_post Post.
+ */
+function lp_docs_is_waiver( ?WP_Post $lp_post ): bool {
+	if ( ! $lp_post ) {
+		return false;
+	}
+	$lp_slug  = $lp_post->post_name;
+	$lp_title = strtolower( $lp_post->post_title );
+	return in_array( $lp_slug, array( 'student-waiver', 'waiver' ), true )
+		|| false !== strpos( $lp_title, 'student waiver' );
+}
+
+/**
+ * Public waiver URL — live site is /waiver/, not /docs/student-waiver/.
+ */
+function lp_docs_waiver_url(): string {
+	$lp_post = lp_docs_find_support( array( 'student-waiver', 'waiver' ) );
+	if ( $lp_post ) {
+		return (string) get_permalink( $lp_post );
+	}
+	return home_url( '/waiver/' );
+}
+
+/**
  * Wiki | Legal for a support post.
  *
- * Only Terms of service uses the Legal page (clauses, doc meta). Every other
- * support post — including Student Waiver, Privacy, Equality, Photography &
- * Video, and Code of Conduct — uses the wiki article chrome, matching
- * Beginners Class.
+ * Terms of service and the student waiver use the Legal page (clauses, doc
+ * meta). An editor can also set Template = Legal on any support post. Every
+ * other support post uses the wiki article chrome.
  *
  * @param int|WP_Post|null $lp_post Post.
  */
@@ -131,7 +156,14 @@ function lp_docs_template_mode( $lp_post = null ): string {
 		}
 		$lp_obj = $lp_id > 0 ? get_post( $lp_id ) : null;
 	}
-	return lp_docs_is_terms( $lp_obj instanceof WP_Post ? $lp_obj : null ) ? 'legal' : 'wiki';
+	if ( ! $lp_obj instanceof WP_Post ) {
+		return 'wiki';
+	}
+	if ( lp_docs_is_terms( $lp_obj ) || lp_docs_is_waiver( $lp_obj ) ) {
+		return 'legal';
+	}
+	$lp_mode = function_exists( 'get_field' ) ? (string) get_field( 'docs_template', $lp_obj->ID ) : '';
+	return 'legal' === $lp_mode ? 'legal' : 'wiki';
 }
 
 /**
@@ -540,14 +572,60 @@ add_filter( 'register_post_type_args', 'lp_docs_support_post_type_args', 20, 2 )
  */
 function lp_docs_rewrite(): void {
 	add_rewrite_rule( '^support/([^/]+)/?$', 'index.php?support=$matches[1]', 'top' );
+	add_rewrite_rule( '^waiver/?$', 'index.php?lp_docs_waiver=1', 'top' );
 }
 add_action( 'init', 'lp_docs_rewrite', 11 );
+
+/**
+ * @param string[] $lp_vars Query vars.
+ * @return string[]
+ */
+function lp_docs_query_vars( array $lp_vars ): array {
+	$lp_vars[] = 'lp_docs_waiver';
+	return $lp_vars;
+}
+add_filter( 'query_vars', 'lp_docs_query_vars' );
+
+/**
+ * Resolve /waiver/ to whichever support slug exists.
+ *
+ * @param array $lp_query_vars Request vars.
+ * @return array
+ */
+function lp_docs_waiver_request( array $lp_query_vars ): array {
+	if ( empty( $lp_query_vars['lp_docs_waiver'] ) ) {
+		return $lp_query_vars;
+	}
+	unset( $lp_query_vars['lp_docs_waiver'] );
+	$lp_post = lp_docs_find_support( array( 'student-waiver', 'waiver' ) );
+	if ( $lp_post ) {
+		$lp_query_vars['post_type'] = 'support';
+		$lp_query_vars['support']   = $lp_post->post_name;
+		$lp_query_vars['name']      = $lp_post->post_name;
+	}
+	return $lp_query_vars;
+}
+add_filter( 'request', 'lp_docs_waiver_request' );
+
+/**
+ * Canonical permalink for the waiver is /waiver/, matching the live site.
+ *
+ * @param string  $lp_permalink Default permalink.
+ * @param WP_Post $lp_post      Post.
+ */
+function lp_docs_waiver_permalink( string $lp_permalink, $lp_post ): string {
+	if ( $lp_post instanceof WP_Post && 'support' === $lp_post->post_type && lp_docs_is_waiver( $lp_post ) ) {
+		return home_url( '/waiver/' );
+	}
+	return $lp_permalink;
+}
+add_filter( 'post_type_link', 'lp_docs_waiver_permalink', 10, 2 );
 
 /**
  * Flush rewrites once after the docs slug change.
  */
 function lp_docs_maybe_flush_rewrites(): void {
-	$lp_flag = 'lp_docs_rewrite_v2';
+	$lp_flag = 'lp_docs_rewrite_v3';
 	if ( get_option( $lp_flag ) ) {
 		return;
 	}
@@ -578,6 +656,11 @@ function lp_docs_redirects(): void {
 		exit;
 	}
 
+	if ( is_singular( 'support' ) && lp_docs_is_waiver( get_post() ) && 'waiver' !== $lp_request ) {
+		wp_safe_redirect( lp_docs_waiver_url(), 301 );
+		exit;
+	}
+
 	if ( is_singular( 'support' ) && lp_docs_is_class_locations( get_post() ) ) {
 		$lp_map = function_exists( 'lp_classes_page_url' )
 			? lp_classes_page_url( 'classes-map' )
@@ -600,7 +683,8 @@ add_action( 'template_redirect', 'lp_docs_redirects' );
  */
 function lp_docs_known_support_map(): array {
 	return array(
-		'student-waiver'         => array( 'group' => 'classes', 'template' => 'wiki' ),
+		'student-waiver'         => array( 'group' => 'classes', 'template' => 'legal' ),
+		'waiver'                 => array( 'group' => 'classes', 'template' => 'legal' ),
 		'youth-class'            => array( 'group' => 'classes', 'template' => 'wiki' ),
 		'personal-training'      => array( 'group' => 'classes', 'template' => 'wiki' ),
 		'personal-training-pt'   => array( 'group' => 'classes', 'template' => 'wiki' ),
@@ -660,4 +744,29 @@ function lp_docs_seed_support_fields(): int {
 	}
 
 	return $lp_updated;
+}
+
+/**
+ * Publish a student-waiver support post when v7 import did not leave one.
+ *
+ * @return int Post ID, or 0 on failure.
+ */
+function lp_docs_ensure_waiver_post(): int {
+	$lp_existing = lp_docs_find_support( array( 'student-waiver', 'waiver' ) );
+	if ( $lp_existing ) {
+		return (int) $lp_existing->ID;
+	}
+
+	$lp_id = wp_insert_post(
+		array(
+			'post_type'    => 'support',
+			'post_status'  => 'publish',
+			'post_title'   => 'Student Waiver',
+			'post_name'    => 'student-waiver',
+			'post_content' => '',
+		),
+		true
+	);
+
+	return is_wp_error( $lp_id ) ? 0 : (int) $lp_id;
 }
