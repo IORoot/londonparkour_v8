@@ -51,7 +51,11 @@ $lp_card = static function ( WP_Post $lp_post ): array {
 $lp_classes = array();
 while ( have_posts() ) {
 	the_post();
-	$lp_classes[] = get_post();
+	$lp_post = get_post();
+	if ( $lp_post instanceof WP_Post && function_exists( 'lp_class_is_appointment' ) && lp_class_is_appointment( (int) $lp_post->ID ) ) {
+		continue;
+	}
+	$lp_classes[] = $lp_post;
 }
 
 $lp_classes = lp_class_dedupe_by_title( $lp_classes );

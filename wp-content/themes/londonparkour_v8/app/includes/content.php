@@ -739,6 +739,25 @@ function lp_classes_page_url( string $lp_slug ): string {
 }
 
 /**
+ * Private 1:1 sales landing (`/private-coaching/`).
+ *
+ * The clasbpro appointment product still lives at `/classes/private-sessions/`
+ * as a booking record. That URL 301s here — this is the public page.
+ *
+ * @return string
+ */
+function lp_private_coaching_url(): string {
+	foreach ( array( 'private-coaching', 'private-tuition' ) as $lp_slug ) {
+		$lp_page = get_page_by_path( $lp_slug );
+		if ( $lp_page instanceof WP_Post ) {
+			return (string) get_permalink( $lp_page );
+		}
+	}
+
+	return home_url( '/private-coaching/' );
+}
+
+/**
  * Class-types listings archive (`/all-classes/`).
  *
  * Agenda is `/classes/` via `lp_classes_page_url( 'classes' )`. Map is
@@ -1174,14 +1193,7 @@ function lp_classes_view_tabs( string $lp_active = 'agenda' ): array {
 	);
 	$lp_workshop_n = count( $lp_workshop_ids );
 
-	$lp_private = home_url( '/private-coaching/' );
-	foreach ( array( 'private-coaching', 'private-tuition' ) as $lp_slug ) {
-		$lp_page = get_page_by_path( $lp_slug );
-		if ( $lp_page instanceof WP_Post ) {
-			$lp_private = (string) get_permalink( $lp_page );
-			break;
-		}
-	}
+	$lp_private = lp_private_coaching_url();
 
 	return array(
 		array(

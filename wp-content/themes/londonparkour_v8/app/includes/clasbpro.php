@@ -237,6 +237,53 @@ function lp_class_is_appointment( int $class_id ): bool {
 }
 
 /**
+ * Appointment (1:1) class singles are a booking product, not a ClassDetail
+ * page. Send visitors to the Private 1:1 landing.
+ */
+function lp_class_appointment_redirect(): void {
+	if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		return;
+	}
+	if ( ! is_singular( lp_class_post_type() ) ) {
+		return;
+	}
+
+	$id = (int) get_queried_object_id();
+	if ( $id <= 0 || ! lp_class_is_appointment( $id ) ) {
+		return;
+	}
+
+	$to = function_exists( 'lp_private_coaching_url' )
+		? lp_private_coaching_url()
+		: home_url( '/private-coaching/' );
+
+	wp_safe_redirect( $to, 301 );
+	exit;
+}
+add_action( 'template_redirect', 'lp_class_appointment_redirect', 8 );
+
+/**
+ * Public permalink for an appointment class is the 1:1 landing, not ClassDetail.
+ *
+ * @param string  $permalink Default CPT permalink.
+ * @param WP_Post $post      Post object.
+ * @return string
+ */
+function lp_class_appointment_permalink( string $permalink, $post ): string {
+	if ( ! $post instanceof WP_Post || lp_class_post_type() !== $post->post_type ) {
+		return $permalink;
+	}
+	if ( ! lp_class_is_appointment( (int) $post->ID ) ) {
+		return $permalink;
+	}
+
+	return function_exists( 'lp_private_coaching_url' )
+		? lp_private_coaching_url()
+		: home_url( '/private-coaching/' );
+}
+add_filter( 'post_type_link', 'lp_class_appointment_permalink', 10, 2 );
+
+/**
  * Published, active, recurring weekly group classes — not workshops, 1:1s, or
  * external-link listings.
  *
@@ -762,7 +809,7 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 		if ( ! lp_class_is_active( $class_id ) ) {
 			continue;
 		}
-		if ( lp_class_is_one_off( $class_id ) ) {
+		if ( lp_class_is_one_off( $class_id ) || lp_class_is_appointment( $class_id ) ) {
 			continue;
 		}
 

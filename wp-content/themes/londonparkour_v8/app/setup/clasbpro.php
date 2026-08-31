@@ -2,8 +2,9 @@
 /**
  * Clasbpro integration — CPT surface, taxonomy attach, booking drawer shell.
  *
- * Clasbpro owns `clasbpro_class`. Singles live at `/classes/{slug}`; the
- * listings archive is `/all-classes/` so `/classes/` can be the Agenda page.
+ * Clasbpro owns `clasbpro_class`. Group-class singles live at `/classes/{slug}`;
+ * appointment (1:1) products 301 to `/private-coaching/`. The listings archive
+ * is `/all-classes/` so `/classes/` can be the Agenda page.
  * Attaches `lp_level` and mounts the shared booking drawer.
  *
  * @package londonparkour_v8
@@ -270,3 +271,41 @@ function lp_clasbpro_status_template_include( string $template ): string {
 	return is_readable( $lp_file ) ? $lp_file : $template;
 }
 add_filter( 'template_include', 'lp_clasbpro_status_template_include' );
+
+/**
+ * Keep appointment (1:1) booking products out of the class sitemap.
+ *
+ * @param array  $args      WP_Query args for the sitemap.
+ * @param string $post_type Post type being listed.
+ * @return array
+ */
+function lp_clasbpro_sitemap_query_args( array $args, string $post_type ): array {
+	if ( $post_type !== lp_class_post_type() || ! function_exists( 'lp_class_is_appointment' ) ) {
+		return $args;
+	}
+
+	$exclude = array();
+	$ids     = get_posts(
+		array(
+			'post_type'      => $post_type,
+			'post_status'    => 'publish',
+			'posts_per_page' => 100,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		)
+	);
+	foreach ( $ids as $id ) {
+		if ( lp_class_is_appointment( (int) $id ) ) {
+			$exclude[] = (int) $id;
+		}
+	}
+	if ( ! $exclude ) {
+		return $args;
+	}
+
+	$existing           = array_map( 'intval', (array) ( $args['post__not_in'] ?? array() ) );
+	$args['post__not_in'] = array_values( array_unique( array_merge( $existing, $exclude ) ) );
+
+	return $args;
+}
+add_filter( 'wp_sitemaps_posts_query_args', 'lp_clasbpro_sitemap_query_args', 10, 2 );
