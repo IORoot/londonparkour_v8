@@ -641,7 +641,10 @@ abstract class REST {
 		}
 		if ( $payment_intent ) {
 			update_post_meta( $booking_id, '_clasbpro_stripe_payment_intent', $payment_intent );
+			Merge_Tags::persist_receipt_url( $booking_id, $payment_intent );
 		}
+
+		Merge_Tags::persist_booking_coupon_snapshot( $booking_id );
 
 		// Update post title to reflect customer.
 		wp_update_post( [

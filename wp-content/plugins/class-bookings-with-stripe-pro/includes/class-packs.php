@@ -665,6 +665,26 @@ abstract class Packs {
 		update_post_meta( $purchase_id, '_clasbpro_stripe_session_id', $session_id );
 	}
 
+	public static function find_purchase_by_promo_id( string $promo_id ): int {
+		$promo_id = trim( $promo_id );
+		if ( '' === $promo_id ) {
+			return 0;
+		}
+		$q = new \WP_Query( [
+			'post_type'      => CPT::PACK_PURCHASE_PT,
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'meta_query'     => [
+				[
+					'key'   => '_clasbpro_stripe_promo_id',
+					'value' => $promo_id,
+				],
+			],
+		] );
+		return ! empty( $q->posts[0] ) ? (int) $q->posts[0] : 0;
+	}
+
 	public static function find_purchase_by_session( string $session_id ): int {
 		if ( '' === $session_id ) {
 			return 0;
@@ -744,6 +764,7 @@ abstract class Packs {
 		}
 		if ( $payment_intent ) {
 			update_post_meta( $purchase_id, '_clasbpro_stripe_payment_intent', $payment_intent );
+			Merge_Tags::persist_receipt_url( $purchase_id, $payment_intent );
 		}
 
 		try {

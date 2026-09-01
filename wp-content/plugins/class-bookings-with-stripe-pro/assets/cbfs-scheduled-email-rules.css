@@ -261,7 +261,41 @@
 }
 
 .clasbpro-email-merge-tags-accordion__note {
-	margin: 0;
+	margin: 0.75rem 0 0;
+}
+
+.clasbpro-email-merge-tags-accordion__heading {
+	margin: 1rem 0 0.4rem;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #50575e;
+}
+
+.clasbpro-email-merge-tags-accordion__heading:first-child {
+	margin-top: 0;
+}
+
+.clasbpro-email-merge-tags-table {
+	margin: 0 0 0.25rem;
+	border: 1px solid #dcdcde;
+}
+
+.clasbpro-email-merge-tags-table th,
+.clasbpro-email-merge-tags-table td {
+	padding: 6px 10px;
+	font-size: 12px;
+	vertical-align: top;
+}
+
+.clasbpro-email-merge-tags-table th {
+	font-weight: 600;
+}
+
+.clasbpro-email-merge-tags-table code {
+	font-size: 12px;
+	white-space: nowrap;
 }
 
 .clasbpro-email-tab-test {

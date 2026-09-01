@@ -461,4 +461,37 @@ abstract class Stripe_Service {
 			return '';
 		}
 	}
+
+	/**
+	 * Hosted Stripe receipt URL for a PaymentIntent, or empty when there is no charge.
+	 */
+	public static function receipt_url_from_payment_intent( string $payment_intent_id ): string {
+		$payment_intent_id = trim( $payment_intent_id );
+		if ( '' === $payment_intent_id ) {
+			return '';
+		}
+
+		try {
+			$client = self::client();
+			if ( ! $client ) {
+				return '';
+			}
+
+			$intent = $client->paymentIntents->retrieve(
+				$payment_intent_id,
+				[ 'expand' => [ 'latest_charge' ] ]
+			);
+			$charge = $intent->latest_charge ?? null;
+			if ( is_string( $charge ) && '' !== $charge ) {
+				$charge = $client->charges->retrieve( $charge, [] );
+			}
+			if ( is_object( $charge ) && ! empty( $charge->receipt_url ) ) {
+				return (string) $charge->receipt_url;
+			}
+		} catch ( \Throwable $e ) {
+			Helpers::debug_log( '[class-bookings-with-stripe-pro] Could not retrieve receipt URL: ' . $e->getMessage() );
+		}
+
+		return '';
+	}
 }

@@ -309,3 +309,79 @@ function lp_clasbpro_sitemap_query_args( array $args, string $post_type ): array
 	return $args;
 }
 add_filter( 'wp_sitemaps_posts_query_args', 'lp_clasbpro_sitemap_query_args', 10, 2 );
+
+/**
+ * Plugin email merge tags owned by this site: coaches, level, WhatsApp.
+ *
+ * @param list<array{tag: string, description: string, example: string, group: string}> $rows
+ * @return list<array{tag: string, description: string, example: string, group: string}>
+ */
+function lp_clasbpro_email_merge_tag_catalogue( array $rows ): array {
+	$rows[] = array(
+		'tag'         => '{class_coaches}',
+		'description' => __( 'Coach names for the booked class, comma-separated.', 'londonparkour_v8' ),
+		'example'     => 'Dan Edwardes, Andy Pearson',
+		'group'       => 'booking',
+	);
+	$rows[] = array(
+		'tag'         => '{class_level}',
+		'description' => __( 'First lp_level term name for the booked class.', 'londonparkour_v8' ),
+		'example'     => 'BEGINNER',
+		'group'       => 'booking',
+	);
+	$rows[] = array(
+		'tag'         => '{whatsapp_url}',
+		'description' => __( 'WhatsApp invite: class, then location, then site settings.', 'londonparkour_v8' ),
+		'example'     => 'https://chat.whatsapp.com/invite',
+		'group'       => 'booking',
+	);
+	return $rows;
+}
+add_filter( 'clasbpro_email_merge_tag_catalogue', 'lp_clasbpro_email_merge_tag_catalogue' );
+
+/**
+ * Fill theme merge tags when the plugin builds a booking email.
+ *
+ * @param array<string, string> $tags
+ * @param array<string, mixed>  $context
+ * @return array<string, string>
+ */
+function lp_clasbpro_email_merge_tag_values( array $tags, array $context ): array {
+	$kind     = (string) ( $context['kind'] ?? '' );
+	$class_id = (int) ( $context['class_id'] ?? 0 );
+	$sample   = ! empty( $context['sample'] );
+
+	if ( 'booking' !== $kind ) {
+		return $tags;
+	}
+
+	if ( $class_id <= 0 ) {
+		if ( $sample ) {
+			$tags['{class_coaches}'] = $tags['{class_coaches}'] ?? 'Dan Edwardes, Andy Pearson';
+			$tags['{class_level}']   = $tags['{class_level}'] ?? 'BEGINNER';
+			$tags['{whatsapp_url}']  = $tags['{whatsapp_url}'] ?? 'https://chat.whatsapp.com/invite';
+		} else {
+			$tags['{class_coaches}'] = '';
+			$tags['{class_level}']   = '';
+			$tags['{whatsapp_url}']  = '';
+		}
+		return $tags;
+	}
+
+	$coach_names = array_values( array_filter( array_map( 'get_the_title', lp_class_coach_ids( $class_id ) ) ) );
+	$tags['{class_coaches}'] = implode( ', ', $coach_names );
+
+	$levels = get_the_terms( $class_id, 'lp_level' );
+	$tags['{class_level}'] = ( is_array( $levels ) && $levels ) ? (string) $levels[0]->name : '';
+
+	$location_id = function_exists( 'lp_class_location_id' ) ? lp_class_location_id( $class_id ) : 0;
+	$whatsapp    = function_exists( 'lp_whatsapp_invite_url' )
+		? lp_whatsapp_invite_url( $class_id, $location_id )
+		: '';
+	$tags['{whatsapp_url}'] = function_exists( 'lp_whatsapp_invite_url_sanitize' )
+		? lp_whatsapp_invite_url_sanitize( $whatsapp )
+		: $whatsapp;
+
+	return $tags;
+}
+add_filter( 'clasbpro_email_merge_tag_values', 'lp_clasbpro_email_merge_tag_values', 10, 2 );

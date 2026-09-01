@@ -273,11 +273,22 @@ abstract class Class_Email_Overrides {
 		$tags['{price}']       = Helpers::format_price( (float) ( $class_data['price_gbp'] ?? 0 ) );
 		$tags['{description}'] = (string) ( $class_data['description'] ?? $tags['{description}'] );
 
+		$tags['{class_id}'] = (string) $class_id;
+
 		if ( ! empty( $class_data['start_time'] ) ) {
 			$tags['{class_time}'] = Helpers::format_time( (string) $class_data['start_time'] );
 		}
 
-		return $tags;
+		return Merge_Tags::filter_values(
+			$tags,
+			[
+				'kind'        => 'booking',
+				'booking_id'  => 0,
+				'class_id'    => $class_id,
+				'purchase_id' => 0,
+				'sample'      => true,
+			]
+		);
 	}
 
 	public static function prefill_from_global( int $class_id, string $type ): void {

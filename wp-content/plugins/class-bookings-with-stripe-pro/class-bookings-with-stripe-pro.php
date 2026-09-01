@@ -40,6 +40,7 @@ require_once CLASBOWPRO_DIR . 'includes/class-stripe-service.php';
 require_once CLASBOWPRO_DIR . 'includes/class-mailchimp.php';
 require_once CLASBOWPRO_DIR . 'includes/class-scheduled-emails.php';
 require_once CLASBOWPRO_DIR . 'includes/class-booking-email-status.php';
+require_once CLASBOWPRO_DIR . 'includes/class-merge-tags.php';
 require_once CLASBOWPRO_DIR . 'includes/class-emails.php';
 require_once CLASBOWPRO_DIR . 'includes/class-class-email-overrides.php';
 require_once CLASBOWPRO_DIR . 'includes/class-email-body-editor.php';

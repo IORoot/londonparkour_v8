@@ -125,7 +125,8 @@ abstract class Emails {
 	}
 
 	public static function render_email_tab_intro( string $tab ): string {
-		return '<div class="clasbpro-email-tab-intro">' . self::render_merge_tags_accordion( $tab ) . '</div>';
+		unset( $tab );
+		return '<div class="clasbpro-email-tab-intro">' . self::render_merge_tags_accordion() . '</div>';
 	}
 
 	/**
@@ -219,65 +220,21 @@ abstract class Emails {
 	/**
 	 * @return list<string>
 	 */
-	public static function get_available_merge_tags( string $tab ): array {
-		if ( in_array( $tab, [ 'admin_coupon', 'customer_coupon' ], true ) ) {
-			return [
-				'{customer_name}',
-				'{customer_email}',
-				'{pack_name}',
-				'{pack_code}',
-				'{pack_uses}',
-				'{amount_total}',
-				'{restore_url}',
-				'{purchase_id}',
-			];
+	public static function get_available_merge_tags( string $tab = '' ): array {
+		unset( $tab );
+		$tags = [];
+		foreach ( Merge_Tags::catalogue() as $row ) {
+			$tag = (string) ( $row['tag'] ?? '' );
+			if ( '' !== $tag ) {
+				$tags[] = $tag;
+			}
 		}
-
-		$tags = [
-			'{customer_name}',
-			'{customer_email}',
-			'{class_name}',
-			'{class_date}',
-			'{class_time}',
-			'{location}',
-			'{slot_label}',
-			'{duration}',
-			'{price}',
-			'{seats}',
-			'{amount_total}',
-			'{booking_id}',
-			'{description}',
-			'{extra_fields}',
-			'{acf:field_xxxxx}',
-		];
-
-		return $tags;
+		return array_values( array_unique( $tags ) );
 	}
 
-	public static function render_merge_tags_accordion( string $tab ): string {
-		$tags = self::get_available_merge_tags( $tab );
-		$uid  = 'clasbpro-merge-tags-' . sanitize_html_class( str_replace( '_', '-', $tab ) );
-		$is_coupon = in_array( $tab, [ 'admin_coupon', 'customer_coupon' ], true );
-
-		ob_start();
-		?>
-		<details class="clasbpro-email-merge-tags-accordion">
-			<summary class="clasbpro-email-merge-tags-accordion__summary"><?php esc_html_e( 'Available merge tags', 'class-bookings-with-stripe-pro' ); ?></summary>
-			<div class="clasbpro-email-merge-tags-accordion__content" id="<?php echo esc_attr( $uid ); ?>">
-				<p class="clasbpro-email-merge-tags-accordion__tags">
-					<?php foreach ( $tags as $tag ) : ?>
-						<code><?php echo esc_html( $tag ); ?></code>
-					<?php endforeach; ?>
-				</p>
-				<?php if ( ! $is_coupon ) : ?>
-					<p class="description clasbpro-email-merge-tags-accordion__note">
-						<?php esc_html_e( 'For booking-form ACF extras, use {acf:FIELD_KEY} (or {FIELD_KEY}). Example: {acf:field_abc123}.', 'class-bookings-with-stripe-pro' ); ?>
-					</p>
-				<?php endif; ?>
-			</div>
-		</details>
-		<?php
-		return (string) ob_get_clean();
+	public static function render_merge_tags_accordion( string $tab = '' ): string {
+		unset( $tab );
+		return Merge_Tags::render_accordion();
 	}
 
 	/**
@@ -285,8 +242,8 @@ abstract class Emails {
 	 */
 	public static function get_intended_test_recipient( string $tab ): array {
 		$tags = in_array( $tab, [ 'admin_coupon', 'customer_coupon' ], true )
-			? self::sample_coupon_merge_tags()
-			: Scheduled_Emails::sample_merge_tags();
+			? Merge_Tags::sample_coupon_tags()
+			: Merge_Tags::sample_booking_tags();
 
 		if ( in_array( $tab, [ 'admin', 'admin_coupon' ], true ) ) {
 			$admin = trim( (string) Helpers::get_option( 'admin_email', '' ) );
@@ -376,7 +333,7 @@ abstract class Emails {
 				$subject_tpl = self::default_customer_subject();
 			}
 			$intended = self::get_intended_test_recipient( 'customer' );
-			$tags     = Scheduled_Emails::sample_merge_tags();
+			$tags     = Merge_Tags::sample_booking_tags();
 			return self::send_raw_template(
 				$intended['to'] ?: $test_to,
 				$subject_tpl,
@@ -395,7 +352,7 @@ abstract class Emails {
 				$subject_tpl = self::default_admin_subject();
 			}
 			$intended = self::get_intended_test_recipient( 'admin' );
-			$tags     = Scheduled_Emails::sample_merge_tags();
+			$tags     = Merge_Tags::sample_booking_tags();
 			$to       = $intended['to'] ?: $test_to;
 			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['html_mode'] );
 		}
@@ -407,7 +364,7 @@ abstract class Emails {
 				$subject_tpl = self::default_customer_coupon_subject();
 			}
 			$intended = self::get_intended_test_recipient( 'customer_coupon' );
-			$tags     = self::sample_coupon_merge_tags();
+			$tags     = Merge_Tags::sample_coupon_tags();
 			return self::send_raw_template(
 				$intended['to'] ?: $test_to,
 				$subject_tpl,
@@ -426,7 +383,7 @@ abstract class Emails {
 				$subject_tpl = self::default_admin_coupon_subject();
 			}
 			$intended = self::get_intended_test_recipient( 'admin_coupon' );
-			$tags     = self::sample_coupon_merge_tags();
+			$tags     = Merge_Tags::sample_coupon_tags();
 			$to       = $intended['to'] ?: $test_to;
 			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['html_mode'] );
 		}
@@ -498,16 +455,29 @@ abstract class Emails {
 		$uses      = (int) get_post_meta( $purchase_id, '_clasbpro_pack_uses', true );
 		$amount    = Helpers::format_stripe_amount( (int) get_post_meta( $purchase_id, '_clasbpro_amount_total', true ) );
 
+		$receipt_url = (string) get_post_meta( $purchase_id, '_clasbpro_stripe_receipt_url', true );
+
 		$tags = [
-			'{customer_name}'  => $name ?: __( 'there', 'class-bookings-with-stripe-pro' ),
-			'{customer_email}' => $email,
-			'{pack_name}'      => (string) $pack_name,
-			'{pack_code}'      => $code,
-			'{pack_uses}'      => (string) $uses,
-			'{amount_total}'   => $amount,
-			'{restore_url}'    => $restore_url,
-			'{purchase_id}'    => '#' . $purchase_id,
+			'{customer_name}'      => $name ?: __( 'there', 'class-bookings-with-stripe-pro' ),
+			'{customer_email}'     => $email,
+			'{pack_name}'          => (string) $pack_name,
+			'{pack_code}'          => $code,
+			'{pack_uses}'          => (string) $uses,
+			'{amount_total}'       => $amount,
+			'{restore_url}'        => $restore_url,
+			'{purchase_id}'        => (string) $purchase_id,
+			'{stripe_receipt_url}' => $receipt_url,
 		];
+		$tags = Merge_Tags::filter_values(
+			$tags,
+			[
+				'kind'        => 'coupon',
+				'booking_id'  => 0,
+				'class_id'    => 0,
+				'purchase_id' => $purchase_id,
+				'sample'      => false,
+			]
+		);
 
 		if ( $email && is_email( $email ) ) {
 			$subject_tpl = (string) Helpers::get_option( 'customer_coupon_email_subject', '' );
@@ -574,16 +544,7 @@ abstract class Emails {
 	 * @return array<string, string>
 	 */
 	public static function sample_coupon_merge_tags(): array {
-		return [
-			'{customer_name}'  => 'Alex Example',
-			'{customer_email}' => 'alex@example.com',
-			'{pack_name}'      => '10-class coupon',
-			'{pack_code}'      => 'DEMO10CLASS',
-			'{pack_uses}'      => '10',
-			'{amount_total}'   => Helpers::format_stripe_amount( 15000 ),
-			'{restore_url}'    => home_url( '/?clasbpro_pack_restore=sample' ),
-			'{purchase_id}'    => '#1001',
-		];
+		return Merge_Tags::sample_coupon_tags();
 	}
 
 	/**
@@ -600,23 +561,58 @@ abstract class Emails {
 		}
 
 		$display = Bookings::get_booking_display_context( $booking_id, $class_data );
-		$tags    = [
-			'{customer_name}'  => (string) $meta['customer_name'],
-			'{customer_email}' => (string) $meta['customer_email'],
-			'{class_name}'     => (string) ( $class_data['name'] ?? '' ),
-			'{class_date}'     => Helpers::format_date( (string) $meta['class_date'] ),
-			'{class_time}'     => Helpers::format_time( (string) $display['start_time'] ),
-			'{location}'       => (string) $display['location'],
-			'{duration}'       => (string) $display['duration'],
-			'{price}'          => Helpers::format_price( (float) $display['price'] ),
-			'{slot_label}'     => (string) $display['label'],
-			'{seats}'          => (string) (int) $meta['seats'],
-			'{amount_total}'   => Helpers::format_stripe_amount( (int) $meta['amount_total_pence'] ),
-			'{booking_id}'     => '#' . $booking_id,
-			'{description}'    => (string) ( $class_data['description'] ?? '' ),
+		$seats   = (string) (int) $meta['seats'];
+		$used    = self::booking_coupon_used( $booking_id );
+
+		$tags = [
+			'{customer_name}'         => (string) $meta['customer_name'],
+			'{customer_email}'        => (string) $meta['customer_email'],
+			'{class_name}'            => (string) ( $class_data['name'] ?? '' ),
+			'{class_date}'            => Helpers::format_date( (string) $meta['class_date'] ),
+			'{class_time}'            => Helpers::format_time( (string) $display['start_time'] ),
+			'{class_day}'             => Merge_Tags::weekday_from_ymd( (string) $meta['class_date'] ),
+			'{class_id}'              => (string) (int) $meta['class_id'],
+			'{location}'              => (string) $display['location'],
+			'{duration}'              => (string) $display['duration'],
+			'{price}'                 => Helpers::format_price( (float) $display['price'] ),
+			'{slot_label}'            => (string) $display['label'],
+			'{seats}'                 => $seats,
+			'{quantity}'              => $seats,
+			'{amount_total}'          => Helpers::format_stripe_amount( (int) $meta['amount_total_pence'] ),
+			'{booking_id}'            => (string) $booking_id,
+			'{description}'           => (string) ( $class_data['description'] ?? '' ),
+			'{stripe_receipt_url}'    => (string) get_post_meta( $booking_id, '_clasbpro_stripe_receipt_url', true ),
+			'{coupon_used}'           => Merge_Tags::yes_no( $used ),
+			'{coupon_code}'           => $used ? (string) get_post_meta( $booking_id, '_clasbpro_coupon_code', true ) : '',
+			'{coupon_uses_remaining}' => $used ? (string) get_post_meta( $booking_id, '_clasbpro_coupon_uses_remaining', true ) : '',
+			'{coupon_reference}'      => $used ? self::booking_coupon_reference( $booking_id ) : '',
 		] + Extra_Fields::build_merge_tags( (int) $meta['class_id'], (string) ( $meta['extra_fields_json'] ?? '' ) );
 
-		return array_merge( $tags, $extra );
+		$tags = array_merge( $tags, $extra );
+
+		return Merge_Tags::filter_values(
+			$tags,
+			[
+				'kind'        => 'booking',
+				'booking_id'  => $booking_id,
+				'class_id'    => (int) $meta['class_id'],
+				'purchase_id' => (int) get_post_meta( $booking_id, '_clasbpro_coupon_purchase_id', true ),
+				'sample'      => false,
+			]
+		);
+	}
+
+	private static function booking_coupon_used( int $booking_id ): bool {
+		$stored = (string) get_post_meta( $booking_id, '_clasbpro_coupon_used', true );
+		if ( '1' === $stored || '0' === $stored ) {
+			return '1' === $stored;
+		}
+		return '' !== (string) get_post_meta( $booking_id, '_clasbpro_pack_promo_id', true );
+	}
+
+	private static function booking_coupon_reference( int $booking_id ): string {
+		$purchase_id = (int) get_post_meta( $booking_id, '_clasbpro_coupon_purchase_id', true );
+		return $purchase_id > 0 ? (string) $purchase_id : '';
 	}
 
 	/**
@@ -692,8 +688,8 @@ abstract class Emails {
 			return false;
 		}
 
-		$subject = self::apply_tags( $subject_tpl, $tags );
-		$body    = self::apply_tags( $body_tpl, $tags );
+		$subject = Merge_Tags::apply( $subject_tpl, $tags );
+		$body    = Merge_Tags::apply( $body_tpl, $tags );
 
 		return self::send( $to, $subject, $body, $recipient_role, $force_test_recipient, $html_mode );
 	}
@@ -798,7 +794,7 @@ abstract class Emails {
 	 * @param array<string, string> $tags
 	 */
 	private static function apply_tags( string $template, array $tags ): string {
-		return strtr( $template, $tags );
+		return Merge_Tags::apply( $template, $tags );
 	}
 
 	private static function send( string $to, string $subject, string $body, string $recipient_role = '', bool $force_test_recipient = false, bool $html_mode = false ): bool {

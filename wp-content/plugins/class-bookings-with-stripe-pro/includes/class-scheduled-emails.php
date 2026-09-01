@@ -617,21 +617,7 @@ abstract class Scheduled_Emails {
 	 * @return array<string, string>
 	 */
 	public static function sample_merge_tags(): array {
-		return [
-			'{customer_name}'  => 'Alex Sample',
-			'{customer_email}' => 'alex@example.com',
-			'{class_name}'     => 'Beginners Yoga',
-			'{class_date}'     => Helpers::format_date( gmdate( 'Y-m-d', strtotime( '+3 days' ) ) ),
-			'{class_time}'     => Helpers::format_time( '10:00' ),
-			'{location}'       => 'Main Studio',
-			'{duration}'       => '60',
-			'{price}'          => Helpers::format_price( 15 ),
-			'{slot_label}'     => '',
-			'{seats}'          => '1',
-			'{amount_total}'   => Helpers::format_price( 15 ),
-			'{booking_id}'     => '#1234',
-			'{description}'    => '<p>A gentle introduction to yoga.</p>',
-		];
+		return Merge_Tags::sample_booking_tags();
 	}
 
 	public static function render_booking_queue_table( int $booking_id ): string {
