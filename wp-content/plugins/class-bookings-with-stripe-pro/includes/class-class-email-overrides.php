@@ -170,7 +170,7 @@ abstract class Class_Email_Overrides {
 	}
 
 	/**
-	 * @return array{body: string, html_mode: bool}
+	 * @return array{body: string, html_mode: bool, editor_mode: string}
 	 */
 	public static function resolve_body( int $class_id, string $type ): array {
 		if ( self::uses_custom( $class_id, $type ) ) {
@@ -178,8 +178,9 @@ abstract class Class_Email_Overrides {
 			$body     = $settings['body'];
 			if ( '' !== $body || $settings['html_mode'] ) {
 				return [
-					'body'      => $body,
-					'html_mode' => $settings['html_mode'],
+					'body'        => $body,
+					'html_mode'   => $settings['html_mode'],
+					'editor_mode' => $settings['editor_mode'],
 				];
 			}
 		}
@@ -250,7 +251,7 @@ abstract class Class_Email_Overrides {
 			'offset_unit'    => $unit,
 			'subject'        => $subject,
 			'body'           => $body_tx,
-			'body_html_mode' => ! empty( $body['html_mode'] ),
+			'body_html_mode' => Email_Body_Editor::queue_flag( (string) ( $body['editor_mode'] ?? Email_Body_Editor::MODE_VISUAL ) ),
 			'admin_copy'     => ! empty( get_field( 'class_email_' . $type . '_admin_copy', $class_id ) ),
 			'max_sends'      => 1,
 		];
@@ -304,16 +305,13 @@ abstract class Class_Email_Overrides {
 		update_field( 'class_email_' . $type . '_subject', $subject, $class_id );
 
 		$prefix      = Email_Body_Editor::template_option_prefix( $type );
-		$editor_mode = sanitize_key( (string) Helpers::get_option( $prefix . '_body_editor_mode', Email_Body_Editor::MODE_VISUAL ) );
-		if ( Email_Body_Editor::MODE_HTML !== $editor_mode ) {
-			$editor_mode = Email_Body_Editor::MODE_VISUAL;
-		}
+		$editor_mode = Email_Body_Editor::sanitize_mode( (string) Helpers::get_option( $prefix . '_body_editor_mode', Email_Body_Editor::MODE_VISUAL ) );
 
 		$visual_body = (string) Helpers::get_option( $prefix . '_body', '' );
 		$html_body   = (string) Helpers::get_option( $prefix . '_body_html', '' );
 		if ( '' === trim( $visual_body ) && '' === trim( $html_body ) ) {
 			$default_body = Emails::default_body_template( $type );
-			if ( Email_Body_Editor::MODE_HTML === $editor_mode ) {
+			if ( Email_Body_Editor::uses_html_field( $editor_mode ) ) {
 				$html_body = $default_body;
 			} else {
 				$visual_body = $default_body;
@@ -516,7 +514,7 @@ abstract class Class_Email_Overrides {
 				$tags,
 				$intended['role'],
 				true,
-				$body['html_mode']
+				$body['editor_mode'] ?? false
 			);
 		}
 
@@ -538,7 +536,7 @@ abstract class Class_Email_Overrides {
 			$tags,
 			$role_label,
 			true,
-			! empty( $rule['body_html_mode'] )
+			(int) ( $rule['body_html_mode'] ?? 0 )
 		);
 	}
 
@@ -625,13 +623,9 @@ abstract class Class_Email_Overrides {
 	 * @return array{body: string, html_mode: bool, editor_mode: string}
 	 */
 	private static function get_class_body_settings( int $class_id, string $type ): array {
-		$editor_mode = sanitize_key( (string) get_field( 'class_email_' . $type . '_body_editor_mode', $class_id ) );
-		if ( Email_Body_Editor::MODE_HTML !== $editor_mode ) {
-			$editor_mode = Email_Body_Editor::MODE_VISUAL;
-		}
-
-		$html_mode = Email_Body_Editor::MODE_HTML === $editor_mode;
-		$body      = $html_mode
+		$editor_mode = Email_Body_Editor::sanitize_mode( (string) get_field( 'class_email_' . $type . '_body_editor_mode', $class_id ) );
+		$html_mode   = Email_Body_Editor::uses_html_field( $editor_mode );
+		$body        = $html_mode
 			? (string) get_field( 'class_email_' . $type . '_body_html', $class_id )
 			: (string) get_field( 'class_email_' . $type . '_body', $class_id );
 
@@ -713,7 +707,9 @@ abstract class Class_Email_Overrides {
 			}
 
 			$body = self::get_class_body_settings( $class_id, $type );
-			$key  = $body['html_mode'] ? 'class_email_' . $type . '_body_html' : 'class_email_' . $type . '_body';
+			$key  = Email_Body_Editor::uses_html_field( (string) ( $body['editor_mode'] ?? '' ) )
+				? 'class_email_' . $type . '_body_html'
+				: 'class_email_' . $type . '_body';
 			if ( array_key_exists( $key, $before ) && (string) $before[ $key ] !== (string) $body['body'] ) {
 				return true;
 			}

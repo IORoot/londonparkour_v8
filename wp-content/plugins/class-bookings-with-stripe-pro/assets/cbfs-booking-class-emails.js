@@ -245,9 +245,17 @@
 		return modeField.querySelector( 'select' );
 	}
 
+	function clasbproNormalizeEmailBodyMode( mode ) {
+		return mode === 'html' || mode === 'raw' ? mode : 'visual';
+	}
+
+	function clasbproEmailBodyModeUsesHtmlField( mode ) {
+		return mode === 'html' || mode === 'raw';
+	}
+
 	function clasbproGetEmailBodyMode( modeField ) {
 		var select = clasbproGetEmailBodyModeSelect( modeField );
-		return select && select.value === 'html' ? 'html' : 'visual';
+		return clasbproNormalizeEmailBodyMode( select ? select.value : 'visual' );
 	}
 
 	function clasbproSetEmailBodyMode( modeField, mode ) {
@@ -255,8 +263,91 @@
 		if ( ! select ) {
 			return;
 		}
-		select.value = mode === 'html' ? 'html' : 'visual';
+		select.value = clasbproNormalizeEmailBodyMode( mode );
 		select.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+	}
+
+	function clasbproCopyTextToClipboard( text ) {
+		function fallback() {
+			return new Promise( function ( resolve, reject ) {
+				var ta = document.createElement( 'textarea' );
+				ta.value = text;
+				ta.setAttribute( 'readonly', '' );
+				ta.style.position = 'fixed';
+				ta.style.left = '-9999px';
+				document.body.appendChild( ta );
+				ta.select();
+				try {
+					if ( document.execCommand( 'copy' ) ) {
+						resolve();
+					} else {
+						reject( new Error( 'copy failed' ) );
+					}
+				} catch ( err ) {
+					reject( err );
+				}
+				document.body.removeChild( ta );
+			} );
+		}
+
+		if ( navigator.clipboard && window.isSecureContext && navigator.clipboard.writeText ) {
+			return navigator.clipboard.writeText( text ).catch( function () {
+				return fallback();
+			} );
+		}
+
+		return fallback();
+	}
+
+	function clasbproGetHtmlFieldValue( htmlField, key ) {
+		var editor = clasbproEmailCodeEditors[ key ];
+		if ( editor && editor.codemirror ) {
+			return editor.codemirror.getValue();
+		}
+		var cm = htmlField ? htmlField.querySelector( '.CodeMirror' ) : null;
+		if ( cm && cm.CodeMirror ) {
+			return cm.CodeMirror.getValue();
+		}
+		var textarea = htmlField ? htmlField.querySelector( 'textarea' ) : null;
+		return textarea ? textarea.value : '';
+	}
+
+	function clasbproMountHtmlCopyButton( htmlField, key ) {
+		if ( ! htmlField || htmlField.dataset.clasbproCopyMounted === '1' ) {
+			return;
+		}
+		var input = htmlField.querySelector( '.acf-input' );
+		if ( ! input ) {
+			return;
+		}
+
+		var bar = document.createElement( 'div' );
+		bar.className = 'clasbpro-email-html-copy-bar';
+		bar.hidden = true;
+
+		var btn = document.createElement( 'button' );
+		btn.type = 'button';
+		btn.className = 'button clasbpro-email-html-copy';
+		btn.textContent = 'Copy to clipboard';
+		bar.appendChild( btn );
+		input.insertBefore( bar, input.firstChild );
+
+		btn.addEventListener( 'click', function ( event ) {
+			event.preventDefault();
+			var text = clasbproGetHtmlFieldValue( htmlField, key );
+			if ( ! text ) {
+				return;
+			}
+			var idle = 'Copy to clipboard';
+			clasbproCopyTextToClipboard( text ).then( function () {
+				btn.textContent = 'Copied';
+				window.setTimeout( function () {
+					btn.textContent = idle;
+				}, 1500 );
+			} );
+		} );
+
+		htmlField.dataset.clasbproCopyMounted = '1';
 	}
 
 	function clasbproInitHtmlCodeEditor( htmlField, key ) {
@@ -364,11 +455,16 @@
 			toolbar.classList.add( 'is-custom-active' );
 		}
 
-		var isHtml = mode === 'html';
-		visualField.style.display = isHtml ? 'none' : 'block';
-		htmlField.style.display   = isHtml ? 'block' : 'none';
-		visualField.classList.toggle( 'is-html-mode-hidden', isHtml );
-		htmlField.classList.toggle( 'is-html-mode-visible', isHtml );
+		var isHtmlField = clasbproEmailBodyModeUsesHtmlField( mode );
+		visualField.style.display = isHtmlField ? 'none' : 'block';
+		htmlField.style.display   = isHtmlField ? 'block' : 'none';
+		visualField.classList.toggle( 'is-html-mode-hidden', isHtmlField );
+		htmlField.classList.toggle( 'is-html-mode-visible', isHtmlField );
+
+		var copyBar = htmlField.querySelector( '.clasbpro-email-html-copy-bar' );
+		if ( copyBar ) {
+			copyBar.hidden = mode !== 'raw';
+		}
 
 		if ( toolbar ) {
 			toolbar.querySelectorAll( '.clasbpro-email-editor-toggle__btn' ).forEach( function ( btn ) {
@@ -380,7 +476,7 @@
 			} );
 		}
 
-		if ( isHtml ) {
+		if ( isHtmlField ) {
 			clasbproInitHtmlCodeEditor( htmlField, cfg.html );
 			var editor = clasbproEmailCodeEditors[ cfg.html ];
 			if ( editor && editor.codemirror ) {
@@ -412,6 +508,8 @@
 				return;
 			}
 
+			clasbproMountHtmlCopyButton( htmlField, cfg.html );
+
 			if ( visualField.dataset.clasbproEmailBodyMounted !== '1' ) {
 				var toolbar = document.createElement( 'div' );
 				toolbar.className =
@@ -430,13 +528,14 @@
 				toggle.setAttribute( 'role', 'tablist' );
 				toggle.setAttribute( 'aria-label', 'Email body editor mode' );
 
-				[ 'visual', 'html' ].forEach( function ( mode ) {
+				[ 'visual', 'html', 'raw' ].forEach( function ( mode ) {
 					var btn = document.createElement( 'button' );
 					btn.type = 'button';
 					btn.className = 'clasbpro-email-editor-toggle__btn';
 					btn.setAttribute( 'data-mode', mode );
 					btn.setAttribute( 'role', 'tab' );
-					btn.textContent = mode === 'html' ? 'HTML' : 'Visual';
+					btn.textContent =
+						mode === 'raw' ? 'Raw HTML' : mode === 'html' ? 'HTML' : 'Visual';
 					toggle.appendChild( btn );
 				} );
 
@@ -445,7 +544,7 @@
 				var note = document.createElement( 'p' );
 				note.className = 'description clasbpro-email-editor-toolbar__note';
 				note.textContent =
-					'Visual and HTML are saved separately. HTML mode sends only the HTML field.';
+					'Visual and HTML are saved separately. HTML is wrapped in the plugin layout. Raw HTML is sent as-is after merge tags.';
 				toolbar.appendChild( note );
 
 				visualField.parentNode.insertBefore( toolbar, visualField );

@@ -1259,7 +1259,7 @@ abstract class ACF_Fields {
 						'type'         => 'textarea',
 						'rows'         => 16,
 						'new_lines'    => '',
-						'instructions' => __( 'Body fragment only — merge tags like {customer_name} are supported. The plugin wraps this in the standard email layout when sending.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => Email_Body_Editor::html_field_instructions(),
 						'wrapper'      => [ 'class' => 'clasbpro-email-section clasbpro-email-section-admin clasbpro-email-body-html-field' ],
 					],
 					[
@@ -1267,10 +1267,7 @@ abstract class ACF_Fields {
 						'label'         => __( 'Admin email editor mode', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'admin_email_body_editor_mode',
 						'type'          => 'select',
-						'choices'       => [
-							'visual' => __( 'Visual', 'class-bookings-with-stripe-pro' ),
-							'html'   => __( 'HTML', 'class-bookings-with-stripe-pro' ),
-						],
+						'choices'       => Email_Body_Editor::mode_choices(),
 						'default_value' => 'visual',
 						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-admin clasbpro-email-body-mode-field' ],
 					],
@@ -1320,7 +1317,7 @@ abstract class ACF_Fields {
 						'type'         => 'textarea',
 						'rows'         => 16,
 						'new_lines'    => '',
-						'instructions' => __( 'Body fragment only — merge tags like {customer_name} are supported. The plugin wraps this in the standard email layout when sending.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => Email_Body_Editor::html_field_instructions(),
 						'wrapper'      => [ 'class' => 'clasbpro-email-section clasbpro-email-section-customer clasbpro-email-body-html-field' ],
 					],
 					[
@@ -1328,10 +1325,7 @@ abstract class ACF_Fields {
 						'label'         => __( 'Customer email editor mode', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'customer_email_body_editor_mode',
 						'type'          => 'select',
-						'choices'       => [
-							'visual' => __( 'Visual', 'class-bookings-with-stripe-pro' ),
-							'html'   => __( 'HTML', 'class-bookings-with-stripe-pro' ),
-						],
+						'choices'       => Email_Body_Editor::mode_choices(),
 						'default_value' => 'visual',
 						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-customer clasbpro-email-body-mode-field' ],
 					],
@@ -1381,7 +1375,7 @@ abstract class ACF_Fields {
 						'type'         => 'textarea',
 						'rows'         => 16,
 						'new_lines'    => '',
-						'instructions' => __( 'Body fragment only — merge tags like {customer_name} and {pack_code} are supported. The plugin wraps this in the standard email layout when sending.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => Email_Body_Editor::html_field_instructions(),
 						'wrapper'      => [ 'class' => 'clasbpro-email-section clasbpro-email-section-admin-coupon clasbpro-email-body-html-field' ],
 					],
 					[
@@ -1389,10 +1383,7 @@ abstract class ACF_Fields {
 						'label'         => __( 'Admin coupon email editor mode', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'admin_coupon_email_body_editor_mode',
 						'type'          => 'select',
-						'choices'       => [
-							'visual' => __( 'Visual', 'class-bookings-with-stripe-pro' ),
-							'html'   => __( 'HTML', 'class-bookings-with-stripe-pro' ),
-						],
+						'choices'       => Email_Body_Editor::mode_choices(),
 						'default_value' => 'visual',
 						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-admin-coupon clasbpro-email-body-mode-field' ],
 					],
@@ -1442,7 +1433,7 @@ abstract class ACF_Fields {
 						'type'         => 'textarea',
 						'rows'         => 16,
 						'new_lines'    => '',
-						'instructions' => __( 'Body fragment only — merge tags like {customer_name} and {pack_code} are supported. The plugin wraps this in the standard email layout when sending.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => Email_Body_Editor::html_field_instructions(),
 						'wrapper'      => [ 'class' => 'clasbpro-email-section clasbpro-email-section-customer-coupon clasbpro-email-body-html-field' ],
 					],
 					[
@@ -1450,10 +1441,7 @@ abstract class ACF_Fields {
 						'label'         => __( 'Customer coupon email editor mode', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'customer_coupon_email_body_editor_mode',
 						'type'          => 'select',
-						'choices'       => [
-							'visual' => __( 'Visual', 'class-bookings-with-stripe-pro' ),
-							'html'   => __( 'HTML', 'class-bookings-with-stripe-pro' ),
-						],
+						'choices'       => Email_Body_Editor::mode_choices(),
 						'default_value' => 'visual',
 						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-customer-coupon clasbpro-email-body-mode-field' ],
 					],
@@ -1545,7 +1533,7 @@ abstract class ACF_Fields {
 						'type'         => 'textarea',
 						'rows'         => 16,
 						'new_lines'    => '',
-						'instructions' => __( 'Body fragment only — merge tags like {customer_name} are supported. The plugin wraps this in the standard email layout when sending.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => Email_Body_Editor::html_field_instructions(),
 						'wrapper'      => [ 'class' => 'clasbpro-email-section clasbpro-email-section-reminders clasbpro-scheduled-email-content clasbpro-email-body-html-field' ],
 					],
 					[
@@ -1553,10 +1541,7 @@ abstract class ACF_Fields {
 						'label'         => __( 'Reminder editor mode', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'reminder_email_body_editor_mode',
 						'type'          => 'select',
-						'choices'       => [
-							'visual' => __( 'Visual', 'class-bookings-with-stripe-pro' ),
-							'html'   => __( 'HTML', 'class-bookings-with-stripe-pro' ),
-						],
+						'choices'       => Email_Body_Editor::mode_choices(),
 						'default_value' => 'visual',
 						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-reminders clasbpro-scheduled-email-content clasbpro-email-body-mode-field' ],
 					],
@@ -1648,7 +1633,7 @@ abstract class ACF_Fields {
 						'type'         => 'textarea',
 						'rows'         => 16,
 						'new_lines'    => '',
-						'instructions' => __( 'Body fragment only — merge tags like {customer_name} are supported. The plugin wraps this in the standard email layout when sending.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => Email_Body_Editor::html_field_instructions(),
 						'wrapper'      => [ 'class' => 'clasbpro-email-section clasbpro-email-section-post-class clasbpro-scheduled-email-content clasbpro-email-body-html-field' ],
 					],
 					[
@@ -1656,10 +1641,7 @@ abstract class ACF_Fields {
 						'label'         => __( 'Post-class editor mode', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'post_class_email_body_editor_mode',
 						'type'          => 'select',
-						'choices'       => [
-							'visual' => __( 'Visual', 'class-bookings-with-stripe-pro' ),
-							'html'   => __( 'HTML', 'class-bookings-with-stripe-pro' ),
-						],
+						'choices'       => Email_Body_Editor::mode_choices(),
 						'default_value' => 'visual',
 						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-post-class clasbpro-scheduled-email-content clasbpro-email-body-mode-field' ],
 					],
@@ -2350,7 +2332,7 @@ abstract class ACF_Fields {
 				'type'              => 'textarea',
 				'rows'              => 16,
 				'new_lines'         => '',
-				'instructions'      => __( 'Body fragment only — merge tags like {customer_name} are supported. The plugin wraps this in the standard email layout when sending.', 'class-bookings-with-stripe-pro' ),
+				'instructions'      => Email_Body_Editor::html_field_instructions(),
 				'wrapper'           => [
 					'class' => 'clasbpro-email-section clasbpro-email-section-' . $section
 						. ( in_array( $type, Class_Email_Overrides::SCHEDULED_TYPES, true ) ? ' clasbpro-scheduled-email-content' : '' )
@@ -2363,10 +2345,7 @@ abstract class ACF_Fields {
 				'label'             => self::class_email_editor_mode_label( $type ),
 				'name'              => 'class_email_' . $type . '_body_editor_mode',
 				'type'              => 'select',
-				'choices'           => [
-					'visual' => __( 'Visual', 'class-bookings-with-stripe-pro' ),
-					'html'   => __( 'HTML', 'class-bookings-with-stripe-pro' ),
-				],
+				'choices'           => Email_Body_Editor::mode_choices(),
 				'default_value'     => 'visual',
 				'wrapper'           => [
 					'class' => 'clasbpro-email-section clasbpro-email-section-' . $section

@@ -341,7 +341,7 @@ abstract class Emails {
 				$tags,
 				$intended['role'],
 				true,
-				$body['html_mode']
+				$body['editor_mode'] ?? false
 			);
 		}
 
@@ -354,7 +354,7 @@ abstract class Emails {
 			$intended = self::get_intended_test_recipient( 'admin' );
 			$tags     = Merge_Tags::sample_booking_tags();
 			$to       = $intended['to'] ?: $test_to;
-			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['html_mode'] );
+			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['editor_mode'] ?? false );
 		}
 
 		if ( 'customer_coupon' === $type ) {
@@ -372,7 +372,7 @@ abstract class Emails {
 				$tags,
 				$intended['role'],
 				true,
-				$body['html_mode']
+				$body['editor_mode'] ?? false
 			);
 		}
 
@@ -385,7 +385,7 @@ abstract class Emails {
 			$intended = self::get_intended_test_recipient( 'admin_coupon' );
 			$tags     = Merge_Tags::sample_coupon_tags();
 			$to       = $intended['to'] ?: $test_to;
-			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['html_mode'] );
+			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['editor_mode'] ?? false );
 		}
 
 		if ( 'reminder' === $type || 'post_class' === $type ) {
@@ -492,7 +492,7 @@ abstract class Emails {
 				$tags,
 				__( 'Customer', 'class-bookings-with-stripe-pro' ),
 				false,
-				$body['html_mode']
+				$body['editor_mode'] ?? false
 			);
 			self::record_instant_delivery( $purchase_id, Booking_Email_Status::TYPE_CUSTOMER, $ok );
 		} else {
@@ -523,7 +523,7 @@ abstract class Emails {
 				$tags,
 				__( 'Admin', 'class-bookings-with-stripe-pro' ),
 				false,
-				$body['html_mode']
+				$body['editor_mode'] ?? false
 			);
 			self::record_instant_delivery( $purchase_id, Booking_Email_Status::TYPE_ADMIN, $ok );
 		} else {
@@ -618,7 +618,11 @@ abstract class Emails {
 	/**
 	 * @param array<string, string> $extra_tags
 	 */
-	public static function send_template( string $to, string $subject_tpl, string $body_tpl, int $booking_id, array $extra_tags = [], bool $html_mode = false ): bool {
+	/**
+	 * @param array<string, string> $extra_tags
+	 * @param bool|int|string       $editor_mode Visual/HTML/Raw, a queue flag, or legacy html bool.
+	 */
+	public static function send_template( string $to, string $subject_tpl, string $body_tpl, int $booking_id, array $extra_tags = [], $editor_mode = false ): bool {
 		if ( ! $to || ! is_email( $to ) ) {
 			return false;
 		}
@@ -628,24 +632,25 @@ abstract class Emails {
 			return false;
 		}
 
-		return self::send_raw_template( $to, $subject_tpl, $body_tpl, $tags, '', false, $html_mode );
+		return self::send_raw_template( $to, $subject_tpl, $body_tpl, $tags, '', false, $editor_mode );
 	}
 
 	/**
 	 * @param array<string, string> $extra_tags
+	 * @param bool|int|string       $editor_mode Visual/HTML/Raw, a queue flag, or legacy html bool.
 	 */
-	public static function send_template_to_admin( string $subject_tpl, string $body_tpl, int $booking_id, array $extra_tags = [], bool $html_mode = false ): bool {
+	public static function send_template_to_admin( string $subject_tpl, string $body_tpl, int $booking_id, array $extra_tags = [], $editor_mode = false ): bool {
 		$class_id    = (int) ( Bookings::get_meta( $booking_id )['class_id'] ?? 0 );
 		$admin_email = Class_Email_Overrides::resolve_admin_recipient( $class_id );
 		if ( ! $admin_email || ! is_email( $admin_email ) ) {
 			return false;
 		}
 
-		return self::send_template( $admin_email, $subject_tpl, $body_tpl, $booking_id, $extra_tags, $html_mode );
+		return self::send_template( $admin_email, $subject_tpl, $body_tpl, $booking_id, $extra_tags, $editor_mode );
 	}
 
 	/**
-	 * @return array{body: string, html_mode: bool}
+	 * @return array{body: string, html_mode: bool, editor_mode: string}
 	 */
 	public static function resolve_body_template( string $template_key ): array {
 		$settings = Email_Body_Editor::get_body_settings( $template_key );
@@ -656,8 +661,9 @@ abstract class Emails {
 		}
 
 		return [
-			'body'      => $body,
-			'html_mode' => $settings['html_mode'],
+			'body'        => $body,
+			'html_mode'   => $settings['html_mode'],
+			'editor_mode' => $settings['editor_mode'],
 		];
 	}
 
@@ -682,8 +688,9 @@ abstract class Emails {
 
 	/**
 	 * @param array<string, string> $tags
+	 * @param bool|int|string       $editor_mode Visual/HTML/Raw, a queue flag, or legacy html bool.
 	 */
-	public static function send_raw_template( string $to, string $subject_tpl, string $body_tpl, array $tags, string $recipient_role = '', bool $force_test_recipient = false, bool $html_mode = false ): bool {
+	public static function send_raw_template( string $to, string $subject_tpl, string $body_tpl, array $tags, string $recipient_role = '', bool $force_test_recipient = false, $editor_mode = false ): bool {
 		if ( ! $to || ! is_email( $to ) ) {
 			return false;
 		}
@@ -691,7 +698,7 @@ abstract class Emails {
 		$subject = Merge_Tags::apply( $subject_tpl, $tags );
 		$body    = Merge_Tags::apply( $body_tpl, $tags );
 
-		return self::send( $to, $subject, $body, $recipient_role, $force_test_recipient, $html_mode );
+		return self::send( $to, $subject, $body, $recipient_role, $force_test_recipient, $editor_mode );
 	}
 
 	/**
@@ -727,7 +734,7 @@ abstract class Emails {
 		$subject_tpl = Class_Email_Overrides::resolve_subject( $class_id, 'customer' );
 		$body        = Class_Email_Overrides::resolve_body( $class_id, 'customer' );
 
-		$sent = self::send_raw_template( $email, $subject_tpl, $body['body'], $tags, __( 'Customer', 'class-bookings-with-stripe-pro' ), false, $body['html_mode'] );
+		$sent = self::send_raw_template( $email, $subject_tpl, $body['body'], $tags, __( 'Customer', 'class-bookings-with-stripe-pro' ), false, $body['editor_mode'] ?? false );
 		self::record_instant_delivery( $booking_id, Booking_Email_Status::TYPE_CUSTOMER, $sent );
 	}
 
@@ -764,7 +771,7 @@ abstract class Emails {
 		$subject_tpl = Class_Email_Overrides::resolve_subject( $class_id, 'admin' );
 		$body        = Class_Email_Overrides::resolve_body( $class_id, 'admin' );
 
-		$sent = self::send_raw_template( $admin_email, $subject_tpl, $body['body'], $tags, __( 'Admin', 'class-bookings-with-stripe-pro' ), false, $body['html_mode'] );
+		$sent = self::send_raw_template( $admin_email, $subject_tpl, $body['body'], $tags, __( 'Admin', 'class-bookings-with-stripe-pro' ), false, $body['editor_mode'] ?? false );
 		self::record_instant_delivery( $booking_id, Booking_Email_Status::TYPE_ADMIN, $sent );
 	}
 
@@ -797,7 +804,11 @@ abstract class Emails {
 		return Merge_Tags::apply( $template, $tags );
 	}
 
-	private static function send( string $to, string $subject, string $body, string $recipient_role = '', bool $force_test_recipient = false, bool $html_mode = false ): bool {
+	/**
+	 * @param bool|int|string $editor_mode Visual/HTML/Raw, a queue flag, or legacy html bool.
+	 */
+	private static function send( string $to, string $subject, string $body, string $recipient_role = '', bool $force_test_recipient = false, $editor_mode = false ): bool {
+		$mode        = Email_Body_Editor::normalize_mode( $editor_mode );
 		$intended_to = $to;
 		$banner      = '';
 		$test_mode   = $force_test_recipient || self::is_local_test_mode();
@@ -810,7 +821,9 @@ abstract class Emails {
 				}
 			} else {
 				$role_label = '' !== $recipient_role ? $recipient_role : __( 'Recipient', 'class-bookings-with-stripe-pro' );
-				$banner     = self::build_test_mode_banner( $intended_to, $role_label );
+				$banner     = Email_Body_Editor::wraps_layout( $mode )
+					? self::build_test_mode_banner( $intended_to, $role_label )
+					: '';
 				$to         = $test_to;
 				if ( ( $force_test_recipient || self::is_local_test_mode() ) && 0 !== strpos( $subject, '[TEST] ' ) ) {
 					$subject = '[TEST] ' . $subject;
@@ -829,7 +842,7 @@ abstract class Emails {
 
 		$headers = self::mail_headers();
 
-		$body_html = self::to_html( $body, $html_mode );
+		$body_html = self::to_html( $body, $mode );
 		if ( '' !== $banner ) {
 			$body_html = preg_replace(
 				'/(<div class="cbfs-mail">)/',
@@ -843,7 +856,7 @@ abstract class Emails {
 		self::$last_send_meta  = [
 			'delivered_to' => $to,
 			'intended_to'  => $intended_to,
-			'test_mode'    => $test_mode && '' !== $banner,
+			'test_mode'    => $test_mode && $to !== $intended_to,
 		];
 
 		return (bool) wp_mail( $to, wp_strip_all_tags( $subject ), $body_html, $headers );
@@ -886,10 +899,17 @@ abstract class Emails {
 	}
 
 	/**
-	 * Convert a plain-or-rich body to HTML email markup.
+	 * Convert a visual/HTML fragment to wrapped email markup, or return Raw HTML unchanged.
+	 *
+	 * @param bool|int|string $editor_mode Visual/HTML/Raw, a queue flag, or legacy html bool.
 	 */
-	private static function to_html( string $body, bool $html_mode = false ): string {
-		if ( ! $html_mode ) {
+	private static function to_html( string $body, $editor_mode = false ): string {
+		$mode = Email_Body_Editor::normalize_mode( $editor_mode );
+		if ( Email_Body_Editor::MODE_RAW === $mode ) {
+			return $body;
+		}
+
+		if ( Email_Body_Editor::MODE_HTML !== $mode ) {
 			$looks_like_html = (bool) preg_match( '/<\s*(p|br|ul|ol|li|div|h[1-6]|table|a)\b/i', $body );
 			if ( ! $looks_like_html ) {
 				$body = wpautop( $body );

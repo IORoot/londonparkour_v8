@@ -317,24 +317,65 @@ add_filter( 'wp_sitemaps_posts_query_args', 'lp_clasbpro_sitemap_query_args', 10
  * @return list<array{tag: string, description: string, example: string, group: string}>
  */
 function lp_clasbpro_email_merge_tag_catalogue( array $rows ): array {
-	$rows[] = array(
-		'tag'         => '{class_coaches}',
-		'description' => __( 'Coach names for the booked class, comma-separated.', 'londonparkour_v8' ),
-		'example'     => 'Dan Edwardes, Andy Pearson',
-		'group'       => 'booking',
+	$extra = array(
+		array(
+			'tag'         => '{class_coaches}',
+			'description' => __( 'Coach names for the booked class, comma-separated.', 'londonparkour_v8' ),
+			'example'     => 'Leon Lawrence, Andy Pearson',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{class_level}',
+			'description' => __( 'First lp_level term name for the booked class.', 'londonparkour_v8' ),
+			'example'     => 'BEGINNER',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{whatsapp_url}',
+			'description' => __( 'WhatsApp invite: class, then location, then site settings.', 'londonparkour_v8' ),
+			'example'     => 'https://chat.whatsapp.com/invite',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{coupon_summary}',
+			'description' => __( 'Coupon code and uses remaining, or “Not used”.', 'londonparkour_v8' ),
+			'example'     => 'DEMO10CLASS — 4 left',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{duration_label}',
+			'description' => __( 'Duration with pluralised minutes.', 'londonparkour_v8' ),
+			'example'     => '90 minutes',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{seats_label}',
+			'description' => __( 'Seats booked, pluralised.', 'londonparkour_v8' ),
+			'example'     => '1 person',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{calendar_url}',
+			'description' => __( 'Google Calendar template URL for the booked session.', 'londonparkour_v8' ),
+			'example'     => 'https://calendar.google.com/calendar/render?action=TEMPLATE',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{maps_url}',
+			'description' => __( 'Google Maps URL for the class location.', 'londonparkour_v8' ),
+			'example'     => 'https://www.google.com/maps/search/?api=1&query=51.5,-0.08',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{receipt_link}',
+			'description' => __( 'Stripe receipt anchor, or “No receipt” when nothing was charged.', 'londonparkour_v8' ),
+			'example'     => '<a href="https://pay.stripe.com/receipts/example">View stripe receipt</a>',
+			'group'       => 'booking',
+		),
 	);
-	$rows[] = array(
-		'tag'         => '{class_level}',
-		'description' => __( 'First lp_level term name for the booked class.', 'londonparkour_v8' ),
-		'example'     => 'BEGINNER',
-		'group'       => 'booking',
-	);
-	$rows[] = array(
-		'tag'         => '{whatsapp_url}',
-		'description' => __( 'WhatsApp invite: class, then location, then site settings.', 'londonparkour_v8' ),
-		'example'     => 'https://chat.whatsapp.com/invite',
-		'group'       => 'booking',
-	);
+	foreach ( $extra as $row ) {
+		$rows[] = $row;
+	}
 	return $rows;
 }
 add_filter( 'clasbpro_email_merge_tag_catalogue', 'lp_clasbpro_email_merge_tag_catalogue' );
@@ -357,7 +398,7 @@ function lp_clasbpro_email_merge_tag_values( array $tags, array $context ): arra
 
 	if ( $class_id <= 0 ) {
 		if ( $sample ) {
-			$tags['{class_coaches}'] = $tags['{class_coaches}'] ?? 'Dan Edwardes, Andy Pearson';
+			$tags['{class_coaches}'] = $tags['{class_coaches}'] ?? 'Leon Lawrence, Andy Pearson';
 			$tags['{class_level}']   = $tags['{class_level}'] ?? 'BEGINNER';
 			$tags['{whatsapp_url}']  = $tags['{whatsapp_url}'] ?? 'https://chat.whatsapp.com/invite';
 		} else {
@@ -365,6 +406,7 @@ function lp_clasbpro_email_merge_tag_values( array $tags, array $context ): arra
 			$tags['{class_level}']   = '';
 			$tags['{whatsapp_url}']  = '';
 		}
+		$tags = lp_clasbpro_email_fill_derived_tags( $tags, $context );
 		return $tags;
 	}
 
@@ -382,6 +424,134 @@ function lp_clasbpro_email_merge_tag_values( array $tags, array $context ): arra
 		? lp_whatsapp_invite_url_sanitize( $whatsapp )
 		: $whatsapp;
 
+	$tags = lp_clasbpro_email_fill_derived_tags( $tags, $context, $location_id );
+
 	return $tags;
 }
 add_filter( 'clasbpro_email_merge_tag_values', 'lp_clasbpro_email_merge_tag_values', 10, 2 );
+
+/**
+ * Coupon/duration/seats/calendar/maps/receipt tags derived from booking context.
+ *
+ * @param array<string, string> $tags
+ * @param array<string, mixed>  $context
+ */
+function lp_clasbpro_email_fill_derived_tags( array $tags, array $context, int $location_id = 0 ): array {
+	$sample     = ! empty( $context['sample'] );
+	$booking_id = (int) ( $context['booking_id'] ?? 0 );
+
+	$code = trim( (string) ( $tags['{coupon_code}'] ?? '' ) );
+	$left = trim( (string) ( $tags['{coupon_uses_remaining}'] ?? '' ) );
+	if ( '' === $code && '' === $left ) {
+		$tags['{coupon_summary}'] = __( 'Not used', 'londonparkour_v8' );
+	} else {
+		$tags['{coupon_summary}'] = sprintf(
+			/* translators: 1: coupon code, 2: uses remaining */
+			__( '%1$s — %2$s left', 'londonparkour_v8' ),
+			'' !== $code ? $code : __( 'Coupon', 'londonparkour_v8' ),
+			'' !== $left ? $left : '0'
+		);
+	}
+
+	$minutes = (int) ( $tags['{duration}'] ?? 0 );
+	$tags['{duration_label}'] = sprintf(
+		/* translators: %d: duration in minutes */
+		_n( '%d minute', '%d minutes', max( 0, $minutes ), 'londonparkour_v8' ),
+		max( 0, $minutes )
+	);
+
+	$seats = (int) ( $tags['{seats}'] ?? $tags['{quantity}'] ?? 0 );
+	$tags['{seats_label}'] = sprintf(
+		/* translators: %d: number of people booked */
+		_n( '%d person', '%d people', max( 0, $seats ), 'londonparkour_v8' ),
+		max( 0, $seats )
+	);
+
+	$receipt_url = trim( (string) ( $tags['{stripe_receipt_url}'] ?? '' ) );
+	if ( '' !== $receipt_url ) {
+		$tags['{receipt_link}'] = '<a href="' . esc_url( $receipt_url ) . '">' . esc_html__( 'View stripe receipt', 'londonparkour_v8' ) . '</a>';
+	} else {
+		$tags['{receipt_link}'] = __( 'No receipt', 'londonparkour_v8' );
+	}
+
+	$maps = '';
+	if ( $location_id > 0 && function_exists( 'get_field' ) && function_exists( 'lp_google_maps_url' ) ) {
+		$lat  = trim( (string) get_field( 'latitude', $location_id ) );
+		$lon  = trim( (string) get_field( 'longitude', $location_id ) );
+		$maps = lp_google_maps_url( $lat, $lon );
+	}
+	if ( '' === $maps && $sample ) {
+		$maps = 'https://www.google.com/maps/search/?api=1&query=London';
+	}
+	$tags['{maps_url}'] = $maps;
+
+	$ymd      = '';
+	$hhmm     = '';
+	$duration = $minutes;
+	if ( $booking_id > 0 && lp_clasbpro_ready() ) {
+		$meta     = \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::get_meta( $booking_id );
+		$display  = \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::get_booking_display_context( $booking_id );
+		$ymd      = (string) ( $meta['class_date'] ?? '' );
+		$hhmm     = (string) ( $display['start_time'] ?? '' );
+		$duration = (int) ( $display['duration'] ?? $duration );
+	} elseif ( $sample ) {
+		try {
+			$ymd  = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->modify( '+3 days' )->format( 'Y-m-d' );
+		} catch ( \Exception $e ) {
+			$ymd = gmdate( 'Y-m-d', (int) strtotime( '+3 days' ) );
+		}
+		$hhmm = '10:00';
+	}
+
+	$tags['{calendar_url}'] = lp_clasbpro_google_calendar_url(
+		$ymd,
+		$hhmm,
+		$duration,
+		(string) ( $tags['{class_name}'] ?? '' ),
+		(string) ( $tags['{location}'] ?? '' )
+	);
+
+	return $tags;
+}
+
+/**
+ * Google Calendar TEMPLATE link for a session.
+ */
+function lp_clasbpro_google_calendar_url( string $ymd, string $hhmm, int $duration_minutes, string $title, string $location ): string {
+	$ymd  = trim( $ymd );
+	$hhmm = trim( $hhmm );
+	if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $ymd ) ) {
+		return '';
+	}
+	if ( '' === $hhmm ) {
+		$hhmm = '00:00';
+	}
+
+	try {
+		$start = new \DateTimeImmutable( $ymd . ' ' . $hhmm, wp_timezone() );
+	} catch ( \Exception $e ) {
+		return '';
+	}
+
+	$mins = max( 1, $duration_minutes );
+	$end  = $start->modify( '+' . $mins . ' minutes' );
+	if ( ! $end ) {
+		return '';
+	}
+
+	$dates = $start->format( 'Ymd\THis' ) . '/' . $end->format( 'Ymd\THis' );
+	$query = http_build_query(
+		array(
+			'action'   => 'TEMPLATE',
+			'text'     => $title,
+			'dates'    => $dates,
+			'ctz'      => wp_timezone_string(),
+			'location' => $location,
+		),
+		'',
+		'&',
+		PHP_QUERY_RFC3986
+	);
+
+	return 'https://calendar.google.com/calendar/render?' . $query;
+}

@@ -222,7 +222,7 @@ abstract class Scheduled_Emails {
 			'offset_unit'    => $unit,
 			'subject'        => $subject,
 			'body'           => $body,
-			'body_html_mode' => ! empty( $body_settings['html_mode'] ),
+			'body_html_mode' => Email_Body_Editor::queue_flag( (string) ( $body_settings['editor_mode'] ?? Email_Body_Editor::MODE_VISUAL ) ),
 			'admin_copy'     => ! empty( Helpers::get_option( $prefix . '_admin_copy', 0 ) ),
 			'max_sends'      => 1,
 		];
@@ -434,7 +434,7 @@ abstract class Scheduled_Emails {
 			}
 		}
 
-		$html_mode = ! empty( $row['body_html_mode'] );
+		$html_mode = (int) ( $row['body_html_mode'] ?? 0 );
 
 		$sent = Emails::send_template(
 			(string) ( $row['customer_email'] ?? '' ),
@@ -609,7 +609,7 @@ abstract class Scheduled_Emails {
 			$tags,
 			$role_label,
 			true,
-			! empty( $rule['body_html_mode'] )
+			(int) ( $rule['body_html_mode'] ?? 0 )
 		);
 	}
 
@@ -869,7 +869,7 @@ abstract class Scheduled_Emails {
 				'skip_reason'    => $skip_reason,
 				'subject_tpl'    => (string) $rule['subject'],
 				'body_tpl'       => (string) $rule['body'],
-				'body_html_mode' => ! empty( $rule['body_html_mode'] ) ? 1 : 0,
+				'body_html_mode' => (int) ( $rule['body_html_mode'] ?? 0 ),
 				'admin_copy'     => ! empty( $rule['admin_copy'] ) ? 1 : 0,
 				'created_at'     => gmdate( 'Y-m-d H:i:s' ),
 			],
