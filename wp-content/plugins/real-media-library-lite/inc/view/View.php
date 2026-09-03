@@ -36,7 +36,7 @@ class View
             data-editable="' . \esc_attr($options['editable'] ? 'true' : 'false') . '"
             data-disabled="' . \esc_attr(\join(',', $options['disabled'])) . '"
             ' . (empty($options['title']) ? '' : 'data-title="' . \esc_attr($options['title']) . '"') . '
-            data-wprfc-visible="1" data-wprfc="preUploadUi" />';
+            class="rml-pre-upload-ui" />';
     }
     /**
      * Create dropdown from the current users tree.

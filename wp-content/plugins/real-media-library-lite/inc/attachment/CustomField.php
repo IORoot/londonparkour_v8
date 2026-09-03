@@ -63,7 +63,7 @@ class CustomField
         // Create form field
         $form_fields['rml_dir'] = ['label' => \__('Folder', 'real-media-library-lite'), 'input' => 'html', 'html' => '<div class="rml-compat-preUploadUi">' . $selector . '</div><p class="description">' . $textToMove . '</p>' . $appendHTML];
         // Create form field
-        $form_fields['rml_shortcut'] = ['label' => '', 'input' => 'html', 'html' => '<div class="rml-wprfc" data-wprfc="shortcutInfo" data-id="' . $post->ID . '"></div><script>jQuery(function() { window.rml.hooks.call("wprfc"); });</script>'];
+        $form_fields['rml_shortcut'] = ['label' => '', 'input' => 'html', 'html' => '<div class="rml-shortcut-info-container" data-id="' . $post->ID . '"></div>'];
         return $form_fields;
     }
     /**

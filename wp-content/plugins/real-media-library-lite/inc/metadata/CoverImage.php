@@ -74,7 +74,7 @@ class CoverImage implements IMetadata
             return \__('This option is disabled on this page. Please navigate to the media library.', 'real-media-library-lite');
         }
         $id = $this->getAttachmentID($folder->getId());
-        return $content . '<label>' . \__('Cover image', 'real-media-library-lite') . '</label><input name="coverImage" data-wprfc-visible="1" data-wprfc="metaCoverImage" value="' . \esc_attr($id) . '" type="text" />';
+        return $content . '<label>' . \__('Cover image', 'real-media-library-lite') . '</label><input name="coverImage" class="rml-cover-image-input" value="' . \esc_attr($id) . '" type="text" />';
     }
     /**
      * Save content in meta box.

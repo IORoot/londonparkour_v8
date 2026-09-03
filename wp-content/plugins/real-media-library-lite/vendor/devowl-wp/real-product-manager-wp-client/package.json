@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-product-manager-wp-client",
-    "version": "1.20.26",
+    "version": "1.22.1",
     "private": true,
     "description": "A WordPress client for Real Product Manager",
     "homepage": "https://devowl.io",
@@ -45,8 +45,8 @@
         "@ant-design/icons": "catalog:frontend",
         "@devowl-wp/react-utils": "workspace:*",
         "antd": "catalog:frontend",
-        "mobx": "catalog:legacy",
-        "mobx-react": "catalog:legacy",
+        "mobx": "catalog:frontend",
+        "mobx-react": "catalog:frontend",
         "react": "catalog:frontend",
         "react-dom": "catalog:frontend"
     },
@@ -301,7 +301,6 @@
     },
     "swc": {
         "jsc": {
-            "loose": true,
             "parser": {
                 "syntax": "typescript",
                 "tsx": true,

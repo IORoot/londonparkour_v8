@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/freemium",
-    "version": "1.3.143",
+    "version": "1.3.151",
     "private": true,
     "description": "Make your plugin to a freemium plugin with predefined Envato support",
     "homepage": "https://devowl.io",
@@ -142,7 +142,6 @@
     },
     "swc": {
         "jsc": {
-            "loose": true,
             "parser": {
                 "syntax": "typescript",
                 "tsx": true,

@@ -2,7 +2,6 @@
 
 namespace MatthiasWeb\RealMediaLibrary\view;
 
-use MatthiasWeb\RealMediaLibrary\base\UtilsProvider;
 use MatthiasWeb\RealMediaLibrary\folder\Creatable;
 // @codeCoverageIgnoreStart
 \defined('ABSPATH') or die('No script kiddies please!');
@@ -14,34 +13,8 @@ use MatthiasWeb\RealMediaLibrary\folder\Creatable;
  */
 class FolderShortcode
 {
-    use UtilsProvider;
     private static $me = null;
     public static $TAG = 'folder-gallery';
-    /**
-     * C'tor.
-     */
-    public function __construct()
-    {
-        if (\is_admin() && \wp_rml_active()) {
-            \add_action('admin_head', [$this, 'admin_head']);
-            \add_filter('RML/Localize', [$this, 'localize']);
-        }
-    }
-    /**
-     * Modify admin_head section.
-     */
-    public function admin_head()
-    {
-        // check user permissions
-        if (!\current_user_can('edit_posts') && !\current_user_can('edit_pages')) {
-            return;
-        }
-        // check if WYSIWYG is enabled
-        if (\get_user_option('rich_editing')) {
-            \add_filter('mce_external_plugins', [$this, 'mce_external_plugins']);
-            \add_filter('mce_buttons', [$this, 'mce_buttons']);
-        }
-    }
     /**
      * Modify original shortcode attributes of [gallery].
      *
@@ -81,41 +54,6 @@ class FolderShortcode
             $out['orderby'] = 'post__in';
         }
         return $out;
-    }
-    /**
-     * Localized variables for TinyMCE shortcode generator.
-     *
-     * @param array $arr
-     * @return array
-     */
-    public function localize($arr)
-    {
-        $arr['mce'] = ['mceButtonTooltip' => \__('Gallery from Media Folder', 'real-media-library-lite'), 'mceListBoxDirsTooltip' => \__('Note: You can only select galleries. Folders and collections are grayed.', 'real-media-library-lite'), 'mceBodyGallery' => \__('Folder', 'real-media-library-lite'), 'mceBodyLinkTo' => \__('Link to', 'real-media-library-lite'), 'mceBodyColumns' => \__('Columns', 'real-media-library-lite'), 'mceBodyRandomOrder' => \__('Random Order', 'real-media-library-lite'), 'mceBodySize' => \__('Size', 'real-media-library-lite'), 'mceBodyLinkToValues' => [['value' => 'post', 'text' => \__('Attachment File', 'real-media-library-lite')], ['value' => 'file', 'text' => \__('Media File', 'real-media-library-lite')], ['value' => 'none', 'text' => \__('None', 'real-media-library-lite')]], 'mceBodySizeValues' => [['value' => 'thumbnail', 'text' => \__('Thumbnail', 'real-media-library-lite')], ['value' => 'medium', 'text' => \__('Medium', 'real-media-library-lite')], ['value' => 'large', 'text' => \__('Large', 'real-media-library-lite')], ['value' => 'full', 'text' => \__('Full Size', 'real-media-library-lite')]]];
-        return $arr;
-    }
-    /**
-     * Add external plugin to MCE.
-     *
-     * @param array $plugin_array
-     * @return array
-     */
-    public function mce_external_plugins($plugin_array)
-    {
-        $assets = $this->getCore()->getAssets();
-        $dir = $assets->getPublicFolder();
-        $plugin_array[self::$TAG] = \plugins_url($dir . 'rml_shortcode.' . ($this->isPro() ? 'pro' : 'lite') . '.js', RML_FILE);
-        return $plugin_array;
-    }
-    /**
-     * Add button to MCE.
-     *
-     * @param string[] $buttons
-     * @return string[]
-     */
-    public function mce_buttons($buttons)
-    {
-        \array_push($buttons, self::$TAG);
-        return $buttons;
     }
     /**
      * Get instance.

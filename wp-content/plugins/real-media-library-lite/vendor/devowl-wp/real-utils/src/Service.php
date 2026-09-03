@@ -33,7 +33,6 @@ class Service
     {
         $namespace = UtilsService::getNamespace($this);
         \register_rest_route($namespace, '/feedback/(?P<slug>[a-zA-Z0-9_-]+)', ['methods' => 'POST', 'callback' => [$this, 'routeFeedbackCreate'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['reason' => ['type' => 'string', 'required' => \true], 'note' => ['type' => 'string', 'required' => \true], 'email' => ['type' => 'string']]]);
-        \register_rest_route($namespace, '/cross/(?P<slug>[a-zA-Z0-9_-]+)/(?P<action>[a-zA-Z0-9_-]+)/dismiss', ['methods' => 'DELETE', 'callback' => [$this, 'routeCrossDismiss'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['force' => ['type' => 'boolean', 'default' => \false]]]);
         \register_rest_route($namespace, '/rating/(?P<slug>[a-zA-Z0-9_-]+)/dismiss', ['methods' => 'DELETE', 'callback' => [$this, 'routeRatingDismiss'], 'permission_callback' => [$this, 'permission_callback'], 'args' => ['force' => ['type' => 'boolean', 'default' => \false]]]);
     }
     /**
@@ -97,33 +96,6 @@ class Service
 Feedback: ' . $reason . '
 
 ' . $note, 'siteHealth' => 'none', 'privacy' => \true]]);
-    }
-    /**
-     * See API docs.
-     *
-     * @param WP_REST_Request $request
-     * @api {delete} /real-utils/v1/cross/:slug/:action/dismiss Dismiss cross-selling popup
-     * @apiHeader {string} X-WP-Nonce
-     * @apiParam {string} slug
-     * @apiParam {string} action
-     * @apiParam {boolean} force
-     * @apiName CrossDismiss
-     * @apiPermission activate_plugins
-     * @apiGroup Service
-     * @apiVersion 1.0.0
-     */
-    public function routeCrossDismiss($request)
-    {
-        $slug = $request->get_param('slug');
-        $action = $request->get_param('action');
-        $force = $request->get_param('force');
-        $impl = Core::getInstance()->getCrossSelling($slug);
-        if ($impl === null) {
-            return new WP_Error('rest_error', \__('The abstract implementation for your slug could not be found.', 'devowl-wp-real-utils'));
-        }
-        $result = $impl->dismiss($action, $force);
-        // Currently, ignore errors
-        return new WP_REST_Response(['result' => $result]);
     }
     /**
      * See API docs.

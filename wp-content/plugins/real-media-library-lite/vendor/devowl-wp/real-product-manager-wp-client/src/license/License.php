@@ -31,6 +31,8 @@ class License
     const INSTALLATION_TYPE_DEVELOPMENT = 'development';
     const INSTALLATION_TYPE_PRODUCTION = 'production';
     const ERROR_CODE_NOT_ACTIVATED = 'rpm_wpc_not_activated';
+    /** Host check skipped or hostname unresolved — callers must not contact the license server. */
+    const ERROR_CODE_HOST_CHECK_BLOCKED = 'rpm_wpc_host_check_blocked';
     /**
      * In some cases, the new host gets validated and RPM automatically deactivates the
      * license of the users without any changes to the host. For some reason, the detected
@@ -41,9 +43,9 @@ class License
      * Skip the license deactivation for some exceptions. For example, AWS Lightsail does
      * not automatically redirect the `ec2-192-18[...]` domain to the WordPress domain URL.
      *
-     * @see https://regex101.com/r/OxkZVE/4
+     * @see https://regex101.com/r/85EbWA/1
      */
-    const VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP = '/^(?:\\w+-\\d+-\\d+-\\d+-\\d+\\.[^\\.]+\\.(?:[\\w-]+[-.])?amazonaws\\.com|.*temp\\.domains|\\w+-\\w+\\.[^\\.]+\\.azurewebsites\\.net|[\\w-]+\\.[\\w-]+\\.elb\\.amazonaws\\.com)$/m';
+    const VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP = '/^(?:\\w+-\\d+-\\d+-\\d+-\\d+\\.[^\\.]+\\.(?:[\\w-]+[-.])?amazonaws\\.com|.*temp\\.domains|\\w+-\\w+\\.[^\\.]+\\.azurewebsites\\.net|[\\w-]+\\.[\\w-]+\\.elb\\.amazonaws\\.com|.*\\.hostingersite\\.com)$/m';
     private $initialized = \false;
     /**
      * Plugin slug.
@@ -88,6 +90,25 @@ class License
      */
     private $remoteStatus;
     /**
+     * Request-local stash of license key + client UUID captured before a clone sever.
+     * Not persisted to options.
+     *
+     * @var array{code: string, uuid: string}|null
+     */
+    private $severedLicenseIdentityStash = null;
+    /**
+     * Belt-and-braces reentrancy guard while clearing local identity during sever.
+     *
+     * @var boolean
+     */
+    private $severingClonedLicenseIdentity = \false;
+    /**
+     * One-shot per request: reclaim + programmatic after a successful sever.
+     *
+     * @var boolean
+     */
+    private $postSeverRestoreDone = \false;
+    /**
      * C'tor.
      *
      * @param PluginUpdate $pluginUpdate
@@ -108,7 +129,6 @@ class License
         if (\did_action($newVersionHook)) {
             $this->newVersionInstalled();
         }
-        \add_action('update_option_siteurl', [$this, 'update_option_siteurl']);
         if ($this->getInitiator()->isExternalUpdateEnabled() && \is_admin()) {
             \add_action('shutdown', [$this, 'validateNewHostName']);
         }
@@ -183,6 +203,10 @@ class License
      */
     public function syncWithRemote()
     {
+        $severResult = $this->probablySeverClonedLicenseIdentity();
+        if (\is_wp_error($severResult)) {
+            return $severResult;
+        }
         $activation = $this->getActivation();
         $code = $activation->getCode();
         if (empty($code)) {
@@ -209,6 +233,10 @@ class License
      */
     public function fetchRemoteStatus($force = \false)
     {
+        $severResult = $this->probablySeverClonedLicenseIdentity();
+        if (\is_wp_error($severResult)) {
+            return $severResult;
+        }
         // Not yet activated, it's an error when asking for remote result
         $code = $this->getActivation()->getCode();
         if (empty($code)) {
@@ -221,43 +249,125 @@ class License
         return $this->remoteStatus;
     }
     /**
-     * If the `site_url` got updated through e.g. the UI, persist the host name as known
-     * so that `self::validateNewHost` does not automatically deactivate the license - its
-     * still the same WordPress installation.
+     * If this instance runs on a different host than the one stored with the license
+     * (typical after a DB clone to staging), drop local license identity without contacting
+     * the license server - otherwise remote DELETE/PATCH/GET would act on production's client UUID.
+     *
+     * @return bool|WP_Error `true` when local identity was severed, `false` when unchanged
+     *                       (or no license identity), `WP_Error` when the host check cannot run
+     *                       safely (do not call remote while identity is still present)
      */
-    public function update_option_siteurl()
+    public function probablySeverClonedLicenseIdentity()
     {
-        $currentHostname = Utils::getCurrentHostname();
-        \update_option(self::OPTION_NAME_HOST_NAME . $this->getSlug(), \base64_encode($currentHostname));
-    }
-    /**
-     * Check if the plugin got migrated to another host and deactivate the license automatically.
-     */
-    public function validateNewHostName()
-    {
+        // clearLocal path must not re-enter host checks mid-sever
+        if ($this->severingClonedLicenseIdentity) {
+            return \true;
+        }
         $this->switch();
         $currentHostname = Utils::getCurrentHostname();
         $persistedHostname = $this->getKnownHostname();
         $code = $this->getActivation()->getCode();
-        $isLicensed = !empty($code);
+        $uuid = $this->getUuid();
+        $hasLicenseIdentity = !empty($code) || !empty($uuid);
         $dynamic = \defined('RPM_WP_CLIENT_SKIP_DYNAMIC_HOST_CHECK') && \constant('RPM_WP_CLIENT_SKIP_DYNAMIC_HOST_CHECK');
-        $isWpCli = \defined('WP_CLI') && \constant('WP_CLI');
-        if (!$isWpCli && !Utils::isRedirected() && $isLicensed && !empty($currentHostname) && \filter_var(\preg_replace('/:[0-9]+/', '', $currentHostname), \FILTER_VALIDATE_IP) === \false && \parse_url($currentHostname) !== \false && !$dynamic && !\in_array($currentHostname, self::VALIDATE_NEW_HOSTNAME_SKIP, \true) && !\preg_match(self::VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP, $currentHostname)) {
-            // Backwards-compatibility, save option of current host
-            if (empty($persistedHostname)) {
-                \update_option(self::OPTION_NAME_HOST_NAME . $this->getSlug(), \base64_encode($currentHostname));
-                $persistedHostname = $currentHostname;
+        // Host check cannot run — with license identity, remote must not use a possibly cloned UUID
+        $hostCheckBlocked = empty($currentHostname) || Utils::isRedirected() || $dynamic || \filter_var(\preg_replace('/:[0-9]+/', '', $currentHostname), \FILTER_VALIDATE_IP) !== \false || \parse_url($currentHostname) === \false || \in_array($currentHostname, self::VALIDATE_NEW_HOSTNAME_SKIP, \true) || \preg_match(self::VALIDATE_NEW_HOSTNAME_SKIP_BY_REGEXP, $currentHostname);
+        if ($hostCheckBlocked) {
+            $this->restore();
+            if (!$hasLicenseIdentity) {
+                return \false;
             }
-            // Automatically deactivate
-            if ($currentHostname !== $persistedHostname) {
-                $this->getActivation()->deactivate(\false, 'warning', \__('The license has been automatically deactivated because your website is running on a new domain. Please activate the license again!', 'devowl-wp-real-product-manager-wp-client') . \sprintf(' "%s" -> "%s"', $persistedHostname, $currentHostname) . ($this->getInitiator()->isExternalUpdateEnabled() ? \sprintf(' %s: %s', \__('License key', 'devowl-wp-real-product-manager-wp-client'), $code) : ''));
-                // It might be a clone of the website, let's delete also the UUID
-                \update_option(License::OPTION_NAME_UUID_PREFIX . $this->getSlug(), '');
-                // Is there a chance the new host is configured programmatically?
-                $this->activateProgrammatically(\true);
+            return new WP_Error(self::ERROR_CODE_HOST_CHECK_BLOCKED, \__('The license server cannot be contacted because the website hostname could not be verified safely.', 'devowl-wp-real-product-manager-wp-client'), ['blog' => $this->getBlogId(), 'slug' => $this->getSlug()]);
+        }
+        if (!$hasLicenseIdentity) {
+            $this->restore();
+            return \false;
+        }
+        $severed = \false;
+        // Backwards-compatibility, save option of current host
+        if (empty($persistedHostname)) {
+            if (!empty($code)) {
+                \update_option(self::OPTION_NAME_HOST_NAME . $this->getSlug(), \base64_encode($currentHostname));
+            }
+        } elseif ($currentHostname !== $persistedHostname) {
+            // Capture proof before local clear so reclaim can run in this request
+            $this->severedLicenseIdentityStash = ['code' => $code, 'uuid' => $uuid];
+            $this->severingClonedLicenseIdentity = \true;
+            try {
+                if (!empty($code)) {
+                    $this->getActivation()->clearLocalLicenseIdentity('warning', \__('The license has been automatically deactivated because your website is running on a new domain. Please activate the license again!', 'devowl-wp-real-product-manager-wp-client') . \sprintf(' "%s" -> "%s"', $persistedHostname, $currentHostname) . ($this->getInitiator()->isExternalUpdateEnabled() ? \sprintf(' %s: %s', \__('License key', 'devowl-wp-real-product-manager-wp-client'), $code) : ''), \true);
+                } else {
+                    \update_option(self::OPTION_NAME_HOST_NAME . $this->getSlug(), '');
+                    \update_option(self::OPTION_NAME_UUID_PREFIX . $this->getSlug(), '');
+                }
+                $severed = \true;
+            } finally {
+                $this->severingClonedLicenseIdentity = \false;
             }
         }
         $this->restore();
+        if ($severed) {
+            $this->afterSeverBestEffortRestore();
+        }
+        return $severed;
+    }
+    /**
+     * Check if the plugin got migrated to another host and deactivate the license automatically.
+     * Sever runs reclaim + programmatic via `afterSeverBestEffortRestore` when needed.
+     */
+    public function validateNewHostName()
+    {
+        $this->probablySeverClonedLicenseIdentity();
+    }
+    /**
+     * After a successful clone sever in this request: reclaim once, then programmatic activate.
+     * Idempotent for the request (`$postSeverRestoreDone`).
+     */
+    public function afterSeverBestEffortRestore()
+    {
+        if ($this->postSeverRestoreDone) {
+            return;
+        }
+        $this->postSeverRestoreDone = \true;
+        $this->probablyReclaimLicenseActivation();
+        $this->activateProgrammatically(\true);
+    }
+    /**
+     * Best-effort reclaim of a prior hostname activation using the sever stash.
+     * Any failure is ignored — the caller continues with programmatic / manual flows.
+     *
+     * @return boolean `true` when local options were restored from reclaim
+     */
+    public function probablyReclaimLicenseActivation()
+    {
+        $stash = $this->severedLicenseIdentityStash;
+        $this->severedLicenseIdentityStash = null;
+        if ($stash === null || empty($stash['code']) || empty($stash['uuid'])) {
+            return \false;
+        }
+        $this->switch();
+        $hostname = Utils::getCurrentHostname();
+        if (empty($hostname)) {
+            $this->restore();
+            return \false;
+        }
+        $response = $this->getClient()->postReclaim($stash['code'], $stash['uuid'], $hostname);
+        if (\is_wp_error($response) || !isset($response['licenseActivation'])) {
+            $this->restore();
+            return \false;
+        }
+        $this->getActivation()->persistLocalLicenseActivationFromRemote($response['licenseActivation'], $response['featureFlags'] ?? []);
+        // After persist (which clears hints): surface a one-time info for the license UI
+        $restoredAt = \date_i18n(\get_option('date_format') . ' ' . \get_option('time_format'));
+        \update_option(self::OPTION_NAME_HINT_PREFIX . $this->getSlug(), ['validateStatus' => 'info', 'hasFeedback' => \false, 'help' => \sprintf(
+            // translators: %s: localized date and time when the license was restored
+            \__('Your license was restored automatically on %s. This website is running on a different domain than before (for example after moving the site or creating a staging copy), so an existing activation for this domain was reused and you do not need to enter a license key again.', 'devowl-wp-real-product-manager-wp-client'),
+            $restoredAt
+        )]);
+        $this->getTelemetryData()->probablyTransmit();
+        $this->getPluginUpdate()->getLicensedBlogIds(\true);
+        $this->restore();
+        return \true;
     }
     /**
      * Validate a remote response against their body and probably an error code.
@@ -286,7 +396,11 @@ class License
             }
         }
         if (!$isError && isset($response['licenseActivation'])) {
-            $this->receivedRemoteLicenseActivation($response['licenseActivation']);
+            $licenseActivation = $response['licenseActivation'];
+            if (\array_key_exists('featureFlags', $response) && \is_array($response['featureFlags'])) {
+                $licenseActivation['featureFlags'] = $response['featureFlags'];
+            }
+            $this->receivedRemoteLicenseActivation($licenseActivation);
         }
         return \true;
     }
@@ -316,12 +430,21 @@ class License
         }
         if (!$force) {
             $hint = $activation->getHint();
-            if (\is_array($hint)) {
+            if (\is_array($hint) && ($hint['validateStatus'] ?? '') !== 'info') {
                 return new WP_Error('rpm_wpc_programmatic_activation_already_error', $hint['help']);
             }
         }
-        // Deactivate old license
+        // Deactivate old license (sever may reclaim first; early-return leaves restored identity)
         if ($isLicensed) {
+            $activation->deactivate(\true);
+        }
+        // After clone sever + reclaim, local key may already match programmatic
+        $codeAfter = $activation->getCode();
+        if (!empty($codeAfter)) {
+            if ($codeAfter === $prog['code'] && $activation->getInstallationType() === $prog['type']) {
+                return $activation->getReceived();
+            }
+            // Same host, different key than filter — intentional remote replace
             $activation->deactivate(\true);
         }
         $result = $activation->activate($prog['code'], $prog['type'], $prog['telemetry'], \false, '', '');

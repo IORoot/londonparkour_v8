@@ -43,6 +43,7 @@ class PluginUpdate
         }], 'autoUpdates' => ['type' => 'boolean', 'default' => \true], 'telemetry' => ['type' => 'boolean', 'default' => \false], 'newsletter' => ['type' => 'boolean', 'default' => \false], 'firstName' => ['type' => 'string'], 'email' => ['type' => 'string', 'validate_callback' => 'is_email']]]);
         \register_rest_route($namespace, '/plugin-update/(?P<slug>[a-zA-Z0-9_-]+)/license/(?P<blogId>[0-9_-]+)', ['methods' => 'DELETE', 'callback' => [$this, 'routeDeleteLicense'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/plugin-update/(?P<slug>[a-zA-Z0-9_-]+)/license/(?P<blogId>[0-9_-]+)/retry', ['methods' => 'POST', 'callback' => [$this, 'routeRetryLicense'], 'permission_callback' => [$this, 'permission_callback']]);
+        \register_rest_route($namespace, '/plugin-update/(?P<slug>[a-zA-Z0-9_-]+)/license/(?P<blogId>[0-9_-]+)/client-uuid', ['methods' => 'DELETE', 'callback' => [$this, 'routeClearClientUuid'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/plugin-update/(?P<slug>[a-zA-Z0-9_-]+)/telemetry/(?P<blogId>[0-9_-]+)', ['methods' => 'GET', 'callback' => [$this, 'routeTelemetry'], 'permission_callback' => [$this, 'permission_callback']]);
         \register_rest_route($namespace, '/plugin-update/(?P<slug>[a-zA-Z0-9_-]+)/license-notice', ['methods' => 'DELETE', 'callback' => [$this, 'routeDismissLicenseNotice'], 'permission_callback' => [$this, 'permission_callback']]);
     }
@@ -206,6 +207,38 @@ class PluginUpdate
             $license = $licenses[$blogId];
             return new WP_REST_Response($license->getTelemetryData()->build());
         }
+    }
+    /**
+     * See API docs.
+     *
+     * @param WP_REST_Request $request
+     * @api {delete} /real-product-manager-wp-client/v1/plugin-update/:slug/license/:blogId/client-uuid Clear the local client UUID for a blog
+     * @apiHeader {string} X-WP-Nonce
+     * @apiParam {string} slug
+     * @apiParam {number} blogId
+     * @apiName ClearClientUuid
+     * @apiPermission activate_plugins
+     * @apiGroup PluginUpdate
+     * @apiVersion 1.0.0
+     */
+    public function routeClearClientUuid($request)
+    {
+        $slug = $request->get_param('slug');
+        $blogId = \intval($request->get_param('blogId'));
+        $initiator = Core::getInstance()->getInitiator($slug);
+        if ($initiator === null) {
+            return new WP_Error('rest_not_found', 'Not found', ['status' => 404]);
+        }
+        $licenses = $initiator->getPluginUpdater()->getLicenses(\true);
+        if (!isset($licenses[$blogId])) {
+            return new WP_Error('rest_not_found', 'Not found', ['status' => 404]);
+        }
+        $license = $licenses[$blogId];
+        $clear = $license->getActivation()->clearClientUuid();
+        if (\is_wp_error($clear)) {
+            return $clear;
+        }
+        return new WP_REST_Response($license->getAsArray());
     }
     /**
      * See API docs.

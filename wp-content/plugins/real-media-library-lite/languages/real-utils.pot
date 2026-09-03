@@ -11,12 +11,8 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
-#: Service.php:140
+#: Service.php:128
 msgid "No such plugin slug available."
-msgstr ""
-
-#: Service.php:192
-msgid "The abstract implementation for your slug could not be found."
 msgstr ""
 
 #: WelcomePage.php:62
@@ -51,108 +47,4 @@ msgstr ""
 
 #: WelcomePage.php:334
 msgid "Available in"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:50
-msgid "Do you manage many categories?"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:52
-msgid ""
-"Do you still create your categories this way? Get an explorer-like tree view "
-"directly in your posts/page tables!"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:59
-msgid "Manage product categories/attributes?"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:61
-msgid ""
-"Do you still create your product categories and attributes this way? Get an "
-"explorer-like tree view directly into your WooCommerce products table!"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:68
-msgid "Paginate without reload?"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:70
-msgid ""
-"Do you want to paginate through your posts and pages without having to "
-"reload the complete page?"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:77
-msgid "Assigning much faster?"
-msgstr ""
-
-#: cross/CrossRealCategoryLibrary.php:79
-msgid ""
-"You can move or insert a post or page directly into a category without "
-"having to deal with checkboxes."
-msgstr ""
-
-#: cross/CrossRealCookieBanner.php:88
-msgid "Is your website GDPR compliant?"
-msgstr ""
-
-#: cross/CrossRealCookieBanner.php:89
-msgid "cookie-banner-frontend.png"
-msgstr ""
-
-#: cross/CrossRealCookieBanner.php:90
-msgid ""
-"Websites targeting EU users and setting non-essential cookies need an opt-in "
-"cookie banner. We recommend Real Cookie Banner as an ePrivacy Policy and "
-"GDPR compliant solution for WordPress."
-msgstr ""
-
-#: cross/CrossRealCookieBanner.php:94
-msgid "https://devowl.io/go/real-cookie-banner?source=cross-rcb"
-msgstr ""
-
-#: cross/CrossRealMediaLibrary.php:49
-msgid "File finally found?"
-msgstr ""
-
-#: cross/CrossRealMediaLibrary.php:51
-msgid ""
-"Your WordPress site will certainly continue to grow. Organize your media "
-"library with folders!"
-msgstr ""
-
-#: cross/CrossRealMediaLibrary.php:58
-msgid "Does it take long to find a file?"
-msgstr ""
-
-#: cross/CrossRealMediaLibrary.php:60
-msgid ""
-"Inserting media into a post or page can be stressful. Use folders to "
-"organize your media library!"
-msgstr ""
-
-#: cross/CrossRealPhysicalMedia.php:47 cross/CrossRealPhysicalMedia.php:56
-msgid "Did you know that?"
-msgstr ""
-
-#: cross/CrossRealPhysicalMedia.php:49 cross/CrossRealPhysicalMedia.php:58
-msgid ""
-"Your uploads can say more than a thousand words. Unfortunately, search "
-"engines do not understand the content of images, for example. Organize your "
-"uploads directly in meaningful folder names and achieve a better ranking in "
-"search engines!"
-msgstr ""
-
-#. translators:
-#: view/Options.php:48
-#, php-format
-msgid "Products of %s"
-msgstr ""
-
-#. translators:
-#: view/Options.php:67
-#, php-format
-msgid ""
-"Show advertising for not yet installed %s products in the WordPress backend"
 msgstr ""

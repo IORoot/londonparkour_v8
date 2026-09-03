@@ -117,6 +117,10 @@ class PageBuilders
      */
     public function diviBuilder_skip($skip, $type)
     {
+        // @see https://gist.github.com/matzeeable/ad1246af9fea87acda40169404df0485
+        if (isset($_GET['et_fb']) && (string) $_GET['et_fb'] === '1' && \defined('ET_BUILDER_PRODUCT_VERSION') && \version_compare(\constant('ET_BUILDER_PRODUCT_VERSION'), '5.0.0', '<')) {
+            return \true;
+        }
         if ($type === 'et_fb_enqueue_assets') {
             return $skip;
         }

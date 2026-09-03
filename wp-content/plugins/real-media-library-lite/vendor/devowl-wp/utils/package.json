@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/utils",
-    "version": "1.20.26",
+    "version": "1.20.34",
     "private": true,
     "description": "Utility functionality for all your WordPress plugins.",
     "homepage": "https://devowl.io",
@@ -58,11 +58,10 @@
         "@devowl-wp/api": "workspace:*",
         "@wordpress/i18n": "catalog:wordpress",
         "deepmerge": "catalog:isomorphic",
-        "immer": "catalog:isomorphic",
         "jquery": "catalog:frontend",
         "js-cookie": "catalog:frontend",
         "json-form-data": "catalog:isomorphic",
-        "mobx": "catalog:legacy",
+        "mobx": "catalog:frontend",
         "react": "catalog:frontend",
         "react-dom": "catalog:frontend"
     },
@@ -304,7 +303,6 @@
     },
     "swc": {
         "jsc": {
-            "loose": true,
             "parser": {
                 "syntax": "typescript",
                 "tsx": true,

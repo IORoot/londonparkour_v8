@@ -26,14 +26,14 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: license/License.php:197
+#: license/License.php:219
 #, php-format
 msgid ""
 "The plugin has a new update server. Therefore, you need to reactivate your "
 "license (%s) to continue receiving updates."
 msgstr ""
 
-#: license/License.php:205
+#: license/License.php:227
 msgid ""
 "You are using a WordPress multisite. According to the plugin's licence "
 "agreement, you need one license per website. If you have only used one "
@@ -42,28 +42,48 @@ msgid ""
 "this causes you any inconvenience!"
 msgstr ""
 
-#: license/License.php:223 license/License.php:261
+#: license/License.php:250 license/License.php:293
 msgid "You have not yet activated a license for this plugin on your website."
 msgstr ""
 
-#: license/License.php:326
+#: license/License.php:353
+msgid ""
+"The license server cannot be contacted because the website hostname could "
+"not be verified safely."
+msgstr ""
+
+#: license/License.php:388
 msgid ""
 "The license has been automatically deactivated because your website is "
 "running on a new domain. Please activate the license again!"
 msgstr ""
 
-#: license/License.php:332
+#: license/License.php:396
 msgid "License key"
 msgstr ""
 
-#: license/License.php:397
+#. translators: %s: localized date and time when the license was restored
+#: license/License.php:481
+#, php-format
+msgid ""
+"Your license was restored automatically on %s. This website is running on a "
+"different domain than before (for example after moving the site or creating "
+"a staging copy), so an existing activation for this domain was reused and "
+"you do not need to enter a license key again."
+msgstr ""
+
+#: license/License.php:548
 msgid "No programmatic activation found for this plugin."
 msgstr ""
 
-#: license/LicenseActivation.php:85
+#: license/LicenseActivation.php:87
 msgid ""
 "You have already activated a license for this plugin. Please deactivate it "
 "first!"
+msgstr ""
+
+#: license/LicenseActivation.php:231
+msgid "Please deactivate the license before resetting the installation ID."
 msgstr ""
 
 #: license/PluginUpdateLicensePool.php:69
@@ -89,7 +109,7 @@ msgid ""
 "if you are blocking access to %s e.g. by a firewall."
 msgstr ""
 
-#: rest/PluginUpdate.php:167
+#: rest/PluginUpdate.php:177
 msgid "Something went wrong. Please try again later!"
 msgstr ""
 
@@ -97,20 +117,20 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: view/PluginUpdateView.php:115
+#: view/PluginUpdateView.php:116
 msgid "You have not yet entered the license key."
 msgstr ""
 
-#: view/PluginUpdateView.php:118
+#: view/PluginUpdateView.php:119
 msgid "Activate the license to receive automatic updates."
 msgstr ""
 
-#: view/PluginUpdateView.php:145
+#: view/PluginUpdateView.php:146
 msgid "License"
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:175
+#: view/PluginUpdateView.php:176
 #, php-format
 msgid ""
 "You have not yet activated a license for the %s plugin. Activate the licence "
@@ -118,7 +138,7 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:196
+#: view/PluginUpdateView.php:197
 #, php-format
 msgid ""
 "Updates of %s are waiting for you when you activate your license. Activate "
@@ -126,13 +146,13 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:203
+#: view/PluginUpdateView.php:204
 #, php-format
 msgid "Activate your %s to use all features with great support. Activate now!"
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:210
+#: view/PluginUpdateView.php:211
 #, php-format
 msgid ""
 "You have not yet activated your %s license. Activate your license now in the "
@@ -140,7 +160,7 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:217
+#: view/PluginUpdateView.php:218
 #, php-format
 msgid ""
 "You are not allowed to use %s according to our license terms unless you have "
@@ -148,7 +168,7 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:225
+#: view/PluginUpdateView.php:226
 #, php-format
 msgid ""
 "Attention! Pirates distribute %s for free without a license. Activate your "
@@ -156,7 +176,7 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:233
+#: view/PluginUpdateView.php:234
 #, php-format
 msgid ""
 "You are probably using an illegally purchased copy of %s without a license. "
@@ -164,7 +184,7 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: view/PluginUpdateView.php:241
+#: view/PluginUpdateView.php:242
 #, php-format
 msgid ""
 "You are probably using an illegal copy of %s. Purchase a license now or "
@@ -172,6 +192,6 @@ msgid ""
 "a clear conscience!"
 msgstr ""
 
-#: view/PluginUpdateView.php:277
+#: view/PluginUpdateView.php:278
 msgid "Activate now"
 msgstr ""

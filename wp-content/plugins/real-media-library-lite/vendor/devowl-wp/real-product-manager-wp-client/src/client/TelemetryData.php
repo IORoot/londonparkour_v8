@@ -40,7 +40,13 @@ class TelemetryData
     public function put()
     {
         $license = $this->getLicense();
+        if (\is_wp_error($license->probablySeverClonedLicenseIdentity())) {
+            return [];
+        }
         $pluginUpdate = $license->getPluginUpdate();
+        if (empty($license->getActivation()->getCode())) {
+            return [];
+        }
         $built = $license->getTelemetryData()->build(\true);
         // Nothing to send, skip request and return simulated "valid" response
         if (\count($built) === 0) {

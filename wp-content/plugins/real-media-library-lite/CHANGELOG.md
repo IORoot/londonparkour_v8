@@ -3,6 +3,302 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.23.4 (2026-08-31)
+
+
+### Bug Fixes
+
+* preserve manual folder and content order across MySQL versions (CU-869emeg3v)
+* skip Real Media Library scripts in Divi 4 Visual Builder to avoid React 16 useId crash (CU-869epje5u)
+
+
+<details><summary>Development dependency update @devowl-wp/api 1.13.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* api-reference did no longer render (CU-869eqh3r0)
+
+
+##### Features
+
+* add SSE Event-Source contracts for typed realtime streams (CU-869eqh3r0)</details>
+
+
+
+
+
+## 4.23.3 (2026-08-24) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.22.0</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Features
+
+* implement percentage-based feature flagging for WordPress clients (CU-869envwq6)</details>
+
+
+
+
+
+## 4.23.2 (2026-08-21) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/api 1.12.2</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* offload high-throughput locks from etcd to Redis Redlock (CU-869emktev)</details>
+
+
+
+
+
+## 4.23.1 (2026-08-20) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/continuous-integration 0.9.2</summary>
+
+
+**_Purpose of dependency:_** _DevOps macros, job templates and jobs for Gitlab CI and @devowl-wp/node-gitlab-ci._
+##### Bug Fixes
+
+* add parent flush lock and pin production app images (CU-869egkb98)
+* update FTP upload command for Envato zips to use secure connection (CU-869ejmez7)
+
+
+##### Build System
+
+* ship Complyforce production deploy on swarm_public2 (CU-869c51h34)
+* split production deploy by Compose profiles for dual public Swarms (CU-869d89by6)
+
+
+##### Code Refactoring
+
+* migrate storage-dev off MinIO to OVH and SeaweedFS (CU-869e14thv)
+
+
+##### Continuous Integration
+
+* gate docker validate deploy config on protected branches (CU-869egkb98)
+* include ensure-bundle.sh in INSTALL_FILES for Docker build context (CU-869ckvgg2)
+* migrate ACME cert generation from lego v4 to v5 CLI (CU-869chp8wu)
+* remove redundant lego migrate commands for ACME cert generation (CU-869chp8wu)
+
+
+##### Maintenance
+
+* add public DNS resolvers for ACME challenge in lego cert generation (CU-869chp8wu)
+* add Pulumi bridged-provider SDK paths to install files for install/bootstrap (CU-869e14thv)
+* add Pulumi infrastructure package for S3 provisioning (CU-869e14thv)
+* dynamic mc aliases from environment variables (CU-869e14thv)
+* migrate storage-dev prerelease workloads to OVH buckets and remove webpack-json-stats (CU-869e14thv)
+* migrate workloads to OVH buckets, including container-fs and tls-certs (CU-869e14thv)
+* squash multiple commits (original ae7282422e840405b144c67e641fd60b04ab932c, CU-869c8tfch)
+* upgrade Playwright 1.56.1 to 1.60.0 to fix extract-zip hang on Node >= 24.16.0 (CU-869dej6b8)
+
+
+##### Performance Improvements
+
+* stop per-session MCP RAM blowups via shared mcpproxy daemon (CU-869e9en4x)</details>
+
+<details><summary>Development dependency update @devowl-wp/eslint-config 0.3.1</summary>
+
+
+**_Purpose of dependency:_** _Provide eslint configuration for our complete monorepo._
+##### Maintenance
+
+* reject MobX decorators without makeObservable via ESLint (CU-869ejmez7)</details>
+
+
+
+
+
+# 4.23.0 (2026-08-18)
+
+
+### Code Refactoring
+
+* prepare WordPress plugins for React 19 compatibility (CU-86956vcbx)
+
+
+### Features
+
+* minimum required WordPress version is now 6.1 (CU-86956vcbx)
+
+
+### Maintenance
+
+* **wordpress-plugins :** declare WordPress 7.1 compatibility in wporg readmes (CU-869ejj0vg)
+
+
+<details><summary>Dependency updates @devowl-wp/freemium 1.3.148</summary>
+
+
+**_Purpose of dependency:_** _Make your plugin to a freemium plugin with predefined Envato support_
+##### Code Refactoring
+
+* prepare WordPress plugins for React 19 compatibility (CU-86956vcbx)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-folder-tree 0.1.32</summary>
+
+
+**_Purpose of dependency:_** _Feature-rich folder tree renderer with toolbar (formerly react-aiot)._
+##### Code Refactoring
+
+* prepare WordPress plugins for React 19 compatibility (CU-86956vcbx)</details>
+
+<details><summary>Dependency updates @devowl-wp/react-utils 1.0.25</summary>
+
+
+**_Purpose of dependency:_** _Provide various React utils, side effect free and tree shakeable._
+##### Code Refactoring
+
+* prepare WordPress plugins for React 19 compatibility (CU-86956vcbx)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-product-manager-wp-client 1.21.0</summary>
+
+
+**_Purpose of dependency:_** _A WordPress client for Real Product Manager_
+##### Bug Fixes
+
+* do not invalidate license for hostingersite.com (CU-869ea3vfe)
+* sever cloned license identity before remote calls (CU-869edzz7b)
+
+
+##### Code Refactoring
+
+* prepare WordPress plugins for React 19 compatibility (CU-86956vcbx)
+
+
+##### Features
+
+* implement safe clone server and activation reclaim process (CU-869edzz7b)</details>
+
+<details><summary>Dependency updates @devowl-wp/real-utils 1.14.32</summary>
+
+
+**_Purpose of dependency:_** _Create about page, rating and newsletter input for WP Real plugins._
+##### Code Refactoring
+
+* prepare WordPress plugins for React 19 compatibility (CU-86956vcbx)</details>
+
+<details><summary>Dependency updates @devowl-wp/utils 1.20.31</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Code Refactoring
+
+* prepare WordPress plugins for React 19 compatibility (CU-86956vcbx)</details>
+
+
+
+
+
+## 4.22.86 (2026-08-10)
+
+**Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/api 1.12.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Features
+
+* self-host production-ready NATS HA cluster on Docker Swarm (CU-869eenube)</details>
+
+
+
+
+
+## 4.22.85 (2026-08-04) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Development dependency update @devowl-wp/api 1.11.0</summary>
+
+
+**_Purpose of dependency:_** _Shared typings for all Node.js backends and frontends._
+##### Bug Fixes
+
+* make the emailed download link valid for the period it advertises (CU-1yyxdg5)
+
+
+##### Features
+
+* expose streamSequence and await NATS listeners via for-await (CU-869c8tfch)</details>
+
+
+
+
+
+## 4.22.84 (2026-07-17) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/utils 1.20.28</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Maintenance
+
+* dynamic mc aliases from environment variables (CU-869e14thv)</details>
+
+
+
+
+
+## 4.22.83 (2026-07-13) (not released)
+
+**Note:** This version of the package has not (yet) been released publicly. This happens if changes have been made in dependencies that do not affect this package (e.g. changes for the development of the package). The changes will be rolled out with the next official update.
+
+**Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.
+
+
+<details><summary>Dependency updates @devowl-wp/utils 1.20.27</summary>
+
+
+**_Purpose of dependency:_** _Utility functionality for all your WordPress plugins._
+##### Maintenance
+
+* migrate storage-dev prerelease workloads to OVH buckets and remove webpack-json-stats (CU-869e14thv)</details>
+
+<details><summary>Development dependency update @devowl-wp/webpack-config 0.2.60</summary>
+
+
+**_Purpose of dependency:_** _Webpack config builder for multiple ecosystems like standalone React frontends, Antd, Preact and WordPress._
+##### Maintenance
+
+* migrate storage-dev prerelease workloads to OVH buckets and remove webpack-json-stats (CU-869e14thv)</details>
+
+
+
+
+
 ## 4.22.82 (2026-07-02)
 
 **Note:** This package (@devowl-wp/real-media-library) has been updated because a dependency, which is also shipped with this package, has changed.

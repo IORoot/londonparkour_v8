@@ -397,7 +397,7 @@ trait Assets
     {
         $useNonMinifiedSources = $this->useNonMinifiedSources();
         $alreadyRegistered = \wp_script_is(Constants::ASSETS_HANDLE_MOBX, 'registered');
-        $this->enqueueLibraryScript(Constants::ASSETS_HANDLE_MOBX, [[$useNonMinifiedSources, 'mobx/lib/mobx.umd.js'], 'mobx/lib/mobx.umd.min.js']);
+        $this->enqueueLibraryScript(Constants::ASSETS_HANDLE_MOBX, [[$useNonMinifiedSources, 'mobx/dist/mobx.umd.development.js'], 'mobx/dist/mobx.umd.production.min.js']);
         // Add inline script only once (this allows multiple instances in mobx)
         if (!$alreadyRegistered) {
             \wp_add_inline_script(Constants::ASSETS_HANDLE_MOBX, 'document.addEventListener("DOMContentLoaded", function () {

@@ -58,15 +58,15 @@ msgstr ""
 msgid "Get your PRO license now!"
 msgstr ""
 
-#: inc/Assets.php:224
+#: inc/Assets.php:243
 msgid "https://devowl.io/"
 msgstr ""
 
-#: inc/Assets.php:226
+#: inc/Assets.php:245
 msgid "Complementary Plugins"
 msgstr ""
 
-#: inc/Assets.php:244
+#: inc/Assets.php:263
 msgid ""
 "\n"
 "\n"
@@ -107,15 +107,14 @@ msgid "Move to another folder"
 msgstr ""
 
 #: inc/attachment/CustomField.php:86 inc/folder/Creatable.php:340
-#: inc/view/FolderShortcode.php:114 inc/view/Lang.php:51
 msgid "Folder"
 msgstr ""
 
-#: inc/attachment/CustomField.php:127
+#: inc/attachment/CustomField.php:124
 msgid "Shortcut infos"
 msgstr ""
 
-#: inc/attachment/CustomField.php:134
+#: inc/attachment/CustomField.php:131
 msgid ""
 "This is a shortcut of a media library file. Shortcuts doesn't need any "
 "physical storage <strong>(0 kB)</strong>. If you want to change the file "
@@ -126,7 +125,7 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: inc/attachment/CustomField.php:157
+#: inc/attachment/CustomField.php:154
 #, php-format
 msgid "For this file is %d shortcut available in the following folder:"
 msgid_plural ""
@@ -134,7 +133,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/attachment/CustomField.php:180
+#: inc/attachment/CustomField.php:177
 msgid ""
 "This file has no associated shortcuts. You can create shortcuts by moving "
 "files per mouse and hold any key."
@@ -215,7 +214,7 @@ msgid "Importing data is only available in PRO version."
 msgstr ""
 
 #: inc/comp/ExImport.php:130 inc/comp/ExImport.php:192
-#: inc/usersettings/DefaultFolder.php:79 inc/view/Lang.php:252
+#: inc/usersettings/DefaultFolder.php:79
 msgid "Learn more about PRO"
 msgstr ""
 
@@ -269,7 +268,7 @@ msgstr ""
 msgid "The given folder does not exist or you cannot rename this folder."
 msgstr ""
 
-#: inc/folder/CRUD.php:146 inc/view/Lang.php:107
+#: inc/folder/CRUD.php:146
 msgid "The folder you try to delete has subfolders."
 msgstr ""
 
@@ -316,8 +315,8 @@ msgstr ""
 msgid "Order by ID descending"
 msgstr ""
 
-#: inc/folder/Root.php:21 inc/folder/Root.php:82 inc/view/Lang.php:146
-#: inc/view/View.php:119 inc/view/View.php:124
+#: inc/folder/Root.php:21 inc/folder/Root.php:82 inc/view/View.php:119
+#: inc/view/View.php:124
 msgid "Unorganized"
 msgstr ""
 
@@ -385,7 +384,7 @@ msgid "Natural order by filename descending"
 msgstr ""
 
 #: inc/overrides/lite/folder/Creatable.php:192
-#: inc/overrides/pro/folder/Creatable.php:309
+#: inc/overrides/pro/folder/Creatable.php:325
 #: inc/overrides/pro/order/Sortable.php:151 inc/rest/Attachment.php:170
 msgid "Something went wrong."
 msgstr ""
@@ -409,20 +408,20 @@ msgid ""
 msgstr ""
 
 #. translators:
-#: inc/overrides/pro/folder/Creatable.php:109
+#: inc/overrides/pro/folder/Creatable.php:117
 #, php-format
 msgid "The parent %d does not exist."
 msgstr ""
 
-#: inc/overrides/pro/folder/Creatable.php:164
+#: inc/overrides/pro/folder/Creatable.php:180
 msgid "The given parent does not exist to set the parent for this folder."
 msgstr ""
 
-#: inc/overrides/pro/folder/Creatable.php:171
+#: inc/overrides/pro/folder/Creatable.php:187
 msgid "You are not allowed to change the parent for this folder."
 msgstr ""
 
-#: inc/overrides/pro/folder/Creatable.php:177
+#: inc/overrides/pro/folder/Creatable.php:193
 msgid "The given parent does not allow the folder type."
 msgstr ""
 
@@ -448,7 +447,7 @@ msgstr ""
 msgid "This folder has an automatic order. Please deactivate that first."
 msgstr ""
 
-#: inc/overrides/pro/usersettings/DefaultFolder.php:39 inc/view/Lang.php:205
+#: inc/overrides/pro/usersettings/DefaultFolder.php:39
 msgid "Please select a folder to show items."
 msgstr ""
 
@@ -498,650 +497,6 @@ msgstr ""
 msgid ""
 "Instead of displaying a \"Load More\" button, all files are loaded "
 "automatically as you scroll down. This is not supported in list view."
-msgstr ""
-
-#: inc/view/FolderShortcode.php:109
-msgid "Gallery from Media Folder"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:110
-msgid ""
-"Note: You can only select galleries. Folders and collections are grayed."
-msgstr ""
-
-#: inc/view/FolderShortcode.php:115
-msgid "Link to"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:116
-msgid "Columns"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:117
-msgid "Random Order"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:118
-msgid "Size"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:122
-msgid "Attachment File"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:126
-msgid "Media File"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:130
-msgid "None"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:136
-msgid "Thumbnail"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:140
-msgid "Medium"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:144
-msgid "Large"
-msgstr ""
-
-#: inc/view/FolderShortcode.php:148
-msgid "Full Size"
-msgstr ""
-
-#: inc/view/Lang.php:39
-msgid ""
-"Subfolders are only available in the PRO version. But you can now create an "
-"unlimited number of folders on the main level (instead of the previous max. "
-"10 folders)."
-msgstr ""
-
-#: inc/view/Lang.php:48
-msgid "No folder selected"
-msgstr ""
-
-#: inc/view/Lang.php:49
-msgid "Select folder"
-msgstr ""
-
-#: inc/view/Lang.php:50
-msgid "Reload content"
-msgstr ""
-
-#: inc/view/Lang.php:52
-msgid "Subfolders"
-msgstr ""
-
-#: inc/view/Lang.php:53
-msgid "Please select a folder (media library) in the block settings."
-msgstr ""
-
-#: inc/view/Lang.php:58
-msgid "New folders inherit this restriction"
-msgstr ""
-
-#: inc/view/Lang.php:59
-msgid "The current selected folder has some restrictions:"
-msgstr ""
-
-#: inc/view/Lang.php:60
-msgid "You cannot change *parent* folder"
-msgstr ""
-
-#: inc/view/Lang.php:61
-msgid "You cannot *rearrange* subfolders"
-msgstr ""
-
-#: inc/view/Lang.php:62
-msgid "You cannot *create* subfolders"
-msgstr ""
-
-#: inc/view/Lang.php:63
-msgid ""
-"You cannot *insert* new files. New files will be moved to Unorganized..."
-msgstr ""
-
-#: inc/view/Lang.php:67
-msgid "You cannot *rename* the folder"
-msgstr ""
-
-#: inc/view/Lang.php:68
-msgid "You cannot *delete* the folder"
-msgstr ""
-
-#: inc/view/Lang.php:69
-msgid "You cannot *move* files outside the folder"
-msgstr ""
-
-#: inc/view/Lang.php:70
-msgid "Parent"
-msgstr ""
-
-#: inc/view/Lang.php:71
-msgid "Before this node"
-msgstr ""
-
-#: inc/view/Lang.php:72
-msgid "If no next node is given, the element is placed at the end."
-msgstr ""
-
-#: inc/view/Lang.php:76
-msgid "The file is uploaded to the folder where you are currently in."
-msgstr ""
-
-#: inc/view/Lang.php:80
-msgid "Are you sure?"
-msgstr ""
-
-#: inc/view/Lang.php:81
-msgid "Success"
-msgstr ""
-
-#: inc/view/Lang.php:82
-msgid "Failed"
-msgstr ""
-
-#: inc/view/Lang.php:83
-msgid "No entries found"
-msgstr ""
-
-#: inc/view/Lang.php:84
-msgid "Are you sure to delete *{name}*? All files gets moved to Unorganized."
-msgstr ""
-
-#: inc/view/Lang.php:88
-msgid ""
-"Are you sure to delete *{count} folders*? All files gets moved to "
-"Unorganized."
-msgstr ""
-
-#: inc/view/Lang.php:92
-msgid "Ok"
-msgstr ""
-
-#: inc/view/Lang.php:93
-msgid "Cancel"
-msgstr ""
-
-#: inc/view/Lang.php:94
-msgid "Save"
-msgstr ""
-
-#: inc/view/Lang.php:95
-msgid "Back"
-msgstr ""
-
-#: inc/view/Lang.php:96
-msgid "No folders found"
-msgstr ""
-
-#: inc/view/Lang.php:97
-msgid ""
-"No folders have been created yet. Just click on the button above to create "
-"your first folder."
-msgstr ""
-
-#: inc/view/Lang.php:101
-msgid "Folders"
-msgstr ""
-
-#: inc/view/Lang.php:102
-msgid "No search results."
-msgstr ""
-
-#: inc/view/Lang.php:103
-msgid "Renaming to *{name}*..."
-msgstr ""
-
-#: inc/view/Lang.php:104
-msgid "Successfully renamed folder to *{name}*"
-msgstr ""
-
-#: inc/view/Lang.php:105
-msgid "Creating *{name}*..."
-msgstr ""
-
-#: inc/view/Lang.php:106
-msgid "Successfully created *{name}*"
-msgstr ""
-
-#: inc/view/Lang.php:108
-msgid "Deleting *{name}*..."
-msgstr ""
-
-#: inc/view/Lang.php:109
-msgid "Successfully deleted *{name}*"
-msgstr ""
-
-#: inc/view/Lang.php:110
-msgid "Successfully deleted *{count} folders*"
-msgstr ""
-
-#: inc/view/Lang.php:111
-msgid "Rearrange *{name}* placement manually"
-msgstr ""
-
-#: inc/view/Lang.php:112
-msgid "Reordering the tree hierarchy..."
-msgstr ""
-
-#: inc/view/Lang.php:113
-msgid "Successfully sorted the tree hierarchy"
-msgstr ""
-
-#: inc/view/Lang.php:114
-msgid "Reorder subfolders of *{name}*..."
-msgstr ""
-
-#: inc/view/Lang.php:115
-msgid "{count} files remaining..."
-msgstr ""
-
-#: inc/view/Lang.php:116
-msgid "Receiving data..."
-msgstr ""
-
-#: inc/view/Lang.php:117
-msgid "Shortcut"
-msgstr ""
-
-#: inc/view/Lang.php:118
-msgid ""
-"This is a shortcut of a media library file. Shortcuts doesn't need any "
-"physical storage *(0 kB)*. If you want to change the file itself, you must "
-"do this in the original file (for example replace media file through a "
-"plugin).\n"
-"Note also that the fields in the shortcuts can be different to the original "
-"file, for example \"Title\", \"Description\" or \"Caption\"."
-msgstr ""
-
-#: inc/view/Lang.php:123
-msgid ""
-"In the current view of uploads, filters are active. Please reset them and "
-"refresh the view."
-msgstr ""
-
-#: inc/view/Lang.php:127
-msgid "A collection cannot contain files. Upload moved to Unorganized..."
-msgstr ""
-
-#: inc/view/Lang.php:131
-msgid "A gallery can only contain images. Upload moved to Unorganized..."
-msgstr ""
-
-#: inc/view/Lang.php:135
-msgid "Order content by *{name}*..."
-msgstr ""
-
-#: inc/view/Lang.php:136
-msgid "Order content by drag & drop"
-msgstr ""
-
-#: inc/view/Lang.php:137
-msgid "Reset order"
-msgstr ""
-
-#: inc/view/Lang.php:138
-msgid "Apply order once..."
-msgstr ""
-
-#: inc/view/Lang.php:139
-msgid "Last"
-msgstr ""
-
-#: inc/view/Lang.php:140
-msgid "Deactivate automatic ordering"
-msgstr ""
-
-#: inc/view/Lang.php:141
-msgid "Apply automatic order..."
-msgstr ""
-
-#: inc/view/Lang.php:142
-msgid "Latest"
-msgstr ""
-
-#: inc/view/Lang.php:143
-msgid "Reindex order"
-msgstr ""
-
-#: inc/view/Lang.php:144
-msgid "Reset to last order"
-msgstr ""
-
-#: inc/view/Lang.php:145
-msgid "All files"
-msgstr ""
-
-#: inc/view/Lang.php:147
-msgid "Move {count} files"
-msgstr ""
-
-#: inc/view/Lang.php:148
-msgid "Move one file"
-msgstr ""
-
-#: inc/view/Lang.php:149
-msgid "Copy {count} files"
-msgstr ""
-
-#: inc/view/Lang.php:150
-msgid "Copy one file"
-msgstr ""
-
-#: inc/view/Lang.php:151
-msgid "Moving {count} files..."
-msgstr ""
-
-#: inc/view/Lang.php:152
-msgid "Moving one file..."
-msgstr ""
-
-#: inc/view/Lang.php:153
-msgid "Copying {count} files..."
-msgstr ""
-
-#: inc/view/Lang.php:154
-msgid "Copying one file..."
-msgstr ""
-
-#: inc/view/Lang.php:155
-msgid "Successfully moved {count} files"
-msgstr ""
-
-#: inc/view/Lang.php:156
-msgid "Successfully moved one file"
-msgstr ""
-
-#: inc/view/Lang.php:157
-msgid "Successfully copied {count} files"
-msgstr ""
-
-#: inc/view/Lang.php:158
-msgid "Successfully copied one file"
-msgstr ""
-
-#: inc/view/Lang.php:159
-msgid "Hold any key to create a shortcut"
-msgstr ""
-
-#: inc/view/Lang.php:160
-msgid "Release key to move file"
-msgstr ""
-
-#: inc/view/Lang.php:161
-msgid "Click this to create a new folder"
-msgstr ""
-
-#: inc/view/Lang.php:162
-msgid ""
-"A folder can contain any file type and collection, but not galleries. If you "
-"want to create a subfolder, select a folder and click this button."
-msgstr ""
-
-#: inc/view/Lang.php:166
-msgid "Click this to create a new collection"
-msgstr ""
-
-#: inc/view/Lang.php:167
-msgid ""
-"A collection cannot contain files. However, you can create additional "
-"collections and *galleries* there. This gallery is only a *gallery data "
-"folder*, i.e. they are not automatically visible on the website.\n"
-"\n"
-"You can create a *visual gallery* by using a shortcode in the Visual Editor "
-"on your pages/postings."
-msgstr ""
-
-#: inc/view/Lang.php:173
-msgid "Click this to create a *new gallery data folder*"
-msgstr ""
-
-#: inc/view/Lang.php:177
-msgid ""
-"A *gallery data folder* can only contain images. It is easier for you to "
-"distinguish where your visual galleries are located.\n"
-"\n"
-"You can also order the images into *a custom image order* per drag&drop."
-msgstr ""
-
-#: inc/view/Lang.php:183
-msgid "Settings"
-msgstr ""
-
-#: inc/view/Lang.php:184
-msgid "General settings for the current logged in user."
-msgstr ""
-
-#: inc/view/Lang.php:188
-msgid "Permissions"
-msgstr ""
-
-#: inc/view/Lang.php:189
-msgid "Reorder files in this folder"
-msgstr ""
-
-#: inc/view/Lang.php:190
-msgid "Start to reorder the files / images by *title, filename, ID, ...*"
-msgstr ""
-
-#: inc/view/Lang.php:194
-msgid "Refresh"
-msgstr ""
-
-#: inc/view/Lang.php:195
-msgid "Refreshes the current folder view."
-msgstr ""
-
-#: inc/view/Lang.php:196
-msgid "Rename"
-msgstr ""
-
-#: inc/view/Lang.php:197
-msgid "Rename the current selected folder."
-msgstr ""
-
-#: inc/view/Lang.php:198
-msgid "Delete"
-msgstr ""
-
-#: inc/view/Lang.php:199
-msgid "Delete the current selected folder."
-msgstr ""
-
-#: inc/view/Lang.php:200
-msgid "Delete the current selected folders."
-msgstr ""
-
-#: inc/view/Lang.php:201
-msgid "Rearrange"
-msgstr ""
-
-#: inc/view/Lang.php:202
-msgid "Change the hierarchical order of the folders."
-msgstr ""
-
-#: inc/view/Lang.php:203
-msgid "Folder details"
-msgstr ""
-
-#: inc/view/Lang.php:204
-msgid "Select a folder and view more details about it."
-msgstr ""
-
-#: inc/view/Lang.php:207
-msgid "Product license not yet activated."
-msgstr ""
-
-#: inc/view/Lang.php:208
-msgid "Enter license"
-msgstr ""
-
-#: inc/view/Lang.php:209
-msgid "Dismiss notice"
-msgstr ""
-
-#: inc/view/Lang.php:210
-msgid ""
-"It looks like you have already used another plugin for folders in the media "
-"library."
-msgstr ""
-
-#: inc/view/Lang.php:214
-msgid "Start importing"
-msgstr ""
-
-#: inc/view/Lang.php:215
-msgid "Dismiss"
-msgstr ""
-
-#: inc/view/Lang.php:216
-msgid ""
-"Real Media Library creates a virtual folder structure. The URLs of uploads "
-"do not change when you move the file. Learn more about <a href=\"https://"
-"devowl.io/knowledge-base/real-media-library-physical-folder-structur/\" "
-"target=\"_blank\">how to automatically move files to physical folders.</a>"
-msgstr ""
-
-#: inc/view/Lang.php:220
-msgid "Product license not for production use!"
-msgstr ""
-
-#: inc/view/Lang.php:221
-msgid "Learn more"
-msgstr ""
-
-#: inc/view/Lang.php:222
-msgid "https://devowl.io/knowledge-base/license-installation-type/"
-msgstr ""
-
-#: inc/view/Lang.php:226
-msgid ""
-"Before we start organizing your media, you can *obtain your free license to "
-"enjoy all the benefits* of the free version of Real Media Library. Get "
-"started now!"
-msgstr ""
-
-#: inc/view/Lang.php:230
-msgid "License activation"
-msgstr ""
-
-#: inc/view/Lang.php:231
-msgid "Get your free license"
-msgstr ""
-
-#: inc/view/Lang.php:232
-msgid "Activate license & continue"
-msgstr ""
-
-#: inc/view/Lang.php:233
-msgid "Activate free license & Continue"
-msgstr ""
-
-#: inc/view/Lang.php:234
-msgid "Continue without regular updates and without any support"
-msgstr ""
-
-#: inc/view/Lang.php:238
-msgid "Continue without any support and without e.g. discount announcements"
-msgstr ""
-
-#: inc/view/Lang.php:242
-msgid ""
-"You will be redirected to the external website of PRO version. Please "
-"confirm to continue!"
-msgstr ""
-
-#: inc/view/Lang.php:246
-msgid "PRO Feature"
-msgstr ""
-
-#: inc/view/Lang.php:247
-msgid "Hide for 30 days"
-msgstr ""
-
-#: inc/view/Lang.php:248
-msgid "Thanks for using the free version of Real Media Library."
-msgstr ""
-
-#: inc/view/Lang.php:253
-msgid "Get PRO!"
-msgstr ""
-
-#: inc/view/Lang.php:254
-msgid "I want to learn more!"
-msgstr ""
-
-#: inc/view/Lang.php:255
-msgid "No, not interested..."
-msgstr ""
-
-#: inc/view/Lang.php:258
-msgid "You like collections?"
-msgstr ""
-
-#: inc/view/Lang.php:260
-msgid ""
-"Get more organized with different types of folders: Collections and "
-"galleries help you to easily recognize where your image galleries are "
-"located."
-msgstr ""
-
-#: inc/view/Lang.php:266
-msgid "Custom content order?"
-msgstr ""
-
-#: inc/view/Lang.php:268
-msgid ""
-"Get your folder contents in order and arrange your files according to a "
-"criterion (e.g. name descending) or by drag & drop."
-msgstr ""
-
-#: inc/view/Lang.php:274
-msgid "Full order control?"
-msgstr ""
-
-#: inc/view/Lang.php:276
-msgid ""
-"Organize the nodes within your folder tree according to a criterion (e.g. "
-"name descending) or by drag & drop."
-msgstr ""
-
-#: inc/view/Lang.php:282
-msgid "Want to create subfolders?"
-msgstr ""
-
-#: inc/view/Lang.php:285
-msgid ""
-"Subfolders offer you the possibility to bring more structure into your media "
-"library. They help you to keep the overview, even if you really have many "
-"files in your media library."
-msgstr ""
-
-#: inc/view/Lang.php:291
-msgid "Want to switch between folders more comfortably?"
-msgstr ""
-
-#: inc/view/Lang.php:293
-msgid ""
-"Let the complete folder tree as in your media library also be displayed in "
-"this dialog instead of searching each time in the dropdown. It is simply "
-"more comfortable!"
-msgstr ""
-
-#: inc/view/Lang.php:299
-msgid "Want to upload entire folders?"
-msgstr ""
-
-#: inc/view/Lang.php:300
-msgid ""
-"With Real Media Library you can upload entire folders using drag and drop. "
-"All folders, subfolders and files will be uploaded and displayed in your "
-"media library in the same structure. Get PRO to upload folders!"
 msgstr ""
 
 #: inc/view/Options.php:41

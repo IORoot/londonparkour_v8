@@ -38,7 +38,7 @@ class Assets
         foreach (Core::getInstance()->getInitiators() as $initiator) {
             $names[$initiator->getPluginSlug()] = \get_plugin_data($initiator->getPluginFile())['Name'];
         }
-        return ['canBeRated' => $ratingHandler->getCanBeRated(), 'rateLinks' => $ratingHandler->getLinks(), 'cross' => Core::getInstance()->getCrossSellingHandler()->getAvailable(), 'names' => $names];
+        return ['canBeRated' => $ratingHandler->getCanBeRated(), 'rateLinks' => $ratingHandler->getLinks(), 'names' => $names];
     }
     /**
      * Enqueue scripts and styles depending on the type. This function is called
@@ -61,7 +61,6 @@ class Assets
         $handle = $this->enqueueHelper();
         $this->enqueueFeedback();
         $this->enqueueWelcome();
-        $this->enqueueCrossSelling();
         // Localize jQuery as it is surely enqueued already and before our scripts
         \wp_localize_script($handle, REAL_UTILS_SLUG_CAMELCASE, $this->localizeScript($this));
     }
@@ -94,19 +93,6 @@ class Assets
             $assets->enqueueComposerStyle(REAL_UTILS_SLUG, [], 'welcome.css');
             \wp_enqueue_script('updates');
             \wp_enqueue_script('plugin-install');
-        }
-    }
-    /**
-     * Enqueue cross selling script if possible.
-     */
-    protected function enqueueCrossSelling()
-    {
-        if (\count(Core::getInstance()->getCrossSellingHandler()->getAvailable()) > 0) {
-            $assets = $this->getFirstAssetsToEnqueueComposer();
-            $scriptDeps = $assets->enqueueUtils();
-            \array_push($scriptDeps, 'wp-pointer');
-            $assets->enqueueComposerScript(REAL_UTILS_SLUG, $scriptDeps, 'cross.js');
-            $assets->enqueueComposerStyle(REAL_UTILS_SLUG, ['wp-pointer'], 'cross.css');
         }
     }
     /**

@@ -1,13 +1,12 @@
 <?php
-// Cachebusters generated on 2026-07-02 05:20:31
+// Cachebusters generated on 2026-08-31 07:08:45
 return [
-	'antd' => '3.8.4',
+	'@ant-design/icons' => '6.2.5',
+	'antd' => '6.3.7',
 	'classnames' => '2.5.1',
-	'i18n-react' => '0.7.0',
 	'jquery' => '3.7.1',
-	'mobx' => '4.15.7',
-	'mobx-react' => '6.3.1',
-	'mobx-state-tree' => '3.17.3',
+	'mobx' => '6.12.4',
+	'mobx-react' => '9.2.0',
 	'react' => '18.3.1',
 	'react-dom' => '18.3.1'
 ];

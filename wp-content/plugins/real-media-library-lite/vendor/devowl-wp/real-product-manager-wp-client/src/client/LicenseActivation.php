@@ -17,6 +17,7 @@ class LicenseActivation
 {
     use UtilsProvider;
     const ENDPOINT_LICENSE_ACTIVATION = '1.0.0/license/activation';
+    const ENDPOINT_LICENSE_ACTIVATION_RECLAIM = '1.0.0/license/activation/reclaim';
     /**
      * PluginUpdate instance.
      *
@@ -51,6 +52,19 @@ class LicenseActivation
         $product = $this->getPluginUpdate()->getInitiator()->getProductAndVariant();
         $body = ['licenseActivation' => ['license' => ['product' => ['id' => $product[0]], 'productVariant' => ['id' => $product[1]], 'licenseKey' => $code], 'client' => ['uuid' => $uuid, 'properties' => $this->getClientProperties()], 'type' => $installationType, 'telemetryDataSharingOptIn' => $telemetry, 'newsletterOptIn' => $newsletterOptIn, 'ip' => $ip, 'properties' => \array_filter([['key' => 'pluginVersion', 'value' => $this->getPluginUpdate()->getInitiator()->getPluginVersion()], $firstName ? ['key' => 'firstName', 'value' => $firstName] : \false, $email ? ['key' => 'email', 'value' => $email] : \false])]];
         return ClientUtils::request($this->getPluginUpdate()->getInitiator(), self::ENDPOINT_LICENSE_ACTIVATION, $body, 'POST');
+    }
+    /**
+     * `POST` reclaim for a hostname activation after a DB clone sever.
+     *
+     * @param string $licenseKey
+     * @param string $clientUuid
+     * @param string $hostname
+     * @return array|WP_Error
+     */
+    public function postReclaim($licenseKey, $clientUuid, $hostname)
+    {
+        $product = $this->getPluginUpdate()->getInitiator()->getProductAndVariant();
+        return ClientUtils::request($this->getPluginUpdate()->getInitiator(), self::ENDPOINT_LICENSE_ACTIVATION_RECLAIM, ['licenseKey' => $licenseKey, 'clientUuid' => $clientUuid, 'hostname' => $hostname, 'product' => ['id' => (string) $product[0]], 'productVariant' => ['id' => (string) $product[1]]], 'POST');
     }
     /**
      * `PATCH` to the REST API of Real Product Manager.

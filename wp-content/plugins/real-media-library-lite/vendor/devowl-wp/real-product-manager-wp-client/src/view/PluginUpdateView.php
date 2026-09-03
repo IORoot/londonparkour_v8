@@ -69,7 +69,8 @@ class PluginUpdateView
     public function admin_notices_license_hint()
     {
         $license = $this->getPluginUpdate()->getCurrentBlogLicense()->getActivation()->getHint();
-        if (\is_array($license)) {
+        // Info hints are shown inline next to the license key, not as admin notices
+        if (\is_array($license) && ($license['validateStatus'] ?? '') !== 'info') {
             echo \sprintf(
                 '<div class="notice notice-%s" style="padding-right:38px;position:relative;"><p><strong>%s:</strong> %s &bull; %s</p></div>',
                 \esc_attr($license['validateStatus']),

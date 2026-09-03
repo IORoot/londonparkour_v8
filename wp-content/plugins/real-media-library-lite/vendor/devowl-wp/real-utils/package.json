@@ -1,8 +1,8 @@
 {
     "name": "@devowl-wp/real-utils",
-    "version": "1.14.27",
+    "version": "1.14.35",
     "private": true,
-    "description": "Create cross-selling ads, about page, rating and newsletter input for WP Real plugins.",
+    "description": "Create about page, rating and newsletter input for WP Real plugins.",
     "homepage": "https://devowl.io",
     "license": "GPL-3.0-or-later",
     "author": "devowl",
@@ -281,7 +281,6 @@
     },
     "swc": {
         "jsc": {
-            "loose": true,
             "parser": {
                 "syntax": "typescript",
                 "tsx": true,

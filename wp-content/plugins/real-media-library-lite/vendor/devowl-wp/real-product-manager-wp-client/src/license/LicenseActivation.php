@@ -76,47 +76,120 @@ class LicenseActivation
         $license = $this->getLicense();
         $license->switch();
         $slug = $license->getSlug();
+        $severResult = $license->probablySeverClonedLicenseIdentity();
         if (!empty($this->getCode())) {
             $result = new WP_Error(self::ERROR_CODE_ALREADY_ACTIVATED, \__('You have already activated a license for this plugin. Please deactivate it first!', 'devowl-wp-real-product-manager-wp-client'), ['blog' => $license->getBlogId(), 'slug' => $slug]);
+        } elseif (\is_wp_error($severResult)) {
+            $result = $severResult;
         } else {
             $uuid = $license->getUuid();
             $result = $license->getClient()->post($code, $uuid, $installationType, $telemetry, $newsletterOptIn, $firstName, $email);
             if (!\is_wp_error($result)) {
-                // No error occurred, let's save the license key and UUID
-                $licenseKey = $result['licenseActivation']['license']['licenseKey'];
-                $uuid = $result['licenseActivation']['client']['uuid'];
-                \update_option(License::OPTION_NAME_CODE_PREFIX . $slug, $licenseKey);
-                \update_option(License::OPTION_NAME_UUID_PREFIX . $slug, $uuid);
-                \update_option(License::OPTION_NAME_HOST_NAME . $slug, \base64_encode(Utils::getCurrentHostname()));
-                // base64 encoded to avoid search & replace of migration tools
-                \update_option(License::OPTION_NAME_TELEMETRY_PREFIX . $slug, \intval($telemetry));
-                \update_option(License::OPTION_NAME_INSTALLATION_TYPE_PREFIX . $slug, $installationType);
-                \update_option(License::OPTION_NAME_NO_USAGE_PREFIX . $slug, 0);
-                \delete_option(License::OPTION_NAME_HINT_PREFIX . $slug);
-                // The notice for license activation should never be shown again
-                $initiator = $this->getLicense()->getInitiator();
-                if ($initiator->isExternalUpdateEnabled()) {
-                    \update_option(PluginUpdateView::OPTION_NAME_ADMIN_NOTICE_LICENSE_DISMISSED_DAY_PREFIX . $initiator->getPluginSlug(), \PHP_INT_MAX);
-                }
-                $this->getLicense()->receivedRemoteLicenseActivation($result['licenseActivation']);
+                $this->persistLocalLicenseActivationFromRemote($result['licenseActivation'], $result['featureFlags'] ?? []);
                 $this->getLicense()->getTelemetryData()->probablyTransmit();
                 $this->getLicense()->getPluginUpdate()->getLicensedBlogIds(\true);
-                /**
-                 * License activation for a given plugin got changed.
-                 *
-                 * Note: You are running in the context of the activated blog if you are in a multisite!
-                 *
-                 * @hook DevOwl/RealProductManager/LicenseActivation/StatusChanged/$slug
-                 * @param {boolean} $status
-                 * @param {string} $licenseKey
-                 * @param {string} $uuid
-                 * @since 1.6.4
-                 */
-                \do_action('DevOwl/RealProductManager/LicenseActivation/StatusChanged/' . $slug, \true, $licenseKey, $uuid);
             }
         }
         $license->restore();
         return $result;
+    }
+    /**
+     * Drop local license options without contacting the license server and without running clone sever.
+     * Caller must already have switched to the license blog when in a multisite.
+     *
+     * @param string|null $validateStatus
+     * @param string $help
+     * @param boolean $clearClientUuid When true (clone sever), drop UUID so it cannot be reused remotely
+     * @param boolean $clearHostname When false (manual deactivate), keep the base64 hostname so a later
+     *                               host mismatch after DB clone can still sever before activate
+     */
+    public function clearLocalLicenseIdentity($validateStatus = null, $help = '', $clearClientUuid = \false, $clearHostname = \true)
+    {
+        $license = $this->getLicense();
+        $slug = $license->getSlug();
+        $uuid = $license->getUuid();
+        \update_option(License::OPTION_NAME_CODE_PREFIX . $slug, '');
+        if ($clearHostname) {
+            \update_option(License::OPTION_NAME_HOST_NAME . $slug, '');
+        }
+        \update_option(License::OPTION_NAME_TELEMETRY_PREFIX . $slug, \false);
+        \update_option(License::OPTION_NAME_NO_USAGE_PREFIX . $slug, \false);
+        \update_option(License::OPTION_NAME_INSTALLATION_TYPE_PREFIX . $slug, License::INSTALLATION_TYPE_NONE);
+        if ($clearClientUuid) {
+            \update_option(License::OPTION_NAME_UUID_PREFIX . $slug, '');
+        }
+        // For feature-flags compatibility we do never delete the last contact to our license server
+        //delete_option(License::OPTION_NAME_LICENSE_ACTIVATION_PREFIX . $slug);
+        if ($validateStatus !== null) {
+            \update_option(License::OPTION_NAME_HINT_PREFIX . $slug, ['validateStatus' => $validateStatus, 'hasFeedback' => \true, 'help' => $help]);
+        }
+        $license->getPluginUpdate()->getLicensedBlogIds(\true);
+        // Documented in `persistLocalLicenseActivationFromRemote`
+        \do_action('DevOwl/RealProductManager/LicenseActivation/StatusChanged/' . $slug, \false, '', $uuid);
+    }
+    /**
+     * Persist a remote licenseActivation payload into local options (activate + reclaim success).
+     * Caller must already have switched to the license blog when in a multisite.
+     * Sibling API `featureFlags` are merged into the stored licenseActivation blob.
+     *
+     * @param array $licenseActivation
+     * @param array<string, bool> $featureFlags Sibling feature flags from the API response
+     */
+    public function persistLocalLicenseActivationFromRemote($licenseActivation, $featureFlags = [])
+    {
+        $license = $this->getLicense();
+        $slug = $license->getSlug();
+        $licenseKey = $licenseActivation['license']['licenseKey'];
+        $uuid = $licenseActivation['client']['uuid'];
+        $installationType = $licenseActivation['type'] ?? License::INSTALLATION_TYPE_PRODUCTION;
+        $telemetry = !empty($licenseActivation['telemetryDataSharingOptIn']);
+        \update_option(License::OPTION_NAME_CODE_PREFIX . $slug, $licenseKey);
+        \update_option(License::OPTION_NAME_UUID_PREFIX . $slug, $uuid);
+        // base64 encoded to avoid search & replace of migration tools
+        \update_option(License::OPTION_NAME_HOST_NAME . $slug, \base64_encode(Utils::getCurrentHostname()));
+        \update_option(License::OPTION_NAME_TELEMETRY_PREFIX . $slug, \intval($telemetry));
+        \update_option(License::OPTION_NAME_INSTALLATION_TYPE_PREFIX . $slug, $installationType);
+        \update_option(License::OPTION_NAME_NO_USAGE_PREFIX . $slug, 0);
+        \delete_option(License::OPTION_NAME_HINT_PREFIX . $slug);
+        $initiator = $license->getInitiator();
+        if ($initiator->isExternalUpdateEnabled()) {
+            \update_option(PluginUpdateView::OPTION_NAME_ADMIN_NOTICE_LICENSE_DISMISSED_DAY_PREFIX . $initiator->getPluginSlug(), \PHP_INT_MAX);
+        }
+        if (\is_array($featureFlags)) {
+            $licenseActivation['featureFlags'] = $featureFlags;
+        }
+        $license->receivedRemoteLicenseActivation($licenseActivation);
+        /**
+         * License activation for a given plugin got changed.
+         *
+         * Note: You are running in the context of the activated blog if you are in a multisite!
+         *
+         * @hook DevOwl/RealProductManager/LicenseActivation/StatusChanged/$slug
+         * @param {boolean} $status
+         * @param {string} $licenseKey
+         * @param {string} $uuid
+         * @since 1.6.4
+         */
+        \do_action('DevOwl/RealProductManager/LicenseActivation/StatusChanged/' . $slug, \true, $licenseKey, $uuid);
+    }
+    /**
+     * Drop the local client UUID so the next activation registers a new client.
+     * Refuses while a license key is still present — deactivate first.
+     *
+     * @return true|WP_Error
+     */
+    public function clearClientUuid()
+    {
+        $license = $this->getLicense();
+        $code = $this->getCode();
+        if (!empty($code)) {
+            return new WP_Error('rpm_wpc_clear_uuid_while_activated', \__('Please deactivate the license before resetting the installation ID.', 'devowl-wp-real-product-manager-wp-client'), ['status' => 400, 'blog' => $license->getBlogId(), 'slug' => $license->getSlug()]);
+        }
+        $license->switch();
+        \update_option(License::OPTION_NAME_UUID_PREFIX . $license->getSlug(), '');
+        \update_option(License::OPTION_NAME_HOST_NAME . $license->getSlug(), '');
+        $license->restore();
+        return \true;
     }
     /**
      * Deactivate the license for this blog and plugin.
@@ -130,30 +203,34 @@ class LicenseActivation
     {
         $license = $this->getLicense();
         $license->switch();
+        $severResult = $license->probablySeverClonedLicenseIdentity();
+        // Strict true: already local-severed (and possibly reclaimed) this request — do not DELETE or wipe restore
+        if ($severResult === \true) {
+            $license->restore();
+            return \true;
+        }
+        if (\is_wp_error($severResult)) {
+            $remote = \false;
+        }
         $code = $this->getCode();
-        $uuid = $this->getLicense()->getUuid();
+        $uuid = $license->getUuid();
         // We need to ensure, the license activation is removed from remote server (only when not already detected remotely)
         if ($remote) {
-            $delete = $this->getLicense()->getClient()->delete($code, $uuid);
+            $delete = $license->getClient()->delete($code, $uuid);
             if (\is_wp_error($delete)) {
+                // Already gone remotely — still drop local identity so callers do not retry DELETE forever
+                if (\array_intersect($delete->get_error_codes(), ['LicenseActivationNotFound', 'ClientNotFound', 'LicenseNotFound'])) {
+                    $this->clearLocalLicenseIdentity($validateStatus, $help, \false);
+                    $license->restore();
+                    return \true;
+                }
+                $license->restore();
                 return $delete;
             }
         }
-        // Let's remove locally...
-        $slug = $license->getSlug();
-        \update_option(License::OPTION_NAME_CODE_PREFIX . $slug, '');
-        \update_option(License::OPTION_NAME_HOST_NAME . $slug, '');
-        \update_option(License::OPTION_NAME_TELEMETRY_PREFIX . $slug, \false);
-        \update_option(License::OPTION_NAME_NO_USAGE_PREFIX . $slug, \false);
-        \update_option(License::OPTION_NAME_INSTALLATION_TYPE_PREFIX . $slug, License::INSTALLATION_TYPE_NONE);
-        // For feature-flags compatibility we do never delete the last contact to our license server
-        //delete_option(License::OPTION_NAME_LICENSE_ACTIVATION_PREFIX . $slug);
-        if ($validateStatus !== null) {
-            \update_option(License::OPTION_NAME_HINT_PREFIX . $slug, ['validateStatus' => $validateStatus, 'hasFeedback' => \true, 'help' => $help]);
-        }
-        $this->getLicense()->getPluginUpdate()->getLicensedBlogIds(\true);
-        // Documented in `activate`
-        \do_action('DevOwl/RealProductManager/LicenseActivation/StatusChanged/' . $slug, \false, '', $uuid);
+        // Keep hostname + UUID: same-site reactivation reuses the client; after a DB clone,
+        // host mismatch still severs before the next activate.
+        $this->clearLocalLicenseIdentity($validateStatus, $help, \false, \false);
         $license->restore();
         return \true;
     }
@@ -221,20 +298,22 @@ class LicenseActivation
     /**
      * Get a hint for this license activation. This can happen e.g. the remote status changed (revoked, expired)
      * and we want to user show a notice for this. Can be `false` if none given.
+     * Info hints stay available while activated (e.g. successful domain-change restore).
      *
-     * @return string
+     * @return false|array{validateStatus: string, hasFeedback: boolean, help: string}
      */
     public function getHint()
     {
-        // Mixed state due to conflicts? We cannot fix this currently, but we can check if there is a active
-        // license activation code.
-        if (!empty($this->getCode())) {
-            return \false;
-        }
         $license = $this->getLicense();
         $license->switch();
         $result = \get_option(License::OPTION_NAME_HINT_PREFIX . $license->getSlug(), \false);
         $license->restore();
+        // Error/warning hints belong to the inactive form UI only
+        if (!empty($this->getCode())) {
+            if (!\is_array($result) || ($result['validateStatus'] ?? '') !== 'info') {
+                return \false;
+            }
+        }
         return $result;
     }
     /**
@@ -278,6 +357,34 @@ class LicenseActivation
     {
         $properties = $this->getReceivedClientProperties();
         return $properties[$key] ?? $default;
+    }
+    /**
+     * Get feature flags received from the license server for this activation.
+     * API returns them as a sibling; locally they are merged into the licenseActivation option.
+     *
+     * @return false|array<string, bool>
+     */
+    public function getReceivedFeatureFlags()
+    {
+        $received = $this->getReceived();
+        if (\is_array($received) && isset($received['featureFlags']) && \is_array($received['featureFlags'])) {
+            return $received['featureFlags'];
+        }
+        return \false;
+    }
+    /**
+     * Check if a server-side feature flag is enabled for this installation.
+     *
+     * @param string $key
+     * @param bool $default
+     */
+    public function isFeatureEnabled($key, $default = \false)
+    {
+        $flags = $this->getReceivedFeatureFlags();
+        if (!\is_array($flags)) {
+            return $default;
+        }
+        return $flags[$key] ?? $default;
     }
     /**
      * Get entered license code for this activation. Can be `false` if none given. If it is
