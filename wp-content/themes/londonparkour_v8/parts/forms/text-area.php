@@ -66,9 +66,11 @@ $lp_state_boxed = array(
 		'disabled' => 'border-base-300 text-base-content/50',
 	),
 	'board' => array(
-		'default'  => 'border-neutral-content/10 text-neutral-content focus:border-neutral-content/20',
-		'error'    => 'border-error text-error',
-		'disabled' => 'border-neutral-content/10 text-neutral-content/50',
+		// `bg-transparent` kills daisyUI `.textarea`'s default `base-100` fill —
+		// on light themes that cream chip + `text-neutral-content` is white-on-white.
+		'default'  => 'border-neutral-content/10 text-neutral-content focus:border-neutral-content/20 bg-transparent',
+		'error'    => 'border-error text-error bg-transparent',
+		'disabled' => 'border-neutral-content/10 text-neutral-content/50 bg-transparent',
 	),
 );
 

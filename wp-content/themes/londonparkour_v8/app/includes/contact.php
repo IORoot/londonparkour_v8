@@ -65,6 +65,7 @@ function lp_handle_contact_form(): void {
 
 	$lp_headers = array(
 		'Content-Type: text/plain; charset=UTF-8',
+		'From: ' . wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES ) . ' <' . $lp_to . '>',
 		'Reply-To: ' . $lp_name . ' <' . $lp_email . '>',
 	);
 
