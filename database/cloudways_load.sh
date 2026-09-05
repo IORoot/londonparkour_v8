@@ -24,6 +24,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DUMP="$REPO_ROOT/database/backup.sql"
+LOG_FILE="$SCRIPT_DIR/db.log"
 FROM_URL="http://localhost:8102"
 FORCE=0
 PATH="/usr/local/bin:/usr/bin:/bin:${PATH:-}"
@@ -36,10 +37,24 @@ Import database/backup.sql into this WordPress database (Cloudways staging).
 May be run from any directory. Refuses unless .staging-import-enabled exists
 in public_html (or next to it, if that directory is writable).
 Skips when the dump SHA matches .staging-import-sha, unless --force.
+Appends one line per run to database/db.log (datetime, success|failure, message).
 EOF
 }
 
+# One line: "YYYY-MM-DD HH:MM:SS success|failure message"
+LOGGED=0
+write_log() {
+	local status="$1"
+	shift
+	local msg="$*"
+	msg="${msg//$'\n'/ }"
+	msg="${msg//$'\r'/ }"
+	printf '%s %s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$status" "$msg" >>"$LOG_FILE" 2>/dev/null || true
+	LOGGED=1
+}
+
 die() {
+	write_log failure "$*"
 	printf 'cloudways_load: %s\n' "$*" >&2
 	exit 1
 }
@@ -47,6 +62,8 @@ die() {
 log() {
 	printf 'cloudways_load: %s\n' "$*"
 }
+
+trap '[[ ${LOGGED:-0} -eq 0 ]] && write_log failure "command failed at line $LINENO"' ERR
 
 file_sha() {
 	if command -v sha256sum >/dev/null 2>&1; then
@@ -129,6 +146,7 @@ fi
 DUMP_SHA="$(file_sha "$DUMP")"
 if [[ "$FORCE" -eq 0 && -f "$STAMP" ]] && [[ "$(cat "$STAMP")" == "$DUMP_SHA" ]]; then
 	log "dump unchanged (sha $DUMP_SHA) — skip. Use --force to import anyway."
+	write_log success "dump unchanged (sha $DUMP_SHA) — skip"
 	exit 0
 fi
 
@@ -154,10 +172,10 @@ if grep -E '^(\/\*![0-9]+[[:space:]]+)?DROP DATABASE|^CREATE DATABASE|^USE[[:spa
 fi
 
 log "importing into Cloudways database ($WP_ROOT)"
-wp_cmd db import "$TMP"
+import_out="$(wp_cmd db import "$TMP" 2>&1)" || die "db import failed: $import_out"
 
 log "search-replace $FROM_URL → $WP_HOME"
-wp_cmd search-replace "$FROM_URL" "$WP_HOME" --all-tables --report-changed-only
+replace_out="$(wp_cmd search-replace "$FROM_URL" "$WP_HOME" --all-tables --report-changed-only 2>&1)" || die "search-replace failed: $replace_out"
 
 # Load plugins/themes so CPT rewrite rules are registered (skip-* hides them).
 "$WP_BIN" --path="$WP_ROOT" rewrite flush >/dev/null
@@ -165,3 +183,4 @@ wp_cmd search-replace "$FROM_URL" "$WP_HOME" --all-tables --report-changed-only
 
 printf '%s\n' "$DUMP_SHA" >"$STAMP"
 log "done (sha $DUMP_SHA)"
+write_log success "imported sha $DUMP_SHA ($FROM_URL → $WP_HOME)"
