@@ -489,11 +489,14 @@ abstract class Helpers {
 	 * Get the active Stripe publishable key.
 	 */
 	public static function stripe_publishable_key(): string {
-		$mode = self::get_option( 'stripe_mode', 'test' );
-		$key  = 'live' === $mode
-			? self::get_option( 'stripe_pub_key_live', '' )
-			: self::get_option( 'stripe_pub_key_test', '' );
-		return is_string( $key ) ? trim( $key ) : '';
+		$mode  = self::get_option( 'stripe_mode', 'test' );
+		$field = 'live' === $mode ? 'stripe_pub_key_live' : 'stripe_pub_key_test';
+		$key   = self::get_option( $field, '' );
+		$key   = is_string( $key ) ? trim( $key ) : '';
+		if ( '' !== $key ) {
+			return $key;
+		}
+		return Secrets::env_value( $field );
 	}
 
 	public static function stripe_webhook_secret(): string {

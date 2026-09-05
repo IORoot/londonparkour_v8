@@ -35,6 +35,7 @@ The plugin uses **Advanced Custom Fields (ACF) Free** (built in). Each bookable 
 * **Form extras** — Waiver, Mailchimp opt-in, and custom ACF fields.
 * **Emails** — Customer and admin templates with merge tags via `wp_mail()`.
 * **Result pages** — Booking Confirmed, Cancelled, and Error pages on activation.
+* **Config-file Stripe keys** — Optional environment variables / `wp-config.php` constants so secrets are not stored in the database.
 
 = Stripe Checkout =
 
@@ -107,13 +108,39 @@ This service is provided by Intuit Mailchimp: [Terms of Use](https://mailchimp.c
 1. Upload the plugin to `/wp-content/plugins/` or install via **Plugins → Add New**.
 2. Activate **Class Bookings with Stripe**.
 3. Open **Class Bookings with Stripe → Settings** in the admin menu.
-4. Enter Stripe publishable and secret keys (test or live).
+4. Enter Stripe publishable and secret keys (test or live), **or** define them in `wp-config.php` / the environment (see FAQ). Leave a settings field empty to use the config value; a pasted key overrides it.
 5. In Stripe Dashboard → **Developers → Webhooks**, add an endpoint: `https://yoursite.com/wp-json/clasbpro/v1/stripe-webhook` with events `checkout.session.completed`, `checkout.session.expired`, and `checkout.session.async_payment_failed`.
-6. Paste the webhook signing secret into plugin settings.
+6. Paste the webhook signing secret into plugin settings, or set `CLASBPRO_STRIPE_WEBHOOK_SECRET`.
 7. Add classes under **Class Bookings with Stripe → Classes**.
 8. Place `[clasbpro_booking class_id="123"]` on a page or add the **Class Booking with Stripe** Elementor widget.
 
 == Frequently Asked Questions ==
+
+= Can I set Stripe keys in wp-config.php? =
+
+Yes. This is the recommended way on hosts that replace the database on deploy (for example Cloudways staging). Keys are not written to the database.
+
+Resolution order for each key:
+
+1. Environment variable (`getenv`, `$_ENV`, `$_SERVER`)
+2. Matching PHP `define()` in `wp-config.php`
+3. A value pasted into **Class Bookings with Stripe → Settings** (overrides 1 and 2)
+
+Leave the settings fields empty to keep using the environment / wp-config values. Secret keys saved in settings are stored encrypted; if they cannot be decrypted after a database import, the plugin falls back to the environment / wp-config value.
+
+Define these constants in `wp-config.php` (same names as environment variables):
+
+`CLASBPRO_STRIPE_SECRET_TEST` — Stripe secret key (`sk_test_…`)
+`CLASBPRO_STRIPE_SECRET_LIVE` — Stripe secret key (`sk_live_…`)
+`CLASBPRO_STRIPE_WEBHOOK_SECRET` — Webhook signing secret (`whsec_…`)
+`CLASBPRO_STRIPE_PUB_TEST` — Publishable key (`pk_test_…`)
+`CLASBPRO_STRIPE_PUB_LIVE` — Publishable key (`pk_live_…`)
+
+Example:
+
+`define( 'CLASBPRO_STRIPE_SECRET_LIVE', 'sk_live_…' );`
+
+Optional: `CLASBPRO_STRIPE_ENCRYPTION_KEY` is a dedicated passphrase for encrypting keys that *are* saved in the database, so they survive WordPress salt rotation.
 
 = Does this plugin store credit card numbers? =
 
@@ -165,6 +192,7 @@ Yes. Use the **Class Booking with Stripe** widget or the shortcode.
 * Shortcodes, Elementor widget, result pages, and email templates.
 * Reports, waiver, Mailchimp opt-in, and custom form fields.
 * Bundled ACF Free when ACF is not active.
+* Stripe keys from environment variables or wp-config.php, with settings fields as an override.
 
 == Upgrade Notice ==
 

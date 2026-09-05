@@ -1135,7 +1135,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Publishable key (test)', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_pub_key_test',
 						'type'         => 'text',
-						'instructions' => __( 'Starts with pk_test_. This key is public and used in the booking form.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Starts with pk_test_. This key is public and used in the booking form. Leave empty to use CLASBPRO_STRIPE_PUB_TEST from the environment or wp-config.php.', 'class-bookings-with-stripe-pro' ),
 						'wrapper'      => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--test',
@@ -1146,7 +1146,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Secret key (test)', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_secret_key_test',
 						'type'         => 'password',
-						'instructions' => __( 'Shown as dots when a key is saved. Paste a new key to replace it, or clear the field to remove it.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Shown as dots when a key is saved. Leave empty to use CLASBPRO_STRIPE_SECRET_TEST from the environment or wp-config.php. Paste a key here to override.', 'class-bookings-with-stripe-pro' ),
 						'wrapper' => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--test',
@@ -1169,7 +1169,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Publishable key (live)', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_pub_key_live',
 						'type'         => 'text',
-						'instructions' => __( 'Starts with pk_live_. This key is public and used in the booking form.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Starts with pk_live_. This key is public and used in the booking form. Leave empty to use CLASBPRO_STRIPE_PUB_LIVE from the environment or wp-config.php.', 'class-bookings-with-stripe-pro' ),
 						'wrapper'      => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--live',
@@ -1180,7 +1180,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Secret key (live)', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_secret_key_live',
 						'type'         => 'password',
-						'instructions' => __( 'Shown as dots when a key is saved. Paste a new key to replace it, or clear the field to remove it.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Shown as dots when a key is saved. Leave empty to use CLASBPRO_STRIPE_SECRET_LIVE from the environment or wp-config.php. Paste a key here to override.', 'class-bookings-with-stripe-pro' ),
 						'wrapper' => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-key-field clasbpro-stripe-key-field--live',
@@ -1191,7 +1191,7 @@ abstract class ACF_Fields {
 						'label'        => __( 'Webhook signing secret', 'class-bookings-with-stripe-pro' ),
 						'name'         => 'stripe_webhook_secret',
 						'type'         => 'password',
-						'instructions' => __( 'Paste the signing secret from Stripe after you add the webhook endpoint (see Help → Stripe webhooks for full steps). Shown as dots when saved; clear the field to remove it.', 'class-bookings-with-stripe-pro' ),
+						'instructions' => __( 'Paste the signing secret from Stripe after you add the webhook endpoint (see Help → Stripe webhooks for full steps). Leave empty to use CLASBPRO_STRIPE_WEBHOOK_SECRET from the environment or wp-config.php. Shown as dots when saved in the database.', 'class-bookings-with-stripe-pro' ),
 						'wrapper'      => [
 							'width' => '50',
 							'class' => 'clasbpro-stripe-webhook-secret',
@@ -4139,6 +4139,7 @@ PHP;
 		</li>
 	</ol>
 	<p class="clasbowi-doc__note"><?php esc_html_e( 'If Checkout fails with an authentication error, double-check that the mode matches the keys (test keys only with Mode = Test).', 'class-bookings-with-stripe-pro' ); ?></p>
+	<p class="clasbowi-doc__note"><?php esc_html_e( 'On hosts such as Cloudways, prefer environment variables or wp-config.php defines so keys survive a database import. getenv() is read first, then a matching define(). A value pasted into the settings fields overrides both. Names: CLASBPRO_STRIPE_SECRET_TEST, CLASBPRO_STRIPE_SECRET_LIVE, CLASBPRO_STRIPE_WEBHOOK_SECRET, CLASBPRO_STRIPE_PUB_TEST, CLASBPRO_STRIPE_PUB_LIVE.', 'class-bookings-with-stripe-pro' ); ?></p>
 </div>
 		<?php
 		return self::help_doc_row(

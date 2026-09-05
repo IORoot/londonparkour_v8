@@ -39,6 +39,16 @@ Staging is a **separate Cloudways application**. Git Pull runs on staging only, 
 4. The database updates every minute via cron (`database/cloudways_load.sh`). No SSH import needed.
 5. Application Settings → General → Purge site cache
 
+Stripe keys live in `public_html/wp-config.php` (that file is not overwritten by Git Pull). Leave the plugin’s key fields empty unless you want to override:
+
+```php
+define( 'CLASBPRO_STRIPE_SECRET_TEST', 'sk_test_…' );
+define( 'CLASBPRO_STRIPE_SECRET_LIVE', 'sk_live_…' );
+define( 'CLASBPRO_STRIPE_WEBHOOK_SECRET', 'whsec_…' );
+define( 'CLASBPRO_STRIPE_PUB_TEST', 'pk_test_…' );
+define( 'CLASBPRO_STRIPE_PUB_LIVE', 'pk_live_…' );
+```
+
 If the page still looks stale after Pull: **Servers → Manage Services → Varnish → Purge**. `uploads/` is gitignored — media 404s on staging until copied.
 
 Caching rules: [`docs/cloudways-caching.md`](docs/cloudways-caching.md). Staging import design: [`docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md`](docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md).

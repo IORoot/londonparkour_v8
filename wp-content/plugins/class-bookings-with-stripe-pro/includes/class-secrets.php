@@ -5,10 +5,14 @@
  * key is derived from WordPress salts in wp-config.php and is never stored
  * in the database.
  *
- * Optional wp-config.php overrides (never written to the DB):
+ * Optional environment / wp-config.php defaults (not written to the DB).
+ * getenv / $_ENV are read first; a matching define() is next. A key pasted
+ * into the settings fields overrides both for that field.
  *   CLASBPRO_STRIPE_SECRET_TEST
  *   CLASBPRO_STRIPE_SECRET_LIVE
  *   CLASBPRO_STRIPE_WEBHOOK_SECRET
+ *   CLASBPRO_STRIPE_PUB_TEST
+ *   CLASBPRO_STRIPE_PUB_LIVE
  *   CLASBPRO_STRIPE_ENCRYPTION_KEY  — dedicated passphrase; survives AUTH_KEY rotation
  *
  * @package IOROOT_STRIPE_BOOKINGS_PRO
@@ -30,7 +34,16 @@ abstract class Secrets {
 	 */
 	private const MASK_CHAR = "\xE2\x80\xA2";
 
-	/** @var array<string, string> field name => wp-config constant */
+	/** @var array<string, string> field name => env / wp-config name */
+	private const ENV_NAMES = [
+		'stripe_secret_key_test' => 'CLASBPRO_STRIPE_SECRET_TEST',
+		'stripe_secret_key_live' => 'CLASBPRO_STRIPE_SECRET_LIVE',
+		'stripe_webhook_secret'  => 'CLASBPRO_STRIPE_WEBHOOK_SECRET',
+		'stripe_pub_key_test'    => 'CLASBPRO_STRIPE_PUB_TEST',
+		'stripe_pub_key_live'    => 'CLASBPRO_STRIPE_PUB_LIVE',
+	];
+
+	/** @var array<string, string> encrypted secret fields only */
 	private const FIELD_CONSTANTS = [
 		'stripe_secret_key_test' => 'CLASBPRO_STRIPE_SECRET_TEST',
 		'stripe_secret_key_live' => 'CLASBPRO_STRIPE_SECRET_LIVE',
@@ -48,7 +61,6 @@ abstract class Secrets {
 		}
 
 		add_action( 'admin_notices', [ self::class, 'maybe_admin_notice' ] );
-		self::scrub_constant_backed_options();
 	}
 
 	/**
@@ -64,32 +76,63 @@ abstract class Secrets {
 
 	/**
 	 * Decrypt a stored secret for Stripe. Never echo or log the return value.
+	 *
+	 * A key saved in settings overrides environment / wp-config. If nothing
+	 * is stored (or ciphertext will not decrypt), the env default is used.
 	 */
 	public static function get( string $field ): string {
 		if ( ! self::is_secret_field( $field ) ) {
 			return '';
 		}
 
-		$from_const = self::constant_value( $field );
-		if ( '' !== $from_const ) {
-			return $from_const;
+		$stored = self::stored_plaintext( $field );
+		if ( '' !== $stored ) {
+			return $stored;
 		}
 
-		$raw = self::raw( $field );
-		if ( '' === $raw ) {
+		return self::env_value( $field );
+	}
+
+	/**
+	 * Environment variable first, then a wp-config.php define() of the same name.
+	 */
+	public static function env_value( string $field ): string {
+		$name = self::env_name( $field );
+		if ( '' === $name ) {
 			return '';
 		}
 
-		if ( self::is_encrypted( $raw ) ) {
-			return self::decrypt( $raw );
+		$candidates = [];
+
+		$from_env = getenv( $name );
+		if ( false !== $from_env ) {
+			$candidates[] = $from_env;
+		}
+		if ( isset( $_ENV[ $name ] ) ) {
+			$candidates[] = $_ENV[ $name ];
+		}
+		if ( isset( $_SERVER[ $name ] ) ) {
+			$candidates[] = $_SERVER[ $name ];
+		}
+		if ( defined( $name ) ) {
+			$candidates[] = constant( $name );
 		}
 
-		$encrypted = self::encrypt( $raw );
-		if ( '' !== $encrypted ) {
-			self::write_raw( $field, $encrypted );
+		foreach ( $candidates as $value ) {
+			if ( ! is_string( $value ) ) {
+				continue;
+			}
+			$value = trim( $value );
+			if ( '' !== $value ) {
+				return $value;
+			}
 		}
 
-		return $raw;
+		return '';
+	}
+
+	public static function env_name( string $field ): string {
+		return self::ENV_NAMES[ $field ] ?? '';
 	}
 
 	/**
@@ -97,13 +140,6 @@ abstract class Secrets {
 	 */
 	public static function encrypt_stored_plaintext(): void {
 		foreach ( self::field_names() as $field ) {
-			if ( '' !== self::constant_value( $field ) ) {
-				foreach ( self::option_keys_for( $field ) as $option ) {
-					delete_option( $option );
-				}
-				continue;
-			}
-
 			foreach ( self::option_keys_for( $field ) as $option ) {
 				$raw = get_option( $option, '' );
 				if ( ! is_string( $raw ) || '' === $raw || self::is_encrypted( $raw ) ) {
@@ -127,10 +163,6 @@ abstract class Secrets {
 		$name = is_array( $field ) ? (string) ( $field['name'] ?? '' ) : '';
 		if ( ! self::is_secret_field( $name ) || ! self::is_settings_post_id( $post_id ) ) {
 			return $value;
-		}
-
-		if ( '' !== self::constant_value( $name ) ) {
-			return '';
 		}
 
 		$value = is_string( $value ) ? trim( $value ) : '';
@@ -164,7 +196,7 @@ abstract class Secrets {
 			return $value;
 		}
 		unset( $value, $post_id );
-		$plaintext = self::get( $name );
+		$plaintext = self::stored_plaintext( $name );
 		if ( '' === $plaintext ) {
 			return '';
 		}
@@ -188,18 +220,24 @@ abstract class Secrets {
 			return $field;
 		}
 
-		$has_key  = '' !== self::constant_value( $name ) || '' !== self::raw( $name );
+		$has_key  = '' !== self::stored_plaintext( $name );
+		$from_env = self::env_value( $name );
 		$existing = trim( (string) ( $field['instructions'] ?? '' ) );
 
-		if ( '' !== self::constant_value( $name ) ) {
-			$const = self::constant_name( $name );
-			$note  = sprintf(
-				/* translators: %s: wp-config.php constant name */
-				__( 'This key is loaded from %s in wp-config.php and is not stored in the database.', 'class-bookings-with-stripe-pro' ),
-				$const
-			);
+		if ( '' !== $from_env ) {
+			$const = self::env_name( $name );
+			$note  = $has_key
+				? sprintf(
+					/* translators: %s: wp-config.php / environment variable name */
+					__( 'A database key is saved and overrides %s. Clear this field to use the environment / wp-config value instead.', 'class-bookings-with-stripe-pro' ),
+					$const
+				)
+				: sprintf(
+					/* translators: %s: wp-config.php / environment variable name */
+					__( 'Using %s from the environment or wp-config.php. Leave empty to keep that, or paste a key here to override it.', 'class-bookings-with-stripe-pro' ),
+					$const
+				);
 			$field['instructions'] = '' === $existing ? $note : $existing . ' ' . $note;
-			$field['disabled']     = 1;
 			return $field;
 		}
 
@@ -221,10 +259,6 @@ abstract class Secrets {
 		$field = self::field_from_option( (string) $option );
 		if ( '' === $field ) {
 			return $value;
-		}
-
-		if ( '' !== self::constant_value( $field ) ) {
-			return '';
 		}
 
 		$value = is_string( $value ) ? trim( $value ) : '';
@@ -264,11 +298,8 @@ abstract class Secrets {
 
 		$broken = [];
 		foreach ( self::field_names() as $field ) {
-			if ( '' !== self::constant_value( $field ) ) {
-				continue;
-			}
 			$raw = self::raw( $field );
-			if ( self::is_encrypted( $raw ) && '' === self::decrypt( $raw ) ) {
+			if ( self::is_encrypted( $raw ) && '' === self::decrypt( $raw ) && '' === self::env_value( $field ) ) {
 				$broken[] = $field;
 			}
 		}
@@ -386,17 +417,22 @@ abstract class Secrets {
 		return hash( 'sha256', 'clasbpro-stripe-v1|' . $auth . '|' . $secure, true );
 	}
 
-	private static function constant_name( string $field ): string {
-		return self::FIELD_CONSTANTS[ $field ] ?? '';
-	}
-
-	private static function constant_value( string $field ): string {
-		$const = self::constant_name( $field );
-		if ( '' === $const || ! defined( $const ) ) {
+	private static function stored_plaintext( string $field ): string {
+		$raw = self::raw( $field );
+		if ( '' === $raw ) {
 			return '';
 		}
-		$value = constant( $const );
-		return is_string( $value ) ? trim( $value ) : '';
+
+		if ( self::is_encrypted( $raw ) ) {
+			return self::decrypt( $raw );
+		}
+
+		$encrypted = self::encrypt( $raw );
+		if ( '' !== $encrypted ) {
+			self::write_raw( $field, $encrypted );
+		}
+
+		return $raw;
 	}
 
 	private static function raw( string $field ): string {
@@ -444,18 +480,5 @@ abstract class Secrets {
 	 */
 	private static function is_settings_post_id( $post_id ): bool {
 		return in_array( (string) $post_id, [ Constants::OPTIONS_POST_ID, 'options' ], true );
-	}
-
-	private static function scrub_constant_backed_options(): void {
-		foreach ( self::field_names() as $field ) {
-			if ( '' === self::constant_value( $field ) ) {
-				continue;
-			}
-			foreach ( self::option_keys_for( $field ) as $option ) {
-				if ( false !== get_option( $option, false ) ) {
-					delete_option( $option );
-				}
-			}
-		}
 	}
 }
