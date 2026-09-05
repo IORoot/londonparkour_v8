@@ -60,6 +60,10 @@ abstract class Secrets {
 			}
 		}
 
+		foreach ( array_keys( self::ENV_NAMES ) as $field ) {
+			add_action( 'acf/render_field/name=' . $field, [ self::class, 'render_source_indicator' ], 20 );
+		}
+
 		add_action( 'admin_notices', [ self::class, 'maybe_admin_notice' ] );
 	}
 
@@ -102,29 +106,18 @@ abstract class Secrets {
 			return '';
 		}
 
-		$candidates = [];
+		$from_env = self::read_process_env( $name );
+		if ( '' !== $from_env ) {
+			return $from_env;
+		}
 
-		$from_env = getenv( $name );
-		if ( false !== $from_env ) {
-			$candidates[] = $from_env;
-		}
-		if ( isset( $_ENV[ $name ] ) ) {
-			$candidates[] = $_ENV[ $name ];
-		}
-		if ( isset( $_SERVER[ $name ] ) ) {
-			$candidates[] = $_SERVER[ $name ];
-		}
 		if ( defined( $name ) ) {
-			$candidates[] = constant( $name );
-		}
-
-		foreach ( $candidates as $value ) {
-			if ( ! is_string( $value ) ) {
-				continue;
-			}
-			$value = trim( $value );
-			if ( '' !== $value ) {
-				return $value;
+			$value = constant( $name );
+			if ( is_string( $value ) ) {
+				$value = trim( $value );
+				if ( '' !== $value ) {
+					return $value;
+				}
 			}
 		}
 
@@ -133,6 +126,67 @@ abstract class Secrets {
 
 	public static function env_name( string $field ): string {
 		return self::ENV_NAMES[ $field ] ?? '';
+	}
+
+	/**
+	 * ACF prepare_field rewrites `name` to the HTML input name. `_name` keeps
+	 * the original field name used in ENV_NAMES / options.
+	 *
+	 * @param array<string, mixed> $field
+	 */
+	private static function field_storage_name( array $field ): string {
+		$name = (string) ( $field['_name'] ?? '' );
+		if ( '' !== $name ) {
+			return $name;
+		}
+		return (string) ( $field['name'] ?? '' );
+	}
+
+	/**
+	 * Which source supplies the active key: form, env, wp-config, or empty if none.
+	 */
+	public static function key_source( string $field ): string {
+		if ( '' === self::env_name( $field ) ) {
+			return '';
+		}
+
+		if ( self::has_form_value( $field ) ) {
+			return 'form';
+		}
+
+		return self::config_source( $field );
+	}
+
+	/**
+	 * Badge under each Stripe key input on the settings screen.
+	 *
+	 * @param array<string, mixed> $field
+	 */
+	public static function render_source_indicator( $field ): void {
+		if ( ! is_array( $field ) ) {
+			return;
+		}
+
+		$name = self::field_storage_name( $field );
+		if ( '' === self::env_name( $name ) ) {
+			return;
+		}
+
+		$source = self::key_source( $name );
+		$mod    = '' === $source ? 'none' : $source;
+		$labels = [
+			'env'       => 'ENV',
+			'wp-config' => 'wp-config',
+			'form'      => 'form',
+			'none'      => 'none',
+		];
+
+		printf(
+			'<p class="clasbpro-stripe-key-source clasbpro-stripe-key-source--%1$s"><span class="clasbpro-stripe-key-source__label">%2$s</span> <span class="clasbpro-stripe-key-source__badge">%3$s</span></p>',
+			esc_attr( $mod ),
+			esc_html__( 'Using', 'class-bookings-with-stripe-pro' ),
+			esc_html( $labels[ $mod ] )
+		);
 	}
 
 	/**
@@ -160,7 +214,7 @@ abstract class Secrets {
 	 * @return mixed
 	 */
 	public static function filter_update_value( $value, $post_id, $field ) {
-		$name = is_array( $field ) ? (string) ( $field['name'] ?? '' ) : '';
+		$name = is_array( $field ) ? self::field_storage_name( $field ) : '';
 		if ( ! self::is_secret_field( $name ) || ! self::is_settings_post_id( $post_id ) ) {
 			return $value;
 		}
@@ -191,7 +245,7 @@ abstract class Secrets {
 	 * @return string
 	 */
 	public static function filter_load_value( $value, $post_id, $field ) {
-		$name = is_array( $field ) ? (string) ( $field['name'] ?? '' ) : '';
+		$name = is_array( $field ) ? self::field_storage_name( $field ) : '';
 		if ( ! self::is_secret_field( $name ) ) {
 			return $value;
 		}
@@ -215,7 +269,7 @@ abstract class Secrets {
 			return $field;
 		}
 
-		$name = (string) ( $field['name'] ?? '' );
+		$name = self::field_storage_name( $field );
 		if ( ! self::is_secret_field( $name ) ) {
 			return $field;
 		}
@@ -415,6 +469,68 @@ abstract class Secrets {
 		}
 
 		return hash( 'sha256', 'clasbpro-stripe-v1|' . $auth . '|' . $secure, true );
+	}
+
+	private static function has_form_value( string $field ): bool {
+		if ( self::is_secret_field( $field ) ) {
+			return '' !== self::stored_plaintext( $field );
+		}
+
+		return '' !== self::stored_public_value( $field );
+	}
+
+	/**
+	 * env wins over wp-config when both are set (same order as env_value()).
+	 */
+	private static function config_source( string $field ): string {
+		$name = self::env_name( $field );
+		if ( '' === $name ) {
+			return '';
+		}
+
+		if ( '' !== self::read_process_env( $name ) ) {
+			return 'env';
+		}
+
+		if ( defined( $name ) ) {
+			$value = constant( $name );
+			if ( is_string( $value ) && '' !== trim( $value ) ) {
+				return 'wp-config';
+			}
+		}
+
+		return '';
+	}
+
+	private static function read_process_env( string $name ): string {
+		$candidates = [
+			getenv( $name ),
+			$_ENV[ $name ] ?? null,
+			$_SERVER[ $name ] ?? null,
+		];
+
+		foreach ( $candidates as $value ) {
+			if ( ! is_string( $value ) ) {
+				continue;
+			}
+			$value = trim( $value );
+			if ( '' !== $value ) {
+				return $value;
+			}
+		}
+
+		return '';
+	}
+
+	private static function stored_public_value( string $field ): string {
+		foreach ( self::option_keys_for( $field ) as $option ) {
+			$value = get_option( $option, '' );
+			if ( is_string( $value ) && '' !== trim( $value ) ) {
+				return trim( $value );
+			}
+		}
+
+		return '';
 	}
 
 	private static function stored_plaintext( string $field ): string {

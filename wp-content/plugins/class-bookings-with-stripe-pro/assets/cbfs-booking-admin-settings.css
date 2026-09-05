@@ -2617,6 +2617,7 @@
 	width: 50%;
 	padding: 16px 18px;
 	border-top: 1px solid rgba(148, 163, 184, 0.35);
+	overflow: visible;
 }
 
 .clasbpro-booking-settings .clasbpro-stripe-keys-banner__inner {
@@ -2731,5 +2732,46 @@
 	.clasbpro-booking-settings.clasbpro-stripe-tab-active .acf-field.clasbpro-stripe-webhook-url {
 		width: 100%;
 	}
+}
+
+.clasbpro-booking-settings .clasbpro-stripe-key-source {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 8px 0 0;
+	font-size: 11px;
+	line-height: 1.3;
+	color: #64748b;
+}
+
+.clasbpro-booking-settings .clasbpro-stripe-key-source__label {
+	font-weight: 500;
+}
+
+.clasbpro-booking-settings .clasbpro-stripe-key-source__badge {
+	display: inline-block;
+	padding: 2px 7px;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: none;
+	border-radius: 999px;
+	color: #fff;
+}
+
+.clasbpro-booking-settings .clasbpro-stripe-key-source--form .clasbpro-stripe-key-source__badge {
+	background: #334155;
+}
+
+.clasbpro-booking-settings .clasbpro-stripe-key-source--env .clasbpro-stripe-key-source__badge {
+	background: #0f766e;
+}
+
+.clasbpro-booking-settings .clasbpro-stripe-key-source--wp-config .clasbpro-stripe-key-source__badge {
+	background: #4338ca;
+}
+
+.clasbpro-booking-settings .clasbpro-stripe-key-source--none .clasbpro-stripe-key-source__badge {
+	background: #94a3b8;
 }
 
