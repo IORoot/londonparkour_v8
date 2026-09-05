@@ -18,6 +18,7 @@
 #
 # Cloudways Git Pull does not delete extra files (wp-config.php survives), so
 # this lock stays. Do not create it on live.
+# test
 set -euo pipefail
 
 # Always resolve from this file, never from $PWD — cron and SSH may start anywhere.
