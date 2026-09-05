@@ -33,17 +33,12 @@ Commit `assets/dist` — Cloudways does not run `npm`.
 
 Staging is a **separate Cloudways application**. Git Pull runs on staging only, never live.
 
-1. Push the branch Cloudways is tracking (usually `main`).
-2. Cloudways → **Applications** → the staging app (`londonparkour_staging`) → **Deployment via Git** → **Pull**.
-   Cloudways clones into `git_repo` and copies files into `public_html`. That copy is **not** a git repo, so git hooks do not run.
-3. Import the dump if `database/backup.sql` changed (one-time lock already on staging):
+1. Push to `master`.
+2. Open the Cloudways dashboard for **staging** (`londonparkour_staging`).
+3. **Deployment via Git** → **Pull**.
+4. The database updates every minute via cron (`database/cloudways_load.sh`). No SSH import needed.
+5. Application Settings → General → Purge site cache
 
-   ```bash
-   bash ~/applications/londonparkour_staging/public_html/database/cloudways_load.sh
-   ```
+If the page still looks stale after Pull: **Servers → Manage Services → Varnish → Purge**. `uploads/` is gitignored — media 404s on staging until copied.
 
-   Or wait for the staging-only cron (every minute). The script no-ops unless `.staging-import-enabled` exists and the dump SHA changed. **Do not** create that marker or cron on live.
-
-4. Purge Varnish if the page still looks stale: **Servers → Manage Services → Varnish → Purge**.
-
-`uploads/` is gitignored — media 404s on staging until copied. Caching rules: [`docs/cloudways-caching.md`](docs/cloudways-caching.md). Staging import design: [`docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md`](docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md).
+Caching rules: [`docs/cloudways-caching.md`](docs/cloudways-caching.md). Staging import design: [`docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md`](docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md).

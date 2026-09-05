@@ -38,7 +38,7 @@ Import database/backup.sql into this WordPress database (Cloudways staging).
 May be run from any directory. Refuses unless .staging-import-enabled exists
 in public_html (or next to it, if that directory is writable).
 Skips when the dump SHA matches .staging-import-sha, unless --force.
-Appends one line per run to database/db.log (datetime, success|failure, message).
+Appends one line to database/db.log on import or failure (not on skip).
 EOF
 }
 
@@ -147,7 +147,6 @@ fi
 DUMP_SHA="$(file_sha "$DUMP")"
 if [[ "$FORCE" -eq 0 && -f "$STAMP" ]] && [[ "$(cat "$STAMP")" == "$DUMP_SHA" ]]; then
 	log "dump unchanged (sha $DUMP_SHA) — skip. Use --force to import anyway."
-	write_log success "dump unchanged (sha $DUMP_SHA) — skip"
 	exit 0
 fi
 
