@@ -14,7 +14,7 @@ Three layers, in order. Fidelity to the design is the product — class strings 
 2. **Storybook** — the Concourse design system (`londonparkour_v8_storybook_v2`) is the HTML + Tailwind implementation of those screens. Components, tokens, and four themes (dark/light × yellow/green) are signed off there first.
 3. **WordPress on Cloudways** — this repo ports that Storybook into a classic theme and hosts it on Cloudways (staging + live).
 
-Elliott at **[We Are Bold](http://www.wearebold.co.uk/)** set up the Docker/WordPress shape, Cloudways git deploy, and the staging database import. Design-system and page work grew from that base.
+Elliott at **[We Are Bold](http://www.wearebold.co.uk/)** built the Design-system in Pen.dev / Storybook.
 
 Theme internals and the porting contract: [`wp-content/themes/londonparkour_v8/README.md`](wp-content/themes/londonparkour_v8/README.md).
 
@@ -39,8 +39,7 @@ Staging is a **separate Cloudways application**. Git Pull runs on staging only, 
 3. Import the dump if `database/backup.sql` changed (one-time lock already on staging):
 
    ```bash
-   cd ~/applications/londonparkour_staging/public_html
-   bash database/cloudways_load.sh
+   bash ~/applications/londonparkour_staging/public_html/database/cloudways_load.sh
    ```
 
    Or wait for the staging-only cron (every minute). The script no-ops unless `.staging-import-enabled` exists and the dump SHA changed. **Do not** create that marker or cron on live.

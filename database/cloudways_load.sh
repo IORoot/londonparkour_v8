@@ -5,6 +5,9 @@
 #   ~/applications/<app>/git_repo      ← git clone (often root-owned)
 #   ~/applications/<app>/public_html   ← WordPress + copied repo files
 #
+# Safe to invoke from any cwd (cron, SSH home, etc.) — paths are taken from
+# this file, then the script cds into WordPress before calling wp-cli.
+#
 # Git hooks never run in public_html. After you press Pull, either:
 #   1. SSH:  bash ~/applications/londonparkour_staging/public_html/database/cloudways_load.sh
 #   2. Cron on staging only (makes Pull automatic, ~1 min later):
@@ -17,18 +20,21 @@
 # this lock stays. Do not create it on live.
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Always resolve from this file, never from $PWD — cron and SSH may start anywhere.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DUMP="$REPO_ROOT/database/backup.sql"
 FROM_URL="http://localhost:8102"
 FORCE=0
+PATH="/usr/local/bin:/usr/bin:/bin:${PATH:-}"
 
 usage() {
 	cat <<'EOF'
-Usage: database/cloudways_load.sh [--force]
+Usage: /path/to/database/cloudways_load.sh [--force]
 
 Import database/backup.sql into this WordPress database (Cloudways staging).
-Refuses unless .staging-import-enabled exists in public_html
-(or next to it, if that directory is writable).
+May be run from any directory. Refuses unless .staging-import-enabled exists
+in public_html (or next to it, if that directory is writable).
 Skips when the dump SHA matches .staging-import-sha, unless --force.
 EOF
 }
@@ -83,6 +89,7 @@ for arg in "$@"; do
 done
 
 WP_ROOT="$(resolve_wp_root)"
+cd "$WP_ROOT" || die "cannot cd to $WP_ROOT"
 APP_ROOT="$(cd "$WP_ROOT/.." && pwd)"
 
 MARKER=""
@@ -98,10 +105,21 @@ STAMP_DIR="$(dirname "$MARKER")"
 STAMP="$STAMP_DIR/.staging-import-sha"
 
 [[ -f "$DUMP" ]] || die "missing $DUMP"
-command -v wp >/dev/null 2>&1 || die "wp-cli not found on PATH (run from public_html, or use the Cloudways app SSH user)"
+
+WP_BIN=""
+for candidate in wp /usr/local/bin/wp /usr/bin/wp; do
+	if command -v "$candidate" >/dev/null 2>&1; then
+		WP_BIN="$(command -v "$candidate")"
+		break
+	elif [[ -x "$candidate" ]]; then
+		WP_BIN="$candidate"
+		break
+	fi
+done
+[[ -n "$WP_BIN" ]] || die "wp-cli not found (looked on PATH, /usr/local/bin/wp, /usr/bin/wp)"
 
 wp_cmd() {
-	command wp --path="$WP_ROOT" --skip-plugins --skip-themes "$@"
+	"$WP_BIN" --path="$WP_ROOT" --skip-plugins --skip-themes "$@"
 }
 
 if ! wp_cmd core is-installed >/dev/null 2>&1; then
@@ -142,8 +160,8 @@ log "search-replace $FROM_URL → $WP_HOME"
 wp_cmd search-replace "$FROM_URL" "$WP_HOME" --all-tables --report-changed-only
 
 # Load plugins/themes so CPT rewrite rules are registered (skip-* hides them).
-command wp --path="$WP_ROOT" rewrite flush >/dev/null
-command wp --path="$WP_ROOT" cache flush >/dev/null 2>&1 || true
+"$WP_BIN" --path="$WP_ROOT" rewrite flush >/dev/null
+"$WP_BIN" --path="$WP_ROOT" cache flush >/dev/null 2>&1 || true
 
 printf '%s\n' "$DUMP_SHA" >"$STAMP"
 log "done (sha $DUMP_SHA)"

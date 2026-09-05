@@ -54,7 +54,7 @@ alone — same as `wp-config.php`.
 
 | Path | Role |
 |---|---|
-| `database/cloudways_load.sh` | Import. Run from `public_html` after Pull, or via staging cron. `--force` ignores the SHA stamp. |
+| `database/cloudways_load.sh` | Import. Safe from any cwd (uses `--path` + `cd` into WordPress). `--force` ignores the SHA stamp. |
 | `public_html/.staging-import-enabled` | Created once on staging. Absent → no import. Not in git. |
 | `public_html/.staging-import-sha` | SHA of last successfully imported dump. |
 
@@ -63,7 +63,7 @@ alone — same as `wp-config.php`.
 ## Import behaviour
 
 1. Abort unless `.staging-import-enabled` exists in `public_html`.
-2. Abort unless `wp` works in that directory (`wp core is-installed`).
+2. Abort unless wp-cli can see WordPress at that path (`wp --path=… core is-installed`).
 3. Skip if SHA of `database/backup.sql` matches `.staging-import-sha`, unless
    `--force`.
 4. Target URL: `WP_HOME` from wp-config. If unset, `wp option get home`
@@ -88,7 +88,8 @@ Not committed. Run once on the staging application:
 ```bash
 cd ~/applications/londonparkour_staging/public_html
 touch .staging-import-enabled
-bash database/cloudways_load.sh
+# cwd no longer matters after the lock exists:
+bash ~/applications/londonparkour_staging/public_html/database/cloudways_load.sh
 ```
 
 If `touch` is denied, SSH as the application user from Cloudways Access

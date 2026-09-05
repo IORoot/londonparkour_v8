@@ -14,12 +14,13 @@ Cloudways clones into `git_repo` and copies files into `public_html`.
 `public_html` is **not** a git repo, so `git config core.hooksPath` there
 will fail, and `post-merge` / `post-checkout` will not run on GUI Pull.
 
-After Pull, import from `public_html` (this is the supported path):
+Create the lock once inside `public_html`. After that, the import script
+may be run from any directory:
 
 ```bash
 cd ~/applications/londonparkour_staging/public_html
 touch .staging-import-enabled
-bash database/cloudways_load.sh
+bash ~/applications/londonparkour_staging/public_html/database/cloudways_load.sh
 ```
 
 The application root is owned by root; Master SSH cannot write there.
