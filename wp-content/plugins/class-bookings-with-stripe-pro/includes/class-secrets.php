@@ -54,7 +54,6 @@ abstract class Secrets {
 		foreach ( self::field_names() as $field ) {
 			add_filter( 'acf/update_value/name=' . $field, [ self::class, 'filter_update_value' ], 5, 3 );
 			add_filter( 'acf/load_value/name=' . $field, [ self::class, 'filter_load_value' ], 5, 3 );
-			add_filter( 'acf/prepare_field/name=' . $field, [ self::class, 'filter_prepare_field' ], 20 );
 			foreach ( self::option_keys_for( $field ) as $option ) {
 				add_filter( 'pre_update_option_' . $option, [ self::class, 'filter_pre_update_option' ], 10, 3 );
 			}
@@ -255,52 +254,6 @@ abstract class Secrets {
 			return '';
 		}
 		return str_repeat( self::MASK_CHAR, strlen( $plaintext ) );
-	}
-
-	/**
-	 * Append instructions and, for constant-backed keys, mark the field
-	 * disabled. Value display is handled by filter_load_value.
-	 *
-	 * @param array<string, mixed> $field
-	 * @return array<string, mixed>
-	 */
-	public static function filter_prepare_field( $field ) {
-		if ( ! is_array( $field ) ) {
-			return $field;
-		}
-
-		$name = self::field_storage_name( $field );
-		if ( ! self::is_secret_field( $name ) ) {
-			return $field;
-		}
-
-		$has_key  = '' !== self::stored_plaintext( $name );
-		$from_env = self::env_value( $name );
-		$existing = trim( (string) ( $field['instructions'] ?? '' ) );
-
-		if ( '' !== $from_env ) {
-			$const = self::env_name( $name );
-			$note  = $has_key
-				? sprintf(
-					/* translators: %s: wp-config.php / environment variable name */
-					__( 'A database key is saved and overrides %s. Clear this field to use the environment / wp-config value instead.', 'class-bookings-with-stripe-pro' ),
-					$const
-				)
-				: sprintf(
-					/* translators: %s: wp-config.php / environment variable name */
-					__( 'Using %s from the environment or wp-config.php. Leave empty to keep that, or paste a key here to override it.', 'class-bookings-with-stripe-pro' ),
-					$const
-				);
-			$field['instructions'] = '' === $existing ? $note : $existing . ' ' . $note;
-			return $field;
-		}
-
-		$note = $has_key
-			? __( 'A key is saved (shown as dots). Paste a new key to replace it, or clear the field to remove it. Stored encrypted.', 'class-bookings-with-stripe-pro' )
-			: __( 'Paste your Stripe secret. It is stored encrypted.', 'class-bookings-with-stripe-pro' );
-
-		$field['instructions'] = '' === $existing ? $note : $existing . ' ' . $note;
-		return $field;
 	}
 
 	/**

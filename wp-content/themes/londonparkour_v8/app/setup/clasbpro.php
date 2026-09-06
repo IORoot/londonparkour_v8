@@ -372,6 +372,30 @@ function lp_clasbpro_email_merge_tag_catalogue( array $rows ): array {
 			'example'     => '<a href="https://pay.stripe.com/receipts/example">View stripe receipt</a>',
 			'group'       => 'booking',
 		),
+		array(
+			'tag'         => '{tickets_label}',
+			'description' => __( 'Seats booked, labelled as tickets.', 'londonparkour_v8' ),
+			'example'     => '1 ticket',
+			'group'       => 'booking',
+		),
+		array(
+			'tag'         => '{pack_uses_label}',
+			'description' => __( 'Coupon uses included, labelled as classes.', 'londonparkour_v8' ),
+			'example'     => '5 classes',
+			'group'       => 'coupon',
+		),
+		array(
+			'tag'         => '{pack_expiry_label}',
+			'description' => __( 'Coupon validity from purchase, or “No expiry”.', 'londonparkour_v8' ),
+			'example'     => '6 months from purchase',
+			'group'       => 'coupon',
+		),
+		array(
+			'tag'         => '{receipt_link}',
+			'description' => __( 'Stripe receipt anchor, or “No receipt” when nothing was charged.', 'londonparkour_v8' ),
+			'example'     => '<a href="https://pay.stripe.com/receipts/example">View stripe receipt</a>',
+			'group'       => 'coupon',
+		),
 	);
 	foreach ( $extra as $row ) {
 		$rows[] = $row;
@@ -391,6 +415,10 @@ function lp_clasbpro_email_merge_tag_values( array $tags, array $context ): arra
 	$kind     = (string) ( $context['kind'] ?? '' );
 	$class_id = (int) ( $context['class_id'] ?? 0 );
 	$sample   = ! empty( $context['sample'] );
+
+	if ( 'coupon' === $kind ) {
+		return lp_clasbpro_email_fill_coupon_tags( $tags, $context );
+	}
 
 	if ( 'booking' !== $kind ) {
 		return $tags;
@@ -431,6 +459,65 @@ function lp_clasbpro_email_merge_tag_values( array $tags, array $context ): arra
 add_filter( 'clasbpro_email_merge_tag_values', 'lp_clasbpro_email_merge_tag_values', 10, 2 );
 
 /**
+ * Stripe receipt HTML for booking and coupon emails.
+ *
+ * @param array<string, string> $tags
+ */
+function lp_clasbpro_email_receipt_link( array $tags ): string {
+	$receipt_url = trim( (string) ( $tags['{stripe_receipt_url}'] ?? '' ) );
+	if ( '' !== $receipt_url ) {
+		return '<a href="' . esc_url( $receipt_url ) . '">' . esc_html__( 'View stripe receipt', 'londonparkour_v8' ) . '</a>';
+	}
+	return __( 'No receipt', 'londonparkour_v8' );
+}
+
+/**
+ * Coupon-email extras: uses/expiry labels and receipt HTML.
+ *
+ * @param array<string, string> $tags
+ * @param array<string, mixed>  $context
+ * @return array<string, string>
+ */
+function lp_clasbpro_email_fill_coupon_tags( array $tags, array $context ): array {
+	$sample      = ! empty( $context['sample'] );
+	$purchase_id = (int) ( $context['purchase_id'] ?? 0 );
+
+	$uses = (int) ( $tags['{pack_uses}'] ?? 0 );
+	$tags['{pack_uses_label}'] = sprintf(
+		/* translators: %d: number of class uses on the coupon */
+		_n( '%d class', '%d classes', max( 0, $uses ), 'londonparkour_v8' ),
+		max( 0, $uses )
+	);
+
+	$months = 0;
+	if ( $purchase_id > 0 ) {
+		$pack_id = (int) get_post_meta( $purchase_id, '_clasbpro_pack_id', true );
+		if ( $pack_id > 0 && function_exists( 'get_field' ) ) {
+			$months = (int) get_field( 'pack_expiry_months', $pack_id );
+		}
+		if ( $months <= 0 && $pack_id > 0 ) {
+			$months = (int) get_post_meta( $pack_id, 'pack_expiry_months', true );
+		}
+	} elseif ( $sample ) {
+		$months = 6;
+	}
+
+	if ( $months > 0 ) {
+		$tags['{pack_expiry_label}'] = sprintf(
+			/* translators: %d: months the coupon is valid after purchase */
+			_n( '%d month from purchase', '%d months from purchase', $months, 'londonparkour_v8' ),
+			$months
+		);
+	} else {
+		$tags['{pack_expiry_label}'] = __( 'No expiry', 'londonparkour_v8' );
+	}
+
+	$tags['{receipt_link}'] = lp_clasbpro_email_receipt_link( $tags );
+
+	return $tags;
+}
+
+/**
  * Coupon/duration/seats/calendar/maps/receipt tags derived from booking context.
  *
  * @param array<string, string> $tags
@@ -466,13 +553,13 @@ function lp_clasbpro_email_fill_derived_tags( array $tags, array $context, int $
 		_n( '%d person', '%d people', max( 0, $seats ), 'londonparkour_v8' ),
 		max( 0, $seats )
 	);
+	$tags['{tickets_label}'] = sprintf(
+		/* translators: %d: number of tickets booked */
+		_n( '%d ticket', '%d tickets', max( 0, $seats ), 'londonparkour_v8' ),
+		max( 0, $seats )
+	);
 
-	$receipt_url = trim( (string) ( $tags['{stripe_receipt_url}'] ?? '' ) );
-	if ( '' !== $receipt_url ) {
-		$tags['{receipt_link}'] = '<a href="' . esc_url( $receipt_url ) . '">' . esc_html__( 'View stripe receipt', 'londonparkour_v8' ) . '</a>';
-	} else {
-		$tags['{receipt_link}'] = __( 'No receipt', 'londonparkour_v8' );
-	}
+	$tags['{receipt_link}'] = lp_clasbpro_email_receipt_link( $tags );
 
 	$maps = '';
 	if ( $location_id > 0 && function_exists( 'get_field' ) && function_exists( 'lp_google_maps_url' ) ) {
