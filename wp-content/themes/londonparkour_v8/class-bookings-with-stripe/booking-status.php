@@ -3,10 +3,12 @@
  * Booking status layout — Concourse overlay of the clasbpro shortcode.
  *
  * Source: src/stories/Pages/BookingStatus/BookingStatus.js
- * Pencil: NAOqS (confirmed), i3S9z (cancelled), O10PG5 (error).
+ * Pencil: NAOqS (class), u14pA (coupon), Asriz (private 1:1), n5hJVq (workshop),
+ * i3S9z (cancelled), O10PG5 (error).
  *
- * Coupon purchases fall through to the plugin fragments. Class bookings get
- * the welcome pack (confirmed) or the compact board (cancelled / error).
+ * Coupon / private / workshop confirmed states use the same overlay with a
+ * product kind from lp_clasbpro_status_context(). Coupon cancelled/error still
+ * falls through to the plugin fragments.
  *
  * @var \IOROOT_STRIPE_BOOKINGS_PRO\Booking_Status_View $view
  *
@@ -28,12 +30,15 @@ do_action( 'clasbpro_status_template_start', $type, $booking );
 <div class="<?php echo esc_attr( $root_classes ); ?>"<?php echo $session_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 <?php
 if ( $view->is_coupon() ) {
-	if ( class_exists( $loader ) ) {
-		include $loader::status_content_path();
+	$lp_coupon_variant = $view->get_variant();
+	if ( in_array( $lp_coupon_variant, array( 'cancelled', 'error' ), true ) ) {
+		if ( class_exists( $loader ) ) {
+			include $loader::status_content_path();
+		}
+		echo '</div>';
+		do_action( 'clasbpro_status_template_end', $type, $booking );
+		return;
 	}
-	echo '</div>';
-	do_action( 'clasbpro_status_template_end', $type, $booking );
-	return;
 }
 
 $lp          = lp_clasbpro_status_context( $view );
@@ -46,46 +51,58 @@ $lp_href     = $lp['class_href'] ? $lp['class_href'] : $lp['origin'];
 $lp_crumb    = $lp_error ? 'ERROR' : ( $lp_compact ? 'CANCELLED' : 'CONFIRMED' );
 $lp_title    = $lp_error
 	? 'We could not take the booking.'
-	: ( $lp_compact ? 'Booking cancelled.' : 'Booking confirmed.' );
+	: ( $lp_compact ? 'Booking cancelled.' : ( $lp['title'] ? $lp['title'] : 'Booking confirmed.' ) );
 $lp_note     = $lp_error
 	? 'Your card has not been charged. Try the same session again, or write to us and we will book you in by hand.'
 	: ( $lp_compact
 		? 'No charge. You left checkout before payment completed. The Saturday seat is still on the board.'
 		: ( $lp['note'] ? $lp['note'] : $lp_name ) );
 
+$lp_crumbs = $lp_compact
+	? array(
+		array(
+			'label' => 'HOME',
+			'href'  => home_url( '/' ),
+		),
+		array(
+			'label' => 'CLASSES',
+			'href'  => function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' ),
+		),
+		array(
+			'label' => strtoupper( $lp_name ),
+			'href'  => $lp_href,
+		),
+		array( 'label' => $lp_crumb ),
+	)
+	: ( ! empty( $lp['crumbs'] ) ? $lp['crumbs'] : array() );
+
+$lp_crumb_action = $lp_compact
+	? array(
+		'label' => 'TRY AGAIN ↗',
+		'href'  => $lp_href,
+	)
+	: ( ! empty( $lp['crumb_action'] ) ? $lp['crumb_action'] : array(
+		'label' => 'CLASS PAGE ↗',
+		'href'  => $lp_href,
+	) );
+
 lp_part(
 	'components/breadcrumb-rail',
 	array(
-		'crumbs' => array(
-			array(
-				'label' => 'HOME',
-				'href'  => home_url( '/' ),
-			),
-			array(
-				'label' => 'CLASSES',
-				'href'  => function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' ),
-			),
-			array(
-				'label' => strtoupper( $lp_name ),
-				'href'  => $lp_href,
-			),
-			array( 'label' => $lp_crumb ),
-		),
-		'action' => array(
-			'label' => $lp_compact ? 'TRY AGAIN ↗' : 'CLASS PAGE ↗',
-			'href'  => $lp_href,
-		),
+		'crumbs' => $lp_crumbs,
+		'action' => $lp_crumb_action,
 	)
 );
 
-lp_part(
-	'components/page-masthead',
-	array(
-		'title'       => $lp_title,
-		'note'        => $lp_note,
-		'title_scale' => $lp_compact ? 'error' : 'default',
-	)
+$lp_masthead = array(
+	'title'       => $lp_title,
+	'note'        => $lp_note,
+	'title_scale' => $lp_compact ? 'error' : 'default',
 );
+if ( ! $lp_compact && ! empty( $lp['masthead_media_id'] ) ) {
+	$lp_masthead['media_id'] = (int) $lp['masthead_media_id'];
+}
+lp_part( 'components/page-masthead', $lp_masthead );
 
 $lp_when = $lp['session'] ? $lp['session'] : '—';
 $lp_site = $lp['location'] ? $lp['location'] : '—';
@@ -104,13 +121,7 @@ $lp_facts = $lp_compact
 			'value' => $lp_error ? 'FAILED' : 'NOT TAKEN',
 		),
 	)
-	: array(
-		array( 'icon' => 'icon-clock', 'label' => 'WHEN', 'value' => $lp_when ),
-		array( 'icon' => 'icon-map-pin', 'label' => 'SITE', 'value' => $lp_site ),
-		array( 'icon' => 'icon-user', 'label' => 'SEATS', 'value' => $lp_seat ),
-		array( 'icon' => 'icon-currency-pound', 'label' => 'TOTAL', 'value' => $lp_sum ),
-		array( 'icon' => 'icon-hashtag', 'label' => 'REF', 'value' => $lp_ref ),
-	);
+	: ( ! empty( $lp['facts_confirmed'] ) ? $lp['facts_confirmed'] : array() );
 ?>
 	<div class="w-full bg-neutral border-y border-neutral-content/40" data-component="booking-status-fact-rail">
 		<div class="px-6 lg:px-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5" data-mount="rail">
@@ -230,20 +241,48 @@ $lp_facts = $lp_compact
 	<div class="w-full bg-base-100" data-component="booking-status-ticket-place">
 		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 			<article class="bg-neutral-content border border-base-300 px-7 pt-7 pb-8 flex flex-col" data-mount="ticket">
-				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase text-base-content/65">YOUR BOOKING</span>
+				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase text-base-content/65"><?php echo esc_html( $lp['ticket_kicker'] ? $lp['ticket_kicker'] : 'YOUR BOOKING' ); ?></span>
 				<h2 class="font-display text-[32px] font-bold leading-none text-base-content mt-2 mb-0">Receipt</h2>
 				<p class="font-label text-[11px] font-normal leading-none tracking-[0.1px] text-base-content/65 mt-2 mb-4">Paid in full · confirmation emailed.</p>
 				<dl class="m-0">
-					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'WHEN', $lp_when ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'WHERE', $lp_site ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'SEATS', $lp_seat ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'NAME', $lp['customer_name'] ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'TOTAL', $lp_sum ); ?>
-					<?php lp_clasbpro_status_ticket_row( 'REFERENCE', $lp_ref ); ?>
+					<?php
+					if ( ! empty( $lp['ticket_rows'] ) ) {
+						foreach ( $lp['ticket_rows'] as $lp_row ) {
+							lp_clasbpro_status_ticket_row( (string) $lp_row[0], (string) $lp_row[1] );
+						}
+					}
+					?>
 				</dl>
 			</article>
 			<div class="flex flex-col gap-4" data-mount="place">
+				<?php if ( 'coupon' === ( $lp['place_mode'] ?? '' ) ) : ?>
+				<div class="bg-base-200 p-[22px] flex flex-col gap-4">
+					<?php if ( $lp['pack_name'] ) : ?>
+						<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp['pack_name'] ); ?></span>
+					<?php endif; ?>
+					<div class="flex flex-col gap-[10px]">
+						<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">YOUR CODE</span>
+						<p class="font-body text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['code_help'] ); ?></p>
+					</div>
+					<div class="flex flex-col gap-[10px]">
+						<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">AUTO-APPLY</span>
+						<p class="font-body text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['auto_apply'] ); ?></p>
+					</div>
+					<?php if ( $lp['eligibility'] ) : ?>
+						<p class="font-body text-[13px] font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp['eligibility'] ); ?></p>
+					<?php endif; ?>
+					<div class="flex flex-wrap items-center justify-between gap-4 border-t border-base-300 pt-[14px]">
+						<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['sites_line'] ); ?></span>
+						<a href="<?php echo esc_url( $lp['timetable_href'] ); ?>" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent">CLASS TIMETABLE ↗</a>
+					</div>
+				</div>
+				<aside class="bg-base-200 p-[22px] flex flex-col gap-2" data-component="booking-status-coupon-next">
+					<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-base-content/65">NEXT</span>
+					<h3 class="font-display text-[22px] font-bold leading-[26px] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp['next_title'] ); ?></h3>
+					<p class="font-body text-[12px] font-normal leading-[15px] text-base-content/65 m-0"><?php echo esc_html( $lp['next_body'] ); ?></p>
+					<a href="<?php echo esc_url( $lp['timetable_href'] ); ?>" class="font-label text-[11px] font-semibold leading-[13px] text-accent">CLASS TIMETABLE ↗</a>
+				</aside>
+				<?php else : ?>
 				<div class="bg-base-200 p-[22px] flex flex-col gap-4">
 					<?php if ( $lp['site_kicker'] ) : ?>
 						<div class="flex items-center gap-2">
@@ -315,16 +354,67 @@ $lp_facts = $lp_compact
 					</div>
 				</aside>
 				<?php endif; ?>
+				<?php endif; ?>
 			</div>
 		</div>
 	</div>
 
+	<?php if ( ! empty( $lp['show_coach'] ) && ! empty( $lp['coach'] ) ) : ?>
+		<section class="w-full bg-accent" data-component="class-detail-your-coach">
+			<div class="px-6 lg:px-16 py-scale-2xl">
+				<div class="flex flex-col gap-[18px] border-t border-accent-content pt-[22px]">
+					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-accent-content">YOUR COACH</span>
+					<?php
+					lp_part(
+						'components/byline',
+						array(
+							'name'      => $lp['coach']['name'],
+							'secondary' => $lp['coach']['secondary'],
+							'bio'       => $lp['coach']['bio'],
+							'size'      => 'lg',
+							'surface'   => 'accent',
+							'photo_id'  => (int) $lp['coach']['photo_id'],
+						)
+					);
+					?>
+				</div>
+			</div>
+		</section>
+	<?php endif; ?>
+
+	<?php if ( ! empty( $lp['show_coaches'] ) && ! empty( $lp['coaches'] ) ) : ?>
+		<section class="w-full bg-accent" data-component="workshop-detail-coaches">
+			<div class="px-6 lg:px-16 py-scale-2xl">
+				<div class="flex flex-col gap-10 border-t border-accent-content pt-[22px]">
+					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-accent-content">THE COACHES</span>
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+						<?php foreach ( $lp['coaches'] as $lp_coach_row ) : ?>
+							<?php
+							lp_part(
+								'components/byline',
+								array(
+									'name'      => $lp_coach_row['name'],
+									'secondary' => $lp_coach_row['secondary'],
+									'bio'       => $lp_coach_row['bio'],
+									'size'      => 'lg',
+									'surface'   => 'accent',
+									'photo_id'  => (int) $lp_coach_row['photo_id'],
+								)
+							);
+							?>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			</div>
+		</section>
+	<?php endif; ?>
+
 	<div class="w-full bg-base-100" data-component="booking-status-before-you-come">
 		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-x-16 gap-y-16 items-start">
 			<aside class="flex flex-col gap-4">
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65">COMMON QUESTIONS</span>
-				<h2 class="font-display text-[36px] font-bold leading-none text-base-content m-0">Before you come.</h2>
-				<p class="font-body text-[12px] leading-[1.25] text-base-content/65 m-0">Anything else, email hello@londonparkour.com or ask the coach on the meeting point.</p>
+				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['faq_kicker'] ? $lp['faq_kicker'] : 'COMMON QUESTIONS' ); ?></span>
+				<h2 class="font-display text-[36px] font-bold leading-none text-base-content m-0"><?php echo esc_html( $lp['faq_title'] ? $lp['faq_title'] : 'Before you come.' ); ?></h2>
+				<p class="font-body text-[12px] leading-[1.25] text-base-content/65 m-0"><?php echo esc_html( $lp['faq_lede'] ? $lp['faq_lede'] : 'Anything else, email hello@londonparkour.com or ask the coach on the meeting point.' ); ?></p>
 				<div class="flex flex-col gap-2 mt-2">
 					<div class="relative w-full aspect-[380/214] bg-neutral overflow-hidden">
 						<?php if ( $lp['image_id'] ) : ?>
@@ -341,7 +431,7 @@ $lp_facts = $lp_compact
 							);
 							?>
 						<?php endif; ?>
-						<?php if ( $lp['video_id'] ) : ?>
+						<?php if ( ! empty( $lp['show_film'] ) && $lp['video_id'] ) : ?>
 							<button type="button" class="absolute inset-0 grid place-items-center" command="show-modal" commandfor="booking-status-class-film" data-video-type="youtube" data-video-id="<?php echo esc_attr( $lp['video_id'] ); ?>" data-autoplay="true" aria-label="Watch the class">
 								<span class="w-14 h-14 rounded-full bg-base-100 grid place-items-center">
 									<?php lp_icon( 'icon-play', 'w-4 h-4 text-base-content' ); ?>
@@ -349,7 +439,7 @@ $lp_facts = $lp_compact
 							</button>
 						<?php endif; ?>
 					</div>
-					<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65">CLASS FILM  ·  <?php echo esc_html( $lp['site_kicker'] ? str_replace( ' · ', ' — ', $lp['site_kicker'] ) : strtoupper( $lp_name ) ); ?></span>
+					<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['film_caption'] ? $lp['film_caption'] : strtoupper( $lp_name ) ); ?></span>
 				</div>
 			</aside>
 			<div class="flex flex-col divide-y divide-base-300 border-t border-t-base-content border-b border-b-base-300">
@@ -360,7 +450,7 @@ $lp_facts = $lp_compact
 		</div>
 	</div>
 	<?php
-	if ( $lp['video_id'] ) {
+	if ( ! empty( $lp['show_film'] ) && $lp['video_id'] ) {
 		lp_part(
 			'elements/dialog-video',
 			array(
@@ -372,6 +462,7 @@ $lp_facts = $lp_compact
 	}
 	?>
 
+	<?php if ( ! empty( $lp['show_private'] ) ) : ?>
 	<div class="w-full bg-neutral" data-component="booking-status-private">
 		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-12 items-center">
 			<div class="relative w-full h-[200px] bg-secondary overflow-hidden">
@@ -412,6 +503,7 @@ $lp_facts = $lp_compact
 			</div>
 		</div>
 	</div>
+	<?php endif; ?>
 
 	<div class="bg-primary px-6 lg:px-16 py-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-20" data-component="gift-card-upsell">
 		<div class="flex flex-col gap-[22px] flex-1 items-start max-w-[912px]">
@@ -465,9 +557,9 @@ $lp_facts = $lp_compact
 <?php endif; ?>
 
 <?php
-lp_part(
-	'components/page-onward',
-	array(
+$lp_onward = ( ! $lp_compact && ! empty( $lp['onward'] ) )
+	? $lp['onward']
+	: array(
 		'prev' => array(
 			'keyword' => '← CLASS PAGE',
 			'label'   => $lp_name,
@@ -480,8 +572,8 @@ lp_part(
 				? ( function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' ) )
 				: $lp['contact_href'],
 		),
-	)
-);
+	);
+lp_part( 'components/page-onward', $lp_onward );
 ?>
 </div>
 <?php

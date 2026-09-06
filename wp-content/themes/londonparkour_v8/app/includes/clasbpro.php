@@ -1590,6 +1590,58 @@ function lp_clasbpro_pack_gift_card( array $pack ): void {
 }
 
 /**
+ * Confirmed-status product: class, coupon, private (appointment), workshop (one-off).
+ *
+ * @param object $view Booking_Status_View.
+ */
+function lp_clasbpro_status_product( $view ): string {
+	if ( is_object( $view ) && method_exists( $view, 'is_coupon' ) && $view->is_coupon() ) {
+		return 'coupon';
+	}
+	$booking    = ( is_object( $view ) && isset( $view->booking ) && is_array( $view->booking ) ) ? $view->booking : array();
+	$booking_id = (int) ( $booking['booking_id'] ?? 0 );
+	$class_id   = (int) ( $booking['class_id'] ?? 0 );
+	if ( $class_id <= 0 && $booking_id > 0 ) {
+		$class_id = (int) get_post_meta( $booking_id, '_clasbpro_class_id', true );
+	}
+	if ( $class_id > 0 && function_exists( 'lp_class_is_appointment' ) && lp_class_is_appointment( $class_id ) ) {
+		return 'private';
+	}
+	if ( $class_id > 0 && function_exists( 'lp_class_is_one_off' ) && lp_class_is_one_off( $class_id ) ) {
+		return 'workshop';
+	}
+	return 'class';
+}
+
+/**
+ * Coach rows for Your Coach / The Coaches on a status page.
+ *
+ * @param int $class_id Class post ID.
+ * @return list<array{name:string,secondary:string,bio:string,photo_id:int}>
+ */
+function lp_clasbpro_status_coaches( int $class_id ): array {
+	if ( $class_id <= 0 || ! function_exists( 'lp_class_coach_ids' ) ) {
+		return array();
+	}
+	$out = array();
+	foreach ( lp_class_coach_ids( $class_id ) as $cid ) {
+		$cid = (int) $cid;
+		if ( $cid <= 0 ) {
+			continue;
+		}
+		$out[] = array(
+			'name'      => get_the_title( $cid ),
+			'secondary' => function_exists( 'get_field' ) ? (string) get_field( 'role', $cid ) : '',
+			'bio'       => function_exists( 'lp_first_sentences' ) && function_exists( 'get_field' )
+				? lp_first_sentences( (string) get_field( 'bio', $cid ), 2 )
+				: '',
+			'photo_id'  => has_post_thumbnail( $cid ) ? (int) get_post_thumbnail_id( $cid ) : 0,
+		);
+	}
+	return $out;
+}
+
+/**
  * Extra class context for the Concourse booking-status overlay.
  *
  * The shortcode booking payload has no class_id. We look it up from booking
@@ -1600,6 +1652,7 @@ function lp_clasbpro_pack_gift_card( array $pack ): void {
  */
 function lp_clasbpro_status_context( $view ): array {
 	$booking    = ( is_object( $view ) && isset( $view->booking ) && is_array( $view->booking ) ) ? $view->booking : array();
+	$purchase   = ( is_object( $view ) && isset( $view->purchase ) && is_array( $view->purchase ) ) ? $view->purchase : array();
 	$booking_id = (int) ( $booking['booking_id'] ?? 0 );
 	$class_id   = (int) ( $booking['class_id'] ?? 0 );
 	if ( $class_id <= 0 && $booking_id > 0 ) {
@@ -1655,6 +1708,10 @@ function lp_clasbpro_status_context( $view ): array {
 	$contact_href    = home_url( '/contact/' );
 	$contact_mail    = 'mailto:hello@londonparkour.com';
 
+	$product = lp_clasbpro_status_product( $view );
+	$coaches = lp_clasbpro_status_coaches( $class_id );
+	$coach   = $coaches[0] ?? null;
+
 	$faqs = array(
 		array(
 			'index'    => '01',
@@ -1678,42 +1735,452 @@ function lp_clasbpro_status_context( $view ): array {
 		),
 	);
 
+	$classes_href   = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' );
+	$workshops_href = function_exists( 'lp_workshops_url' ) ? lp_workshops_url() : home_url( '/workshops/' );
+	$total          = '';
+	$customer_name  = '';
+	$seats          = '';
+	$ticket_kicker  = 'YOUR BOOKING';
+	$ticket_rows    = array(
+		array( 'CLASS', $class_name ),
+		array( 'WHEN', $session ),
+		array( 'WHERE', $location ),
+		array( 'SEATS', (string) ( $booking['seats'] ?? '' ) ),
+		array( 'NAME', (string) ( $booking['customer_name'] ?? '' ) ),
+		array( 'TOTAL', (string) ( $booking['amount_total'] ?? '' ) ),
+		array( 'REFERENCE', $ref ),
+	);
+	$title          = 'Booking confirmed.';
+	$faq_kicker     = 'COMMON QUESTIONS';
+	$faq_title      = 'Before you come.';
+	$faq_lede       = 'Anything else, email hello@londonparkour.com or ask the coach on the meeting point.';
+	$film_caption   = $site_kicker ? ( 'CLASS FILM  ·  ' . str_replace( ' · ', ' — ', $site_kicker ) ) : strtoupper( $class_name );
+	$show_film      = (bool) $video_id;
+	$show_private   = true;
+	$show_coach     = false;
+	$show_coaches   = false;
+	$place_mode     = 'location';
+	$masthead_media = 0;
+	$pack_name      = '';
+	$code_help      = '';
+	$auto_apply     = '';
+	$eligibility    = '';
+	$sites_line     = 'VAUXHALL · OLD STREET · KILBURN PARK';
+	$next_title     = '';
+	$next_body      = '';
+	$crumbs         = array(
+		array(
+			'label' => 'HOME',
+			'href'  => home_url( '/' ),
+		),
+		array(
+			'label' => 'CLASSES',
+			'href'  => $classes_href,
+		),
+		array(
+			'label' => strtoupper( $class_name ? $class_name : __( 'Class', 'londonparkour_v8' ) ),
+			'href'  => $class_href,
+		),
+		array( 'label' => 'CONFIRMED' ),
+	);
+	$crumb_action   = array(
+		'label' => 'CLASS PAGE ↗',
+		'href'  => $class_href,
+	);
+	$onward         = array(
+		'prev' => array(
+			'keyword' => '← CLASS PAGE',
+			'label'   => $class_name ? $class_name : __( 'Class', 'londonparkour_v8' ),
+			'href'    => $class_href,
+		),
+		'next' => array(
+			'keyword' => 'CONTACT →',
+			'label'   => 'Questions before Saturday',
+			'href'    => $contact_href,
+		),
+	);
+
+	if ( 'coupon' === $product ) {
+		$pack_id        = (int) ( $purchase['pack_id'] ?? 0 );
+		$pack_name      = (string) ( $purchase['pack_name'] ?? ( $pack_id ? get_the_title( $pack_id ) : __( 'Coupon', 'londonparkour_v8' ) ) );
+		$uses           = (int) ( $purchase['uses'] ?? 0 );
+		$uses_label     = sprintf(
+			/* translators: %d: number of class uses on the coupon */
+			_n( '%d class', '%d classes', max( 0, $uses ), 'londonparkour_v8' ),
+			max( 0, $uses )
+		);
+		$months         = 0;
+		if ( $pack_id > 0 && function_exists( 'get_field' ) ) {
+			$months = (int) get_field( 'pack_expiry_months', $pack_id );
+		}
+		if ( $months <= 0 && $pack_id > 0 ) {
+			$months = (int) get_post_meta( $pack_id, 'pack_expiry_months', true );
+		}
+		$validity_full  = $months > 0
+			? sprintf(
+				/* translators: %d: months the coupon is valid after purchase */
+				_n( '%d month from purchase', '%d months from purchase', $months, 'londonparkour_v8' ),
+				$months
+			)
+			: __( 'No expiry', 'londonparkour_v8' );
+		$validity_short = $months > 0
+			? sprintf(
+				/* translators: %d: months of validity */
+				_n( '%d month', '%d months', $months, 'londonparkour_v8' ),
+				$months
+			)
+			: __( 'No expiry', 'londonparkour_v8' );
+		$code           = (string) ( $purchase['code'] ?? '' );
+		$purchase_id    = (int) ( $purchase['purchase_id'] ?? 0 );
+		$ref            = $purchase_id ? ( '#' . $purchase_id ) : $ref;
+		$total          = (string) ( $purchase['amount_total'] ?? '' );
+		$customer_name  = (string) ( $purchase['customer_name'] ?? '' );
+		$title          = 'Coupon purchased.';
+		$note           = $pack_name . '. ' . $uses_label . '. ' . $validity_full . '.';
+		$ticket_kicker  = 'YOUR COUPON';
+		$place_mode     = 'coupon';
+		$show_whatsapp  = false;
+		$show_film      = false;
+		$ticket_rows    = array(
+			array( 'PACK', $pack_name ),
+			array( 'USES', $uses_label ),
+			array( 'VALIDITY', $validity_full ),
+			array( 'CODE', $code ),
+			array( 'NAME', $customer_name ),
+			array( 'TOTAL', $total ),
+			array( 'REFERENCE', $ref ),
+		);
+		$code_help      = 'On payment you land on a confirmation page showing your coupon code. The same code is emailed to you automatically. If you do not receive it, contact us and we will send it manually.';
+		$auto_apply     = 'The site remembers your code. Once entered, it will be applied automatically at checkout on your next visit — you do not need to re-enter it each time.';
+		$eligibility    = 'Coupons are valid for standard classes only. They cannot be used against workshops, private 1:1 sessions, or any other service.';
+		$next_title     = 'Buy once, book when you want.';
+		$next_body      = 'The site remembers your code. Once entered, it will be applied automatically at checkout on your next visit.';
+		$faq_kicker     = 'TERMS + HOW IT WORKS';
+		$faq_title      = 'Everything you need to know.';
+		$faq_lede       = 'Most questions have a straightforward answer.';
+		$film_caption   = 'EVERY COUPON WORKS AT ALL THREE SITES';
+		$faqs           = array(
+			array(
+				'index'    => '01',
+				'question' => 'VALIDITY',
+				'answer'   => 'Each coupon pack has a validity window from the date of purchase: single coupons are valid for 3 months, 5-packs for 6 months, and 10-packs for 12 months. Unused coupons expire at the end of this period.',
+			),
+			array(
+				'index'    => '02',
+				'question' => 'YOUR CODE',
+				'answer'   => $code_help,
+			),
+			array(
+				'index'    => '03',
+				'question' => 'AUTO-APPLY',
+				'answer'   => $auto_apply,
+			),
+			array(
+				'index'    => '04',
+				'question' => 'REFUNDS',
+				'answer'   => 'Refunds are available only if no classes have been redeemed against the coupon. Partial refunds are not available once any class has been used.',
+			),
+		);
+		$crumbs         = array(
+			array(
+				'label' => 'HOME',
+				'href'  => home_url( '/' ),
+			),
+			array(
+				'label' => 'COUPONS',
+				'href'  => $coupons_href,
+			),
+			array(
+				'label' => strtoupper( $pack_name ),
+				'href'  => $coupons_href,
+			),
+			array( 'label' => 'CONFIRMED' ),
+		);
+		$crumb_action   = array(
+			'label' => 'TIMETABLE ↗',
+			'href'  => $classes_href,
+		);
+		$onward         = array(
+			'prev' => array(
+				'keyword' => '← CLASS TIMETABLE',
+				'label'   => 'Book your next session',
+				'href'    => $classes_href,
+			),
+			'next' => array(
+				'keyword' => 'PRIVATE COACHING →',
+				'label'   => 'One coach, any of six sites',
+				'href'    => $private_href,
+			),
+		);
+		$class_name     = $pack_name;
+		$session        = $uses_label;
+		$location       = $validity_short;
+		$seats          = $uses_label;
+	} elseif ( 'private' === $product ) {
+		$coach_name     = $coach ? (string) $coach['name'] : '';
+		$title          = 'Booking confirmed.';
+		$note           = trim(
+			implode(
+				' ',
+				array_filter(
+					array(
+						'Private 1:1' . ( $location ? ' — ' . $location . '.' : '.' ),
+						'One coach. Just you.',
+						$session && $coach_name ? ( $session . ' with ' . $coach_name . '.' ) : $session,
+					)
+				)
+			)
+		);
+		$ticket_rows    = array(
+			array( 'SESSION', $class_name ? $class_name : 'Private 1:1' ),
+			array( 'WHEN', $session ),
+			array( 'WHERE', $location ),
+			array( 'COACH', $coach_name ),
+			array( 'NAME', (string) ( $booking['customer_name'] ?? '' ) ),
+			array( 'TOTAL', (string) ( $booking['amount_total'] ?? '' ) ),
+			array( 'REFERENCE', $ref ),
+		);
+		$site_kicker    = $location ? ( 'PRIVATE 1:1 · ' . strtoupper( $location ) ) : 'PRIVATE 1:1';
+		$faqs           = array(
+			array(
+				'index'    => '01',
+				'question' => 'Who will this help?',
+				'answer'   => "Anyone. You don't need to be fit already — shy, old, overweight, uncoordinated or injured, none of it matters. We give you the coaching to become fit, healthy, mobile and functional.",
+			),
+			array(
+				'index'    => '02',
+				'question' => 'What benefit is this to you?',
+				'answer'   => "Uninterrupted, face-to-face time with some of the most experienced parkour coaches in the world. We're not the best performers or competitors — we've taught many of those people.",
+			),
+			array(
+				'index'    => '03',
+				'question' => 'How experienced are the coaches?',
+				'answer'   => "Teaching since 2005: Olympic athletes, special forces, emergency services, people with disabilities, and everyone in between. Practical, functional movement — that's the qualification.",
+			),
+			array(
+				'index'    => '04',
+				'question' => 'What will you get?',
+				'answer'   => 'Whatever you want to work on — fundamentals, strength, recovery, injury prevention, or how you live. No topic yet? The coach judges what you need and leads.',
+			),
+		);
+		$film_caption   = $location ? ( 'PRIVATE 1:1  ·  ' . strtoupper( $location ) ) : 'PRIVATE 1:1';
+		$show_private   = false;
+		$show_coach     = (bool) $coach;
+		$crumbs         = array(
+			array(
+				'label' => 'HOME',
+				'href'  => home_url( '/' ),
+			),
+			array(
+				'label' => 'CLASSES',
+				'href'  => $classes_href,
+			),
+			array(
+				'label' => 'PRIVATE 1:1',
+				'href'  => $private_href,
+			),
+			array( 'label' => 'CONFIRMED' ),
+		);
+		$crumb_action   = array(
+			'label' => 'PRIVATE 1:1 ↗',
+			'href'  => $private_href,
+		);
+		$onward         = array(
+			'prev' => array(
+				'keyword' => '← PRIVATE 1:1',
+				'label'   => 'One coach. Just you.',
+				'href'    => $private_href,
+			),
+			'next' => array(
+				'keyword' => 'CONTACT →',
+				'label'   => 'Anything unclear before Saturday',
+				'href'    => $contact_href,
+			),
+		);
+		$seats          = $coach_name;
+	} elseif ( 'workshop' === $product ) {
+		$title          = 'Booking confirmed.';
+		$note           = trim(
+			implode(
+				' ',
+				array_filter(
+					array(
+						$class_name . ( $location ? ' — ' . $location . '.' : '.' ),
+						$session,
+					)
+				)
+			)
+		);
+		$ticket_rows    = array(
+			array( 'WORKSHOP', $class_name ),
+			array( 'WHEN', $session ),
+			array( 'WHERE', $location ),
+			array( 'SEATS', (string) ( $booking['seats'] ?? '' ) ),
+			array( 'NAME', (string) ( $booking['customer_name'] ?? '' ) ),
+			array( 'TOTAL', (string) ( $booking['amount_total'] ?? '' ) ),
+			array( 'REFERENCE', $ref ),
+		);
+		$site_kicker    = $location ? ( 'WORKSHOP · ' . strtoupper( $location ) ) : 'WORKSHOP';
+		$faqs           = array(
+			array(
+				'index'    => '01',
+				'question' => 'Do I need any experience?',
+				'answer'   => 'A full day for coaches and near-coaches. How we teach a vault, how we hold a group, and what we never skip.',
+			),
+			array(
+				'index'    => '02',
+				'question' => 'What should I wear?',
+				'answer'   => 'Unrestrictive kit — tracksuit bottoms, a tee, trainers. Skip jeans and boots.',
+			),
+			array(
+				'index'    => '03',
+				'question' => 'What should I bring?',
+				'answer'   => 'A bottle of water. Leave jewellery, watches, phones and wallets out of the session.',
+			),
+			array(
+				'index'    => '04',
+				'question' => 'Can I cancel?',
+				'answer'   => 'Free cancellation up to 24 hours before the day.',
+			),
+		);
+		$film_caption   = $location ? ( 'A SATURDAY AT ' . strtoupper( $location ) . '  ·  6 HOURS' ) : 'WORKSHOP';
+		$masthead_media = $image_id;
+		$show_coaches   = (bool) $coaches;
+		$crumbs         = array(
+			array(
+				'label' => 'HOME',
+				'href'  => home_url( '/' ),
+			),
+			array(
+				'label' => 'CLASSES',
+				'href'  => $classes_href,
+			),
+			array(
+				'label' => 'WORKSHOPS',
+				'href'  => $workshops_href,
+			),
+			array(
+				'label' => strtoupper( $class_name ? $class_name : __( 'Workshop', 'londonparkour_v8' ) ),
+				'href'  => $class_href,
+			),
+			array( 'label' => 'CONFIRMED' ),
+		);
+		$crumb_action   = array(
+			'label' => 'ALL WORKSHOPS ↗',
+			'href'  => $workshops_href,
+		);
+		$onward         = array(
+			'prev' => array(
+				'keyword' => '← ALL WORKSHOPS',
+				'label'   => 'The dates still to come',
+				'href'    => $workshops_href,
+			),
+			'next' => array(
+				'keyword' => 'PRIVATE COACHING →',
+				'label'   => 'One coach, any of six sites',
+				'href'    => $private_href,
+			),
+		);
+		$seats          = (string) ( $booking['seats'] ?? '' );
+	} else {
+		$seats = (string) ( $booking['seats'] ?? '' );
+	}
+
+	if ( 'coupon' !== $product ) {
+		$total         = (string) ( $booking['amount_total'] ?? '' );
+		$customer_name = (string) ( $booking['customer_name'] ?? '' );
+	}
+
+	$facts_confirmed = array(
+		array( 'icon' => 'icon-clock', 'label' => 'WHEN', 'value' => $session ? $session : '—' ),
+		array( 'icon' => 'icon-map-pin', 'label' => 'SITE', 'value' => $location ? $location : '—' ),
+		array( 'icon' => 'icon-user', 'label' => 'SEATS', 'value' => '' !== $seats ? $seats : '—' ),
+		array( 'icon' => 'icon-currency-pound', 'label' => 'TOTAL', 'value' => $total ? $total : '—' ),
+		array( 'icon' => 'icon-hashtag', 'label' => 'REF', 'value' => $ref ? $ref : '—' ),
+	);
+	if ( 'coupon' === $product ) {
+		$facts_confirmed = array(
+			array( 'icon' => 'icon-ticket', 'label' => 'PACK', 'value' => $pack_name ? $pack_name : '—' ),
+			array( 'icon' => 'icon-user', 'label' => 'USES', 'value' => $seats ? $seats : '—' ),
+			array( 'icon' => 'icon-clock', 'label' => 'VALIDITY', 'value' => $location ? $location : '—' ),
+			array( 'icon' => 'icon-currency-pound', 'label' => 'TOTAL', 'value' => $total ? $total : '—' ),
+			array( 'icon' => 'icon-hashtag', 'label' => 'REF', 'value' => $ref ? $ref : '—' ),
+		);
+	} elseif ( 'private' === $product ) {
+		$facts_confirmed = array(
+			array( 'icon' => 'icon-clock', 'label' => 'WHEN', 'value' => $session ? $session : '—' ),
+			array( 'icon' => 'icon-map-pin', 'label' => 'SITE', 'value' => $location ? $location : '—' ),
+			array( 'icon' => 'icon-user', 'label' => 'COACH', 'value' => $seats ? $seats : '—' ),
+			array( 'icon' => 'icon-currency-pound', 'label' => 'TOTAL', 'value' => $total ? $total : '—' ),
+			array( 'icon' => 'icon-hashtag', 'label' => 'REF', 'value' => $ref ? $ref : '—' ),
+		);
+	}
+
 	return (array) apply_filters(
 		'lp_clasbpro_status_context',
 		array(
-			'booking'         => $booking,
-			'booking_id'      => $booking_id,
-			'class_id'        => $class_id,
-			'class_name'      => $class_name,
-			'class_href'      => $class_href,
-			'location'        => $location,
-			'session'         => $session,
-			'note'            => $note,
-			'seats'           => (string) ( $booking['seats'] ?? '' ),
-			'total'           => (string) ( $booking['amount_total'] ?? '' ),
-			'ref'             => $ref,
-			'customer_name'   => (string) ( $booking['customer_name'] ?? '' ),
-			'origin'          => $origin,
-			'location_id'     => $location_id,
-			'meeting_point'   => $meeting_point,
-			'transport_rail'  => $transport_rail,
-			'transport_bus'   => $transport_bus,
-			'lat'             => $lat,
-			'lon'             => $lon,
-			'maps_href'       => $maps_href,
-			'image_id'        => $image_id,
+			'product'           => $product,
+			'booking'           => $booking,
+			'purchase'          => $purchase,
+			'booking_id'        => $booking_id,
+			'class_id'          => $class_id,
+			'class_name'        => $class_name,
+			'class_href'        => $class_href,
+			'location'          => $location,
+			'session'           => $session,
+			'note'              => $note,
+			'title'             => $title,
+			'seats'             => $seats,
+			'total'             => $total,
+			'ref'               => $ref,
+			'customer_name'     => $customer_name,
+			'origin'            => $origin,
+			'location_id'       => $location_id,
+			'meeting_point'     => $meeting_point,
+			'transport_rail'    => $transport_rail,
+			'transport_bus'     => $transport_bus,
+			'lat'               => $lat,
+			'lon'               => $lon,
+			'maps_href'         => $maps_href,
+			'image_id'          => $image_id,
 			'location_image_id' => $location_image,
-			'site_kicker'     => $site_kicker,
-			'foot'            => $foot,
-			'video_id'        => $video_id,
-			'qr_src'          => $qr_src,
-			'whatsapp_href'   => $whatsapp,
-			'show_whatsapp'   => $show_whatsapp,
-			'private_href'    => $private_href,
-			'coupons_href'    => $coupons_href,
-			'contact_href'    => $contact_href,
-			'contact_mail'    => $contact_mail,
-			'faqs'            => $faqs,
+			'site_kicker'       => $site_kicker,
+			'foot'              => $foot,
+			'video_id'          => $video_id,
+			'qr_src'            => $qr_src,
+			'whatsapp_href'     => $whatsapp,
+			'show_whatsapp'     => $show_whatsapp,
+			'private_href'      => $private_href,
+			'coupons_href'      => $coupons_href,
+			'contact_href'      => $contact_href,
+			'contact_mail'      => $contact_mail,
+			'faqs'              => $faqs,
+			'faq_kicker'        => $faq_kicker,
+			'faq_title'         => $faq_title,
+			'faq_lede'          => $faq_lede,
+			'film_caption'      => $film_caption,
+			'show_film'         => $show_film,
+			'show_private'      => $show_private,
+			'show_coach'        => $show_coach,
+			'show_coaches'      => $show_coaches,
+			'coach'             => $coach,
+			'coaches'           => $coaches,
+			'ticket_kicker'     => $ticket_kicker,
+			'ticket_rows'       => $ticket_rows,
+			'place_mode'        => $place_mode,
+			'masthead_media_id' => $masthead_media,
+			'pack_name'         => $pack_name,
+			'code_help'         => $code_help,
+			'auto_apply'        => $auto_apply,
+			'eligibility'       => $eligibility,
+			'sites_line'        => $sites_line,
+			'next_title'        => $next_title,
+			'next_body'         => $next_body,
+			'crumbs'            => $crumbs,
+			'crumb_action'      => $crumb_action,
+			'onward'            => $onward,
+			'timetable_href'    => $classes_href,
+			'facts_confirmed'   => $facts_confirmed,
 		),
 		$view
 	);
