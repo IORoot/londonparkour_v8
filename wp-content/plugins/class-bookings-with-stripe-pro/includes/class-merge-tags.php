@@ -56,8 +56,29 @@ abstract class Merge_Tags {
 	 * @param array<string, string> $tags
 	 */
 	public static function apply( string $template, array $tags ): string {
-		$replaced = strtr( $template, $tags );
-		return self::apply_lookups( $replaced, $tags );
+		$pairs = [];
+		foreach ( $tags as $search => $replace ) {
+			$search  = (string) $search;
+			$replace = (string) $replace;
+			if ( '' === $search ) {
+				continue;
+			}
+			$pairs[ $search ] = $replace;
+			if ( strlen( $search ) >= 3 && '{' === $search[0] && '}' === substr( $search, -1 ) ) {
+				$pairs[ '&#123;' . substr( $search, 1, -1 ) . '&#125;' ] = $replace;
+			}
+		}
+		uksort(
+			$pairs,
+			static function ( $a, $b ): int {
+				return strlen( (string) $b ) <=> strlen( (string) $a );
+			}
+		);
+		foreach ( $pairs as $search => $replace ) {
+			$template = str_replace( $search, $replace, $template );
+		}
+
+		return self::apply_lookups( $template, $tags );
 	}
 
 	/**
@@ -81,7 +102,7 @@ abstract class Merge_Tags {
 		$filtered = apply_filters( 'clasbpro_email_merge_tag_values', $tags, $context );
 
 		if ( ! is_array( $filtered ) ) {
-			return $tags;
+			$filtered = $tags;
 		}
 
 		$out = [];
@@ -89,7 +110,66 @@ abstract class Merge_Tags {
 			$out[ (string) $key ] = (string) $value;
 		}
 
+		if ( 'coupon' === (string) ( $context['kind'] ?? '' ) ) {
+			$out = self::fill_coupon_derived_tags( $out, $context );
+		}
+
 		return $out;
+	}
+
+	/**
+	 * Labels and receipt HTML the coupon templates use but the purchase array does not.
+	 *
+	 * @param array<string, string> $tags
+	 * @param array<string, mixed>  $context
+	 * @return array<string, string>
+	 */
+	private static function fill_coupon_derived_tags( array $tags, array $context ): array {
+		$sample      = ! empty( $context['sample'] );
+		$purchase_id = (int) ( $context['purchase_id'] ?? 0 );
+
+		$uses                      = (int) ( $tags['{pack_uses}'] ?? 0 );
+		$tags['{pack_uses_label}'] = sprintf(
+			/* translators: %d: number of class uses on the coupon */
+			_n( '%d class', '%d classes', max( 0, $uses ), 'class-bookings-with-stripe-pro' ),
+			max( 0, $uses )
+		);
+
+		$months  = 0;
+		$pack_id = 0;
+		if ( $purchase_id > 0 ) {
+			$pack_id = (int) get_post_meta( $purchase_id, '_clasbpro_pack_id', true );
+			if ( $pack_id > 0 ) {
+				$pack = Packs::get_pack_data( $pack_id );
+				if ( is_array( $pack ) ) {
+					$months = (int) ( $pack['expiry_months'] ?? 0 );
+				}
+				if ( $months <= 0 ) {
+					$months = (int) ( function_exists( 'get_field' ) ? get_field( 'pack_expiry_months', $pack_id ) : get_post_meta( $pack_id, 'pack_expiry_months', true ) );
+				}
+			}
+		} elseif ( $sample ) {
+			$months = 6;
+		}
+
+		if ( $months > 0 ) {
+			$tags['{pack_expiry_label}'] = sprintf(
+				/* translators: %d: months the coupon is valid after purchase */
+				_n( '%d month from purchase', '%d months from purchase', $months, 'class-bookings-with-stripe-pro' ),
+				$months
+			);
+		} else {
+			$tags['{pack_expiry_label}'] = __( 'No expiry', 'class-bookings-with-stripe-pro' );
+		}
+
+		$receipt_url = trim( (string) ( $tags['{stripe_receipt_url}'] ?? '' ) );
+		if ( '' !== $receipt_url ) {
+			$tags['{receipt_link}'] = '<a href="' . esc_url( $receipt_url ) . '">' . esc_html__( 'View stripe receipt', 'class-bookings-with-stripe-pro' ) . '</a>';
+		} else {
+			$tags['{receipt_link}'] = __( 'No receipt', 'class-bookings-with-stripe-pro' );
+		}
+
+		return $tags;
 	}
 
 	public static function render_accordion(): string {
@@ -324,10 +404,13 @@ abstract class Merge_Tags {
 			self::row( '{pack_name}', __( 'Coupon product name.', 'class-bookings-with-stripe-pro' ), '10-class coupon', 'coupon' ),
 			self::row( '{pack_code}', __( 'Customer-facing coupon code.', 'class-bookings-with-stripe-pro' ), 'DEMO10CLASS', 'coupon' ),
 			self::row( '{pack_uses}', __( 'Uses included at purchase.', 'class-bookings-with-stripe-pro' ), '10', 'coupon' ),
+			self::row( '{pack_uses_label}', __( 'Uses included, labelled as classes.', 'class-bookings-with-stripe-pro' ), '10 classes', 'coupon' ),
+			self::row( '{pack_expiry_label}', __( 'Coupon validity from purchase, or “No expiry”.', 'class-bookings-with-stripe-pro' ), '6 months from purchase', 'coupon' ),
 			self::row( '{amount_total}', __( 'Total paid.', 'class-bookings-with-stripe-pro' ), '£150.00', 'coupon' ),
 			self::row( '{restore_url}', __( 'Link to restore the coupon on another device.', 'class-bookings-with-stripe-pro' ), 'https://example.com/?clasbpro_pack_restore=…', 'coupon' ),
 			self::row( '{purchase_id}', __( 'Coupon purchase post ID (raw, no #).', 'class-bookings-with-stripe-pro' ), '1001', 'coupon' ),
 			self::row( '{stripe_receipt_url}', __( 'Stripe hosted receipt URL. Empty when nothing was charged.', 'class-bookings-with-stripe-pro' ), 'https://pay.stripe.com/receipts/…', 'coupon' ),
+			self::row( '{receipt_link}', __( 'Stripe receipt anchor, or “No receipt” when nothing was charged.', 'class-bookings-with-stripe-pro' ), '<a href="https://pay.stripe.com/receipts/example">View stripe receipt</a>', 'coupon' ),
 		];
 	}
 
