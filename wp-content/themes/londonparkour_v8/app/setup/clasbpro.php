@@ -320,7 +320,7 @@ function lp_clasbpro_email_merge_tag_catalogue( array $rows ): array {
 	$extra = array(
 		array(
 			'tag'         => '{class_coaches}',
-			'description' => __( 'Coach names for the booked class, comma-separated.', 'londonparkour_v8' ),
+			'description' => __( 'Coach name(s) for the booking. For 1:1, the coach on the booked slot.', 'londonparkour_v8' ),
 			'example'     => 'Leon Lawrence, Andy Pearson',
 			'group'       => 'booking',
 		),
@@ -438,7 +438,10 @@ function lp_clasbpro_email_merge_tag_values( array $tags, array $context ): arra
 		return $tags;
 	}
 
-	$coach_names = array_values( array_filter( array_map( 'get_the_title', lp_class_coach_ids( $class_id ) ) ) );
+	$booking_id  = (int) ( $context['booking_id'] ?? 0 );
+	$coach_names = function_exists( 'lp_coach_names_for_booking' )
+		? lp_coach_names_for_booking( $booking_id, $class_id )
+		: array_values( array_filter( array_map( 'get_the_title', lp_class_coach_ids( $class_id ) ) ) );
 	$tags['{class_coaches}'] = implode( ', ', $coach_names );
 
 	$levels = get_the_terms( $class_id, 'lp_level' );

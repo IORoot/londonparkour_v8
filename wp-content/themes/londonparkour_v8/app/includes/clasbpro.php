@@ -202,6 +202,165 @@ function lp_class_coach_ids( int $class_id ): array {
 }
 
 /**
+ * Slot-rule label snapshotted onto a booking (1:1 coach first name).
+ *
+ * Prefers `_clasbpro_slot_snapshot`; falls back to the live rule via
+ * `_clasbpro_slot_rule_id`.
+ */
+function lp_booking_slot_label( int $booking_id ): string {
+	if ( $booking_id <= 0 || ! lp_clasbpro_ready() ) {
+		return '';
+	}
+
+	$display = \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::get_booking_display_context( $booking_id );
+	$label   = trim( (string) ( $display['label'] ?? '' ) );
+	if ( '' !== $label ) {
+		return $label;
+	}
+
+	if ( ! class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Slot_Rules' ) ) {
+		return '';
+	}
+
+	$meta     = \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::get_meta( $booking_id );
+	$rule_id  = (string) ( $meta['slot_rule_id'] ?? '' );
+	$class_id = (int) ( $meta['class_id'] ?? 0 );
+	if ( '' === $rule_id || $class_id <= 0 ) {
+		return '';
+	}
+
+	$data = \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::get_class_data( $class_id );
+	if ( ! $data ) {
+		return '';
+	}
+
+	$rule = \IOROOT_STRIPE_BOOKINGS_PRO\Slot_Rules::find_rule( $data, $rule_id );
+	return $rule ? trim( (string) ( $rule['label'] ?? '' ) ) : '';
+}
+
+/**
+ * Match a slot label ("Andy") to a unique coach post ("Andy Pearson").
+ *
+ * Exact title wins, then a unique first-name / word-prefix match. Ambiguous
+ * matches return 0 so the caller can fall back to the raw label.
+ *
+ * @param int[] $candidate_ids Coach post IDs.
+ */
+function lp_match_coach_id_from_label( string $label, array $candidate_ids ): int {
+	$needle = strtolower( trim( (string) preg_replace( '/^coach\s+/i', '', $label ) ) );
+	if ( '' === $needle ) {
+		return 0;
+	}
+
+	$exact  = array();
+	$prefix = array();
+	foreach ( $candidate_ids as $id ) {
+		$id = (int) $id;
+		if ( $id <= 0 ) {
+			continue;
+		}
+		$title = strtolower( trim( (string) get_the_title( $id ) ) );
+		if ( '' === $title ) {
+			continue;
+		}
+		if ( $title === $needle ) {
+			$exact[] = $id;
+			continue;
+		}
+		if ( preg_match( '/^' . preg_quote( $needle, '/' ) . '(?:\s|$)/', $title ) ) {
+			$prefix[] = $id;
+		}
+	}
+
+	$exact = array_values( array_unique( $exact ) );
+	if ( 1 === count( $exact ) ) {
+		return $exact[0];
+	}
+
+	$prefix = array_values( array_unique( $prefix ) );
+	if ( 1 === count( $prefix ) ) {
+		return $prefix[0];
+	}
+
+	return 0;
+}
+
+/**
+ * Coach post IDs for a booking.
+ *
+ * Group / workshop: every coach on the class. 1:1: the coach whose name
+ * matches the booked slot label. Empty when the 1:1 slot has no unique match
+ * (caller may then use the raw label).
+ *
+ * @return int[]
+ */
+function lp_coach_ids_for_booking( int $booking_id, int $class_id ): array {
+	if ( $class_id <= 0 ) {
+		return array();
+	}
+
+	$class_ids = lp_class_coach_ids( $class_id );
+	if ( $booking_id <= 0 || ! lp_class_is_appointment( $class_id ) ) {
+		return $class_ids;
+	}
+
+	$label = lp_booking_slot_label( $booking_id );
+	if ( '' === $label ) {
+		return 1 === count( $class_ids ) ? $class_ids : array();
+	}
+
+	$matched = lp_match_coach_id_from_label( $label, $class_ids );
+	if ( $matched > 0 ) {
+		return array( $matched );
+	}
+
+	$all = get_posts(
+		array(
+			'post_type'              => 'lp_coach',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 100,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		)
+	);
+	$matched = lp_match_coach_id_from_label( $label, array_map( 'intval', (array) $all ) );
+	if ( $matched > 0 ) {
+		return array( $matched );
+	}
+
+	return array();
+}
+
+/**
+ * Coach display names for a booking email / ticket.
+ *
+ * Resolves to coach post titles when matched; otherwise the 1:1 slot label.
+ *
+ * @return string[]
+ */
+function lp_coach_names_for_booking( int $booking_id, int $class_id ): array {
+	$names = array();
+	foreach ( lp_coach_ids_for_booking( $booking_id, $class_id ) as $id ) {
+		$title = trim( (string) get_the_title( (int) $id ) );
+		if ( '' !== $title ) {
+			$names[] = $title;
+		}
+	}
+	if ( $names ) {
+		return $names;
+	}
+	if ( $booking_id > 0 && $class_id > 0 && lp_class_is_appointment( $class_id ) ) {
+		$label = lp_booking_slot_label( $booking_id );
+		if ( '' !== $label ) {
+			return array( $label );
+		}
+	}
+	return array();
+}
+
+/**
  * Public one-off clasbpro class — the Workshops identity.
  *
  * Clasbpro stores this as schedule_type = one_off, exposed on class_data as
@@ -1626,15 +1785,23 @@ function lp_clasbpro_status_product( $view ): string {
 /**
  * Coach rows for Your Coach / The Coaches on a status page.
  *
- * @param int $class_id Class post ID.
+ * For 1:1, pass $booking_id so the row is the slot coach, not the whole roster.
+ *
+ * @param int $class_id   Class post ID.
+ * @param int $booking_id Booking post ID, or 0 when unknown.
  * @return list<array{name:string,secondary:string,bio:string,photo_id:int}>
  */
-function lp_clasbpro_status_coaches( int $class_id ): array {
-	if ( $class_id <= 0 || ! function_exists( 'lp_class_coach_ids' ) ) {
+function lp_clasbpro_status_coaches( int $class_id, int $booking_id = 0 ): array {
+	if ( $class_id <= 0 ) {
 		return array();
 	}
+
+	$ids = function_exists( 'lp_coach_ids_for_booking' )
+		? lp_coach_ids_for_booking( $booking_id, $class_id )
+		: ( function_exists( 'lp_class_coach_ids' ) ? lp_class_coach_ids( $class_id ) : array() );
+
 	$out = array();
-	foreach ( lp_class_coach_ids( $class_id ) as $cid ) {
+	foreach ( $ids as $cid ) {
 		$cid = (int) $cid;
 		if ( $cid <= 0 ) {
 			continue;
@@ -1648,6 +1815,19 @@ function lp_clasbpro_status_coaches( int $class_id ): array {
 			'photo_id'  => has_post_thumbnail( $cid ) ? (int) get_post_thumbnail_id( $cid ) : 0,
 		);
 	}
+
+	if ( ! $out && $booking_id > 0 && function_exists( 'lp_class_is_appointment' ) && lp_class_is_appointment( $class_id ) ) {
+		$label = lp_booking_slot_label( $booking_id );
+		if ( '' !== $label ) {
+			$out[] = array(
+				'name'      => $label,
+				'secondary' => '',
+				'bio'       => '',
+				'photo_id'  => 0,
+			);
+		}
+	}
+
 	return $out;
 }
 
@@ -1786,7 +1966,7 @@ function lp_clasbpro_status_context( $view ): array {
 	$contact_mail    = 'mailto:hello@londonparkour.com';
 
 	$product = lp_clasbpro_status_product( $view );
-	$coaches = lp_clasbpro_status_coaches( $class_id );
+	$coaches = lp_clasbpro_status_coaches( $class_id, $booking_id );
 	$coach   = $coaches[0] ?? null;
 
 	$faqs = array(

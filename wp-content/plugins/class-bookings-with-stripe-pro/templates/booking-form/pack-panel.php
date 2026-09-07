@@ -4,10 +4,21 @@ defined( 'ABSPATH' ) || exit;
 		<div class="cbfs-form__pack" data-cbfs-pack-panel hidden>
 			<div class="cbfs-form__pack-status" data-cbfs-pack-status hidden>
 				<p class="cbfs-form__pack-summary" data-cbfs-pack-summary></p>
-				<p class="cbfs-form__pack-message" data-cbfs-pack-message hidden></p>
 				<label class="cbfs-form__pack-choice">
 					<input type="radio" name="cbfs_pack_choice" value="pack" data-cbfs-pack-choice-pack />
-					<span data-cbfs-pack-choice-label><?php esc_html_e( 'Use coupon (1 seat)', 'class-bookings-with-stripe-pro' ); ?></span>
+					<span class="cbfs-form__pack-choice-text">
+						<span class="cbfs-form__pack-choice-line">
+							<span
+								data-cbfs-pack-choice-label
+								data-label-available="<?php echo esc_attr__( 'Use coupon (1 seat)', 'class-bookings-with-stripe-pro' ); ?>"
+								data-label-recognised="<?php echo esc_attr__( 'Use coupon', 'class-bookings-with-stripe-pro' ); ?>"
+								data-label-unavailable="<?php echo esc_attr__( 'Use coupon (unavailable)', 'class-bookings-with-stripe-pro' ); ?>"
+							><?php esc_html_e( 'Use coupon (1 seat)', 'class-bookings-with-stripe-pro' ); ?></span>
+							<span class="cbfs-form__pack-code" data-cbfs-pack-choice-code hidden></span>
+							<span class="cbfs-form__pack-left" data-cbfs-pack-choice-left data-left-template="<?php echo esc_attr__( '(%s left)', 'class-bookings-with-stripe-pro' ); ?>" hidden></span>
+						</span>
+						<span class="cbfs-form__pack-message" data-cbfs-pack-message hidden></span>
+					</span>
 				</label>
 				<label class="cbfs-form__pack-choice">
 					<input type="radio" name="cbfs_pack_choice" value="pay" checked data-cbfs-pack-choice-pay />

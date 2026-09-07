@@ -555,6 +555,8 @@
 		const packChoice = panel.querySelector( '[data-cbfs-pack-choice-pack]' );
 		const payChoice = panel.querySelector( '[data-cbfs-pack-choice-pay]' );
 		const choiceLabel = panel.querySelector( '[data-cbfs-pack-choice-label]' );
+		const choiceCode = panel.querySelector( '[data-cbfs-pack-choice-code]' );
+		const choiceLeft = panel.querySelector( '[data-cbfs-pack-choice-left]' );
 		const seatsField = form.querySelector( '[name="seats"]' );
 		const buttonLabel = form.querySelector( '.cbfs-form__button-label' );
 
@@ -574,15 +576,6 @@
 					+ ( status.uses_total ? ' of ' + status.uses_total : '' )
 					+ '.';
 			}
-			if ( message ) {
-				if ( status.message && ! status.eligible ) {
-					message.hidden = false;
-					message.textContent = status.message;
-				} else {
-					message.hidden = true;
-					message.textContent = '';
-				}
-			}
 			if ( packChoice ) {
 				packChoice.disabled = ! status.eligible;
 				if ( ! status.eligible && packChoice.checked && payChoice ) {
@@ -590,9 +583,44 @@
 				}
 			}
 			if ( choiceLabel ) {
-				choiceLabel.textContent = status.eligible
-					? 'Use coupon (1 seat)'
-					: 'Use coupon (unavailable)';
+				const available = choiceLabel.getAttribute( 'data-label-available' ) || 'Use coupon (1 seat)';
+				const recognised = choiceLabel.getAttribute( 'data-label-recognised' ) || 'Use coupon';
+				const unavailable = choiceLabel.getAttribute( 'data-label-unavailable' ) || 'Use coupon (unavailable)';
+				const code = String( status.code || '' ).trim();
+				if ( ! status.eligible ) {
+					choiceLabel.textContent = unavailable;
+				} else if ( code ) {
+					choiceLabel.textContent = recognised;
+				} else {
+					choiceLabel.textContent = available;
+				}
+			}
+			if ( choiceCode ) {
+				const code = String( status.code || '' ).trim();
+				choiceCode.hidden = ! code;
+				choiceCode.textContent = code;
+			}
+			if ( choiceLeft ) {
+				const left = typeof status.uses_remaining === 'number'
+					? status.uses_remaining
+					: 0;
+				const tpl = choiceLeft.getAttribute( 'data-left-template' ) || '(%s left)';
+				choiceLeft.hidden = false;
+				choiceLeft.textContent = tpl.replace( '%s', String( left ) );
+			}
+			if ( message ) {
+				const reason = status.eligible
+					? ''
+					: ( status.message || 'This coupon can’t be used for this booking.' );
+				message.hidden = ! reason;
+				message.textContent = reason;
+				if ( packChoice ) {
+					if ( reason ) {
+						packChoice.setAttribute( 'title', reason );
+					} else {
+						packChoice.removeAttribute( 'title' );
+					}
+				}
 			}
 		} else {
 			if ( statusEl ) statusEl.hidden = true;
@@ -600,8 +628,21 @@
 			if ( packChoice ) {
 				packChoice.checked = false;
 				packChoice.disabled = true;
+				packChoice.removeAttribute( 'title' );
 			}
 			if ( payChoice ) payChoice.checked = true;
+			if ( choiceCode ) {
+				choiceCode.hidden = true;
+				choiceCode.textContent = '';
+			}
+			if ( choiceLeft ) {
+				choiceLeft.hidden = true;
+				choiceLeft.textContent = '';
+			}
+			if ( message ) {
+				message.hidden = true;
+				message.textContent = '';
+			}
 		}
 
 		const usingPack = shouldUsePack( form );

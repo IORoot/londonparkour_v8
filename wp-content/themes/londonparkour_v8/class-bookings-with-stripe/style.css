@@ -924,9 +924,23 @@
 
 .cbfs-form .cbfs-form__pack-summary,
 .cbfs-form .cbfs-form__pack-choice,
-.cbfs-form .cbfs-form__pack-switch,
-.cbfs-form .cbfs-form__pack-message {
+.cbfs-form .cbfs-form__pack-switch {
 	color: var(--cbfs-fg);
+}
+
+.cbfs-form .cbfs-form__pack-message {
+	color: var(--cbfs-error-fg);
+}
+
+.cbfs-form .cbfs-form__pack-code {
+	font-weight: 700;
+	letter-spacing: 0.6px;
+	text-transform: uppercase;
+	color: var(--cbfs-fg);
+}
+
+.cbfs-form .cbfs-form__pack-left {
+	color: color-mix(in srgb, var(--cbfs-fg) 70%, transparent);
 }
 
 .cbfs-form .cbfs-form__pack-attach-error {

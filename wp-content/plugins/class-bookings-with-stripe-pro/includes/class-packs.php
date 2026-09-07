@@ -121,14 +121,36 @@ abstract class Packs {
 	}
 
 	public static function class_is_eligible( array $pack, int $class_id ): bool {
+		return null === self::class_ineligibility_reason( $pack, $class_id );
+	}
+
+	/**
+	 * Why this pack cannot be redeemed against $class_id, or null if it can.
+	 *
+	 * @param array<string, mixed> $pack
+	 * @return array{code: string, message: string}|null
+	 */
+	public static function class_ineligibility_reason( array $pack, int $class_id ): ?array {
 		if ( $class_id <= 0 || empty( $pack['class_ids'] ) || ! in_array( $class_id, $pack['class_ids'], true ) ) {
-			return false;
+			return [
+				'code'    => 'class_not_covered',
+				'message' => __( 'This coupon isn’t valid for this class.', 'class-bookings-with-stripe-pro' ),
+			];
 		}
 		$class = Helpers::get_class_data( $class_id );
 		if ( ! $class || empty( $class['class_active'] ) ) {
-			return false;
+			return [
+				'code'    => 'class_unavailable',
+				'message' => __( 'This class isn’t available for coupon booking.', 'class-bookings-with-stripe-pro' ),
+			];
 		}
-		return Helpers::to_pence( $class['price'] ) === Helpers::to_pence( $pack['unit_price'] );
+		if ( Helpers::to_pence( $class['price'] ) !== Helpers::to_pence( $pack['unit_price'] ) ) {
+			return [
+				'code'    => 'price_mismatch',
+				'message' => __( 'This coupon is for a different class price, so it can’t be used here.', 'class-bookings-with-stripe-pro' ),
+			];
+		}
+		return null;
 	}
 
 	/**
@@ -285,13 +307,14 @@ abstract class Packs {
 			'uses_total'     => $state['uses_total'],
 			'pack_id'        => (int) ( $promo->metadata->clasbpro_pack_id ?? 0 ),
 			'pack_name'      => (string) ( $promo->metadata->clasbpro_pack_name ?? '' ),
+			'code'           => strtoupper( (string) ( $promo->code ?? '' ) ),
 			'expires_at'     => $expires_at,
 		];
 	}
 
 	/**
 	 * @param \Stripe\PromotionCode|object $promo
-	 * @return array{active: bool, message: string, uses_remaining: int, uses_total: int, pack_id: int}
+	 * @return array{active: bool, message: string, reason_code: string, uses_remaining: int, uses_total: int, pack_id: int}
 	 */
 	public static function promotion_state( $promo ): array {
 		$uses_total = (int) ( $promo->max_redemptions ?? 0 );
@@ -299,41 +322,54 @@ abstract class Packs {
 		$remaining  = $uses_total > 0 ? max( 0, $uses_total - $redeemed ) : 0;
 		$pack_id    = (int) ( $promo->metadata->clasbpro_pack_id ?? 0 );
 
-		if ( empty( $promo->active ) ) {
-			return [
-				'active'         => false,
-				'message'        => __( 'That coupon code is inactive.', 'class-bookings-with-stripe-pro' ),
-				'uses_remaining' => $remaining,
-				'uses_total'     => $uses_total,
-				'pack_id'        => $pack_id,
-			];
-		}
-		if ( ! empty( $promo->expires_at ) && (int) $promo->expires_at < time() ) {
-			return [
-				'active'         => false,
-				'message'        => __( 'That coupon has expired.', 'class-bookings-with-stripe-pro' ),
-				'uses_remaining' => $remaining,
-				'uses_total'     => $uses_total,
-				'pack_id'        => $pack_id,
-			];
-		}
-		if ( $uses_total > 0 && $remaining <= 0 ) {
-			return [
-				'active'         => false,
-				'message'        => __( 'That coupon has no uses left.', 'class-bookings-with-stripe-pro' ),
-				'uses_remaining' => 0,
-				'uses_total'     => $uses_total,
-				'pack_id'        => $pack_id,
-			];
-		}
-
-		return [
-			'active'         => true,
-			'message'        => '',
+		$base = [
 			'uses_remaining' => $remaining,
 			'uses_total'     => $uses_total,
 			'pack_id'        => $pack_id,
 		];
+
+		// Stripe sets active=false when max_redemptions is hit — check uses first
+		// so the booking form does not report a spent code as merely “inactive”.
+		if ( $uses_total > 0 && $remaining <= 0 ) {
+			return array_merge(
+				$base,
+				[
+					'active'         => false,
+					'reason_code'    => 'no_uses',
+					'message'        => __( 'This coupon has no uses left.', 'class-bookings-with-stripe-pro' ),
+					'uses_remaining' => 0,
+				]
+			);
+		}
+		if ( ! empty( $promo->expires_at ) && (int) $promo->expires_at < time() ) {
+			return array_merge(
+				$base,
+				[
+					'active'      => false,
+					'reason_code' => 'expired',
+					'message'     => __( 'This coupon has expired.', 'class-bookings-with-stripe-pro' ),
+				]
+			);
+		}
+		if ( empty( $promo->active ) ) {
+			return array_merge(
+				$base,
+				[
+					'active'      => false,
+					'reason_code' => 'inactive',
+					'message'     => __( 'This coupon has been deactivated.', 'class-bookings-with-stripe-pro' ),
+				]
+			);
+		}
+
+		return array_merge(
+			$base,
+			[
+				'active'      => true,
+				'reason_code' => '',
+				'message'     => '',
+			]
+		);
 	}
 
 	/**
@@ -389,18 +425,26 @@ abstract class Packs {
 		$form_email = strtolower( sanitize_email( $form_email ) );
 		$email_ok   = '' === $form_email || $form_email === $cookie['email'];
 
-		$eligible = false;
-		$reason   = '';
+		$eligible    = false;
+		$reason      = '';
+		$reason_code = '';
 		if ( ! $state['active'] ) {
-			$reason = $state['message'];
+			$reason      = $state['message'];
+			$reason_code = (string) ( $state['reason_code'] ?? '' );
 		} elseif ( ! $email_ok ) {
-			$reason = __( 'Use the same email you bought the coupon with to redeem it.', 'class-bookings-with-stripe-pro' );
+			$reason      = __( 'Use the same email you bought the coupon with to redeem it.', 'class-bookings-with-stripe-pro' );
+			$reason_code = 'email_mismatch';
 		} elseif ( ! $pack ) {
-			$reason = __( 'This coupon is no longer available for booking.', 'class-bookings-with-stripe-pro' );
-		} elseif ( ! self::class_is_eligible( $pack, $class_id ) ) {
-			$reason = __( 'This coupon cannot be used for this class (or the class price has changed).', 'class-bookings-with-stripe-pro' );
+			$reason      = __( 'This coupon’s pack is no longer available.', 'class-bookings-with-stripe-pro' );
+			$reason_code = 'pack_missing';
 		} else {
-			$eligible = true;
+			$block = self::class_ineligibility_reason( $pack, $class_id );
+			if ( $block ) {
+				$reason      = $block['message'];
+				$reason_code = $block['code'];
+			} else {
+				$eligible = true;
+			}
 		}
 
 		return [
@@ -412,8 +456,10 @@ abstract class Packs {
 			'pack_name'      => $pack_name,
 			'pack_id'        => $pack_id,
 			'promo_id'       => (string) $promo->id,
+			'code'           => strtoupper( (string) ( $promo->code ?? '' ) ),
 			'email'          => $cookie['email'],
 			'message'        => $reason,
+			'reason_code'    => $reason_code,
 			'restore_token'  => self::build_restore_token( (string) $promo->id, $cookie['email'], (int) ( $cookie['exp'] ?? 0 ) ),
 		];
 	}

@@ -188,6 +188,33 @@
 	font-weight: 400;
 }
 
+.cbfs-form__pack-choice-text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.cbfs-form__pack-choice-line {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.35rem 0.5rem;
+}
+
+.cbfs-form__pack-code {
+	font-weight: 600;
+	letter-spacing: 0.04em;
+}
+
+.cbfs-form__pack-left {
+	opacity: 0.75;
+	font-weight: 400;
+}
+
+.cbfs-form__pack-choice .cbfs-form__pack-message {
+	margin: 0;
+}
+
 .cbfs-form__pack-switch,
 .cbfs-form__pack-attach-btn {
 	margin-top: 0.4rem;
