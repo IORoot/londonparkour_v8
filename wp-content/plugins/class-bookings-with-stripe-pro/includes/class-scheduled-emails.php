@@ -27,6 +27,7 @@ abstract class Scheduled_Emails {
 
 	public static function init(): void {
 		add_action( Bookings::CRON_HOOK, [ self::class, 'process_due_queue' ], 20 );
+		add_action( 'admin_init', [ self::class, 'maybe_process_due_queue' ], 30 );
 		add_action( 'acf/save_post', [ self::class, 'ensure_rule_uuids_on_save' ], 25 );
 		add_action( 'admin_post_clasbpro_backfill_scheduled_emails', [ self::class, 'handle_backfill' ] );
 		add_filter( 'acf/load_field/key=field_clasbpro_scheduled_email_tools', [ self::class, 'load_admin_tools_field' ] );
@@ -369,28 +370,54 @@ abstract class Scheduled_Emails {
 			return;
 		}
 
+		if ( get_transient( 'clasbpro_processing_queue' ) ) {
+			return;
+		}
+		set_transient( 'clasbpro_processing_queue', 1, 30 );
+
 		global $wpdb;
 
 		$table   = self::table_name();
 		$now_gmt = gmdate( 'Y-m-d H:i:s' );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE status = %s AND send_at <= %s ORDER BY send_at ASC LIMIT 50",
-				self::STATUS_PENDING,
-				$now_gmt
-			),
-			ARRAY_A
-		);
+		try {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$rows = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$table} WHERE status = %s AND send_at <= %s ORDER BY send_at ASC LIMIT 50",
+					self::STATUS_PENDING,
+					$now_gmt
+				),
+				ARRAY_A
+			);
 
-		if ( ! is_array( $rows ) ) {
+			if ( ! is_array( $rows ) ) {
+				return;
+			}
+
+			foreach ( $rows as $row ) {
+				self::process_queue_row( $row );
+			}
+		} finally {
+			delete_transient( 'clasbpro_processing_queue' );
+		}
+	}
+
+	/**
+	 * WP-Cron spawn is an HTTP loopback to siteurl. In Docker that is
+	 * localhost:8102, which the container cannot reach, so clasbpro_expire_holds
+	 * sits overdue and reminders never leave pending. Run the due queue from
+	 * wp-admin at most once a minute as a fallback.
+	 */
+	public static function maybe_process_due_queue(): void {
+		if ( wp_doing_cron() || wp_doing_ajax() ) {
 			return;
 		}
-
-		foreach ( $rows as $row ) {
-			self::process_queue_row( $row );
+		if ( get_transient( 'clasbpro_scheduled_email_tick' ) ) {
+			return;
 		}
+		set_transient( 'clasbpro_scheduled_email_tick', 1, MINUTE_IN_SECONDS );
+		self::process_due_queue();
 	}
 
 	/**

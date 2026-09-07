@@ -113,6 +113,9 @@ done
 say "Discourage search engines on local"
 wp option update blog_public 0
 
+say "Timezone"
+wp option update timezone_string 'Europe/London'
+
 say "Building ACF definitions from PHP and syncing to database"
 wp lp acf:build --sync || echo "  ! acf:build unavailable — is the theme active and ACF Pro on?"
 
