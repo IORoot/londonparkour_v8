@@ -4,8 +4,8 @@
  *
  * Ported from src/stories/Blocks/Marquee/Marquee.js.
  *
- * Separator is ASCII `*` — the pen's U+2733 dingbat becomes a colour emoji
- * on iOS when Archivo does not contain the glyph.
+ * Separator is a middle dot (U+00B7) — the pen's U+2733 dingbat becomes a
+ * colour emoji on iOS when Archivo does not contain the glyph.
  *
  * Repeater-only: no CPT source control, the items are the block's own copy.
  *
@@ -70,7 +70,7 @@ $lp_spacing = lp_section_spacing( $args );
 		>
 			<?php foreach ( $lp_items as $lp_item ) : ?>
 				<span class="font-heading text-step--1 font-semibold tracking-[0.6px] uppercase text-primary-content whitespace-nowrap"><?php echo esc_html( $lp_item ); ?></span>
-				<span class="font-heading text-step--2 text-primary-content px-[18px]" aria-hidden="true">*</span>
+				<span class="font-heading text-step--2 text-primary-content px-[18px]" aria-hidden="true">·</span>
 			<?php endforeach; ?>
 		</div>
 		<span class="sr-only"><?php echo esc_html( implode( ', ', $lp_items ) ); ?></span>
