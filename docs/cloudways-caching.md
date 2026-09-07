@@ -147,7 +147,39 @@ before creating a Stripe session.
 | Import staging DB | `cloudways_load.sh` already flushes WP cache; still **Varnish → Purge** |
 | Booking plugin / coupon change | Varnish purge so listings match |
 
-## 6. Check it worked
+## 6. WP-Cron (scheduled emails and hold expiry)
+
+Class Bookings reminder / post-class mail and hold expiry run on
+`clasbpro_expire_holds` (every 5 minutes). WordPress fires that by POSTing
+to `siteurl/wp-cron.php`.
+
+On **staging** that URL is behind HTTP basic auth. The loopback has no
+credentials, nginx returns **401**, and the hook sits overdue indefinitely.
+The OS clock being UTC is normal and is not this bug. WordPress still needs
+**Settings → General → Timezone = Europe/London** so class wall-clock times
+convert to GMT correctly.
+
+Do **not** rely on visitors to spawn cron (Varnish cached HTML never hits
+PHP). Add a CLI job that bypasses HTTP:
+
+```
+*/5 * * * * cd /home/master/applications/rswhxpawjz/public_html && /usr/local/bin/wp cron event run --due-now >/dev/null 2>&1
+```
+
+And in `wp-config.php` (survives Git Pull):
+
+```php
+define( 'DISABLE_WP_CRON', true );
+```
+
+`wp-cli` still runs due events when `DISABLE_WP_CRON` is true. Repeat the
+crontab on **live** (different `public_html` path) even if live has no basic
+auth — Varnish has the same “nobody hits PHP” problem.
+
+Staging’s only other crontab line is `cloudways_load.sh` (DB import). That
+does not run WP-Cron.
+
+## 7. Check it worked
 
 From a private window (logged out, no `clasbpro_pack` cookie):
 
@@ -173,7 +205,7 @@ Then in the browser:
 4. Leave a tab open ~5 hours, then Book. Drawer must not 403. If it does, TTL
    is too long.
 
-## 7. If something breaks
+## 8. If something breaks
 
 | Symptom | Likely cause |
 |---|---|
@@ -183,10 +215,11 @@ Then in the browser:
 | Every agenda week looks the same | Ignore Query String is on |
 | CSS missing after Pull | Not caching — `assets/dist` not deployed. See theme `bin/README.md` |
 | Logged-in admin sees old pages | Unusual; confirm `wordpress_logged_in` is still a default exclude |
+| Reminder / post-class mail stays “Scheduled” | WP-Cron 401 (staging basic auth) or no CLI crontab — see §6 |
 
 Fix: add the missing rule, **Purge Varnish**, hard-reload.
 
-## 8. Do not
+## 9. Do not
 
 - Exclude the whole site from Varnish “until booking works”. Exclude JSON and
   the pack cookie instead.

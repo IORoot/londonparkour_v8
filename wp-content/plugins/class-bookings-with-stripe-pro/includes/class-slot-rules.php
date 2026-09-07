@@ -171,14 +171,7 @@ abstract class Slot_Rules {
 	}
 
 	public static function normalise_time( string $value ): string {
-		$value = trim( $value );
-		if ( '' === $value ) {
-			return '';
-		}
-		if ( preg_match( '/^(\d{1,2}):(\d{2})/', $value, $m ) ) {
-			return sprintf( '%02d:%02d', (int) $m[1], (int) $m[2] );
-		}
-		return '';
+		return Helpers::normalise_time_string( $value );
 	}
 
 	/**
@@ -227,11 +220,9 @@ abstract class Slot_Rules {
 	public static function calendar_window_end( array $class_data ): \DateTimeImmutable {
 		$months = max( 1, min( 12, (int) ( $class_data['calendar_months_ahead'] ?? 3 ) ) );
 		try {
-			$tz  = wp_timezone();
-			$now = new \DateTimeImmutable( 'now', $tz );
-			return $now->modify( '+' . $months . ' months' )->setTime( 23, 59, 59 );
+			return Helpers::now()->modify( '+' . $months . ' months' )->setTime( 23, 59, 59 );
 		} catch ( \Exception $e ) {
-			return new \DateTimeImmutable( '+3 months', wp_timezone() );
+			return Helpers::now()->modify( '+3 months' );
 		}
 	}
 
@@ -239,13 +230,7 @@ abstract class Slot_Rules {
 	 * @param array<string, mixed> $class_data
 	 */
 	public static function slot_datetime( array $class_data, array $rule, string $date ): ?\DateTimeImmutable {
-		try {
-			$tz = wp_timezone();
-			$dt = new \DateTimeImmutable( $date . ' ' . ( $rule['start_time'] ?? '00:00' ), $tz );
-			return $dt;
-		} catch ( \Exception $e ) {
-			return null;
-		}
+		return Helpers::session_datetime( $date, (string) ( $rule['start_time'] ?? '00:00' ) );
 	}
 
 	/**
@@ -258,7 +243,7 @@ abstract class Slot_Rules {
 			return true;
 		}
 		try {
-			$now      = new \DateTimeImmutable( 'now', wp_timezone() );
+			$now      = Helpers::now();
 			$lead_hrs = max( 0, (int) ( $class_data['minimum_lead_time_hours'] ?? 0 ) );
 			$earliest = $now->modify( '+' . $lead_hrs . ' hours' );
 			return $slot_start <= $earliest;
@@ -291,7 +276,7 @@ abstract class Slot_Rules {
 		}
 
 		$window_end = self::calendar_window_end( $class_data );
-		$now        = new \DateTimeImmutable( 'now', $tz );
+		$now        = Helpers::now();
 		$today      = $now->setTime( 0, 0, 0 );
 
 		if ( $dt < $today || $dt > $window_end ) {
@@ -454,8 +439,7 @@ abstract class Slot_Rules {
 		}
 
 		try {
-			$tz    = wp_timezone();
-			$start = new \DateTimeImmutable( 'today', $tz );
+			$start = Helpers::now()->setTime( 0, 0, 0 );
 			$end   = self::calendar_window_end( $class_data );
 		} catch ( \Exception $e ) {
 			return false;

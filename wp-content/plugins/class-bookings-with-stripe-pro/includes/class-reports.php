@@ -846,7 +846,8 @@ abstract class Reports {
 			}
 			$session_seats[ $date ] += (int) $row['seats'];
 
-			$dow_index = (int) wp_date( 'N', strtotime( $date . ' 12:00:00' ) ) - 1;
+			$dow_dt    = Helpers::session_datetime( $date, '12:00' );
+			$dow_index = $dow_dt ? ( (int) $dow_dt->format( 'N' ) - 1 ) : -1;
 			if ( $dow_index >= 0 && $dow_index < 7 ) {
 				++$dow_counts[ $dow_index ];
 			}
@@ -1015,7 +1016,7 @@ abstract class Reports {
 	private static function last_n_month_keys( int $count ): array {
 		$months = [];
 		for ( $i = $count - 1; $i >= 0; $i-- ) {
-			$months[] = wp_date( 'Y-m', strtotime( '-' . $i . ' months' ) );
+			$months[] = Helpers::now()->modify( '-' . $i . ' months' )->format( 'Y-m' );
 		}
 		return $months;
 	}
@@ -1083,7 +1084,7 @@ abstract class Reports {
 				if ( '' === $date ) {
 					continue;
 				}
-				$ts = strtotime( $date . ' ' . (string) $class['start_time'] );
+				$ts = Helpers::session_timestamp( $date, (string) $class['start_time'] );
 				$sessions[] = [
 					'class_id'    => (int) $class['id'],
 					'class_name'  => (string) $class['name'],
@@ -1135,7 +1136,7 @@ abstract class Reports {
 				if ( '' === $date ) {
 					continue;
 				}
-				$ts = strtotime( $date . ' ' . (string) $class['start_time'] );
+				$ts = Helpers::session_timestamp( $date, (string) $class['start_time'] );
 				$sessions[] = [
 					'class_id'    => (int) $class['id'],
 					'class_name'  => (string) $class['name'],

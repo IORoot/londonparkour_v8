@@ -97,6 +97,14 @@
 		return now.getFullYear() + '-' + String( now.getMonth() + 1 ).padStart( 2, '0' ) + '-' + String( now.getDate() ).padStart( 2, '0' );
 	}
 
+	function siteTodayYmd( root ) {
+		const fromAttr = root && root.dataset ? root.dataset.cbfsToday : '';
+		if ( fromAttr && /^\d{4}-\d{2}-\d{2}$/.test( fromAttr ) ) {
+			return fromAttr;
+		}
+		return localTodayYmd();
+	}
+
 	function formatDayHead( index, dayNumber ) {
 		return DAY_LABELS[ index ] + ', ' + dayNumber;
 	}
@@ -160,7 +168,7 @@
 	}
 
 	function formatAgendaDayHeading( root, ymd ) {
-		const today = localTodayYmd();
+		const today = siteTodayYmd( root );
 		const tomorrow = addDays( today, 1 );
 		const full = formatFullDate( ymd );
 		if ( ymd === today ) {
@@ -290,14 +298,14 @@
 
 	function initSchedule( root ) {
 		const state = {
-			week: root.dataset.cbfsWeek || mondayOfWeek( new Date().toISOString().slice( 0, 10 ) ),
+			week: root.dataset.cbfsWeek || mondayOfWeek( siteTodayYmd( root ) ),
 			classIds: ( root.dataset.cbfsClassIds || '' ).split( ',' ).filter( Boolean ).map( Number ),
 			weeksAhead: parseInt( root.dataset.cbfsWeeksAhead || '8', 10 ) || 8,
 			filterClassId: 'all',
 			classes: [],
 			events: [],
 			range: { start_minutes: 8 * 60, end_minutes: 18 * 60 },
-			minWeek: mondayOfWeek( new Date().toISOString().slice( 0, 10 ) ),
+			minWeek: mondayOfWeek( siteTodayYmd( root ) ),
 			maxWeek: '',
 			loading: false,
 		};
@@ -532,7 +540,7 @@
 			const rangeEnd = state.range.end_minutes;
 			const totalMinutes = Math.max( SLOT_MINUTES, rangeEnd - rangeStart );
 			const gridHeight = totalMinutes * PX_PER_MIN;
-			const todayYmd = localTodayYmd();
+			const todayYmd = siteTodayYmd( root );
 			const minEventHeight = isTabletView() ? 64 : 72;
 
 			els.timeAxis.innerHTML = '';

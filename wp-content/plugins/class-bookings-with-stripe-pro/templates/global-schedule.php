@@ -15,6 +15,7 @@ $schedule_classes = trim( 'cbfs-schedule alignwide ' . \IOROOT_STRIPE_BOOKINGS_P
 	class="<?php echo esc_attr( $schedule_classes ); ?>"
 	data-cbfs-global-schedule
 	data-cbfs-week="<?php echo esc_attr( $week_monday ); ?>"
+	data-cbfs-today="<?php echo esc_attr( wp_date( 'Y-m-d' ) ); ?>"
 	data-cbfs-class-ids="<?php echo esc_attr( implode( ',', array_map( 'strval', $class_ids ) ) ); ?>"
 	data-cbfs-weeks-ahead="<?php echo esc_attr( (string) $weeks_ahead ); ?>"
 	data-label-loading="<?php echo esc_attr( $labels['loading'] ); ?>"

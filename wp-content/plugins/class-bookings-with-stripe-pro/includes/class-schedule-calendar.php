@@ -87,11 +87,10 @@ abstract class Schedule_Calendar {
 
 	public static function is_week_in_range( string $monday ): bool {
 		try {
-			$tz     = wp_timezone();
-			$now    = new \DateTimeImmutable( 'now', $tz );
+			$now    = Helpers::now();
 			$cursor = $now->modify( 'monday this week' )->setTime( 0, 0, 0 );
 			$end    = $cursor->modify( '+' . self::weeks_ahead_cap() . ' weeks' )->modify( 'sunday this week' );
-			$view   = new \DateTimeImmutable( self::monday_of_week( $monday ), $tz );
+			$view   = new \DateTimeImmutable( self::monday_of_week( $monday ), wp_timezone() );
 		} catch ( \Exception $e ) {
 			return false;
 		}
@@ -362,15 +361,8 @@ abstract class Schedule_Calendar {
 		if ( empty( $class_data['start_time'] ) ) {
 			return null;
 		}
-		try {
-			$tz          = wp_timezone();
-			$now         = new \DateTimeImmutable( 'now', $tz );
-			$dt          = new \DateTimeImmutable( $date, $tz );
-			$class_start = $dt->modify( (string) $class_data['start_time'] );
-		} catch ( \Exception $e ) {
-			return null;
-		}
-		if ( ! $class_start || $class_start <= $now ) {
+		$class_start = Helpers::session_datetime( $date, (string) $class_data['start_time'] );
+		if ( ! $class_start || $class_start <= Helpers::now() ) {
 			return null;
 		}
 

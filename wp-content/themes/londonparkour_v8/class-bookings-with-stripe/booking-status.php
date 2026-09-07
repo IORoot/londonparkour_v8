@@ -332,6 +332,15 @@ $lp_facts = $lp_compact
 						</div>
 					<?php endif; ?>
 				</div>
+				<?php if ( ! empty( $lp['show_coupon_used'] ) ) : ?>
+				<aside class="bg-accent p-[22px] flex flex-col gap-2" data-component="booking-status-coupon-used">
+					<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-accent-content">COUPON</span>
+					<h3 class="font-display text-[22px] font-bold leading-[26px] text-accent-content m-0 [text-box:normal]"><?php echo esc_html( $lp['coupon_code'] ); ?></h3>
+					<?php if ( ! empty( $lp['coupon_uses_left_label'] ) ) : ?>
+						<p class="font-body text-[12px] font-normal leading-[15px] text-accent-content m-0"><?php echo esc_html( $lp['coupon_uses_left_label'] ); ?></p>
+					<?php endif; ?>
+				</aside>
+				<?php endif; ?>
 				<?php if ( ! empty( $lp['show_whatsapp'] ) ) : ?>
 				<aside class="bg-base-200 p-[22px] flex flex-row gap-5 items-center" data-component="booking-status-whatsapp">
 					<div class="flex flex-col gap-2 min-w-0 flex-1">

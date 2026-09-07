@@ -22,6 +22,114 @@ abstract class Helpers {
 	];
 
 	/**
+	 * Date/time contract
+	 *
+	 * Class dates (Y-m-d) and start times (H:i) are civil wall-clock values —
+	 * the time the coach typed. Display them without converting timezones.
+	 * Instants (now, send_at, created_gmt) are UTC.
+	 *
+	 * Bridge: session_datetime( $date, $time ) reads wall-clock in the site
+	 * timezone. getTimestamp() / session_utc() are the UTC instant.
+	 */
+
+	public static function utc_timezone(): \DateTimeZone {
+		return new \DateTimeZone( 'UTC' );
+	}
+
+	public static function now(): \DateTimeImmutable {
+		return new \DateTimeImmutable( 'now', wp_timezone() );
+	}
+
+	public static function now_utc(): \DateTimeImmutable {
+		return new \DateTimeImmutable( 'now', self::utc_timezone() );
+	}
+
+	/**
+	 * Coerce a stored clock string to 24-hour HH:MM. Empty if unparseable.
+	 */
+	public static function normalise_time_string( string $hhmm ): string {
+		$hhmm = trim( $hhmm );
+		if ( '' === $hhmm ) {
+			return '';
+		}
+		if ( preg_match( '/^(\d{1,2}):(\d{2})(?::\d{2})?$/', $hhmm, $m ) ) {
+			$hour = (int) $m[1];
+			$min  = (int) $m[2];
+			if ( $hour > 23 || $min > 59 ) {
+				return '';
+			}
+			return sprintf( '%02d:%02d', $hour, $min );
+		}
+
+		$tz   = wp_timezone();
+		$fmts = [ 'g:i A', 'g:i a', 'h:i A', 'h:i a' ];
+		foreach ( $fmts as $fmt ) {
+			$dt = \DateTimeImmutable::createFromFormat( $fmt, $hhmm, $tz );
+			if ( ! $dt instanceof \DateTimeImmutable ) {
+				continue;
+			}
+			$errors = \DateTimeImmutable::getLastErrors();
+			if ( is_array( $errors ) && ( (int) ( $errors['warning_count'] ?? 0 ) > 0 || (int) ( $errors['error_count'] ?? 0 ) > 0 ) ) {
+				continue;
+			}
+			return $dt->format( 'H:i' );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Class session instant: wall-clock $ymd + $hhmm in the site timezone.
+	 */
+	public static function session_datetime( string $ymd, string $hhmm = '00:00' ): ?\DateTimeImmutable {
+		$ymd  = self::normalise_date_string( $ymd );
+		$hhmm = self::normalise_time_string( $hhmm );
+		if ( '' === $ymd ) {
+			return null;
+		}
+		if ( '' === $hhmm ) {
+			$hhmm = '00:00';
+		}
+
+		$dt = \DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $ymd . ' ' . $hhmm, wp_timezone() );
+		if ( ! $dt instanceof \DateTimeImmutable ) {
+			return null;
+		}
+		$errors = \DateTimeImmutable::getLastErrors();
+		if ( is_array( $errors ) && ( (int) ( $errors['warning_count'] ?? 0 ) > 0 || (int) ( $errors['error_count'] ?? 0 ) > 0 ) ) {
+			return null;
+		}
+		return $dt;
+	}
+
+	/**
+	 * Same instant as session_datetime(), shifted to UTC.
+	 */
+	public static function session_utc( string $ymd, string $hhmm = '00:00' ): ?\DateTimeImmutable {
+		$dt = self::session_datetime( $ymd, $hhmm );
+		return $dt ? $dt->setTimezone( self::utc_timezone() ) : null;
+	}
+
+	/**
+	 * UTC unix timestamp for sorting/comparing session starts. 0 if unparseable.
+	 */
+	public static function session_timestamp( string $ymd, string $hhmm = '00:00' ): int {
+		$dt = self::session_datetime( $ymd, $hhmm );
+		return $dt ? $dt->getTimestamp() : 0;
+	}
+
+	/**
+	 * Civil Y-m-d in the site timezone for a Unix timestamp (UTC instant).
+	 */
+	public static function civil_date_from_timestamp( int $timestamp ): string {
+		if ( $timestamp <= 0 ) {
+			return '';
+		}
+		$ymd = wp_date( 'Y-m-d', $timestamp );
+		return is_string( $ymd ) ? $ymd : '';
+	}
+
+	/**
 	 * Get the next $count occurrences of $weekday (e.g. 'sunday') as Y-m-d strings,
 	 * starting from "now" in the site timezone. Skips today if its $start_time has already passed.
 	 *
@@ -44,7 +152,7 @@ abstract class Helpers {
 
 		try {
 			$tz   = wp_timezone();
-			$now  = new \DateTimeImmutable( 'now', $tz );
+			$now  = self::now();
 			$walk = $now->setTime( 0, 0, 0 );
 			if ( '' !== $from_date ) {
 				$from = new \DateTimeImmutable( $from_date, $tz );
@@ -76,7 +184,7 @@ abstract class Helpers {
 		// If today matches the weekday, only include it if the class hasn't started yet.
 		$today_is_target = ( $todays_weekday === $target_weekday ) && $walk->format( 'Y-m-d' ) === $now->format( 'Y-m-d' );
 		if ( $today_is_target ) {
-			$today_class_start = $now->modify( $start_time );
+			$today_class_start = self::session_datetime( $now->format( 'Y-m-d' ), $start_time );
 			if ( $today_class_start && $now < $today_class_start ) {
 				$candidate = $walk->format( 'Y-m-d' );
 				if ( $include_candidate( $candidate ) ) {
@@ -172,7 +280,7 @@ abstract class Helpers {
 
 		try {
 			$tz    = wp_timezone();
-			$now   = new \DateTimeImmutable( 'now', $tz );
+			$now   = self::now();
 			$walk  = new \DateTimeImmutable( $start_date, $tz );
 			$end   = new \DateTimeImmutable( $end_date, $tz );
 		} catch ( \Exception $e ) {
@@ -187,7 +295,7 @@ abstract class Helpers {
 		$max_iterations = 366;
 		while ( count( $results ) < $count && $walk <= $end && $max_iterations-- > 0 ) {
 			$candidate       = $walk->format( 'Y-m-d' );
-			$candidate_start = $walk->modify( $start_time ?: '00:00' );
+			$candidate_start = self::session_datetime( $candidate, $start_time ?: '00:00' );
 			if ( $candidate_start && $candidate_start > $now && ! in_array( $candidate, $skip_dates, true ) ) {
 				$results[] = $candidate;
 			}
@@ -201,12 +309,8 @@ abstract class Helpers {
 	 * Format Y-m-d as e.g. "Sun 17 May 2026".
 	 */
 	public static function format_date( string $ymd ): string {
-		try {
-			$dt = new \DateTimeImmutable( $ymd, wp_timezone() );
-			return wp_date( 'D j M Y', $dt->getTimestamp() );
-		} catch ( \Exception $e ) {
-			return $ymd;
-		}
+		$dt = self::session_datetime( $ymd, '12:00' );
+		return $dt ? $dt->format( 'D j M Y' ) : $ymd;
 	}
 
 	/**
@@ -227,13 +331,18 @@ abstract class Helpers {
 
 	/**
 	 * Format HH:MM as 12-hour (e.g. "10:15 AM"). Falls back to input.
+	 *
+	 * Wall-clock strings from ACF must not go through strtotime()+wp_date():
+	 * PHP's default timezone is UTC while the site is Europe/London, so BST
+	 * would shift 15:40 to 4:40 PM.
 	 */
 	public static function format_time( string $hhmm ): string {
-		$ts = strtotime( $hhmm );
-		if ( false === $ts ) {
-			return $hhmm;
+		$norm = self::normalise_time_string( $hhmm );
+		if ( '' === $norm ) {
+			return trim( $hhmm );
 		}
-		return wp_date( 'g:i A', $ts );
+		$dt = self::session_datetime( '2000-01-01', $norm );
+		return $dt ? $dt->format( 'g:i A' ) : $norm;
 	}
 
 	/**
@@ -532,11 +641,9 @@ abstract class Helpers {
 
 		$cancelled_dates = self::read_cancelled_dates( $class_id );
 
-		$start_time = (string) ( function_exists( 'get_field' ) ? get_field( 'start_time', $class_id ) : '' );
-		// ACF time field saves as H:i:s — keep first 5 chars.
-		if ( $start_time && strlen( $start_time ) > 5 ) {
-			$start_time = substr( $start_time, 0, 5 );
-		}
+		$start_time = self::normalise_time_string(
+			(string) ( function_exists( 'get_field' ) ? get_field( 'start_time', $class_id ) : '' )
+		);
 
 		$schedule_type   = function_exists( 'get_field' ) ? (string) get_field( 'schedule_type', $class_id ) : 'recurring';
 		$legacy_external = function_exists( 'get_field' ) ? (bool) get_field( 'use_external_link', $class_id ) : false;
@@ -683,15 +790,18 @@ abstract class Helpers {
 		if ( '' === $value ) {
 			return '';
 		}
-		// ACF stores as Ymd by default; tolerate other formats.
+		if ( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ) {
+			return $value;
+		}
 		if ( preg_match( '/^\d{8}$/', $value ) ) {
 			return substr( $value, 0, 4 ) . '-' . substr( $value, 4, 2 ) . '-' . substr( $value, 6, 2 );
 		}
-		$ts = strtotime( $value );
-		if ( false === $ts ) {
+		try {
+			$dt = new \DateTimeImmutable( $value, wp_timezone() );
+			return $dt->format( 'Y-m-d' );
+		} catch ( \Exception $e ) {
 			return '';
 		}
-		return wp_date( 'Y-m-d', $ts );
 	}
 
 	/**
@@ -699,7 +809,7 @@ abstract class Helpers {
 	 */
 	public static function calendar_month_shell( string $preset_date = '' ): array {
 		$tz  = wp_timezone();
-		$now = new \DateTimeImmutable( 'now', $tz );
+		$now = self::now();
 		try {
 			$focus = '' !== $preset_date ? new \DateTimeImmutable( $preset_date, $tz ) : $now;
 		} catch ( \Exception $e ) {
@@ -711,7 +821,7 @@ abstract class Helpers {
 		return [
 			'offset' => 0 === $cal_start ? 6 : $cal_start - 1,
 			'days'   => (int) $focus->format( 't' ),
-			'title'  => wp_date( 'F Y', $focus->getTimestamp() ),
+			'title'  => $focus->format( 'F Y' ),
 		];
 	}
 

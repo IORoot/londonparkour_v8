@@ -234,7 +234,7 @@ abstract class Merge_Tags {
 	 * @return array<string, string>
 	 */
 	public static function sample_booking_tags(): array {
-		$ymd = gmdate( 'Y-m-d', (int) strtotime( '+3 days' ) );
+		$ymd = Helpers::now()->modify( '+3 days' )->format( 'Y-m-d' );
 
 		$tags = [
 			'{customer_name}'           => 'Alex Sample',
@@ -301,16 +301,8 @@ abstract class Merge_Tags {
 	}
 
 	public static function weekday_from_ymd( string $ymd ): string {
-		$ymd = trim( $ymd );
-		if ( '' === $ymd ) {
-			return '';
-		}
-		try {
-			$dt = new \DateTimeImmutable( $ymd, wp_timezone() );
-			return (string) wp_date( 'l', $dt->getTimestamp() );
-		} catch ( \Exception $e ) {
-			return '';
-		}
+		$dt = Helpers::session_datetime( $ymd, '12:00' );
+		return $dt ? $dt->format( 'l' ) : '';
 	}
 
 	public static function yes_no( bool $yes ): string {

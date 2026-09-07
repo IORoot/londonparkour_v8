@@ -587,7 +587,7 @@ abstract class Packs {
 			'customer_name'  => (string) get_post_meta( $purchase_id, '_clasbpro_customer_name', true ),
 			'customer_email' => $email,
 			'expires_label'  => $expires_at > 0
-				? Helpers::format_date( gmdate( 'Y-m-d', $expires_at ) )
+				? Helpers::format_date( Helpers::civil_date_from_timestamp( $expires_at ) )
 				: '',
 			'promo_id'       => $promo_id,
 			'code'           => $code,

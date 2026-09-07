@@ -1323,13 +1323,20 @@ function lp_agenda_when_label( string $lp_time, int $lp_class_id ): string {
 	}
 
 	$lp_minutes = (int) filter_var( lp_class_duration( $lp_class_id ), FILTER_SANITIZE_NUMBER_INT );
-	if ( ! $lp_minutes ) {
-		return $lp_time;
+	$lp_start   = null;
+	if ( lp_clasbpro_ready() ) {
+		$norm     = \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::normalise_time_string( $lp_time );
+		$lp_start = '' !== $norm
+			? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::session_datetime( '2000-01-01', $norm )
+			: null;
+	} else {
+		$lp_start = DateTimeImmutable::createFromFormat( 'H:i', $lp_time, wp_timezone() );
 	}
-
-	$lp_start = DateTimeImmutable::createFromFormat( 'H:i', $lp_time );
 	if ( ! $lp_start ) {
 		return $lp_time;
+	}
+	if ( ! $lp_minutes ) {
+		return $lp_start->format( 'H:i' );
 	}
 
 	return $lp_start->format( 'H:i' ) . ' – ' . $lp_start->modify( sprintf( '+%d minutes', $lp_minutes ) )->format( 'H:i' );
@@ -1370,7 +1377,7 @@ function lp_demo_media_id( string $lp_filename ): int {
  * @return array start, end, week number, day groups and a session count.
  */
 function lp_agenda_week( int $lp_offset = 0 ): array {
-	$lp_start = ( new DateTimeImmutable( 'monday this week' ) )->modify( sprintf( '%+d weeks', $lp_offset ) );
+	$lp_start = ( new DateTimeImmutable( 'monday this week', wp_timezone() ) )->modify( sprintf( '%+d weeks', $lp_offset ) );
 	$lp_end   = $lp_start->modify( '+6 days' );
 
 	// Keyed by Y-m-d so the seven day buckets stay in calendar order.
@@ -1420,7 +1427,7 @@ function lp_agenda_week( int $lp_offset = 0 ): array {
 	$lp_groups = array();
 	foreach ( $lp_days as $lp_date => $lp_sessions ) {
 		usort( $lp_sessions, static fn( $lp_a, $lp_b ): int => strcmp( $lp_a['time'], $lp_b['time'] ) );
-		$lp_day = new DateTimeImmutable( $lp_date );
+		$lp_day = new DateTimeImmutable( $lp_date, wp_timezone() );
 
 		$lp_groups[] = array(
 			'iso'      => $lp_date,

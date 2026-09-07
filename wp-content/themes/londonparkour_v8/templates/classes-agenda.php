@@ -34,7 +34,7 @@ $lp_url  = static fn( int $lp_n ): string => 0 === $lp_n ? (string) get_permalin
  * with no parseable duration cannot be said to be running, so it is not
  * counted rather than assumed.
  */
-$lp_now     = current_datetime();
+$lp_now     = lp_clasbpro_ready() ? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::now() : current_datetime();
 $lp_running = 0;
 foreach ( $lp_week['days'] as $lp_day_group ) {
 	foreach ( $lp_day_group['sessions'] as $lp_session ) {
@@ -44,11 +44,13 @@ foreach ( $lp_week['days'] as $lp_day_group ) {
 			continue;
 		}
 
-		$lp_start = DateTimeImmutable::createFromFormat(
-			'Y-m-d H:i',
-			$lp_day_group['iso'] . ' ' . $lp_session['time'],
-			$lp_now->getTimezone()
-		);
+		$lp_start = ( lp_clasbpro_ready() )
+			? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::session_datetime( (string) $lp_day_group['iso'], (string) $lp_session['time'] )
+			: DateTimeImmutable::createFromFormat(
+				'Y-m-d H:i',
+				$lp_day_group['iso'] . ' ' . $lp_session['time'],
+				$lp_now->getTimezone()
+			);
 
 		if ( ! $lp_start ) {
 			continue;

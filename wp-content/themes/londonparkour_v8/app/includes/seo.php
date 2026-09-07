@@ -973,17 +973,26 @@ function lp_seo_class_nodes( int $class_id ): array {
 		if ( '' === $date ) {
 			continue;
 		}
-		if ( strlen( $time ) > 5 ) {
-			$time = substr( $time, 0, 5 );
-		}
 
-		$start = date_create( $date . ' ' . $time, wp_timezone() );
+		$start = null;
+		if ( function_exists( 'lp_clasbpro_ready' ) && lp_clasbpro_ready() ) {
+			$start = \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::session_datetime( $date, $time );
+		} else {
+			if ( strlen( $time ) > 5 ) {
+				$time = substr( $time, 0, 5 );
+			}
+			$start = date_create( $date . ' ' . $time, wp_timezone() );
+		}
 		if ( ! $start ) {
 			continue;
 		}
-		$end = clone $start;
-		if ( $mins > 0 ) {
-			$end->modify( '+' . $mins . ' minutes' );
+		if ( $start instanceof DateTimeImmutable ) {
+			$end = $mins > 0 ? $start->modify( '+' . $mins . ' minutes' ) : $start;
+		} else {
+			$end = clone $start;
+			if ( $mins > 0 ) {
+				$end->modify( '+' . $mins . ' minutes' );
+			}
 		}
 
 		$remaining = isset( $session['remaining'] ) ? (int) $session['remaining'] : -1;

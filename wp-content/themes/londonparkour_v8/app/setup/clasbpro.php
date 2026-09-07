@@ -583,9 +583,11 @@ function lp_clasbpro_email_fill_derived_tags( array $tags, array $context, int $
 		$duration = (int) ( $display['duration'] ?? $duration );
 	} elseif ( $sample ) {
 		try {
-			$ymd  = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->modify( '+3 days' )->format( 'Y-m-d' );
+			$ymd  = lp_clasbpro_ready()
+				? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::now()->modify( '+3 days' )->format( 'Y-m-d' )
+				: ( new \DateTimeImmutable( 'now', wp_timezone() ) )->modify( '+3 days' )->format( 'Y-m-d' );
 		} catch ( \Exception $e ) {
-			$ymd = gmdate( 'Y-m-d', (int) strtotime( '+3 days' ) );
+			$ymd = gmdate( 'Y-m-d' );
 		}
 		$hhmm = '10:00';
 	}
@@ -614,25 +616,31 @@ function lp_clasbpro_google_calendar_url( string $ymd, string $hhmm, int $durati
 		$hhmm = '00:00';
 	}
 
+	$start = null;
 	try {
-		$start = new \DateTimeImmutable( $ymd . ' ' . $hhmm, wp_timezone() );
+		$start = lp_clasbpro_ready()
+			? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::session_datetime( $ymd, $hhmm )
+			: new \DateTimeImmutable( $ymd . ' ' . $hhmm, wp_timezone() );
 	} catch ( \Exception $e ) {
+		return '';
+	}
+	if ( ! $start instanceof \DateTimeImmutable ) {
 		return '';
 	}
 
 	$mins = max( 1, $duration_minutes );
 	$end  = $start->modify( '+' . $mins . ' minutes' );
-	if ( ! $end ) {
+	if ( ! $end instanceof \DateTimeImmutable ) {
 		return '';
 	}
 
-	$dates = $start->format( 'Ymd\THis' ) . '/' . $end->format( 'Ymd\THis' );
+	$utc   = new \DateTimeZone( 'UTC' );
+	$dates = $start->setTimezone( $utc )->format( 'Ymd\THis\Z' ) . '/' . $end->setTimezone( $utc )->format( 'Ymd\THis\Z' );
 	$query = http_build_query(
 		array(
 			'action'   => 'TEMPLATE',
 			'text'     => $title,
 			'dates'    => $dates,
-			'ctz'      => wp_timezone_string(),
 			'location' => $location,
 		),
 		'',

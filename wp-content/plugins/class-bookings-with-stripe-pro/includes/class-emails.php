@@ -805,6 +805,139 @@ abstract class Emails {
 	}
 
 	/**
+	 * Drop Mailchimp export chrome: the *|UNSUB|* footer, monkey badge, and
+	 * injected tracking scripts. Theme HTML files are already clean; ACF and
+	 * queued copies pasted from a Mailchimp export are not.
+	 */
+	public static function strip_mailchimp_export_chrome( string $html ): string {
+		$stripped = self::strip_mailchimp_export_chrome_once( $html );
+		if ( ! self::has_mailchimp_export_chrome( $stripped ) ) {
+			return $stripped;
+		}
+
+		$decoded = html_entity_decode( $html, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		if ( $decoded === $html ) {
+			return $stripped;
+		}
+
+		return self::strip_mailchimp_export_chrome_once( $decoded );
+	}
+
+	private static function has_mailchimp_export_chrome( string $html ): bool {
+		return false !== stripos( $html, 'mceFooterSection' )
+			|| false !== stripos( $html, 'monkey_rewards' )
+			|| false !== stripos( $html, 'Email Marketing Powered by Mailchimp' )
+			|| false !== strpos( $html, '*|UNSUB' );
+	}
+
+	private static function strip_mailchimp_export_chrome_once( string $html ): string {
+		if ( '' === $html || ( false === stripos( $html, 'mailchimp' ) && false === strpos( $html, 'mceFooterSection' ) && false === strpos( $html, '*|' ) && false === stripos( $html, '<script' ) ) ) {
+			return $html;
+		}
+
+		$stripped = preg_replace( '#<script\b[^>]*>.*?</script>#is', '', $html );
+		if ( is_string( $stripped ) ) {
+			$html = $stripped;
+		}
+
+		$stripped = preg_replace( '#\.mceFooterSection[^{]*\{[^}]*\}#', '', $html );
+		if ( is_string( $stripped ) ) {
+			$html = $stripped;
+		}
+
+		while ( true ) {
+			$footer_at = strpos( $html, 'class="mceFooterSection"' );
+			if ( false === $footer_at ) {
+				break;
+			}
+
+			$start = self::find_wrapping_mce_tbody( $html, $footer_at );
+			if ( null === $start ) {
+				break;
+			}
+
+			$end = self::find_matching_tbody_end( $html, $start );
+			if ( null === $end ) {
+				break;
+			}
+
+			$html = substr( $html, 0, $start ) . substr( $html, $end );
+		}
+
+		$replacements = [
+			'*|UNSUB|*'              => '',
+			'*|ARCHIVE|*'            => '',
+			'*|UPDATE_PROFILE|*'     => '',
+			'*|LIST:ADDRESSLINE|*'   => '',
+			'*|IFNOT:ARCHIVE_PAGE|*' => '',
+			'*|END:IF|*'             => '',
+		];
+		$html = str_replace( array_keys( $replacements ), array_values( $replacements ), $html );
+
+		$stripped = preg_replace( '#<img\b[^>]*(?:mailchimp|monkey_rewards)[^>]*>#i', '', $html );
+		if ( is_string( $stripped ) ) {
+			$html = $stripped;
+		}
+
+		return $html;
+	}
+
+	private static function find_wrapping_mce_tbody( string $html, int $from ): ?int {
+		$pos = $from;
+
+		while ( $pos > 0 ) {
+			$chunk = substr( $html, 0, $pos );
+			$tbody = strrpos( $chunk, '<tbody' );
+			if ( false === $tbody ) {
+				return null;
+			}
+
+			$tag_end = strpos( $html, '>', $tbody );
+			if ( false === $tag_end ) {
+				return null;
+			}
+
+			$tag = substr( $html, $tbody, ( $tag_end - $tbody ) + 1 );
+			if ( false !== strpos( $tag, 'mceWrapper' ) ) {
+				return $tbody;
+			}
+
+			$pos = $tbody;
+		}
+
+		return null;
+	}
+
+	private static function find_matching_tbody_end( string $html, int $start ): ?int {
+		$lower = strtolower( $html );
+		$i     = $start;
+		$depth = 0;
+		$len   = strlen( $html );
+
+		while ( $i < $len ) {
+			$nxt_open  = strpos( $lower, '<tbody', $i );
+			$nxt_close = strpos( $lower, '</tbody>', $i );
+			if ( false === $nxt_close ) {
+				return null;
+			}
+
+			if ( false !== $nxt_open && $nxt_open < $nxt_close ) {
+				++$depth;
+				$i = $nxt_open + 6;
+				continue;
+			}
+
+			--$depth;
+			$i = $nxt_close + 8;
+			if ( 0 === $depth ) {
+				return $i;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * @param bool|int|string $editor_mode Visual/HTML/Raw, a queue flag, or legacy html bool.
 	 */
 	private static function send( string $to, string $subject, string $body, string $recipient_role = '', bool $force_test_recipient = false, $editor_mode = false ): bool {
@@ -842,6 +975,7 @@ abstract class Emails {
 
 		$headers = self::mail_headers();
 
+		$body      = self::strip_mailchimp_export_chrome( $body );
 		$body_html = self::to_html( $body, $mode );
 		if ( '' !== $banner ) {
 			$body_html = preg_replace(

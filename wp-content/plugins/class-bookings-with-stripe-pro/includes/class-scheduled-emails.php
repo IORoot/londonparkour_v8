@@ -404,10 +404,12 @@ abstract class Scheduled_Emails {
 	}
 
 	/**
-	 * WP-Cron spawn is an HTTP loopback to siteurl. In Docker that is
-	 * localhost:8102, which the container cannot reach, so clasbpro_expire_holds
-	 * sits overdue and reminders never leave pending. Run the due queue from
-	 * wp-admin at most once a minute as a fallback.
+	 * WP-Cron spawn is an HTTP loopback to siteurl. That POST never lands in
+	 * Docker (localhost:8102 inside the container) or on Cloudways staging
+	 * (HTTP basic auth returns 401). clasbpro_expire_holds then sits overdue
+	 * and reminders never leave pending. Run the due queue from wp-admin at
+	 * most once a minute as a fallback. Hosts still need a real crontab
+	 * (`wp cron event run --due-now`) so mail goes out with nobody in admin.
 	 */
 	public static function maybe_process_due_queue(): void {
 		if ( wp_doing_cron() || wp_doing_ajax() ) {
@@ -459,6 +461,15 @@ abstract class Scheduled_Emails {
 				self::update_row_status( $id, self::STATUS_SKIPPED, self::SKIP_DEDUP );
 				return;
 			}
+		}
+
+		// Skip-if-late is also applied at queue time. Repeat it here so a
+		// WP-Cron outage (or a restored dump of old pending rows) cannot send
+		// a reminder days after the class.
+		$send_at = (string) ( $row['send_at'] ?? '' );
+		if ( '' !== $send_at && $send_at < gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS ) ) {
+			self::update_row_status( $id, self::STATUS_SKIPPED, self::SKIP_LATE );
+			return;
 		}
 
 		$html_mode = (int) ( $row['body_html_mode'] ?? 0 );
@@ -589,7 +600,7 @@ abstract class Scheduled_Emails {
 			if ( ! $end ) {
 				continue;
 			}
-			$now = new \DateTimeImmutable( 'now', wp_timezone() );
+			$now = Helpers::now();
 			if ( $end < $now ) {
 				continue;
 			}
@@ -772,7 +783,7 @@ abstract class Scheduled_Emails {
 			if ( ! $end ) {
 				continue;
 			}
-			$now = new \DateTimeImmutable( 'now', wp_timezone() );
+			$now = Helpers::now();
 			if ( $end < $now ) {
 				continue;
 			}
@@ -974,9 +985,9 @@ abstract class Scheduled_Emails {
 		}
 
 		try {
-			return new \DateTimeImmutable(
-				(string) $meta['class_date'] . ' ' . $start_time,
-				wp_timezone()
+			return Helpers::session_datetime(
+				(string) $meta['class_date'],
+				$start_time
 			);
 		} catch ( \Exception $e ) {
 			return null;

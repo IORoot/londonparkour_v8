@@ -279,7 +279,7 @@ abstract class Bookings {
 		try {
 			$tz   = wp_timezone();
 			$dt   = new \DateTimeImmutable( $class_date, $tz );
-			$now  = new \DateTimeImmutable( 'now', $tz );
+			$now  = Helpers::now();
 		} catch ( \Exception $e ) {
 			return 'date_invalid';
 		}
@@ -320,7 +320,7 @@ abstract class Bookings {
 		}
 
 		// Past date — allow today before start_time.
-		$class_start = $dt->modify( $class_data['start_time'] ?: '00:00' );
+		$class_start = Helpers::session_datetime( $class_date, (string) ( $class_data['start_time'] ?? '00:00' ) );
 		if ( ! $class_start ) {
 			return 'date_invalid';
 		}
@@ -346,8 +346,7 @@ abstract class Bookings {
 		}
 
 		try {
-			$tz     = wp_timezone();
-			$cursor = ( new \DateTimeImmutable( 'now', $tz ) )->modify( 'first day of this month' );
+			$cursor = Helpers::now()->modify( 'first day of this month' );
 			$months = max( 1, min( 12, (int) ( $class_data['calendar_months_ahead'] ?? 3 ) ) );
 			$end    = $cursor->modify( '+' . $months . ' months' );
 		} catch ( \Exception $e ) {
@@ -389,7 +388,7 @@ abstract class Bookings {
 
 		try {
 			$tz          = wp_timezone();
-			$now         = new \DateTimeImmutable( 'now', $tz );
+			$now         = Helpers::now();
 			$month_start = new \DateTimeImmutable( sprintf( '%04d-%02d-01', $year, $month ), $tz );
 			$month_end   = $month_start->modify( 'last day of this month' );
 		} catch ( \Exception $e ) {
@@ -415,13 +414,7 @@ abstract class Bookings {
 				continue;
 			}
 
-			try {
-				$dt          = new \DateTimeImmutable( $date, $tz );
-				$class_start = $dt->modify( (string) $class_data['start_time'] );
-			} catch ( \Exception $e ) {
-				continue;
-			}
-
+			$class_start = Helpers::session_datetime( $date, (string) $class_data['start_time'] );
 			if ( ! $class_start || $class_start <= $now ) {
 				continue;
 			}
@@ -650,7 +643,7 @@ abstract class Bookings {
 		$snapshot = self::get_slot_snapshot( $booking_id );
 		if ( $snapshot ) {
 			return [
-				'start_time' => (string) ( $snapshot['start_time'] ?? '' ),
+				'start_time' => Helpers::normalise_time_string( (string) ( $snapshot['start_time'] ?? '' ) ),
 				'location'   => (string) ( $snapshot['location'] ?? '' ),
 				'duration'   => (int) ( $snapshot['duration_minutes'] ?? 0 ),
 				'label'      => (string) ( $snapshot['label'] ?? '' ),
@@ -661,7 +654,7 @@ abstract class Bookings {
 			$class_data = Helpers::get_class_data( (int) $meta['class_id'] );
 		}
 		return [
-			'start_time' => (string) ( $class_data['start_time'] ?? '' ),
+			'start_time' => Helpers::normalise_time_string( (string) ( $class_data['start_time'] ?? '' ) ),
 			'location'   => (string) ( $class_data['location'] ?? '' ),
 			'duration'   => (int) ( $class_data['duration'] ?? 0 ),
 			'label'      => '',

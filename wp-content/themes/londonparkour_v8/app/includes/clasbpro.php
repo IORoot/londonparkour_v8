@@ -485,13 +485,12 @@ function lp_class_one_off_is_upcoming( int $class_id ): bool {
 	$end   = (string) ( $raw['end_date'] ?? '' );
 	$date  = '' !== $end ? $end : $start;
 	$time  = (string) ( $raw['start_time'] ?? '00:00' );
-	if ( strlen( $time ) > 5 ) {
-		$time = substr( $time, 0, 5 );
-	}
 	if ( '' === $date || '' === $time ) {
 		return false;
 	}
-	$dt = DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $date . ' ' . $time, wp_timezone() );
+	$dt = lp_clasbpro_ready()
+		? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::session_datetime( $date, $time )
+		: DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $date . ' ' . substr( $time, 0, 5 ), wp_timezone() );
 	if ( ! $dt ) {
 		return false;
 	}
@@ -499,7 +498,7 @@ function lp_class_one_off_is_upcoming( int $class_id ): bool {
 	if ( $mins > 0 ) {
 		$dt = $dt->modify( '+' . $mins . ' minutes' );
 	}
-	return $dt > current_datetime();
+	return $dt > ( lp_clasbpro_ready() ? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::now() : current_datetime() );
 }
 
 /**
@@ -653,7 +652,9 @@ function lp_class_upcoming_sessions( int $class_id, int $limit = 3 ): array {
 
 	$limit    = max( 1, $limit );
 	$capacity = max( 0, (int) ( $raw['capacity'] ?? 0 ) );
-	$time     = (string) $raw['start_time'];
+	$time     = lp_clasbpro_ready()
+		? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::normalise_time_string( (string) $raw['start_time'] )
+		: (string) $raw['start_time'];
 	if ( strlen( $time ) > 5 ) {
 		$time = substr( $time, 0, 5 );
 	}
@@ -818,7 +819,9 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 			continue;
 		}
 
-		$time = (string) $raw['start_time'];
+		$time = lp_clasbpro_ready()
+			? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::normalise_time_string( (string) $raw['start_time'] )
+			: (string) $raw['start_time'];
 		if ( strlen( $time ) > 5 ) {
 			$time = substr( $time, 0, 5 );
 		}
@@ -1132,6 +1135,10 @@ function lp_class_session_is_future( array $session ): bool {
 	if ( '' === $date || '' === $time ) {
 		return false;
 	}
+	if ( lp_clasbpro_ready() ) {
+		$start = \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::session_datetime( $date, $time );
+		return $start instanceof DateTimeImmutable && $start > \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::now();
+	}
 	if ( strlen( $time ) > 5 ) {
 		$time = substr( $time, 0, 5 );
 	}
@@ -1345,6 +1352,9 @@ function lp_hero_next_class_board( ?array $session = null ): array {
  * @param string $time Raw start_time (H:i, H:i:s, or already formatted).
  */
 function lp_booking_form_hhmm( string $time ): string {
+	if ( lp_clasbpro_ready() ) {
+		return \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::normalise_time_string( $time );
+	}
 	$time = trim( $time );
 	if ( '' === $time ) {
 		return '';
@@ -1642,6 +1652,73 @@ function lp_clasbpro_status_coaches( int $class_id ): array {
 }
 
 /**
+ * Coupon redeemed on a class booking, if any.
+ *
+ * Prefers a live Stripe remaining-uses count so a revisited confirmation
+ * page matches the code; falls back to the snapshot stored at booking time.
+ *
+ * @return array{code:string,uses_remaining:?int,uses_left_label:string}|null
+ */
+function lp_clasbpro_status_booking_coupon( int $booking_id ): ?array {
+	if ( $booking_id <= 0 ) {
+		return null;
+	}
+
+	$used_meta = (string) get_post_meta( $booking_id, '_clasbpro_coupon_used', true );
+	$promo_id  = (string) get_post_meta( $booking_id, '_clasbpro_pack_promo_id', true );
+	if ( '0' === $used_meta ) {
+		return null;
+	}
+	if ( '1' !== $used_meta && '' === $promo_id ) {
+		return null;
+	}
+
+	$code     = trim( (string) get_post_meta( $booking_id, '_clasbpro_coupon_code', true ) );
+	$left_raw = get_post_meta( $booking_id, '_clasbpro_coupon_uses_remaining', true );
+	$has_left = '' !== (string) $left_raw;
+	$left     = $has_left ? (int) $left_raw : null;
+
+	if ( '' !== $promo_id
+		&& class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Stripe_Service' )
+		&& class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Packs' )
+	) {
+		try {
+			$promo = \IOROOT_STRIPE_BOOKINGS_PRO\Stripe_Service::retrieve_promotion_code( $promo_id );
+			if ( $promo ) {
+				$state    = \IOROOT_STRIPE_BOOKINGS_PRO\Packs::promotion_state( $promo );
+				$left     = (int) ( $state['uses_remaining'] ?? 0 );
+				$has_left = true;
+				if ( '' === $code && ! empty( $promo->code ) ) {
+					$code = (string) $promo->code;
+				}
+			}
+		} catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			// Keep the booking snapshot.
+		}
+	}
+
+	if ( '' === $code ) {
+		return null;
+	}
+
+	$uses_left_label = '';
+	if ( $has_left ) {
+		$n               = max( 0, (int) $left );
+		$uses_left_label = sprintf(
+			/* translators: %d: remaining class uses on this coupon code */
+			_n( '%d class left', '%d classes left', $n, 'londonparkour_v8' ),
+			$n
+		);
+	}
+
+	return array(
+		'code'            => $code,
+		'uses_remaining'  => $has_left ? (int) $left : null,
+		'uses_left_label' => $uses_left_label,
+	);
+}
+
+/**
  * Extra class context for the Concourse booking-status overlay.
  *
  * The shortcode booking payload has no class_id. We look it up from booking
@@ -1766,9 +1843,13 @@ function lp_clasbpro_status_context( $view ): array {
 	$auto_apply     = '';
 	$eligibility    = '';
 	$sites_line     = 'VAUXHALL · OLD STREET · KILBURN PARK';
-	$next_title     = '';
-	$next_body      = '';
-	$crumbs         = array(
+	$next_title             = '';
+	$next_body              = '';
+	$show_coupon_used       = false;
+	$coupon_code            = '';
+	$coupon_uses_remaining  = null;
+	$coupon_uses_left_label = '';
+	$crumbs                 = array(
 		array(
 			'label' => 'HOME',
 			'href'  => home_url( '/' ),
@@ -2091,6 +2172,16 @@ function lp_clasbpro_status_context( $view ): array {
 		$customer_name = (string) ( $booking['customer_name'] ?? '' );
 	}
 
+	if ( 'class' === $product && $booking_id > 0 ) {
+		$coupon = lp_clasbpro_status_booking_coupon( $booking_id );
+		if ( is_array( $coupon ) ) {
+			$show_coupon_used       = true;
+			$coupon_code            = (string) ( $coupon['code'] ?? '' );
+			$coupon_uses_remaining  = $coupon['uses_remaining'] ?? null;
+			$coupon_uses_left_label = (string) ( $coupon['uses_left_label'] ?? '' );
+		}
+	}
+
 	$facts_confirmed = array(
 		array( 'icon' => 'icon-clock', 'label' => 'WHEN', 'value' => $session ? $session : '—' ),
 		array( 'icon' => 'icon-map-pin', 'label' => 'SITE', 'value' => $location ? $location : '—' ),
@@ -2150,6 +2241,10 @@ function lp_clasbpro_status_context( $view ): array {
 			'qr_src'            => $qr_src,
 			'whatsapp_href'     => $whatsapp,
 			'show_whatsapp'     => $show_whatsapp,
+			'show_coupon_used'  => $show_coupon_used,
+			'coupon_code'       => $coupon_code,
+			'coupon_uses_remaining'  => $coupon_uses_remaining,
+			'coupon_uses_left_label' => $coupon_uses_left_label,
 			'private_href'      => $private_href,
 			'coupons_href'      => $coupons_href,
 			'contact_href'      => $contact_href,

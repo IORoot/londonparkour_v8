@@ -3467,7 +3467,7 @@ abstract class ACF_Fields {
 				<?php if ( $expires_at > 0 ) : ?>
 					<div class="cbfs-admin-summary__kv-row">
 						<span class="cbfs-admin-summary__kv-label"><?php esc_html_e( 'Expires', 'class-bookings-with-stripe-pro' ); ?></span>
-						<div class="cbfs-admin-summary__kv-value"><?php echo esc_html( Helpers::format_date( gmdate( 'Y-m-d', $expires_at ) ) ); ?></div>
+						<div class="cbfs-admin-summary__kv-value"><?php echo esc_html( Helpers::format_date( Helpers::civil_date_from_timestamp( $expires_at ) ) ); ?></div>
 					</div>
 				<?php endif; ?>
 				<div class="cbfs-admin-summary__kv-row">
