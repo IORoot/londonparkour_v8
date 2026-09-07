@@ -1,6 +1,9 @@
 <?php
 /**
- * Scheduled reminder and post-class emails: queue, cron dispatch, deduplication.
+ * Scheduled reminder and post-class emails: queue and cron dispatch.
+ *
+ * One queue row per booking + rule. Duplicate inserts are ignored. Post-class
+ * mail is per booking (per session), not once per customer on the class product.
  *
  * @package IOROOT_STRIPE_BOOKINGS_PRO
  */
@@ -329,9 +332,6 @@ abstract class Scheduled_Emails {
 			if ( $send_at <= $now_gmt ) {
 				$status = self::STATUS_SKIPPED;
 				$skip   = self::SKIP_LATE;
-			} elseif ( self::dedup_cap_reached( $email, $class_id, (string) $rule['uuid'], (int) $rule['max_sends'] ) ) {
-				$status = self::STATUS_SKIPPED;
-				$skip   = self::SKIP_DEDUP;
 			}
 
 			self::insert_queue_row(
@@ -450,19 +450,6 @@ abstract class Scheduled_Emails {
 			return;
 		}
 
-		if ( self::TYPE_POST_CLASS === $rule_type ) {
-			$max_sends = self::max_sends_for_rule( $class_id, (string) ( $row['rule_id'] ?? '' ) );
-			if ( self::dedup_cap_reached(
-				(string) ( $row['customer_email'] ?? '' ),
-				$class_id,
-				(string) ( $row['rule_id'] ?? '' ),
-				$max_sends
-			) ) {
-				self::update_row_status( $id, self::STATUS_SKIPPED, self::SKIP_DEDUP );
-				return;
-			}
-		}
-
 		// Skip-if-late is also applied at queue time. Repeat it here so a
 		// WP-Cron outage (or a restored dump of old pending rows) cannot send
 		// a reminder days after the class.
@@ -560,7 +547,7 @@ abstract class Scheduled_Emails {
 		ob_start();
 		?>
 		<div class="clasbpro-scheduled-email-tools">
-			<p><?php esc_html_e( 'Queue reminders and post-class emails for existing paid bookings whose class has not ended yet. Skip-if-late and dedup rules still apply.', 'class-bookings-with-stripe-pro' ); ?></p>
+			<p><?php esc_html_e( 'Queue reminders and post-class emails for existing paid bookings whose class has not ended yet. Skip-if-late still applies; each booking is queued independently.', 'class-bookings-with-stripe-pro' ); ?></p>
 			<p class="clasbpro-scheduled-email-tools__actions">
 				<a class="button button-secondary" href="<?php echo esc_url( $backfill_url ); ?>"><?php esc_html_e( 'Schedule emails for existing upcoming bookings', 'class-bookings-with-stripe-pro' ); ?></a>
 			</p>
@@ -722,7 +709,7 @@ abstract class Scheduled_Emails {
 				return __( 'Skipped (late)', 'class-bookings-with-stripe-pro' );
 			}
 			if ( self::SKIP_DEDUP === $skip_reason ) {
-				return __( 'Skipped (already sent for class type)', 'class-bookings-with-stripe-pro' );
+				return __( 'Skipped (legacy duplicate)', 'class-bookings-with-stripe-pro' );
 			}
 			return __( 'Skipped', 'class-bookings-with-stripe-pro' );
 		}
@@ -833,33 +820,53 @@ abstract class Scheduled_Emails {
 		return (bool) $val;
 	}
 
-	private static function max_sends_for_rule( int $class_id, string $rule_uuid ): int {
-		unset( $class_id, $rule_uuid );
-		return 1;
-	}
-
-	private static function dedup_cap_reached( string $email, int $class_id, string $rule_uuid, int $max_sends ): bool {
-		if ( $max_sends < 1 || '' === $email || '' === $rule_uuid ) {
-			return true;
-		}
-
+	/**
+	 * Re-queue post-class rows skipped by the old once-per-email-per-class cap.
+	 *
+	 * Only published, paid bookings are reopened. Trashed test bookings stay skipped.
+	 *
+	 * @return int Number of rows set back to pending.
+	 */
+	public static function reopen_dedup_skipped_for_live_bookings(): int {
 		global $wpdb;
+
 		$table = self::table_name();
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$count = (int) $wpdb->get_var(
+		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$table}
-				WHERE customer_email = %s AND class_id = %d AND rule_id = %s AND rule_type = %s AND status = %s",
-				$email,
-				$class_id,
-				$rule_uuid,
-				self::TYPE_POST_CLASS,
-				self::STATUS_SENT
-			)
+				"SELECT id, booking_id FROM {$table} WHERE status = %s AND skip_reason = %s",
+				self::STATUS_SKIPPED,
+				self::SKIP_DEDUP
+			),
+			ARRAY_A
 		);
 
-		return $count >= $max_sends;
+		if ( ! is_array( $rows ) || ! $rows ) {
+			return 0;
+		}
+
+		$reopened = 0;
+		foreach ( $rows as $row ) {
+			$id         = (int) ( $row['id'] ?? 0 );
+			$booking_id = (int) ( $row['booking_id'] ?? 0 );
+			if ( $id <= 0 || $booking_id <= 0 ) {
+				continue;
+			}
+
+			$post = get_post( $booking_id );
+			if ( ! $post || 'publish' !== $post->post_status ) {
+				continue;
+			}
+			if ( Bookings::STATUS_PAID !== Bookings::get_status( $booking_id ) ) {
+				continue;
+			}
+
+			self::update_row_status( $id, self::STATUS_PENDING, '' );
+			++$reopened;
+		}
+
+		return $reopened;
 	}
 
 	/**

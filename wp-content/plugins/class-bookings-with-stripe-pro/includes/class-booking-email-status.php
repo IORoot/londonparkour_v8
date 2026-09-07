@@ -430,7 +430,7 @@ abstract class Booking_Email_Status {
 				return [
 					'slug'   => self::PILL_NOT_SENT,
 					'label'  => self::pill_label( self::PILL_NOT_SENT ),
-					'detail' => __( 'Already sent for another booking in this class.', 'class-bookings-with-stripe-pro' ),
+					'detail' => __( 'Skipped as a duplicate of an earlier booking (legacy).', 'class-bookings-with-stripe-pro' ),
 				];
 			}
 
