@@ -168,12 +168,20 @@ a REST endpoint the map fetches on demand. Pairs naturally with item 1.
 
 **Check:** `/classes-map/` HTML under 150 KB; all map pins still render.
 
-### 12. Preload the hero image · S
-No `rel="preload"` exists on any page. Add one for the LCP image, after item 4
-so the preload points at a reasonably-sized asset.
+### 12. ~~Preload the hero image~~ · **DONE 2026-09-08**
 
-**Check:** `rel="preload"` present with a matching `imagesrcset`; LCP improves
-against the pre-change baseline.
+`wp_preload_resources` in `app/includes/media.php`. Same attachment, size and
+`sizes` as the LCP `<img>` — first-slide Hero, About / private-coaching opening
+photos, blog featured, Classes / Map / location mastheads. Pages with no photo
+in the opening band get no hint.
+
+**Checks — passing:**
+
+| check | result |
+|---|---|
+| `/` | `rel="preload"` `as="image"` for `alfredo-strides` `lp_wide_lg`; `imagesrcset` matches the hero `<img>` |
+| `/about/`, `/private-coaching/`, `/classes/locations/vauxhall/` | preload `href` matches `fetchpriority="high"` img |
+| `/contact/`, `/tutorials/`, `/blog/`, `/docs/` | zero image preloads (text mastheads) |
 
 ### 13. ~~Populate `seo_description` on the commercial pages~~ · **DONE 2026-09-08**
 

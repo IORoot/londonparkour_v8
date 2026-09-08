@@ -307,11 +307,15 @@ Measured 1,071,926 bytes, by rendering all 304 location spots server-side into
 the document. Those are the same spots covered by C3. Move them to a fetched
 JSON endpoint the map consumes on demand.
 
-### H10 — No `rel="preload"` for the hero image on any page
+### H10 — No `rel="preload"` for the hero image on any page — **FIXED 2026-09-08**
 
 Verified: zero `rel="preload"` on the homepage. `fetchpriority="high"` is
 correctly set (one occurrence), which helps once the image is discovered, but a
 preload hint would let discovery start earlier.
+
+**Shipped.** `wp_preload_resources` emits a matching `as="image"` hint for the
+LCP photo (`app/includes/media.php`). Homepage preload `href` + `imagesrcset`
+match the first Ken Burns slide. Pages with no opening photo get no hint.
 
 ---
 

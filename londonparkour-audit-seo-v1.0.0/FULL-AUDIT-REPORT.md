@@ -9,9 +9,9 @@ Shipped since the original pass (sitemap, tutorial pagination, spot 404s,
 tutorial image weight, the 2.9 MB LCP photo, meta descriptions, dead
 nav/footer links, hidden transcripts, REST users / xmlrpc, `BlogPosting`,
 map HTML weight, `/classes/` alt text, class `VideoObject` `uploadDate` /
-`duration`, `seo_title` on pages whose H1s omit “parkour” / “London”, and
-conditional booking JS) are out of this document. The original write-up is in
-`FULL-AUDIT-REPORT-original.md`.
+`duration`, `seo_title` on pages whose H1s omit “parkour” / “London”,
+conditional booking JS, and hero `rel="preload"`) are out of this document.
+The original write-up is in `FULL-AUDIT-REPORT-original.md`.
 
 ## Remaining score pressure
 
@@ -21,7 +21,7 @@ holding the site back:
 
 | Category | Still open |
 |---|---|
-| Performance | No page caching; TTFB 329–493 ms on localhost; no hero `rel="preload"`; oversized images |
+| Performance | No page caching; TTFB 329–493 ms on localhost; oversized images |
 | Content & E-E-A-T | 229 tutorials have no transcript data at all; no safeguarding statement; coach bios not rendered |
 | Local | Real Google reviews and geo data, but no phone number |
 | On-page / SXO | `/classes/` is a weekly agenda, not a service page; pricing lives at `/coupons/` and `/docs/pricing/` |
@@ -35,13 +35,6 @@ gaps** — not discoverability.
 
 ## High
 
-### H4 — No phone number anywhere on the site
-
-Verified across all six key pages and `/contact/`. The only contact route is a
-form plus email, with a stated 36-hour reply time. For a local service business
-taking class bookings, this is a direct conversion loss and a missing local
-ranking signal.
-
 ### H7 — No page caching; TTFB 329–493 ms on localhost
 
 On localhost, TTFB should be tens of milliseconds. 329–493 ms means real work on
@@ -52,12 +45,6 @@ a floor no amount of asset optimisation can get under.
 **All the performance figures in this report are lab floors on localhost.**
 Localhost LCP of 420–644 ms translates to roughly **2.5–5 s in the field**
 without caching.
-
-### H10 — No `rel="preload"` for the hero image on any page
-
-Verified: zero `rel="preload"` on the homepage. `fetchpriority="high"` is
-correctly set (one occurrence), which helps once the image is discovered, but a
-preload hint would let discovery start earlier.
 
 ---
 
@@ -107,7 +94,8 @@ Worth stating plainly, because the remaining list undersells it:
 - **Canonicals, clean URLs, and `robots` directives are correct** where present.
 - **CLS is 0** on the homepage.
 - **`fetchpriority="high"` is correctly applied** to hero images via
-  `media-photo.php`, and `font-display: swap` is active.
+  `media-photo.php`, and a matching `rel="preload"` now early-discovers the LCP
+  photo. `font-display: swap` is active.
 - **Mobile layout is correct** — no horizontal overflow on any page tested, and
   both the hamburger nav and the Leaflet map work at mobile widths.
 
