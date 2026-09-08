@@ -67,8 +67,7 @@ $lp_sites_lbl = preg_replace_callback(
 
 $lp_map_places = array_merge( $lp_sites, $lp_spots );
 
-$lp_mast_media = lp_demo_media_id( 'DSC01072.jpeg' );
-$lp_mast_url   = $lp_mast_media ? '' : (string) get_theme_file_uri( 'bin/demo-media/DSC01072.jpeg' );
+$lp_mast_media = (int) get_post_thumbnail_id();
 
 get_header();
 ?>
@@ -97,7 +96,6 @@ get_header();
 				'title'     => 'Stride. Leap. Balance. Fly.',
 				'note'      => 'Find your class on the map, then scroll for meeting points and travel details. Every site is a ten-minute walk from a tube or overground station.',
 				'media_id'  => $lp_mast_media,
-				'media_url' => $lp_mast_url,
 				'media_alt' => '',
 			),
 			'active'      => 'map',

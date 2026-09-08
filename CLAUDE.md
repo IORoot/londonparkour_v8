@@ -60,7 +60,8 @@ themes/londonparkour_v8/bin/wp lp seed     # demo content + /blocks-qa/
 - `docker compose down -v` destroys the database. That is the supported
   recovery path, not a disaster — bootstrap + seed rebuild in under a minute
 - The database is **never** committed or shared. Content lives in
-  `bin/demo-content/`, `bin/demo-media/` and each block's `example.json`
+  `bin/demo-content/` and each block's `example.json`. Photographs live in
+  the media library — do not ship camera files in the theme.
 
 ## Key mechanisms
 

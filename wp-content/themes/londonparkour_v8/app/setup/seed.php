@@ -128,9 +128,7 @@ function lp_seed_find( string $post_type, string $slug ): int {
 }
 
 /**
- * Media seeding removed — image import caused WordPress to regenerate
- * all crops on every seed run, polluting uploads/ with duplicates.
- * Image fields are left unset (0); set them manually in the WP admin.
+ * Photograph fields are editor-owned. Seed does not import theme files.
  *
  * @return array<string,int> Always empty.
  */
@@ -276,8 +274,6 @@ function lp_seed_posts( string $post_type, array $media ): array {
 			$file = (string) $record['thumbnail'];
 			if ( isset( $media[ $file ] ) ) {
 				set_post_thumbnail( $id, $media[ $file ] );
-			} else {
-				WP_CLI::warning( "No demo image '{$file}' for {$post_type} '{$slug}'." );
 			}
 		}
 
@@ -435,8 +431,6 @@ function lp_seed_rows( array $media ): array {
 			foreach ( (array) $map as $path => $file ) {
 				if ( isset( $media[ $file ] ) ) {
 					lp_seed_set_path( $data, (string) $path, $media[ $file ] );
-				} else {
-					WP_CLI::warning( "blocks/{$slug}: no demo image '{$file}' — {$path} left unset." );
 				}
 			}
 		}
@@ -862,6 +856,7 @@ WP_CLI::add_command(
 
 		WP_CLI::log( 'Media' );
 		$media = lp_seed_media();
+		WP_CLI::log( '  skipped — photographs are editor-owned' );
 
 		WP_CLI::log( 'Terms' );
 		lp_seed_terms();

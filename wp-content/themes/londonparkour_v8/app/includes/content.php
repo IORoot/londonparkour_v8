@@ -1346,31 +1346,6 @@ function lp_agenda_when_label( string $lp_time, int $lp_class_id ): string {
 }
 
 /**
- * Attachment ID for a seeded demo-media filename (e.g. DSC01072.jpeg).
- *
- * @param string $lp_filename Basename under bin/demo-media/.
- */
-function lp_demo_media_id( string $lp_filename ): int {
-	$lp_slug = sanitize_title( pathinfo( $lp_filename, PATHINFO_FILENAME ) );
-	if ( '' === $lp_slug ) {
-		return 0;
-	}
-
-	$lp_ids = get_posts(
-		array(
-			'post_type'      => 'attachment',
-			'post_status'    => 'inherit',
-			'name'           => $lp_slug,
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-		)
-	);
-
-	return (int) ( $lp_ids[0] ?? 0 );
-}
-
-/**
  * Every session in one week, grouped by day, for the Agenda board.
  *
  * Sessions come from clasbpro via lp_class_sessions_between() — active classes

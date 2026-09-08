@@ -47,7 +47,7 @@ Change it in the same commit as C2.
 
 ## Critical
 
-### C1 — No XML sitemap exists anywhere
+### C1 — No XML sitemap exists anywhere — **FIXED 2026-09-08**
 
 ```
 /sitemap.xml        404
@@ -62,6 +62,12 @@ most likely a leftover from the Rank Math removal.
 This is critical *because of C2*: with 486 URLs having no internal link path, a
 sitemap is currently the only route by which they could be discovered. Right now
 neither route exists.
+
+**Shipped.** `/wp-sitemap.xml` returns 200 (`application/xml`), `/sitemap.xml`
+301s to it, and `robots.txt` advertises `Sitemap: http://localhost:8102/wp-sitemap.xml`.
+The index lists posts + taxonomies, no users provider. Tutorial sitemap contains
+609 URLs. WordPress 7.1 was returning 404 on a rendered sitemap; `pre_handle_404`
+in `seo.php` forces 200.
 
 ### C2 — 486 of 609 tutorials are unreachable (pagination 404s) — **FIXED 2026-09-08**
 
@@ -86,7 +92,7 @@ the database. See ACTION-PLAN item 3 for the corrected root cause — it was the
 singular *permalink* rule that swallowed the request, not the singular
 pagination rule.
 
-### C3 — 301 published posts deliberately return 404
+### C3 — 301 published posts deliberately return 404 — **FIXED 2026-09-08**
 
 `lp_location` has 304 published posts. Only **3** are indexable:
 
@@ -104,6 +110,12 @@ soft-404s. It also currently leaks them via the REST API.
 **Fix before fixing C1:** set these to a non-public status, or exclude
 `kind=spot` from the sitemap and add `noindex`. Whichever route, C3 must land
 *with or before* C1.
+
+**Shipped.** Spots are `private` (`lp_location_spots_private_v1`), not `publish`.
+Live counts: 3 published `site`, 301 private `spot`. Location sitemap lists
+exactly Old Street, Vauxhall, Kilburn Park. Sample spot pretty URLs 404;
+the three sites return 200. A `save_post` hook keeps spots private if someone
+hits Publish.
 
 ### C4 — `/tutorials/` ships 544 KB of HTML and ~19.4 MB of images — **FIXED 2026-09-08**
 

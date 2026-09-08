@@ -35,7 +35,7 @@ Site: http://localhost:8102 · admin `admin` / `admin` · QA page: `/blocks-qa/`
 | Nuke and rebuild | `docker compose down -v`, then the four commands above |
 | Changed a field group | edit PHP → `bin/wp lp acf:build --sync` → commit `acf-json/` |
 | Sync ACF to wp-admin | `bin/sync-acf-to-admin.sh` or `bin/wp lp acf:build --sync` |
-| Changed a demo image | replace the file in `bin/demo-media/` → `bin/wp lp seed --fresh` → `bin/wp media regenerate --yes` |
+| Changed a page photograph | set the featured image (or ACF image field) in the media library |
 | Verify a block in isolation | `bin/wp lp render <layout>` |
 | Verify a partial | `bin/wp lp part components/<name>` |
 | Parse Google reviews HTML | `php bin/parse-google-reviews.php` |
@@ -50,9 +50,8 @@ path, not a disaster — bootstrap and seed rebuild it in under a minute.
 | Path | Owns |
 |---|---|
 | `blocks/*/example.json` | a block's manual-mode content |
-| `blocks/*/example.media.json` | field dot-path → demo image filename |
+| `blocks/*/example.media.json` | field dot-path → media-library filename. Seed does not import files. |
 | `bin/demo-content/*.json` | CPT records, native `post` records, and taxonomy terms |
-| `bin/demo-media/*.jpeg` | the photographs, 2132×1200 |
 
 `post.json` is the native blog type rather than a CPT, so its records carry
 `date`, `excerpt` and `content` in the post row itself instead of in `fields`.
@@ -76,9 +75,9 @@ Records reference each other **by slug**, not by ID — a class names
 `"location": "peckham-rye"` and seed resolves it. IDs differ between machines;
 slugs do not.
 
-Demo images are 2132×1200 for a reason: `lp_wide_lg` is 1920×1080 and
-`lp_portrait_lg` is 1112×1200, so a smaller source makes WordPress skip the
-largest crop and thins every srcset. If you swap one in, clear both bars.
+Photographs live in the **media library**, not the theme. Seed does not
+import image files. Classes / Classes Map mastheads use each page's featured
+image, which goes through `wp_get_attachment_image()` and a `srcset`.
 
 ## Safety
 
@@ -95,7 +94,6 @@ seed warns and skips. `--fresh` deletes only marked records.
 | `wp` | WP-CLI wrapper. WP-CLI is not on the host; it runs in the `cli` sidecar. Always use this, never bare `wp`. |
 | `audit-reuse.sh` | Fails the build on hand-rolled markup — a raw `<svg>`, a raw `<img>`, or a built class string. Verified by injection; trust it. |
 | `demo-content/` | CPT records and terms, read by `wp lp seed`. |
-| `demo-media/` | Demo photographs, read by `wp lp seed`. |
 | `data/reviews/` | Google review HTML dump + parsed JSON. Not seed. Parse with `php bin/parse-google-reviews.php`, import with `bin/wp lp import-reviews`. Re-parse keeps `quote` by `review_id`. Import never deletes posts, and never overwrites a quote that is already set. |
 
 `wp lp seed` itself is not here — it needs WordPress bootstrapped, so it lives

@@ -63,8 +63,7 @@ foreach ( $lp_week['days'] as $lp_day_group ) {
 }
 
 $lp_sites      = count( lp_locations_by_kind( 'site' ) );
-$lp_mast_media = lp_demo_media_id( 'DSC01072.jpeg' );
-$lp_mast_url   = $lp_mast_media ? '' : (string) get_theme_file_uri( 'bin/demo-media/DSC01072.jpeg' );
+$lp_mast_media = (int) get_post_thumbnail_id();
 
 get_header();
 ?>
@@ -93,7 +92,6 @@ get_header();
 				'title'     => "This week's sessions.",
 				'note'      => 'Every session on the board for the week ahead. Coach-led, capped at twelve, £15 to drop in. Spaces update live — take the slot while it is there.',
 				'media_id'  => $lp_mast_media,
-				'media_url' => $lp_mast_url,
 				'media_alt' => '',
 			),
 			'active'      => 'agenda',

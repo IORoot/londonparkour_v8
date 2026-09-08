@@ -4,3 +4,6 @@ node_modules/
 
 # assets/dist is tracked. Cloudways Git Pull has no npm step, so the Vite
 # production build has to live in the repo or staging has no CSS/JS.
+
+# Do not ship camera originals. They are served from this path with no srcset.
+bin/demo-media/

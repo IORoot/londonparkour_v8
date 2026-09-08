@@ -29,8 +29,8 @@ run (PORT-FINDINGS §13); use it to eyeball any block while porting a template.
     bin/bootstrap.sh && bin/wp lp seed     # from a clean database
 
 The database is disposable and is never shared between developers — the content
-definition is code, in `bin/demo-content/`, `bin/demo-media/` and each block's
-`example.json`. `bin/README.md` is the contract; read it before touching content.
+definition is code, in `bin/demo-content/` and each block's `example.json`.
+`bin/README.md` is the contract; read it before touching content.
 
 ## Session 2 corrections — read before acting on the older sections
 

@@ -10,21 +10,14 @@ decision, needs the design file and owner sign-off
 
 ## Do first — ordered, because two of these are coupled
 
-### 1. Gate the spot locations *before* adding a sitemap · S
-301 published `lp_location` posts return 404 by design. A sitemap generator will
-happily enumerate all of them.
+### 1. ~~Gate the spot locations *before* adding a sitemap~~ · **DONE 2026-09-08**
 
-Exclude `lp_location_kind() === 'spot'` from any sitemap and add `noindex`, or
-move them to a non-public post status.
+Spots are `private`. Check passed: 3 sitemap-eligible locations, not 304.
 
-**Check:** `bin/wp eval` counts 3 sitemap-eligible locations, not 304.
+### 2. ~~Restore the sitemap~~ · **DONE 2026-09-08**
 
-### 2. Restore the sitemap · S
-Find what disables `/wp-sitemap.xml` (likely Rank Math residue), re-enable it,
-and add `Sitemap:` to `robots.txt`.
-
-**Check:** `/wp-sitemap.xml` returns 200; `robots.txt` contains the directive;
-the URL count matches expectation and contains no `spot` locations.
+`/wp-sitemap.xml` returns 200; `robots.txt` contains `Sitemap:`; location
+sitemap has the 3 sites and no spots. `/sitemap.xml` 301s to `/wp-sitemap.xml`.
 
 ### 3. ~~Fix tutorial pagination and reduce `posts_per_page`~~ · **DONE 2026-09-08**
 
