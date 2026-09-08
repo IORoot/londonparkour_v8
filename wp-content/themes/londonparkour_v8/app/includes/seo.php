@@ -11,6 +11,10 @@
  *   lp_seo_image
  *   lp_seo_robots
  *   lp_seo_graph
+ *   lp_seo_title
+ *
+ * Editor overrides live in ACF: per-entry group `group_lp_seo` (SEO box after
+ * the title) and the SEO tab on Site Settings (`seo_*` option fields).
  *
  * @package londonparkour_v8
  */
@@ -27,26 +31,174 @@ function lp_seo_boot(): void {
 
 	remove_action( 'wp_head', 'rel_canonical' );
 
-	add_action( 'wp_head', 'lp_seo_print_meta', 1 );
 	add_action( 'wp_head', 'lp_seo_print_jsonld', 5 );
 	add_filter( 'wp_robots', 'lp_seo_robots' );
-	add_filter( 'document_title_separator', 'lp_seo_title_separator' );
 	add_filter( 'robots_txt', 'lp_seo_robots_txt', 10, 2 );
+
+	// Rank Math owns document title, Open Graph and Twitter tags when active.
+	if ( ! defined( 'RANK_MATH_VERSION' ) ) {
+		add_action( 'wp_head', 'lp_seo_print_meta', 1 );
+		add_filter( 'pre_get_document_title', 'lp_seo_document_title' );
+		add_filter( 'document_title_separator', 'lp_seo_title_separator' );
+	}
 }
 add_action( 'wp', 'lp_seo_boot' );
 
 /**
- * Title separator matching the site's label voice.
+ * Built-in homepage title when Site Settings has none.
+ */
+function lp_seo_default_site_title(): string {
+	return 'London Parkour | Practical Movement Training & Classes';
+}
+
+/**
+ * Current singular post ID, including the static front page.
+ */
+function lp_seo_current_post_id(): int {
+	if ( is_singular() ) {
+		return (int) get_queried_object_id();
+	}
+	if ( is_front_page() ) {
+		return (int) get_option( 'page_on_front' );
+	}
+	if ( is_home() ) {
+		return (int) get_option( 'page_for_posts' );
+	}
+
+	return 0;
+}
+
+/**
+ * Whether an ACF value should win over the automatic fallback.
+ *
+ * @param mixed $value Field value.
+ */
+function lp_seo_has_value( $value ): bool {
+	if ( null === $value || false === $value || '' === $value ) {
+		return false;
+	}
+	if ( is_array( $value ) && array() === $value ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * ACF field on the current post only (no options fallback).
+ *
+ * @param string $name    Field name.
+ * @param int    $post_id Post ID, or 0 for the current view.
+ * @return mixed
+ */
+function lp_seo_post_field( string $name, int $post_id = 0 ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return null;
+	}
+	$post_id = $post_id > 0 ? $post_id : lp_seo_current_post_id();
+	if ( $post_id < 1 ) {
+		return null;
+	}
+
+	return get_field( $name, $post_id );
+}
+
+/**
+ * ACF field on Site Settings (options).
+ *
+ * @param string $name Field name.
+ * @return mixed
+ */
+function lp_seo_option_field( string $name ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return null;
+	}
+
+	return get_field( $name, 'option' );
+}
+
+/**
+ * Attachment ID from an ACF image field (id or array).
+ *
+ * @param mixed $value Field value.
+ */
+function lp_seo_field_image_id( $value ): int {
+	if ( is_numeric( $value ) ) {
+		return (int) $value;
+	}
+	if ( is_array( $value ) ) {
+		return (int) ( $value['ID'] ?? $value['id'] ?? 0 );
+	}
+
+	return 0;
+}
+
+/**
+ * True/false ACF on the current post.
+ */
+function lp_seo_post_flag( string $name ): bool {
+	return (bool) lp_seo_post_field( $name );
+}
+
+/**
+ * Document title for the current view.
+ *
+ * Per-entry SEO title wins. The homepage falls back to the Site Settings
+ * default (then the built-in string). Other views leave WordPress to compose
+ * “Page | Site name” unless a title is set.
+ */
+function lp_seo_title(): string {
+	$post_title = lp_seo_post_field( 'seo_title' );
+	if ( is_string( $post_title ) && '' !== lp_seo_plain( $post_title ) ) {
+		$title = lp_seo_plain( $post_title );
+		return apply_filters( 'lp_seo_title', $title );
+	}
+
+	if ( is_front_page() ) {
+		$site_title = lp_seo_option_field( 'seo_title' );
+		if ( is_string( $site_title ) && '' !== lp_seo_plain( $site_title ) ) {
+			$title = lp_seo_plain( $site_title );
+		} else {
+			$title = lp_seo_default_site_title();
+		}
+		return apply_filters( 'lp_seo_title', $title );
+	}
+
+	return apply_filters( 'lp_seo_title', '' );
+}
+
+/**
+ * Short-circuit WordPress title-tag generation when an override exists.
+ */
+function lp_seo_document_title( string $title ): string {
+	$override = lp_seo_title();
+	if ( '' === $override ) {
+		return $title;
+	}
+
+	return $override;
+}
+
+/**
+ * Title separator.
  */
 function lp_seo_title_separator( string $sep ): string {
 	unset( $sep );
-	return '·';
+	return '|';
 }
 
 /**
  * Current canonical URL: the public permalink, minus tracking query args.
  */
 function lp_seo_canonical_url(): string {
+	$override = lp_seo_post_field( 'seo_canonical' );
+	if ( is_string( $override ) && '' !== $override && ! is_wp_error( $override ) ) {
+		$override = esc_url_raw( $override );
+		if ( '' !== $override ) {
+			return $override;
+		}
+	}
+
 	$url = '';
 
 	if ( is_front_page() ) {
@@ -148,6 +300,10 @@ function lp_seo_is_noindex(): bool {
 		}
 	}
 
+	if ( lp_seo_post_flag( 'seo_noindex' ) ) {
+		return true;
+	}
+
 	return (bool) apply_filters( 'lp_seo_noindex', false );
 }
 
@@ -215,6 +371,11 @@ function lp_seo_row_text( array $row ): string {
  * Description for the current response.
  */
 function lp_seo_description(): string {
+	$override = lp_seo_post_field( 'seo_description' );
+	if ( is_string( $override ) && '' !== lp_seo_plain( $override ) ) {
+		return apply_filters( 'lp_seo_description', lp_seo_clip( $override ) );
+	}
+
 	$desc = '';
 
 	if ( is_singular() ) {
@@ -275,6 +436,13 @@ function lp_seo_description(): string {
 	}
 
 	if ( '' === lp_seo_plain( $desc ) ) {
+		$site_desc = lp_seo_option_field( 'seo_description' );
+		if ( is_string( $site_desc ) && '' !== lp_seo_plain( $site_desc ) ) {
+			$desc = $site_desc;
+		}
+	}
+
+	if ( '' === lp_seo_plain( $desc ) ) {
 		$desc = (string) get_bloginfo( 'description', 'display' );
 	}
 
@@ -293,15 +461,49 @@ function lp_seo_description(): string {
 }
 
 /**
- * Share image: featured → custom logo → site icon.
+ * Site-wide share image: Alfredo Strides (attachment slug `alfredo-strides`).
+ */
+function lp_seo_default_image_id(): int {
+	static $attachment_id = null;
+
+	if ( null !== $attachment_id ) {
+		return $attachment_id;
+	}
+
+	$ids = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'name'           => 'alfredo-strides',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		)
+	);
+
+	$attachment_id = (int) ( $ids[0] ?? 0 );
+
+	return $attachment_id;
+}
+
+/**
+ * Share image: SEO field → featured → site default → Alfredo Strides → logo → icon → homepage hero.
  *
  * @return array{url:string,width:int,height:int,alt:string}|null
  */
 function lp_seo_image(): ?array {
-	$attachment_id = 0;
+	$attachment_id = lp_seo_field_image_id( lp_seo_post_field( 'seo_image' ) );
 
-	if ( is_singular() && has_post_thumbnail() ) {
+	if ( $attachment_id < 1 && is_singular() && ! is_front_page() && has_post_thumbnail() ) {
 		$attachment_id = (int) get_post_thumbnail_id();
+	}
+
+	if ( $attachment_id < 1 ) {
+		$attachment_id = lp_seo_field_image_id( lp_seo_option_field( 'seo_image' ) );
+	}
+
+	if ( $attachment_id < 1 ) {
+		$attachment_id = lp_seo_default_image_id();
 	}
 
 	if ( ! $attachment_id && function_exists( 'get_theme_mod' ) ) {
@@ -343,7 +545,10 @@ function lp_seo_image(): ?array {
 		return apply_filters( 'lp_seo_image', null );
 	}
 
-	$src = wp_get_attachment_image_src( $attachment_id, 'lp_wide' );
+	$src = wp_get_attachment_image_src( $attachment_id, 'lp_wide_lg' );
+	if ( ! is_array( $src ) ) {
+		$src = wp_get_attachment_image_src( $attachment_id, 'lp_wide' );
+	}
 	if ( ! is_array( $src ) ) {
 		$src = wp_get_attachment_image_src( $attachment_id, 'full' );
 	}
@@ -413,6 +618,9 @@ function lp_seo_print_meta(): void {
 			printf( '<meta property="og:image:alt" content="%s">' . "\n", esc_attr( $image['alt'] ) );
 		}
 		printf( '<meta name="twitter:image" content="%s">' . "\n", esc_url( $image['url'] ) );
+		if ( '' !== $image['alt'] ) {
+			printf( '<meta name="twitter:image:alt" content="%s">' . "\n", esc_attr( $image['alt'] ) );
+		}
 	}
 }
 
@@ -518,32 +726,161 @@ function lp_seo_aggregate_rating(): ?array {
 }
 
 /**
+ * Organisation JSON-LD @type list. Default SportsClub + LocalBusiness.
+ *
+ * @return array<int, string>
+ */
+function lp_seo_org_types(): array {
+	$types = lp_seo_option_field( 'seo_org_types' );
+	if ( ! is_array( $types ) ) {
+		$types = array();
+	}
+
+	$allowed = array(
+		'SportsClub',
+		'LocalBusiness',
+		'SportsActivityLocation',
+		'SportsOrganization',
+		'Organization',
+	);
+	$clean = array();
+	foreach ( $types as $type ) {
+		$type = (string) $type;
+		if ( in_array( $type, $allowed, true ) ) {
+			$clean[] = $type;
+		}
+	}
+
+	if ( ! $clean ) {
+		$clean = array( 'SportsClub', 'LocalBusiness' );
+	}
+
+	return array_values( array_unique( $clean ) );
+}
+
+/**
+ * Organisation sameAs URLs.
+ *
+ * @return array<int, string>
+ */
+function lp_seo_org_same_as(): array {
+	$rows = lp_seo_option_field( 'seo_same_as' );
+	$urls = array();
+	if ( is_array( $rows ) ) {
+		foreach ( $rows as $row ) {
+			$url = is_array( $row ) ? (string) ( $row['url'] ?? '' ) : (string) $row;
+			$url = esc_url_raw( $url );
+			if ( '' !== $url ) {
+				$urls[] = $url;
+			}
+		}
+	}
+
+	if ( $urls ) {
+		return array_values( array_unique( $urls ) );
+	}
+
+	return array(
+		'https://www.instagram.com/london_parkour',
+		'https://youtube.com/@londonparkour',
+		'https://www.facebook.com/ldnpk',
+	);
+}
+
+/**
+ * Extra JSON-LD nodes from the current entry's SEO repeater.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function lp_seo_extra_schema_nodes(): array {
+	$rows = lp_seo_post_field( 'seo_schema_nodes' );
+	if ( ! is_array( $rows ) ) {
+		return array();
+	}
+
+	$allowed = array(
+		'Service',
+		'Person',
+		'Place',
+		'Article',
+		'Course',
+		'Event',
+		'VideoObject',
+		'Offer',
+		'HowTo',
+		'Organization',
+	);
+	$nodes = array();
+	foreach ( $rows as $row ) {
+		if ( ! is_array( $row ) ) {
+			continue;
+		}
+		$type = (string) ( $row['type'] ?? '' );
+		if ( ! in_array( $type, $allowed, true ) ) {
+			continue;
+		}
+		$node = array( '@type' => $type );
+		$name = lp_seo_plain( (string) ( $row['name'] ?? '' ) );
+		if ( '' !== $name ) {
+			$node['name'] = $name;
+		}
+		$desc = lp_seo_plain( (string) ( $row['description'] ?? '' ) );
+		if ( '' !== $desc ) {
+			$node['description'] = $desc;
+		}
+		$url = esc_url_raw( (string) ( $row['url'] ?? '' ) );
+		if ( '' !== $url ) {
+			$node['url'] = $url;
+		}
+		if ( count( $node ) < 2 ) {
+			continue;
+		}
+		$nodes[] = $node;
+	}
+
+	return $nodes;
+}
+
+/**
  * Organisation / LocalBusiness node.
  *
  * @return array<string, mixed>
  */
 function lp_seo_organization_node(): array {
+	$types = lp_seo_org_types();
+	$name  = lp_seo_option_field( 'seo_org_name' );
+	$name  = is_string( $name ) && '' !== lp_seo_plain( $name ) ? lp_seo_plain( $name ) : (string) get_bloginfo( 'name' );
+
+	$email = lp_seo_option_field( 'seo_org_email' );
+	if ( ! is_string( $email ) || '' === $email ) {
+		$email = lp_seo_option_field( 'contact_email' );
+	}
+	if ( ! is_string( $email ) || '' === $email ) {
+		$email = 'hello@londonparkour.com';
+	}
+
 	$org = array(
-		'@type' => array( 'SportsActivityLocation', 'LocalBusiness' ),
-		'@id'   => lp_seo_org_id(),
-		'name'  => get_bloginfo( 'name' ),
-		'url'   => home_url( '/' ),
-		'email' => 'hello@londonparkour.com',
+		'@type'      => 1 === count( $types ) ? $types[0] : $types,
+		'@id'        => lp_seo_org_id(),
+		'name'       => $name,
+		'url'        => home_url( '/' ),
+		'email'      => $email,
 		'areaServed' => array(
 			'@type' => 'City',
 			'name'  => 'London',
 		),
-		'sameAs' => array(
-			'https://www.instagram.com/london_parkour',
-			'https://youtube.com/@londonparkour',
-			'https://www.facebook.com/ldnpk',
-		),
+		'sameAs'     => lp_seo_org_same_as(),
 	);
+
+	$phone = lp_seo_option_field( 'seo_org_phone' );
+	if ( is_string( $phone ) && '' !== lp_seo_plain( $phone ) ) {
+		$org['telephone'] = lp_seo_plain( $phone );
+	}
 
 	$image = lp_seo_image();
 	if ( $image ) {
-		$org['image']  = $image['url'];
-		$org['logo']   = $image['url'];
+		$org['image'] = $image['url'];
+		$org['logo']  = $image['url'];
 	}
 
 	$rating = lp_seo_aggregate_rating();
@@ -600,6 +937,10 @@ function lp_seo_website_node(): array {
  * @return array<string, mixed>|null
  */
 function lp_seo_breadcrumb_node(): ?array {
+	if ( lp_seo_post_flag( 'seo_disable_breadcrumbs' ) ) {
+		return null;
+	}
+
 	$items = array(
 		array(
 			'name' => get_bloginfo( 'name' ),
@@ -828,6 +1169,10 @@ function lp_seo_faq_pairs(): array {
  * @return array<string, mixed>|null
  */
 function lp_seo_faq_node(): ?array {
+	if ( lp_seo_post_flag( 'seo_disable_faq' ) ) {
+		return null;
+	}
+
 	$pairs = lp_seo_faq_pairs();
 	if ( ! $pairs ) {
 		return null;
@@ -1197,6 +1542,10 @@ function lp_seo_pack_offer_nodes(): array {
  * Whether the current view should emit pack Offers.
  */
 function lp_seo_should_emit_packs(): bool {
+	if ( lp_seo_post_flag( 'seo_disable_offers' ) ) {
+		return false;
+	}
+
 	if ( is_front_page() ) {
 		return true;
 	}
@@ -1214,8 +1563,23 @@ function lp_seo_should_emit_packs(): bool {
  * @return array<string, mixed>
  */
 function lp_seo_webpage_node(): array {
+	$allowed = array(
+		'WebPage',
+		'AboutPage',
+		'ContactPage',
+		'CollectionPage',
+		'ItemPage',
+		'ProfilePage',
+		'FAQPage',
+		'SearchResultsPage',
+	);
+	$type = (string) ( lp_seo_post_field( 'seo_webpage_type' ) ?? '' );
+	if ( ! in_array( $type, $allowed, true ) ) {
+		$type = 'WebPage';
+	}
+
 	$node = array(
-		'@type'      => 'WebPage',
+		'@type'      => $type,
 		'@id'        => lp_seo_canonical_url() . '#webpage',
 		'url'        => lp_seo_canonical_url(),
 		'name'       => wp_get_document_title(),
@@ -1254,7 +1618,12 @@ function lp_seo_graph(): array {
 
 	$faq = lp_seo_faq_node();
 	if ( $faq ) {
-		$graph[] = $faq;
+		$webpage_type = $graph[2]['@type'] ?? '';
+		if ( 'FAQPage' === $webpage_type ) {
+			$graph[2]['mainEntity'] = $faq['mainEntity'];
+		} else {
+			$graph[] = $faq;
+		}
 	}
 
 	if ( is_singular( 'clasbpro_class' ) ) {
@@ -1274,6 +1643,10 @@ function lp_seo_graph(): array {
 		foreach ( lp_seo_pack_offer_nodes() as $offer ) {
 			$graph[] = $offer;
 		}
+	}
+
+	foreach ( lp_seo_extra_schema_nodes() as $extra ) {
+		$graph[] = $extra;
 	}
 
 	return array(

@@ -574,6 +574,21 @@ function lp_seed_homepage( array $media ): void {
 	}
 
 	update_field( 'page_sections', $rows, $front_id );
+
+	$title = function_exists( 'lp_seo_default_site_title' )
+		? lp_seo_default_site_title()
+		: 'London Parkour | Practical Movement Training & Classes';
+	update_field( 'seo_title', $title, $front_id );
+	update_field( 'seo_title', $title, 'option' );
+
+	$image_id = function_exists( 'lp_seo_default_image_id' ) ? lp_seo_default_image_id() : 0;
+	if ( $image_id > 0 ) {
+		update_field( 'seo_image', $image_id, $front_id );
+		update_field( 'seo_image', $image_id, 'option' );
+	}
+
+	update_field( 'seo_org_types', array( 'SportsClub', 'LocalBusiness' ), 'option' );
+
 	WP_CLI::log( sprintf( '  + homepage (#%d) with %d row(s)', $front_id, count( $rows ) ) );
 }
 

@@ -62,6 +62,98 @@
             "type": "url",
             "instructions": "School-wide chat.whatsapp.com invite. Used on paid booking confirmations when the class and site have no URL of their own. Never output on an unconfirmed visit.",
             "key": "field_54becc274fd82508"
+        },
+        {
+            "name": "tab_seo",
+            "label": "SEO",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0,
+            "key": "field_8d48c35e5dd00c33"
+        },
+        {
+            "name": "seo_title",
+            "label": "Default title",
+            "type": "text",
+            "maxlength": 70,
+            "instructions": "Homepage title, and the fallback when a page has no SEO title. Aim for 30–60 characters.",
+            "key": "field_f551bbadaec07726"
+        },
+        {
+            "name": "seo_description",
+            "label": "Default description",
+            "type": "textarea",
+            "rows": 3,
+            "new_lines": "",
+            "maxlength": 200,
+            "instructions": "Fallback meta / Open Graph description when a page has none of its own. Aim for ~150–160 characters.",
+            "key": "field_24a381d7169b527f"
+        },
+        {
+            "name": "seo_image",
+            "label": "Default share image",
+            "type": "image",
+            "return_format": "id",
+            "preview_size": "medium",
+            "instructions": "og:image when a page has no SEO image and no featured image. Landscape, at least 1200×630.",
+            "key": "field_36b79415ea8f60de"
+        },
+        {
+            "name": "seo_org_types",
+            "label": "Organisation schema types",
+            "type": "checkbox",
+            "layout": "vertical",
+            "choices": {
+                "SportsClub": "SportsClub",
+                "LocalBusiness": "LocalBusiness",
+                "SportsActivityLocation": "SportsActivityLocation",
+                "SportsOrganization": "SportsOrganization",
+                "Organization": "Organization"
+            },
+            "default_value": [
+                "SportsClub",
+                "LocalBusiness"
+            ],
+            "instructions": "JSON-LD @type for the organisation node. SportsClub + LocalBusiness is the default.",
+            "key": "field_2a459694216b6074"
+        },
+        {
+            "name": "seo_org_name",
+            "label": "Organisation name",
+            "type": "text",
+            "instructions": "Defaults to the WordPress site title when empty.",
+            "key": "field_8067488d9cd60d4b"
+        },
+        {
+            "name": "seo_org_email",
+            "label": "Organisation email",
+            "type": "email",
+            "instructions": "Shown on the organisation node. Falls back to Contact email, then hello@londonparkour.com.",
+            "key": "field_6aa619894ab58e3b"
+        },
+        {
+            "name": "seo_org_phone",
+            "label": "Organisation phone",
+            "type": "text",
+            "instructions": "E.164 if possible, e.g. +44 20 1234 5678. Leave empty to omit.",
+            "key": "field_2426fefb16e2785f"
+        },
+        {
+            "name": "seo_same_as",
+            "label": "sameAs profiles",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Add profile URL",
+            "instructions": "Instagram, YouTube, Facebook, GBP, etc. Leave empty to keep the three built-in profiles.",
+            "sub_fields": [
+                {
+                    "name": "url",
+                    "label": "URL",
+                    "type": "url",
+                    "key": "field_bcdc3bc4d89c5781"
+                }
+            ],
+            "key": "field_e67a30cf0bd8dee4"
         }
     ]
 }
