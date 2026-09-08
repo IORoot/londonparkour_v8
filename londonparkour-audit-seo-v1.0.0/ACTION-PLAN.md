@@ -147,13 +147,20 @@ caching with sensible exclusions for the booking flow.
 **Check:** TTFB on localhost under 100 ms for a cached page; the timetable still
 reflects a new session within its TTL.
 
-### 10. Stop loading booking assets where nothing can be booked · S
-67 KB of `cbfs-*.js` loads on `/contact/`, `/tutorials/` and `/blog/`.
-Conditionally dequeue on templates with no booking surface — do not modify the
-plugin.
+### 10. ~~Stop loading booking assets where nothing can be booked~~ · **DONE 2026-09-08**
 
-**Check:** zero `cbfs-*` assets on `/tutorials/`, `/blog/` and `/contact/`; the
-booking form still works on `/classes/` and single class pages.
+Theme dequeue in `app/setup/clasbpro.php` (`lp_clasbpro_needs_booking_assets()`).
+Plugin untouched. Assets stay on homepage, `/classes/`, class pages, `/coupons/`,
+`/private-coaching/`, `/workshops/`, and pages with a Hero, Pricing, or Classes
+block or a clasbpro shortcode.
+
+**Checks — passing:**
+
+| check | result |
+|---|---|
+| `/contact/`, `/tutorials/`, `/blog/`, `/about/`, `/docs/`, `/classes-map/` | zero `cbfs-*` files; no `#lp-booking-drawer` |
+| `/`, `/classes/`, `/coupons/`, `/private-coaching/`, `/workshops/`, a class URL | 5 `cbfs-*` JS files + drawer |
+| BOOK on `/classes/` Evening Intermediate Outdoor | drawer loads name / date / seats / coupon form |
 
 ### 11. Move `/classes-map/` spots to a JSON endpoint · M
 The page renders all 304 spots server-side into 1.07 MB of HTML. Serve them from

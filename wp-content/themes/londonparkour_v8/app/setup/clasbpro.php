@@ -105,10 +105,99 @@ function lp_clasbpro_enable_theme_forms(): void {
 add_action( 'init', 'lp_clasbpro_enable_theme_forms', 30 );
 
 /**
+ * Whether this request has a booking / coupon purchase surface.
+ *
+ * Clasbpro enqueues globally so AJAX-injected forms still work. That puts
+ * ~67 KB of `cbfs-*.js` on pages that cannot book. Gate the theme enqueue,
+ * the drawer shell, and dequeue the plugin's global handles here — do not
+ * patch the plugin.
+ */
+function lp_clasbpro_needs_booking_assets(): bool {
+	static $need = null;
+
+	if ( null !== $need ) {
+		return $need;
+	}
+
+	$need = false;
+
+	if ( is_admin() ) {
+		return $need;
+	}
+
+	if ( is_singular( 'clasbpro_class' ) || is_post_type_archive( 'clasbpro_class' ) ) {
+		$need = true;
+		return $need;
+	}
+
+	if ( is_front_page() ) {
+		$need = true;
+		return $need;
+	}
+
+	$templates = array(
+		'templates/classes-agenda.php',
+		'templates/private-coaching.php',
+		'templates/coupons.php',
+		'templates/workshops-overview.php',
+		'templates/workshop-detail.php',
+		'templates/booking-status.php',
+	);
+	foreach ( $templates as $template ) {
+		if ( is_page_template( $template ) ) {
+			$need = true;
+			return $need;
+		}
+	}
+
+	if ( is_page( array( 'classes', 'coupons', 'private-coaching', 'workshops', 'booking-confirmed', 'booking-cancelled', 'booking-error', 'blocks-qa' ) ) ) {
+		$need = true;
+		return $need;
+	}
+
+	$post = get_queried_object();
+	if ( $post instanceof WP_Post && function_exists( 'has_shortcode' ) ) {
+		$content = (string) $post->post_content;
+		$tags    = array( 'clasbpro_booking', 'clasbpro_booking_status', 'clasbpro_schedule', 'clasbpro_coupons', 'clasbpro_packs' );
+		foreach ( $tags as $tag ) {
+			if ( has_shortcode( $content, $tag ) ) {
+				$need = true;
+				return $need;
+			}
+		}
+	}
+
+	if ( $post instanceof WP_Post && function_exists( 'get_field' ) ) {
+		$sections = get_field( 'page_sections', (int) $post->ID );
+		if ( is_array( $sections ) ) {
+			foreach ( $sections as $row ) {
+				if ( ! is_array( $row ) ) {
+					continue;
+				}
+				$layout = str_replace( '_', '-', (string) ( $row['acf_fc_layout'] ?? '' ) );
+				if ( in_array( $layout, array( 'hero', 'pricing', 'classes' ), true ) ) {
+					$need = true;
+					return $need;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Filter whether clasbpro booking assets load on this request.
+	 *
+	 * @param bool $need True when a booking or coupon surface is present.
+	 */
+	$need = (bool) apply_filters( 'lp_clasbpro_needs_booking_assets', $need );
+
+	return $need;
+}
+
+/**
  * Localise the panel drawer REST endpoint onto the main bundle.
  */
 function lp_clasbpro_localize_booking(): void {
-	if ( ! defined( 'CLASBOWPRO_REST_NS' ) ) {
+	if ( ! defined( 'CLASBOWPRO_REST_NS' ) || ! lp_clasbpro_needs_booking_assets() ) {
 		return;
 	}
 
@@ -150,10 +239,49 @@ function lp_clasbpro_localize_booking(): void {
 add_action( 'wp_enqueue_scripts', 'lp_clasbpro_localize_booking', 20 );
 
 /**
+ * Drop clasbpro's global enqueue on pages with no booking surface.
+ *
+ * Plugin `register_assets` and `enqueue_form_select_style` (priority 999)
+ * always print `cbfs-*` CSS/JS. Theme bootstrap retouches deps at 1000.
+ * Run after both.
+ */
+function lp_clasbpro_dequeue_unused_assets(): void {
+	if ( lp_clasbpro_needs_booking_assets() ) {
+		return;
+	}
+
+	$scripts = array(
+		'clasbpro',
+		'clasbpro-packs',
+		'clasbpro-calendar-core',
+		'clasbpro-appointment-calendar',
+		'clasbpro-class-date-calendar',
+		'clasbpro-global-schedule',
+	);
+	$styles  = array(
+		'clasbpro',
+		'clasbpro-packs',
+		'clasbpro-appointment-calendar',
+		'clasbpro-form-select',
+		'clasbpro-theme-pack',
+		'clasbpro-status-themes',
+		'clasbpro-global-schedule',
+	);
+
+	foreach ( $scripts as $handle ) {
+		wp_dequeue_script( $handle );
+	}
+	foreach ( $styles as $handle ) {
+		wp_dequeue_style( $handle );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'lp_clasbpro_dequeue_unused_assets', 1001 );
+
+/**
  * Shared right-panel drawer (clasbpro shortcode HTML injected by JS).
  */
 function lp_clasbpro_booking_drawer(): void {
-	if ( is_admin() ) {
+	if ( is_admin() || ! lp_clasbpro_needs_booking_assets() ) {
 		return;
 	}
 	?>

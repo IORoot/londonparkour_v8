@@ -319,9 +319,20 @@ get_header();
 				?>
 			</div>
 			<div class="flex flex-col gap-8 w-full">
-				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.88] m-0 pb-3">
-					<span class="block text-neutral-content">Work hard.</span>
-					<span class="block text-primary">Enjoy it.</span>
+				<h1 class="m-0 max-w-full text-neutral-content">
+					<span class="sr-only">London Parkour</span>
+					<span aria-hidden="true">
+						<?php
+						lp_part(
+							'brand/logo',
+							array(
+								'width'       => 800,
+								'color_class' => 'text-neutral-content max-w-full h-auto',
+								'label'       => 'London Parkour',
+							)
+						);
+						?>
+					</span>
 				</h1>
 				<p class="font-body text-[14px] font-normal tracking-[0.1px] leading-[1.55] text-neutral-content/50 m-0 max-w-[560px]"><?php echo esc_html( $lp_hero_dek ); ?></p>
 			</div>
