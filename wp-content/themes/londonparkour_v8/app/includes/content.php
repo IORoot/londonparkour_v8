@@ -791,17 +791,20 @@ function lp_location_kind( int $lp_id ): string {
 }
 
 /**
- * Published lp_location posts filtered by kind.
+ * lp_location posts filtered by kind.
+ *
+ * Sites are public (`publish`). Spots are map-only and stored as `private`.
  *
  * @param string $lp_kind site|spot.
  * @return WP_Post[]
  */
 function lp_locations_by_kind( string $lp_kind = 'site' ): array {
-	$lp_kind  = 'spot' === $lp_kind ? 'spot' : 'site';
-	$lp_posts = get_posts(
+	$lp_kind        = 'spot' === $lp_kind ? 'spot' : 'site';
+	$lp_spot_status = function_exists( 'lp_location_spot_status' ) ? lp_location_spot_status() : 'private';
+	$lp_posts       = get_posts(
 		array(
 			'post_type'      => 'lp_location',
-			'post_status'    => 'publish',
+			'post_status'    => 'spot' === $lp_kind ? array( $lp_spot_status, 'publish' ) : 'publish',
 			'posts_per_page' => -1,
 			'orderby'        => 'menu_order title',
 			'order'          => 'ASC',

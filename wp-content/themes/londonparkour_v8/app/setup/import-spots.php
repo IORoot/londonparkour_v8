@@ -90,7 +90,7 @@ function lp_cli_import_spots( $args, $assoc_args ) {
 			$candidates = get_posts(
 				array(
 					'post_type'      => 'lp_location',
-					'post_status'    => 'publish',
+					'post_status'    => array( 'publish', 'private' ),
 					'posts_per_page' => 50,
 					'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						'relation' => 'AND',
@@ -139,7 +139,7 @@ function lp_cli_import_spots( $args, $assoc_args ) {
 
 		$postarr = array(
 			'post_type'    => 'lp_location',
-			'post_status'  => 'publish',
+			'post_status'  => function_exists( 'lp_location_spot_status' ) ? lp_location_spot_status() : 'private',
 			'post_title'   => $name,
 			'post_name'    => $slug,
 			'post_excerpt' => $excerpt,

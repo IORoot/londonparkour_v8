@@ -5,8 +5,9 @@
  * Public sites live at `/classes/locations/{slug}/`. The clasbpro class CPT
  * already owns `/classes/{slug}/`, so location rules are registered `top` and
  * the rewrite slug is forced here even if ACF JSON is stale. Map-only spots
- * stay off the front-end (404, no archive, no sitemap). Old `/locations/{slug}/`
- * URLs 301 to the new path for sites.
+ * are stored as `private` so they cannot enter a sitemap or the REST API, and
+ * they 404 on the front-end. Old `/locations/{slug}/` URLs 301 to the new path
+ * for sites.
  *
  * @package londonparkour_v8
  */
@@ -73,6 +74,110 @@ function lp_location_maybe_flush_rewrites(): void {
 	update_option( $flag, 1, true );
 }
 add_action( 'init', 'lp_location_maybe_flush_rewrites', 99 );
+
+/**
+ * Post status for map-only spots. Not `publish`: a sitemap generator would
+ * otherwise enumerate every spot and hand Google hundreds of soft-404s.
+ *
+ * @return string
+ */
+function lp_location_spot_status(): string {
+	return 'private';
+}
+
+/**
+ * Move every published kind=spot location to the map-only status.
+ *
+ * @return int Number of posts updated.
+ */
+function lp_location_privatise_spots(): int {
+	$ids = get_posts(
+		array(
+			'post_type'              => 'lp_location',
+			'post_status'            => 'publish',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'   => 'location_kind',
+					'value' => 'spot',
+				),
+			),
+		)
+	);
+
+	$count = 0;
+	foreach ( $ids as $id ) {
+		$id     = (int) $id;
+		$result = wp_update_post(
+			array(
+				'ID'          => $id,
+				'post_status' => lp_location_spot_status(),
+			),
+			true
+		);
+		if ( ! is_wp_error( $result ) && $result ) {
+			++$count;
+		}
+	}
+
+	return $count;
+}
+
+/**
+ * One-shot: published spots become private so C1 cannot sitemap them.
+ */
+function lp_location_maybe_privatise_spots(): void {
+	$flag = 'lp_location_spots_private_v1';
+	if ( get_option( $flag ) ) {
+		return;
+	}
+
+	lp_location_privatise_spots();
+	update_option( $flag, 1, true );
+}
+add_action( 'init', 'lp_location_maybe_privatise_spots', 99 );
+
+/**
+ * Spots stay private even if an editor hits Publish, or an import forgets.
+ *
+ * @param int|string $post_id ACF may pass a non-post id (user_1, option).
+ */
+function lp_location_force_spot_private( $post_id ): void {
+	static $busy = false;
+	if ( $busy || ! is_numeric( $post_id ) ) {
+		return;
+	}
+
+	$post_id = (int) $post_id;
+	if ( $post_id < 1 || 'lp_location' !== get_post_type( $post_id ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'lp_location_kind' ) || 'spot' !== lp_location_kind( $post_id ) ) {
+		return;
+	}
+
+	$status = (string) get_post_status( $post_id );
+	$want   = lp_location_spot_status();
+	if ( $want === $status || in_array( $status, array( 'trash', 'auto-draft' ), true ) ) {
+		return;
+	}
+
+	$busy = true;
+	wp_update_post(
+		array(
+			'ID'          => $post_id,
+			'post_status' => $want,
+		)
+	);
+	$busy = false;
+}
+add_action( 'save_post_lp_location', 'lp_location_force_spot_private', 20 );
+add_action( 'acf/save_post', 'lp_location_force_spot_private', 20 );
 
 /**
  * Meta query that keeps only class sites (kind=site, or the field missing).
@@ -205,3 +310,14 @@ function lp_location_sitemap_query_args( array $args, string $post_type ): array
 	return $args;
 }
 add_filter( 'wp_sitemaps_posts_query_args', 'lp_location_sitemap_query_args', 10, 2 );
+
+/**
+ * Same gate if the location CPT is ever shown in REST.
+ *
+ * @param array $args WP_Query args for the REST collection.
+ * @return array
+ */
+function lp_location_rest_query_args( array $args ): array {
+	return lp_location_sitemap_query_args( $args, 'lp_location' );
+}
+add_filter( 'rest_lp_location_query', 'lp_location_rest_query_args' );

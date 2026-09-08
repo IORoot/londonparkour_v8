@@ -45,6 +45,111 @@ function lp_seo_boot(): void {
 add_action( 'wp', 'lp_seo_boot' );
 
 /**
+ * WordPress 7.1 added is_sitemap() but forgot to exempt it in handle_404(),
+ * unlike is_robots() / is_favicon(). The XML still renders; the status is 404.
+ * Short-circuit that so crawlers actually accept the sitemap.
+ *
+ * Must be registered at load time — handle_404() runs before the `wp` action.
+ *
+ * @param bool     $bypass Whether to skip default 404 handling.
+ * @param WP_Query $query  Main query.
+ * @return bool
+ */
+function lp_seo_sitemap_pre_handle_404( $bypass, $query ) {
+	if ( $bypass ) {
+		return $bypass;
+	}
+	if ( ! $query instanceof WP_Query ) {
+		return $bypass;
+	}
+	if ( $query->get( 'sitemap-stylesheet' ) ) {
+		status_header( 200 );
+		return true;
+	}
+
+	$sitemap = (string) $query->get( 'sitemap' );
+	if ( '' === $sitemap ) {
+		return $bypass;
+	}
+
+	if ( 'index' === $sitemap ) {
+		status_header( 200 );
+		return true;
+	}
+
+	$provider = wp_sitemaps_get_server()->registry->get_provider( $sitemap );
+	if ( $provider ) {
+		status_header( 200 );
+		return true;
+	}
+
+	return $bypass;
+}
+add_filter( 'pre_handle_404', 'lp_seo_sitemap_pre_handle_404', 10, 2 );
+
+/**
+ * Author archives are not a public surface here — keep /author/admin/ out of
+ * the sitemap (and close the username-disclosure vector the audit flagged).
+ *
+ * @param WP_Sitemaps_Provider|false $provider Provider instance, or false to skip.
+ * @param string                     $name     Provider name.
+ * @return WP_Sitemaps_Provider|false
+ */
+function lp_seo_sitemap_providers( $provider, string $name ) {
+	if ( 'users' === $name ) {
+		return false;
+	}
+
+	return $provider;
+}
+add_filter( 'wp_sitemaps_add_provider', 'lp_seo_sitemap_providers', 10, 2 );
+
+/**
+ * Keep noindex / utility pages out of the post sitemaps.
+ *
+ * @param array  $args      WP_Query args for the sitemap.
+ * @param string $post_type Post type being listed.
+ * @return array
+ */
+function lp_seo_sitemap_posts_query_args( array $args, string $post_type ): array {
+	$exclude = array();
+
+	if ( 'page' === $post_type ) {
+		foreach ( array( 'blocks-qa', 'booking-error', 'booking-cancelled', 'booking-confirmed' ) as $slug ) {
+			$page = get_page_by_path( $slug );
+			if ( $page instanceof WP_Post ) {
+				$exclude[] = (int) $page->ID;
+			}
+		}
+	}
+
+	$noindex = get_posts(
+		array(
+			'post_type'      => $post_type,
+			'post_status'    => 'publish',
+			'posts_per_page' => 200,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'meta_key'       => 'seo_noindex', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'     => '1', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		)
+	);
+	foreach ( $noindex as $id ) {
+		$exclude[] = (int) $id;
+	}
+
+	if ( ! $exclude ) {
+		return $args;
+	}
+
+	$existing             = array_map( 'intval', (array) ( $args['post__not_in'] ?? array() ) );
+	$args['post__not_in'] = array_values( array_unique( array_merge( $existing, $exclude ) ) );
+
+	return $args;
+}
+add_filter( 'wp_sitemaps_posts_query_args', 'lp_seo_sitemap_posts_query_args', 10, 2 );
+
+/**
  * Built-in homepage title when Site Settings has none.
  */
 function lp_seo_default_site_title(): string {
@@ -798,6 +903,7 @@ function lp_seo_extra_schema_nodes(): array {
 		return array();
 	}
 
+	// No HowTo — Google deprecated HowTo rich results in September 2023.
 	$allowed = array(
 		'Service',
 		'Person',
@@ -807,7 +913,6 @@ function lp_seo_extra_schema_nodes(): array {
 		'Event',
 		'VideoObject',
 		'Offer',
-		'HowTo',
 		'Organization',
 	);
 	$nodes = array();
@@ -1349,7 +1454,7 @@ function lp_seo_class_nodes( int $class_id ): array {
 			'startDate'        => $start->format( DATE_ATOM ),
 			'endDate'          => $end->format( DATE_ATOM ),
 			'eventStatus'      => ! empty( $session['sold_out'] )
-				? 'https://schema.org/EventScheduled'
+				? 'https://schema.org/EventSoldOut'
 				: 'https://schema.org/EventScheduled',
 			'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
 			'organizer'        => array( '@id' => lp_seo_org_id() ),

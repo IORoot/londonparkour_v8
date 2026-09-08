@@ -1094,6 +1094,11 @@ return array(
 						'type'          => 'select',
 						'allow_null'    => 0,
 						'ui'            => 1,
+						/*
+						 * No HowTo — Google deprecated HowTo rich results in
+						 * September 2023, so offering it invites markup that
+						 * can never earn a result.
+						 */
 						'choices'       => array(
 							'Service'      => 'Service',
 							'Person'       => 'Person',
@@ -1103,7 +1108,6 @@ return array(
 							'Event'        => 'Event',
 							'VideoObject'  => 'VideoObject',
 							'Offer'        => 'Offer',
-							'HowTo'        => 'HowTo',
 							'Organization' => 'Organization',
 						),
 					),

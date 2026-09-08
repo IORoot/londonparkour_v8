@@ -64,7 +64,7 @@ $lp_glyph_id  = (string) ( $args['glyph_id'] ?? '' );
 $lp_photo = array(
 	'image_id'  => $lp_image_id,
 	'image_url' => $lp_image_url,
-	'size'      => 'lp_wide',
+	'size'      => 'lp_wide_sm',
 	'sizes'     => '(min-width: 1024px) 33vw, 100vw',
 );
 
@@ -141,7 +141,7 @@ if ( $lp_is_lesson ) :
 						$lp_photo,
 						array(
 							'layout' => 'fill',
-							'size'   => 'lp_wide',
+							'size'   => 'lp_wide_sm',
 							'sizes'  => '248px',
 						)
 					)

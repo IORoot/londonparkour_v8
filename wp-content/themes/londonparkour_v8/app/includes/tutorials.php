@@ -1863,23 +1863,33 @@ function lp_series_project_shelf( int $term_id ): ?array {
 }
 
 /**
- * Map `/tutorials/series` and `/tutorials/category` onto the seeded pages.
+ * Top-priority rules for the paths the `/tutorials/` archive would otherwise eat.
  *
  * The tutorial CPT archive owns `/tutorials/`, so without a top rewrite a
  * tutorial slug of `series` or `category` (or the archive's rewrite) would
  * 404 those paths.
+ *
+ * Archive pagination needs the same treatment. Because the CPT is registered
+ * with `pages => true`, WordPress generates the single-tutorial rule as
+ * `tutorials/([^/]+)(?:/([0-9]+))?/?$` and places it well above its own
+ * `tutorials/page/([0-9]+)/?$` archive rule. `/tutorials/page/2/` therefore
+ * matches the singular rule first, resolving to `lp_tutorial=page&page=2` —
+ * no tutorial has the slug `page`, so every paginated archive URL 404s and
+ * every tutorial past the first page becomes unreachable. Registering the
+ * archive rule `top` puts it back in front.
  */
 function lp_tutorials_series_rewrite(): void {
 	add_rewrite_rule( '^tutorials/series/?$', 'index.php?pagename=tutorials-series', 'top' );
 	add_rewrite_rule( '^tutorials/category/?$', 'index.php?pagename=tutorials-category', 'top' );
+	add_rewrite_rule( '^tutorials/page/([0-9]{1,})/?$', 'index.php?post_type=lp_tutorial&paged=$matches[1]', 'top' );
 }
 add_action( 'init', 'lp_tutorials_series_rewrite', 10 );
 
 /**
- * Flush rewrites once after the series/category view rules are registered.
+ * Flush rewrites once after the series/category/pagination rules are registered.
  */
 function lp_tutorials_series_maybe_flush(): void {
-	$flag = 'lp_tutorials_view_rewrite_v1';
+	$flag = 'lp_tutorials_view_rewrite_v2';
 	if ( get_option( $flag ) ) {
 		return;
 	}

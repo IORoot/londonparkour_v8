@@ -50,7 +50,7 @@
  * It only has something to show when there is more than one page.
  *
  * Numbered page pagination is separate: the main query is paged
- * (120 per page, set in lp_filter_tutorial_archive()), and when there
+ * (48 per page, set in lp_filter_tutorial_archive()), and when there
  * is more than one page the shared `components/pagination` band mounts
  * after the board via `lp_pagination_args( …, 'VIDEOS' )`.
  *

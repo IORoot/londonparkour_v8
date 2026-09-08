@@ -196,7 +196,7 @@ function lp_filter_tutorial_archive( WP_Query $lp_query ): void {
 	}
 
 	$lp_query->set( 'lp_natural_order', true );
-	$lp_query->set( 'posts_per_page', 120 );
+	$lp_query->set( 'posts_per_page', 48 );
 }
 add_action( 'pre_get_posts', 'lp_filter_tutorial_archive' );
 
