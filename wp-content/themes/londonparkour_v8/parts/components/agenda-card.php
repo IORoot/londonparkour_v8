@@ -17,7 +17,7 @@
  * @param string $args['time']
  * @param int    $args['media_id']
  * @param string $args['media_url']
- * @param string $args['media_alt']
+ * @param string $args['media_alt']  Omit to inherit the attachment alt, then the session title.
  * @param string $args['glyph_icon_id'] Default 'glyph-flowing'.
  * @param string $args['kicker']
  * @param string $args['title']
@@ -202,18 +202,22 @@ if ( $lp_can_book ) {
 	<div class="<?php echo lp_classes( $lp_media[ $lp_size ] ); ?>">
 		<?php
 		if ( $lp_has_media ) {
-			lp_part(
-				'components/media-photo',
-				array(
-					'image_id'  => $lp_media_id,
-					'image_url' => $lp_media_url,
-					'alt'       => (string) ( $args['media_alt'] ?? '' ),
-					'scrim'     => 'none',
-					'size'      => 'lp_wide',
-					'sizes'     => '(min-width: 768px) 340px, 100vw',
-					'class'     => $lp_past ? 'opacity-60' : '',
-				)
+			$lp_photo = array(
+				'image_id'  => $lp_media_id,
+				'image_url' => $lp_media_url,
+				'scrim'     => 'none',
+				'size'      => 'lp_wide',
+				'sizes'     => '(min-width: 768px) 340px, 100vw',
+				'class'     => $lp_past ? 'opacity-60' : '',
 			);
+			$lp_alt = trim( (string) ( $args['media_alt'] ?? '' ) );
+			if ( '' === $lp_alt ) {
+				$lp_alt = $lp_title_t;
+			}
+			if ( '' !== $lp_alt ) {
+				$lp_photo['alt'] = $lp_alt;
+			}
+			lp_part( 'components/media-photo', $lp_photo );
 		}
 		?>
 		<?php if ( '' !== $lp_hover_mode ) : ?>

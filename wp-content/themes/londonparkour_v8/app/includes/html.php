@@ -337,6 +337,62 @@ function lp_youtube_id_from_url( string $url ): string {
 }
 
 /**
+ * Cached YouTube duration + upload date for VideoObject.
+ *
+ * @return array{duration: string, uploadDate: string}
+ */
+function lp_youtube_video_meta( string $youtube_id ): array {
+	$empty = array(
+		'duration'   => '',
+		'uploadDate' => '',
+	);
+
+	$youtube_id = lp_youtube_id_from_url( $youtube_id );
+	if ( '' === $youtube_id ) {
+		return $empty;
+	}
+
+	$key  = 'lp_yt_meta_' . $youtube_id;
+	$hit  = get_transient( $key );
+	if ( is_array( $hit ) && ( isset( $hit['duration'] ) || isset( $hit['uploadDate'] ) ) ) {
+		return array(
+			'duration'   => (string) ( $hit['duration'] ?? '' ),
+			'uploadDate' => (string) ( $hit['uploadDate'] ?? '' ),
+		);
+	}
+
+	$response = wp_remote_get(
+		'https://www.youtube.com/watch?v=' . rawurlencode( $youtube_id ),
+		array(
+			'timeout'    => 8,
+			'user-agent' => 'Mozilla/5.0 (compatible; LondonParkour/1.0; +https://londonparkour.com/)',
+		)
+	);
+
+	$out = $empty;
+	if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
+		$body = (string) wp_remote_retrieve_body( $response );
+		if ( preg_match( '/"lengthSeconds":"(\d+)"/', $body, $match ) ) {
+			$secs = (int) $match[1];
+			if ( $secs > 0 ) {
+				$out['duration'] = 'PT' . $secs . 'S';
+			}
+		}
+		if ( preg_match( '/"(?:publishDate|uploadDate)":"([^"]+)"/', $body, $match ) ) {
+			$ts = strtotime( $match[1] );
+			if ( $ts ) {
+				$out['uploadDate'] = gmdate( 'c', $ts );
+			}
+		}
+	}
+
+	$ttl = ( '' !== $out['duration'] || '' !== $out['uploadDate'] ) ? WEEK_IN_SECONDS : HOUR_IN_SECONDS;
+	set_transient( $key, $out, $ttl );
+
+	return $out;
+}
+
+/**
  * Numeric Vimeo id from a vimeo.com or player.vimeo.com URL.
  *
  * @param string $url Full Vimeo URL.

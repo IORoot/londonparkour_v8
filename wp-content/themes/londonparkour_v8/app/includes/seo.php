@@ -302,6 +302,10 @@ function lp_seo_title(): string {
 		}
 	}
 
+	if ( is_post_type_archive( 'lp_coach' ) ) {
+		return apply_filters( 'lp_seo_title', 'Parkour Coaches in London' );
+	}
+
 	return apply_filters( 'lp_seo_title', '' );
 }
 
@@ -1539,13 +1543,26 @@ function lp_seo_class_nodes( int $class_id ): array {
 	$video_url = function_exists( 'get_field' ) ? (string) get_field( 'video_url', $class_id ) : '';
 	$video_id  = function_exists( 'lp_youtube_id_from_url' ) ? lp_youtube_id_from_url( $video_url ) : '';
 	if ( '' !== $video_id ) {
-		$nodes[] = lp_seo_video_node(
+		$video = lp_seo_video_node(
 			$title,
 			$permalink,
 			$video_id,
 			$about,
 			$image['url'] ?? ''
 		);
+		$yt    = function_exists( 'lp_youtube_video_meta' ) ? lp_youtube_video_meta( $video_id ) : array();
+		if ( ! empty( $yt['duration'] ) ) {
+			$video['duration'] = $yt['duration'];
+		}
+		if ( ! empty( $yt['uploadDate'] ) ) {
+			$video['uploadDate'] = $yt['uploadDate'];
+		} else {
+			$published = get_the_date( DATE_ATOM, $class_id );
+			if ( $published ) {
+				$video['uploadDate'] = $published;
+			}
+		}
+		$nodes[] = $video;
 	}
 
 	return $nodes;

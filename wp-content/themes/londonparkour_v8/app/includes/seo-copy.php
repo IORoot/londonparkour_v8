@@ -31,7 +31,7 @@ function lp_seo_page_defaults(): array {
 			'Find your class on the map, then scroll for meeting points and travel details. Every site is a ten-minute walk from a station.',
 		),
 		'coupons'            => array(
-			'Parkour Class Packs | No Contract',
+			'Parkour Class Packs in London | No Contract',
 			'Buy a class, a pack of five, or ten. Use them at any site — Vauxhall, Old Street or Kilburn Park. No membership. No lock-in.',
 		),
 		'private-coaching'   => array(

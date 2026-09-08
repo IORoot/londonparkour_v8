@@ -87,10 +87,9 @@ get_header();
 				'href'  => lp_classes_page_url( 'classes' ),
 			),
 			'masthead' => array(
-				'title'     => 'Stride. Leap. Balance. Fly.',
-				'note'      => 'Find your class on the map, then scroll for meeting points and travel details. Every site is a ten-minute walk from a tube or overground station.',
-				'media_id'  => $lp_mast_media,
-				'media_alt' => '',
+				'title'    => 'Stride. Leap. Balance. Fly.',
+				'note'     => 'Find your class on the map, then scroll for meeting points and travel details. Every site is a ten-minute walk from a tube or overground station.',
+				'media_id' => $lp_mast_media,
 			),
 			'active'      => 'map',
 			'show_filter' => false,
