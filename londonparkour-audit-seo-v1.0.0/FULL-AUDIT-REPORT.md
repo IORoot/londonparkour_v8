@@ -153,7 +153,7 @@ and `src` is the 640px `lp_wide_sm` file. Fallback `src` payload is 2.00 MB
 `sizes` (`25vw` on `lg`) will pick 300w or 640w, so the bytes on the wire are
 lower still. See ACTION-PLAN item 5.
 
-### C5 — A 2.9 MB raw DSLR photo is the LCP element on two pages
+### C5 — A 2.9 MB raw DSLR photo is the LCP element on two pages — **FIXED 2026-09-08**
 
 `/classes/` and `/classes-map/` load:
 
@@ -172,6 +172,12 @@ entire rest of the page**.
 
 **Fix:** import via `lp_sideload_image_once()` and store the attachment ID, as
 the rest of the seeder already does.
+
+**Shipped.** Zero `demo-media` / `DSC01072` references on `/classes/` or
+`/classes-map/`. `/classes/` LCP is now `uploads/2026/08/lp_wide/french-guys.jpg`
+at **125,497 bytes** with an 8-candidate `srcset`. `/classes-map/` no longer
+uses that file either (its flagship photos are other uploads; the first still
+lacks a `srcset` — a leftover of C5's *cause*, not the 2.9 MB asset itself).
 
 ---
 
@@ -192,7 +198,7 @@ Because they are global, `/about` alone appears on all ~666 indexable URLs.
 Note `/about` has two sources. Fixing only `footer.php` leaves `menus.json` to
 reintroduce it on the next `bin/wp lp seed`.
 
-### H2 — Meta description equals the page title on 26 URLs
+### H2 — Meta description equals the page title on 26 URLs — **FIXED 2026-09-08**
 
 `lp_seo_description()` ends its fallback chain at `wp_get_document_title()`.
 Page bodies live in the ACF `page_sections` Flexible Content field, so
@@ -204,6 +210,12 @@ Hit list includes the commercial pages: `/classes/`, `/coupons/`,
 Now cheap to fix: the `seo_description` ACF field added today overrides this per
 page. ~8 pages of content entry closes the commercial exposure; widening the
 code fallback closes the rest.
+
+**Shipped.** ACF `seo_title` / `seo_description` filled on template pages,
+classes, sites, coaches, blog posts, docs, series terms, and the tutorials
+archive (via Site Settings, because `/tutorials/` is not a page). Copy is taken
+from each page's masthead note. Markdown is stripped in `lp_seo_plain()` so
+docs no longer leak `##` into the meta tag.
 
 ### H3 — 181 tutorials have transcript text that is never rendered
 

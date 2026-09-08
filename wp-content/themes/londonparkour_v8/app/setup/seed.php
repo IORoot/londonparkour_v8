@@ -608,6 +608,7 @@ function lp_seed_template_pages(): void {
 		'classes-map'      => array( 'Classes — Map', 'templates/classes-map.php' ),
 		'workshops'        => array( 'Workshops', 'templates/workshops-overview.php' ),
 		'private-coaching' => array( 'Private 1:1', 'templates/private-coaching.php' ),
+		'about'            => array( 'About', 'templates/about.php' ),
 		'coupons'          => array( 'Coupons', 'templates/coupons.php' ),
 		'contact'          => array( 'Contact', 'templates/contact.php' ),
 		'docs'             => array( 'Docs', 'templates/docs-faq.php' ),
@@ -718,6 +719,140 @@ function lp_seed_template_pages(): void {
 			}
 		}
 	}
+}
+
+/**
+ * Fill ACF SEO title + description on public pages, archives, and entries.
+ */
+function lp_seed_seo_fields(): void {
+	if ( ! function_exists( 'update_field' ) || ! function_exists( 'lp_seo_page_defaults' ) ) {
+		return;
+	}
+
+	WP_CLI::log( 'SEO titles & descriptions' );
+
+	$pages = lp_seo_page_defaults();
+	$home  = $pages[''];
+	lp_seo_write_fields( 'option', $home[0], $home[1] );
+
+	$archive = lp_seo_tutorials_archive_defaults();
+	update_field( 'seo_tutorials_title', $archive[0], 'option' );
+	update_field( 'seo_tutorials_description', $archive[1], 'option' );
+
+	$written = 0;
+	foreach ( $pages as $slug => $pair ) {
+		if ( '' === $slug ) {
+			$id = (int) get_option( 'page_on_front' );
+		} else {
+			$page = get_page_by_path( $slug );
+			$id   = $page instanceof WP_Post ? (int) $page->ID : 0;
+		}
+		if ( $id < 1 ) {
+			continue;
+		}
+		lp_seo_write_fields( $id, $pair[0], $pair[1] );
+		++$written;
+	}
+
+	foreach ( get_posts( array( 'post_type' => 'clasbpro_class', 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $post ) {
+		$body  = lp_seo_plain( (string) ( $post->post_content ?: $post->post_excerpt ) );
+		$title = get_the_title( $post ) . ' | Parkour in London';
+		if ( '' === $body ) {
+			$body = get_the_title( $post ) . ' — outdoor parkour with London Parkour.';
+		}
+		lp_seo_write_fields( (int) $post->ID, $title, $body );
+		++$written;
+	}
+
+	foreach ( get_posts( array( 'post_type' => 'lp_location', 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $post ) {
+		if ( function_exists( 'lp_location_kind' ) && 'spot' === lp_location_kind( (int) $post->ID ) ) {
+			continue;
+		}
+		$name    = get_the_title( $post );
+		$meeting = lp_seo_plain( (string) get_field( 'meeting_point', $post->ID ) );
+		$rail    = lp_seo_plain( (string) get_field( 'transport_rail', $post->ID ) );
+		$desc    = 'Outdoor parkour classes at ' . $name . ', London.';
+		if ( '' !== $meeting ) {
+			$desc .= ' Meet ' . rtrim( lcfirst( $meeting ), '.' ) . '.';
+		}
+		if ( '' !== $rail ) {
+			$desc .= ' ' . rtrim( $rail, '.' ) . '.';
+		}
+		lp_seo_write_fields( (int) $post->ID, 'Parkour Classes at ' . $name . ' | London', $desc );
+		++$written;
+	}
+
+	foreach ( get_posts( array( 'post_type' => 'lp_coach', 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $post ) {
+		$bio   = lp_seo_plain( (string) ( $post->post_content ?: get_field( 'bio', $post->ID ) ) );
+		$role  = lp_seo_plain( (string) get_field( 'role', $post->ID ) );
+		$title = get_the_title( $post ) . ' | Parkour Coach, London';
+		if ( '' === $bio ) {
+			$bio = get_the_title( $post ) . ' coaches parkour with London Parkour.';
+			if ( '' !== $role ) {
+				$bio .= ' ' . $role . '.';
+			}
+		}
+		lp_seo_write_fields( (int) $post->ID, $title, $bio );
+		++$written;
+	}
+
+	foreach ( get_posts( array( 'post_type' => 'blog', 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $post ) {
+		$desc  = lp_seo_plain( (string) ( $post->post_excerpt ?: $post->post_content ) );
+		$title = get_the_title( $post );
+		if ( mb_strlen( $title ) <= 50 ) {
+			$title .= ' | London Parkour';
+		}
+		if ( '' === $desc ) {
+			$desc = $title;
+		}
+		lp_seo_write_fields( (int) $post->ID, $title, $desc );
+		++$written;
+	}
+
+	foreach ( get_posts( array( 'post_type' => 'support', 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $post ) {
+		$overrides = lp_seo_support_defaults();
+		if ( isset( $overrides[ $post->post_name ] ) ) {
+			lp_seo_write_fields( (int) $post->ID, $overrides[ $post->post_name ][0], $overrides[ $post->post_name ][1] );
+			++$written;
+			continue;
+		}
+		$desc  = lp_seo_plain( (string) $post->post_content );
+		$title = get_the_title( $post ) . ' | London Parkour';
+		if ( '' === $desc ) {
+			$desc = get_the_title( $post ) . ' — guides and policies from London Parkour.';
+		}
+		lp_seo_write_fields( (int) $post->ID, $title, $desc );
+		++$written;
+	}
+
+	foreach ( array( 'lp_series', 'tutorial-category' ) as $tax ) {
+		if ( ! taxonomy_exists( $tax ) ) {
+			continue;
+		}
+		$terms = get_terms(
+			array(
+				'taxonomy'   => $tax,
+				'hide_empty' => false,
+			)
+		);
+		if ( is_wp_error( $terms ) ) {
+			continue;
+		}
+		foreach ( $terms as $term ) {
+			$title = $term->name . ' | Parkour Tutorials';
+			$desc  = sprintf(
+				'lp_series' === $tax
+					? '%d coached parkour videos in %s, from London Parkour.'
+					: '%d parkour tutorials in %s, from London Parkour.',
+				(int) $term->count,
+				$term->name
+			);
+			lp_seo_write_fields( $term->taxonomy . '_' . $term->term_id, $title, $desc );
+			++$written;
+		}
+	}
+
+	WP_CLI::log( sprintf( '  + wrote SEO fields on %d entries', $written ) );
 }
 
 /**
@@ -895,6 +1030,9 @@ WP_CLI::add_command(
 
 		WP_CLI::log( 'Homepage' );
 		lp_seed_homepage( $media );
+
+		WP_CLI::log( 'SEO' );
+		lp_seed_seo_fields();
 
 		WP_CLI::log( 'Blocks QA page' );
 		lp_seed_page( $media );

@@ -90,6 +90,24 @@
             "key": "field_24a381d7169b527f"
         },
         {
+            "name": "seo_tutorials_title",
+            "label": "Tutorials archive title",
+            "type": "text",
+            "maxlength": 70,
+            "instructions": "Document title for /tutorials/. Leave empty to use “Tutorials | Site name”.",
+            "key": "field_37609842dc8383cb"
+        },
+        {
+            "name": "seo_tutorials_description",
+            "label": "Tutorials archive description",
+            "type": "textarea",
+            "rows": 3,
+            "new_lines": "",
+            "maxlength": 200,
+            "instructions": "Meta description for /tutorials/. The archive is not a page, so it cannot use the per-entry SEO box.",
+            "key": "field_a4778b4b87e8369f"
+        },
+        {
             "name": "seo_image",
             "label": "Default share image",
             "type": "image",

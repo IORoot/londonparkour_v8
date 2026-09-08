@@ -174,6 +174,27 @@ function lp_seo_current_post_id(): int {
 }
 
 /**
+ * ACF object id for the current view — post ID, or `taxonomy_termid`.
+ *
+ * @return int|string
+ */
+function lp_seo_acf_id() {
+	$post_id = lp_seo_current_post_id();
+	if ( $post_id > 0 ) {
+		return $post_id;
+	}
+
+	if ( is_tax() || is_category() || is_tag() ) {
+		$term = get_queried_object();
+		if ( $term instanceof WP_Term ) {
+			return $term->taxonomy . '_' . $term->term_id;
+		}
+	}
+
+	return 0;
+}
+
+/**
  * Whether an ACF value should win over the automatic fallback.
  *
  * @param mixed $value Field value.
@@ -192,16 +213,21 @@ function lp_seo_has_value( $value ): bool {
 /**
  * ACF field on the current post only (no options fallback).
  *
- * @param string $name    Field name.
- * @param int    $post_id Post ID, or 0 for the current view.
+ * @param string     $name    Field name.
+ * @param int|string $post_id Post ID, term `taxonomy_id`, or 0 for the current view.
  * @return mixed
  */
-function lp_seo_post_field( string $name, int $post_id = 0 ) {
+function lp_seo_post_field( string $name, $post_id = 0 ) {
 	if ( ! function_exists( 'get_field' ) ) {
 		return null;
 	}
-	$post_id = $post_id > 0 ? $post_id : lp_seo_current_post_id();
-	if ( $post_id < 1 ) {
+	if ( 0 === $post_id || '' === $post_id ) {
+		$post_id = lp_seo_acf_id();
+	}
+	if ( is_int( $post_id ) && $post_id < 1 ) {
+		return null;
+	}
+	if ( ! $post_id ) {
 		return null;
 	}
 
@@ -267,6 +293,13 @@ function lp_seo_title(): string {
 			$title = lp_seo_default_site_title();
 		}
 		return apply_filters( 'lp_seo_title', $title );
+	}
+
+	if ( is_post_type_archive( 'lp_tutorial' ) ) {
+		$archive_title = lp_seo_option_field( 'seo_tutorials_title' );
+		if ( is_string( $archive_title ) && '' !== lp_seo_plain( $archive_title ) ) {
+			return apply_filters( 'lp_seo_title', lp_seo_plain( $archive_title ) );
+		}
 	}
 
 	return apply_filters( 'lp_seo_title', '' );
@@ -364,6 +397,14 @@ function lp_seo_canonical_url(): string {
  * Plain text, collapsed whitespace, no tags.
  */
 function lp_seo_plain( string $html ): string {
+	$html = preg_replace( '/```[\s\S]*?```/', ' ', $html ) ?? $html;
+	$html = preg_replace( '/^#{1,6}\s+/m', '', $html ) ?? $html;
+	$html = preg_replace( '/!\[([^\]]*)\]\([^)]+\)/', '$1', $html ) ?? $html;
+	$html = preg_replace( '/\[([^\]]+)\]\([^)]+\)/', '$1', $html ) ?? $html;
+	$html = preg_replace( '/(\*\*|__)(.*?)\1/', '$2', $html ) ?? $html;
+	$html = preg_replace( '/(`)([^`]+)\1/', '$2', $html ) ?? $html;
+	$html = preg_replace( '/^\s*[-*+]\s+/m', '', $html ) ?? $html;
+	$html = preg_replace( '/^\s*>\s+/m', '', $html ) ?? $html;
 	$html = wp_strip_all_tags( $html, true );
 	$html = html_entity_decode( $html, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 	$html = preg_replace( '/\s+/u', ' ', $html );
@@ -479,6 +520,13 @@ function lp_seo_description(): string {
 	$override = lp_seo_post_field( 'seo_description' );
 	if ( is_string( $override ) && '' !== lp_seo_plain( $override ) ) {
 		return apply_filters( 'lp_seo_description', lp_seo_clip( $override ) );
+	}
+
+	if ( is_post_type_archive( 'lp_tutorial' ) ) {
+		$archive_desc = lp_seo_option_field( 'seo_tutorials_description' );
+		if ( is_string( $archive_desc ) && '' !== lp_seo_plain( $archive_desc ) ) {
+			return apply_filters( 'lp_seo_description', lp_seo_clip( $archive_desc ) );
+		}
 	}
 
 	$desc = '';

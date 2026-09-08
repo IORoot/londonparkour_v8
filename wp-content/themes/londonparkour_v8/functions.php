@@ -38,6 +38,7 @@ $lp_includes = array(
 	'app/includes/faq-copy.php',
 	'app/includes/waiver-copy.php',
 	'app/includes/seo.php',
+	'app/includes/seo-copy.php',
 	'app/includes/docs.php',
 	'app/includes/contact.php',
 	'app/includes/tutorials.php',

@@ -16,9 +16,14 @@
  * it is the 6-col grid. Reduced motion skips the loop; the wrapper
  * becomes swipeable.
  *
+ * `layout` `embed` drops the section chrome so a parent band can own the
+ * copy and sit the logo tracks underneath (About Delivered To). Homepage
+ * stays the default `band`.
+ *
  * @param string $args['eyebrow']
  * @param string $args['meta']
  * @param array  $args['logos'] Rows of array( 'label', 'href', 'image' ).
+ * @param string $args['layout'] band|embed. Default band.
  *
  * @package londonparkour_v8
  */
@@ -163,7 +168,13 @@ if ( ! $lp_logos ) {
 	}
 }
 
-$lp_spacing = lp_section_spacing( $args );
+$lp_layouts = array(
+	'band'  => 'band',
+	'embed' => 'embed',
+);
+$lp_layout  = $lp_layouts[ (string) ( $args['layout'] ?? 'band' ) ] ?? 'band';
+$lp_embed   = 'embed' === $lp_layout;
+$lp_spacing = $lp_embed ? '' : lp_section_spacing( $args );
 
 $lp_item_classes = array(
 	'marquee' => 'min-w-0 w-[160px] shrink-0',
@@ -208,22 +219,8 @@ $lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos,
 		<?php
 	endforeach;
 };
-?>
-<section
-	class="<?php echo lp_classes( 'w-full bg-accent px-6 py-[120px] lg:px-16', $lp_spacing ); ?>"
-	data-component="clients"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
->
-	<div class="flex flex-col gap-[36px]">
-		<header class="flex flex-col gap-[18px]">
-			<div class="flex items-baseline justify-between gap-4">
-				<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_eyebrow ); ?></span>
-				<?php if ( '' !== $lp_meta ) : ?>
-					<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_meta ); ?></span>
-				<?php endif; ?>
-			</div>
-			<div class="h-px w-full bg-accent-content/15" aria-hidden="true"></div>
-		</header>
-
+$lp_emit_tracks = static function () use ( $lp_emit_logo_items, $lp_item_classes ): void {
+	?>
 		<div
 			class="overflow-hidden min-w-0 w-full lg:hidden motion-reduce:overflow-x-auto"
 			data-clients-track="marquee"
@@ -248,6 +245,33 @@ $lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos,
 		>
 			<?php $lp_emit_logo_items( $lp_item_classes['grid'] ); ?>
 		</div>
+	<?php
+};
+
+if ( $lp_embed ) :
+	?>
+<div data-component="clients" data-layout="embed">
+	<?php $lp_emit_tracks(); ?>
+</div>
+	<?php
+	return;
+endif;
+?>
+<section
+	class="<?php echo lp_classes( 'w-full bg-accent px-6 py-[120px] lg:px-16', $lp_spacing ); ?>"
+	data-component="clients"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
+>
+	<div class="flex flex-col gap-[36px]">
+		<header class="flex flex-col gap-[18px]">
+			<div class="flex items-baseline justify-between gap-4">
+				<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<?php if ( '' !== $lp_meta ) : ?>
+					<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_meta ); ?></span>
+				<?php endif; ?>
+			</div>
+			<div class="h-px w-full bg-accent-content/15" aria-hidden="true"></div>
+		</header>
+		<?php $lp_emit_tracks(); ?>
 	</div>
 </section>
 

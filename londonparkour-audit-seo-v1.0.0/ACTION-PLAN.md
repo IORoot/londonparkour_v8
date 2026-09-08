@@ -73,16 +73,9 @@ card count — part of that is item 10. The page is materially lighter but is
 **not yet fast**: at 8 MB of images it still needs item 5, which is now the
 binding constraint here.
 
-### 4. Stop serving the 2.9 MB DSLR photo · S
-`bin/demo-media/DSC01072.jpeg` is the LCP element on `/classes/` and
-`/classes-map/`, served straight from the theme source directory at 2,918,849
-bytes — 19× the weight of the rest of the page.
+### 4. ~~Stop serving the 2.9 MB DSLR photo~~ · **DONE 2026-09-08**
 
-Import it with `lp_sideload_image_once()` and store the attachment ID so it
-routes through `wp_get_attachment_image()` and gets a `srcset`.
-
-**Check:** no `<img src>` on any page points into `bin/demo-media/`; the LCP
-image on `/classes/` is under 200 KB and carries a `srcset`.
+No `<img>` points at `bin/demo-media/`. `/classes/` LCP is 123 KB with srcset.
 
 ### 5. ~~Regenerate tutorial thumbnails~~ · **DONE 2026-09-08**
 
@@ -175,24 +168,18 @@ so the preload points at a reasonably-sized asset.
 **Check:** `rel="preload"` present with a matching `imagesrcset`; LCP improves
 against the pre-change baseline.
 
-### 13. Populate `seo_description` on the commercial pages · M ©
-`/classes/`, `/coupons/`, `/private-coaching/`, `/workshops/`, `/blog/`,
-`/classes-map/`, and the two tutorial taxonomy hubs currently serve their title
-as their description.
+### 13. ~~Populate `seo_description` on the commercial pages~~ · **DONE 2026-09-08**
 
-Then widen `lp_seo_description()` to read block copy across all section rows
-(it only reads the first), and add a term-description branch.
+ACF `seo_title` and `seo_description` filled on the commercial pages, docs,
+classes, sites, coaches, blog posts, and series terms. Tutorials archive uses
+Site Settings fields (`seo_tutorials_title` / `seo_tutorials_description`).
 
-**Check:** no indexable URL has `meta[name=description] == <title>`. Script it
-across the new sitemap.
+**Check:** sampled indexable URLs have distinct title and description; none
+equal.
 
-### 14. Add `seo_title` to the seven pages whose H1s carry no keywords · M ©
-The H1s are signed-off design copy — **do not rewrite them**. `seo_title` is the
-sanctioned override and exists now. This captures the "parkour" / "London"
-signal without touching the design.
+### 14. ~~Add `seo_title` to the seven pages whose H1s carry no keywords~~ · **DONE 2026-09-08**
 
-**Check:** each target page's `<title>` contains its head term; the rendered H1
-is byte-identical to before.
+Same pass as item 13. `/classes/` title is now `Parkour Classes in London | Weekly Timetable`; H1 remains `This week's sessions.`
 
 ### 15. Add `Article` schema to the 10 blog posts · M
 Emit `BlogPosting` with `headline`, `datePublished`, `dateModified`, `author`
