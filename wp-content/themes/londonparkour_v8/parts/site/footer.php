@@ -96,7 +96,7 @@ $lp_default_columns = array(
 		),
 	),
 	array(
-		'heading' => 'Studio',
+		'heading' => 'Company',
 		'links'   => array(
 			array(
 				'label' => 'About',

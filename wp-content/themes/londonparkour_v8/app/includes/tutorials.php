@@ -1897,3 +1897,68 @@ function lp_tutorials_series_maybe_flush(): void {
 	update_option( $flag, 1, true );
 }
 add_action( 'init', 'lp_tutorials_series_maybe_flush', 99 );
+
+/**
+ * Whether a tutorial has stored transcript text (SRT, JSON cues, or ChatGPT prose).
+ */
+function lp_tutorial_has_transcript_data( int $post_id ): bool {
+	foreach ( array( 'video_transcript_srt', 'video_transcript_json', 'video_transcript_chatgpt' ) as $key ) {
+		if ( '' !== trim( (string) get_post_meta( $post_id, $key, true ) ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Turn `display_transcript` on for published tutorials that already have
+ * transcript data. Idempotent — skips posts whose flag is already on.
+ *
+ * @return int Posts updated.
+ */
+function lp_tutorials_enable_hidden_transcripts(): int {
+	$ids = get_posts(
+		array(
+			'post_type'              => 'lp_tutorial',
+			'post_status'            => 'publish',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => true,
+		)
+	);
+
+	$updated = 0;
+	foreach ( $ids as $id ) {
+		$id = (int) $id;
+		if ( $id < 1 || ! lp_tutorial_has_transcript_data( $id ) ) {
+			continue;
+		}
+		if ( get_post_meta( $id, 'display_transcript', true ) ) {
+			continue;
+		}
+		if ( function_exists( 'update_field' ) ) {
+			update_field( 'display_transcript', 1, $id );
+		} else {
+			update_post_meta( $id, 'display_transcript', 1 );
+		}
+		++$updated;
+	}
+
+	return $updated;
+}
+
+/**
+ * One-shot: reveal the stored transcripts that were never flagged to render.
+ */
+function lp_tutorials_maybe_enable_hidden_transcripts(): void {
+	$flag = 'lp_tutorials_display_transcript_v1';
+	if ( get_option( $flag ) ) {
+		return;
+	}
+
+	lp_tutorials_enable_hidden_transcripts();
+	update_option( $flag, 1, true );
+}
+add_action( 'init', 'lp_tutorials_maybe_enable_hidden_transcripts', 20 );

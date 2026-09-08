@@ -1,13 +1,12 @@
 <?php
 /**
- * Site location permalinks, archive query, and spot 404s.
+ * Site location permalinks, archive query, and leftover-spot 404s.
  *
  * Public sites live at `/classes/locations/{slug}/`. The clasbpro class CPT
  * already owns `/classes/{slug}/`, so location rules are registered `top` and
- * the rewrite slug is forced here even if ACF JSON is stale. Map-only spots
- * are stored as `private` so they cannot enter a sitemap or the REST API, and
- * they 404 on the front-end. Old `/locations/{slug}/` URLs 301 to the new path
- * for sites.
+ * the rewrite slug is forced here even if ACF JSON is stale. Training spots
+ * are retired: a one-shot deletes remaining kind=spot records. Old
+ * `/locations/{slug}/` URLs 301 to the new path for sites.
  *
  * @package londonparkour_v8
  */
@@ -76,25 +75,15 @@ function lp_location_maybe_flush_rewrites(): void {
 add_action( 'init', 'lp_location_maybe_flush_rewrites', 99 );
 
 /**
- * Post status for map-only spots. Not `publish`: a sitemap generator would
- * otherwise enumerate every spot and hand Google hundreds of soft-404s.
+ * Permanently delete leftover kind=spot location posts.
  *
- * @return string
+ * @return int Number of posts deleted.
  */
-function lp_location_spot_status(): string {
-	return 'private';
-}
-
-/**
- * Move every published kind=spot location to the map-only status.
- *
- * @return int Number of posts updated.
- */
-function lp_location_privatise_spots(): int {
+function lp_location_delete_spots(): int {
 	$ids = get_posts(
 		array(
 			'post_type'              => 'lp_location',
-			'post_status'            => 'publish',
+			'post_status'            => 'any',
 			'posts_per_page'         => -1,
 			'fields'                 => 'ids',
 			'no_found_rows'          => true,
@@ -111,15 +100,8 @@ function lp_location_privatise_spots(): int {
 
 	$count = 0;
 	foreach ( $ids as $id ) {
-		$id     = (int) $id;
-		$result = wp_update_post(
-			array(
-				'ID'          => $id,
-				'post_status' => lp_location_spot_status(),
-			),
-			true
-		);
-		if ( ! is_wp_error( $result ) && $result ) {
+		$id = (int) $id;
+		if ( $id > 0 && wp_delete_post( $id, true ) ) {
 			++$count;
 		}
 	}
@@ -128,56 +110,18 @@ function lp_location_privatise_spots(): int {
 }
 
 /**
- * One-shot: published spots become private so C1 cannot sitemap them.
+ * One-shot: remove retired training-spot locations.
  */
-function lp_location_maybe_privatise_spots(): void {
-	$flag = 'lp_location_spots_private_v1';
+function lp_location_maybe_delete_spots(): void {
+	$flag = 'lp_location_spots_deleted_v1';
 	if ( get_option( $flag ) ) {
 		return;
 	}
 
-	lp_location_privatise_spots();
+	lp_location_delete_spots();
 	update_option( $flag, 1, true );
 }
-add_action( 'init', 'lp_location_maybe_privatise_spots', 99 );
-
-/**
- * Spots stay private even if an editor hits Publish, or an import forgets.
- *
- * @param int|string $post_id ACF may pass a non-post id (user_1, option).
- */
-function lp_location_force_spot_private( $post_id ): void {
-	static $busy = false;
-	if ( $busy || ! is_numeric( $post_id ) ) {
-		return;
-	}
-
-	$post_id = (int) $post_id;
-	if ( $post_id < 1 || 'lp_location' !== get_post_type( $post_id ) ) {
-		return;
-	}
-
-	if ( ! function_exists( 'lp_location_kind' ) || 'spot' !== lp_location_kind( $post_id ) ) {
-		return;
-	}
-
-	$status = (string) get_post_status( $post_id );
-	$want   = lp_location_spot_status();
-	if ( $want === $status || in_array( $status, array( 'trash', 'auto-draft' ), true ) ) {
-		return;
-	}
-
-	$busy = true;
-	wp_update_post(
-		array(
-			'ID'          => $post_id,
-			'post_status' => $want,
-		)
-	);
-	$busy = false;
-}
-add_action( 'save_post_lp_location', 'lp_location_force_spot_private', 20 );
-add_action( 'acf/save_post', 'lp_location_force_spot_private', 20 );
+add_action( 'init', 'lp_location_maybe_delete_spots', 99 );
 
 /**
  * Meta query that keeps only class sites (kind=site, or the field missing).

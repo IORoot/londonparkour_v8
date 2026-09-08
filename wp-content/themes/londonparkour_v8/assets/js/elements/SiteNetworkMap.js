@@ -5,8 +5,7 @@
  * Wheel zoom only with ⌘/Ctrl (and trackpad pinch, which browsers send as
  * Ctrl+wheel) so ordinary page scroll is not stolen.
  *
- * Sidebar tabs switch Sites / Spots lists. Site pins scroll to meeting panels;
- * spot pins open Street View.
+ * Class-site pins scroll to that site's meeting panel.
  */
 
 import L from 'leaflet';
@@ -15,11 +14,6 @@ import 'leaflet/dist/leaflet.css';
 const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-
-const TAB_ACTIVE =
-  'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b-2 border-accent bg-transparent cursor-pointer';
-const TAB_IDLE =
-  'flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/65 border-b-2 border-transparent bg-transparent cursor-pointer';
 
 const highlightSite = (siteId) => {
   if (!siteId) return;
@@ -30,11 +24,6 @@ const highlightSite = (siteId) => {
   window.setTimeout(() => {
     panel.classList.remove('ring-2', 'ring-primary', 'ring-offset-2', 'ring-offset-base-200');
   }, 1600);
-};
-
-const openStreetview = (url) => {
-  if (!url || url === '#') return;
-  window.open(url, '_blank', 'noopener,noreferrer');
 };
 
 const enableModifierWheelZoom = (map) => {
@@ -52,35 +41,6 @@ const enableModifierWheelZoom = (map) => {
   return () => el.removeEventListener('wheel', onWheel);
 };
 
-const bindSidebarTabs = (network, { onChange = null } = {}) => {
-  const tabs = [...network.querySelectorAll('[data-map-list-tab]')];
-  if (!tabs.length) return () => {};
-
-  const setTab = (name) => {
-    tabs.forEach((tab) => {
-      const active = tab.dataset.mapListTab === name;
-      tab.setAttribute('aria-selected', active ? 'true' : 'false');
-      tab.className = active ? TAB_ACTIVE : TAB_IDLE;
-    });
-    network.querySelectorAll('[data-map-list]').forEach((list) => {
-      const show = list.dataset.mapList === name;
-      list.classList.toggle('hidden', !show);
-      if (show) list.removeAttribute('hidden');
-      else list.setAttribute('hidden', '');
-    });
-    onChange?.(name);
-  };
-
-  const onClick = (event) => {
-    const tab = event.target.closest('[data-map-list-tab]');
-    if (!tab || !network.contains(tab)) return;
-    setTab(tab.dataset.mapListTab);
-  };
-
-  network.addEventListener('click', onClick);
-  return () => network.removeEventListener('click', onClick);
-};
-
 const fitLayerBounds = (map, layer) => {
   const layers = layer.getLayers();
   if (!layers.length) {
@@ -89,19 +49,6 @@ const fitLayerBounds = (map, layer) => {
   }
   const group = L.featureGroup(layers);
   map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 13 });
-};
-
-const showMarkerKind = (map, layers, kind) => {
-  const showClasses = kind === 'classes';
-  if (showClasses) {
-    if (!map.hasLayer(layers.classes)) map.addLayer(layers.classes);
-    if (map.hasLayer(layers.spots)) map.removeLayer(layers.spots);
-    fitLayerBounds(map, layers.classes);
-  } else {
-    if (!map.hasLayer(layers.spots)) map.addLayer(layers.spots);
-    if (map.hasLayer(layers.classes)) map.removeLayer(layers.classes);
-    fitLayerBounds(map, layers.spots);
-  }
 };
 
 const bindSiteListFlyTo = (map, mount) => {
@@ -118,11 +65,6 @@ const bindSiteListFlyTo = (map, mount) => {
 
     event.preventDefault();
     map.flyTo([lat, lon], Math.max(map.getZoom(), 15), { duration: 0.75 });
-
-    if (item.dataset.kind === 'spot') {
-      openStreetview(item.dataset.streetview || '');
-      return;
-    }
     highlightSite(item.dataset.siteId || '');
   };
 
@@ -130,7 +72,7 @@ const bindSiteListFlyTo = (map, mount) => {
   return () => network.removeEventListener('click', onClick);
 };
 
-/** Match sidebar height to the map column (head + stage + legend). */
+/** Match sidebar height to the map column (head + stage). */
 const syncSidebarHeight = (network) => {
   const sidebar = network?.querySelector('[data-map-sidebar]');
   const panel = network?.querySelector('[data-map-panel]');
@@ -178,7 +120,6 @@ export function initSiteNetworkMap(root = document) {
     let map = null;
     let removeWheel = null;
     let removeList = null;
-    let removeTabs = null;
     let removeHeight = null;
 
     try {
@@ -197,31 +138,23 @@ export function initSiteNetworkMap(root = document) {
         maxZoom: 19,
       }).addTo(map);
 
-      const layers = {
-        classes: L.layerGroup(),
-        spots: L.layerGroup(),
-      };
+      const classes = L.layerGroup().addTo(map);
 
       pins.forEach((pin) => {
         const lat = Number(pin.dataset.lat);
         const lon = Number(pin.dataset.lon);
         const siteId = pin.dataset.siteId || '';
-        const kind = pin.dataset.kind || 'site';
-        const streetview = pin.dataset.streetview || '';
         const name = pin.dataset.name || siteId;
         if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
-        const isSpot = kind === 'spot';
-        const markerHtml = isSpot
-          ? (pin.querySelector('[data-spot-marker] [data-component="map-pin"]')?.outerHTML || '').trim()
-          : pin.innerHTML.trim();
+        const markerHtml = pin.innerHTML.trim();
         if (!markerHtml) return;
 
         const icon = L.divIcon({
           className: 'lp-map-pin-icon !bg-transparent !border-0',
           html: markerHtml,
-          iconSize: isSpot ? [30, 30] : [168, 44],
-          iconAnchor: isSpot ? [15, 15] : [14, 22],
+          iconSize: [168, 44],
+          iconAnchor: [14, 22],
         });
 
         const marker = L.marker([lat, lon], {
@@ -229,41 +162,17 @@ export function initSiteNetworkMap(root = document) {
           keyboard: true,
           title: name,
         });
-
-        if (isSpot) {
-          const popupHtml = (
-            pin.querySelector('template[data-spot-popup]')?.innerHTML || ''
-          ).trim();
-          if (popupHtml) {
-            marker.bindPopup(popupHtml, {
-              className: 'lp-spot-popup',
-              closeButton: false,
-              offset: [0, -10],
-              maxWidth: 280,
-            });
-          }
-          marker.on('click', () => {
-            marker.openPopup();
-            openStreetview(streetview);
-          });
-          layers.spots.addLayer(marker);
-          return;
-        }
-
         marker.on('click', () => {
           highlightSite(siteId);
         });
-        layers.classes.addLayer(marker);
+        classes.addLayer(marker);
       });
 
       if (network) {
-        removeTabs = bindSidebarTabs(network, {
-          onChange: (tab) => showMarkerKind(map, layers, tab),
-        });
         removeHeight = bindSidebarHeight(network);
       }
 
-      showMarkerKind(map, layers, 'classes');
+      fitLayerBounds(map, classes);
 
       requestAnimationFrame(() => {
         map?.invalidateSize();
@@ -279,7 +188,6 @@ export function initSiteNetworkMap(root = document) {
 
     cleanups.push(() => {
       removeHeight?.();
-      removeTabs?.();
       removeList?.();
       removeWheel?.();
       map?.remove();

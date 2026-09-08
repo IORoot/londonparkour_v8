@@ -1034,6 +1034,12 @@ WP_CLI::add_command(
 		WP_CLI::log( 'SEO' );
 		lp_seed_seo_fields();
 
+		if ( function_exists( 'lp_tutorials_enable_hidden_transcripts' ) ) {
+			WP_CLI::log( 'Tutorial transcripts' );
+			$lp_n = lp_tutorials_enable_hidden_transcripts();
+			WP_CLI::log( sprintf( '  display_transcript on for %d hidden tutorial(s)', $lp_n ) );
+		}
+
 		WP_CLI::log( 'Blocks QA page' );
 		lp_seed_page( $media );
 

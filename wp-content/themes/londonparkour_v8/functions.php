@@ -30,6 +30,7 @@ if ( ! defined( 'LONDONPARKOUR_V8_TYPOGRAPHY_CLASSES' ) ) {
 $lp_includes = array(
 	// Infrastructure.
 	'app/includes/html.php',
+	'app/includes/hardening.php',
 	'app/includes/media.php',
 	'app/includes/menus.php',
 	'app/includes/modules.php',

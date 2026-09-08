@@ -728,11 +728,7 @@ function lp_seo_print_meta(): void {
 	$url         = lp_seo_canonical_url();
 	$image       = lp_seo_image();
 	$locale      = str_replace( '-', '_', get_locale() );
-	$type        = ( is_singular( 'post' ) || is_singular( 'lp_tutorial' ) ) ? 'article' : 'website';
-
-	if ( is_singular( 'clasbpro_class' ) ) {
-		$type = 'article';
-	}
+	$type        = ( is_singular( array( 'post', 'blog', 'lp_tutorial', 'clasbpro_class' ) ) ) ? 'article' : 'website';
 
 	if ( '' !== $description ) {
 		printf( '<meta name="description" content="%s">' . "\n", esc_attr( $description ) );
@@ -957,6 +953,7 @@ function lp_seo_extra_schema_nodes(): array {
 		'Person',
 		'Place',
 		'Article',
+		'BlogPosting',
 		'Course',
 		'Event',
 		'VideoObject',
@@ -1753,6 +1750,82 @@ function lp_seo_webpage_node(): array {
 }
 
 /**
+ * BlogPosting node for a native `post` or the `blog` CPT.
+ *
+ * Author archives are not public, so the Person has no url — name + jobTitle
+ * + worksFor is what Google asks for on Article rich results.
+ *
+ * @return array<string, mixed>|null
+ */
+function lp_seo_blog_posting_node( int $post_id ): ?array {
+	$post = get_post( $post_id );
+	if ( ! $post instanceof WP_Post ) {
+		return null;
+	}
+
+	$permalink = (string) get_permalink( $post_id );
+	$headline  = lp_seo_plain( get_the_title( $post_id ) );
+	if ( '' === $permalink || '' === $headline ) {
+		return null;
+	}
+
+	$author_name = (string) get_the_author_meta( 'display_name', (int) $post->post_author );
+	$login       = (string) get_the_author_meta( 'user_login', (int) $post->post_author );
+	if ( '' === $author_name || 'admin' === strtolower( $author_name ) || 'admin' === strtolower( $login ) ) {
+		$author_name = 'Andy Pearson';
+	}
+	$job         = function_exists( 'get_field' ) ? (string) get_field( 'author_role', $post_id ) : '';
+	$job         = '' !== $job ? $job : 'HEAD COACH';
+
+	$node = array(
+		'@type'            => 'BlogPosting',
+		'@id'              => $permalink . '#article',
+		'headline'         => $headline,
+		'url'              => $permalink,
+		'mainEntityOfPage' => array( '@id' => lp_seo_canonical_url() . '#webpage' ),
+		'datePublished'    => get_the_date( DATE_ATOM, $post_id ),
+		'dateModified'     => get_the_modified_date( DATE_ATOM, $post_id ),
+		'author'           => array(
+			'@type'    => 'Person',
+			'name'     => $author_name,
+			'jobTitle' => $job,
+			'worksFor' => array( '@id' => lp_seo_org_id() ),
+		),
+		'publisher'        => array( '@id' => lp_seo_org_id() ),
+		'inLanguage'       => get_bloginfo( 'language' ),
+	);
+
+	$desc = lp_seo_description();
+	if ( '' !== $desc ) {
+		$node['description'] = $desc;
+	}
+
+	$image = lp_seo_image();
+	if ( $image ) {
+		$img = array(
+			'@type' => 'ImageObject',
+			'url'   => $image['url'],
+		);
+		if ( $image['width'] > 0 ) {
+			$img['width'] = $image['width'];
+		}
+		if ( $image['height'] > 0 ) {
+			$img['height'] = $image['height'];
+		}
+		$node['image'] = $img;
+	}
+
+	if ( function_exists( 'lp_post_category_label' ) ) {
+		$section = lp_post_category_label( $post );
+		if ( '' !== $section ) {
+			$node['articleSection'] = $section;
+		}
+	}
+
+	return $node;
+}
+
+/**
  * Full JSON-LD @graph for this response.
  *
  * @return array<string, mixed>
@@ -1776,6 +1849,16 @@ function lp_seo_graph(): array {
 			$graph[2]['mainEntity'] = $faq['mainEntity'];
 		} else {
 			$graph[] = $faq;
+		}
+	}
+
+	if ( is_singular( array( 'blog', 'post' ) ) ) {
+		$article = lp_seo_blog_posting_node( (int) get_queried_object_id() );
+		if ( $article ) {
+			$graph[] = $article;
+			if ( isset( $graph[2] ) && is_array( $graph[2] ) ) {
+				$graph[2]['mainEntity'] = array( '@id' => $article['@id'] );
+			}
 		}
 	}
 

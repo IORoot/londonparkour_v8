@@ -40,7 +40,10 @@ while ( have_posts() ) :
 	$lp_date_site = strtoupper( get_the_date( 'j M Y' ) ) . ' · LONDONPARKOUR';
 
 	$lp_author = get_the_author();
-	$lp_author = $lp_author ?: 'Andy Pearson';
+	$lp_login  = (string) get_the_author_meta( 'user_login' );
+	if ( '' === $lp_author || 'admin' === strtolower( (string) $lp_author ) || 'admin' === strtolower( $lp_login ) ) {
+		$lp_author = 'Andy Pearson';
+	}
 
 	$lp_author_role = function_exists( 'get_field' ) ? (string) get_field( 'author_role', $lp_post_id ) : '';
 	$lp_author_role = $lp_author_role ?: 'HEAD COACH';

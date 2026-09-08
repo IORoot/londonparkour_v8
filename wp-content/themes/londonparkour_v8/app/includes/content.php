@@ -739,6 +739,30 @@ function lp_classes_page_url( string $lp_slug ): string {
 }
 
 /**
+ * Retired Storybook paths: `/classes/map/` is `/classes-map/`; there is no studio.
+ */
+function lp_legacy_path_redirects(): void {
+	if ( is_admin() ) {
+		return;
+	}
+
+	$request = trim( (string) ( $GLOBALS['wp']->request ?? '' ), '/' );
+
+	if ( 'classes/map' === $request ) {
+		wp_safe_redirect( lp_classes_page_url( 'classes-map' ), 301 );
+		exit;
+	}
+
+	if ( 'studio' === $request ) {
+		$about = get_page_by_path( 'about' );
+		$to    = $about instanceof WP_Post ? (string) get_permalink( $about ) : home_url( '/about/' );
+		wp_safe_redirect( $to, 301 );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'lp_legacy_path_redirects', 8 );
+
+/**
  * Private 1:1 sales landing (`/private-coaching/`).
  *
  * The clasbpro appointment product still lives at `/classes/private-sessions/`
@@ -799,12 +823,14 @@ function lp_location_kind( int $lp_id ): string {
  * @return WP_Post[]
  */
 function lp_locations_by_kind( string $lp_kind = 'site' ): array {
-	$lp_kind        = 'spot' === $lp_kind ? 'spot' : 'site';
-	$lp_spot_status = function_exists( 'lp_location_spot_status' ) ? lp_location_spot_status() : 'private';
-	$lp_posts       = get_posts(
+	if ( 'spot' === $lp_kind ) {
+		return array();
+	}
+
+	$lp_posts = get_posts(
 		array(
 			'post_type'      => 'lp_location',
-			'post_status'    => 'spot' === $lp_kind ? array( $lp_spot_status, 'publish' ) : 'publish',
+			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'orderby'        => 'menu_order title',
 			'order'          => 'ASC',
@@ -814,8 +840,8 @@ function lp_locations_by_kind( string $lp_kind = 'site' ): array {
 	return array_values(
 		array_filter(
 			$lp_posts,
-			static function ( WP_Post $lp_post ) use ( $lp_kind ): bool {
-				return lp_location_kind( (int) $lp_post->ID ) === $lp_kind;
+			static function ( WP_Post $lp_post ): bool {
+				return 'spot' !== lp_location_kind( (int) $lp_post->ID );
 			}
 		)
 	);

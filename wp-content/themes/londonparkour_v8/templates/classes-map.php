@@ -2,9 +2,8 @@
 /**
  * Template Name: Classes — Map
  *
- * Class sites and map-only training spots from `lp_location`. The Network map
- * is Leaflet + OpenStreetMap (`assets/js/elements/SiteNetworkMap.js`).
- * Meeting Points lists sites only.
+ * Class sites from `lp_location`. The Network map is Leaflet + OpenStreetMap
+ * (`assets/js/elements/SiteNetworkMap.js`). Meeting Points lists the same sites.
  *
  * @package londonparkour_v8
  */
@@ -12,7 +11,6 @@
 defined( 'ABSPATH' ) || exit;
 
 $lp_sites = lp_locations_by_kind( 'site' );
-$lp_spots = lp_locations_by_kind( 'spot' );
 
 $lp_classes = get_posts(
 	lp_class_query_exclude_one_offs(
@@ -41,8 +39,6 @@ foreach ( $lp_classes as $lp_class ) {
 }
 
 $lp_site_n    = count( $lp_sites );
-$lp_spot_n    = count( $lp_spots );
-$lp_class_n   = count( $lp_classes );
 $lp_sites_lbl = sprintf(
 	/* translators: %d: number of training sites */
 	_n( '%d site. One network.', '%d sites. One network.', $lp_site_n, 'londonparkour_v8' ),
@@ -64,8 +60,6 @@ $lp_sites_lbl = preg_replace_callback(
 	},
 	$lp_sites_lbl
 );
-
-$lp_map_places = array_merge( $lp_sites, $lp_spots );
 
 $lp_mast_media = (int) get_post_thumbnail_id();
 
@@ -128,25 +122,8 @@ get_header();
 		</div>
 		<div class="flex flex-col lg:flex-row lg:items-stretch pb-scale-2xl px-6 lg:px-16" data-map-stage>
 			<div class="w-full lg:w-[300px] xl:w-[340px] lg:shrink-0 flex flex-col bg-base-100 mb-0 overflow-hidden min-h-0" data-map-sidebar>
-				<div class="shrink-0 flex border-b border-base-300" role="tablist" aria-label="Map places">
-					<button
-						type="button"
-						role="tab"
-						aria-selected="true"
-						data-map-list-tab="classes"
-						class="flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b-2 border-accent bg-transparent cursor-pointer"
-					>
-						CLASSES · <?php echo esc_html( (string) $lp_site_n ); ?>
-					</button>
-					<button
-						type="button"
-						role="tab"
-						aria-selected="false"
-						data-map-list-tab="spots"
-						class="flex-1 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content/65 border-b-2 border-transparent bg-transparent cursor-pointer"
-					>
-						SPOTS · <?php echo esc_html( (string) $lp_spot_n ); ?>
-					</button>
+				<div class="shrink-0 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b border-base-300">
+					CLASSES · <?php echo esc_html( (string) $lp_site_n ); ?>
 				</div>
 
 				<ul role="list" class="flex flex-col m-0 p-0 list-none" data-map-list="classes">
@@ -189,41 +166,6 @@ get_header();
 						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/65">No class locations yet.</li>
 					<?php endif; ?>
 				</ul>
-
-				<ul role="list" class="flex flex-col m-0 p-0 list-none hidden" data-map-list="spots" hidden>
-					<?php
-					foreach ( $lp_spots as $lp_i => $lp_spot ) :
-						$lp_slug = $lp_spot->post_name ? $lp_spot->post_name : (string) $lp_spot->ID;
-						$lp_lat  = trim( (string) get_field( 'latitude', $lp_spot->ID ) );
-						$lp_lon  = trim( (string) get_field( 'longitude', $lp_spot->ID ) );
-						$lp_sv   = lp_location_streetview_url( (int) $lp_spot->ID );
-						?>
-						<li
-							data-site-flyto
-							data-kind="spot"
-							data-site-id="<?php echo esc_attr( $lp_slug ); ?>"
-							data-lat="<?php echo esc_attr( $lp_lat ); ?>"
-							data-lon="<?php echo esc_attr( $lp_lon ); ?>"
-							data-streetview="<?php echo esc_attr( $lp_sv ); ?>"
-						>
-							<?php
-							lp_part(
-								'components/list-row',
-								array(
-									'surface' => 'page',
-									'index'   => str_pad( (string) ( (int) $lp_i + 1 ), 2, '0', STR_PAD_LEFT ),
-									'title'   => get_the_title( $lp_spot ),
-									'meta'    => 'TRAINING SPOT',
-									'href'    => $lp_sv ? $lp_sv : '#',
-								)
-							);
-							?>
-						</li>
-					<?php endforeach; ?>
-					<?php if ( ! $lp_spots ) : ?>
-						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/65">No training spots yet.</li>
-					<?php endif; ?>
-				</ul>
 			</div>
 
 			<div class="w-full flex-1 min-w-0 flex flex-col bg-base-300 overflow-hidden min-h-0" data-map-panel>
@@ -244,110 +186,47 @@ get_header();
 					<div class="absolute inset-0 z-0" data-mount="leaflet"></div>
 					<template data-site-pins>
 						<?php
-						foreach ( $lp_map_places as $lp_place ) :
+						foreach ( $lp_sites as $lp_place ) :
 							$lp_lat = trim( (string) get_field( 'latitude', $lp_place->ID ) );
 							$lp_lon = trim( (string) get_field( 'longitude', $lp_place->ID ) );
 							if ( '' === $lp_lat || '' === $lp_lon ) {
 								continue;
 							}
 
-							$lp_kind  = lp_location_kind( (int) $lp_place->ID );
 							$lp_slug  = $lp_place->post_name ? $lp_place->post_name : (string) $lp_place->ID;
-							$lp_sv    = lp_location_streetview_url( (int) $lp_place->ID );
-							$lp_is_spot = 'spot' === $lp_kind;
-
-							if ( $lp_is_spot ) {
-								$lp_sub = 'TRAINING SPOT';
-							} else {
-								$lp_type  = (string) get_field( 'type', $lp_place->ID );
-								$lp_count = (int) ( $lp_count_by_site[ $lp_place->ID ] ?? 0 );
-								$lp_sub   = implode(
-									' · ',
-									array_filter(
-										array(
-											$lp_count ? sprintf( _n( '%d CLASS', '%d CLASSES', $lp_count, 'londonparkour_v8' ), $lp_count ) : '',
-											strtoupper( $lp_type ),
-										)
+							$lp_type  = (string) get_field( 'type', $lp_place->ID );
+							$lp_count = (int) ( $lp_count_by_site[ $lp_place->ID ] ?? 0 );
+							$lp_sub   = implode(
+								' · ',
+								array_filter(
+									array(
+										$lp_count ? sprintf( _n( '%d CLASS', '%d CLASSES', $lp_count, 'londonparkour_v8' ), $lp_count ) : '',
+										strtoupper( $lp_type ),
 									)
-								);
-							}
+								)
+							);
 							?>
 							<div
 								data-site-pin
-								data-kind="<?php echo esc_attr( $lp_kind ); ?>"
+								data-kind="site"
 								data-site-id="<?php echo esc_attr( $lp_slug ); ?>"
 								data-name="<?php echo esc_attr( get_the_title( $lp_place ) ); ?>"
 								data-lat="<?php echo esc_attr( $lp_lat ); ?>"
 								data-lon="<?php echo esc_attr( $lp_lon ); ?>"
-								data-streetview="<?php echo esc_attr( $lp_sv ); ?>"
 							>
-								<?php if ( $lp_is_spot ) : ?>
-									<span data-spot-marker>
-										<?php
-										lp_part(
-											'components/map-pin',
-											array(
-												'variant'  => 'icon',
-												'name'     => get_the_title( $lp_place ),
-												'flagship' => true,
-												'label'    => false,
-											)
-										);
-										?>
-									</span>
-									<template data-spot-popup>
-										<?php
-										lp_part(
-											'components/map-pin',
-											array(
-												'variant'  => 'icon',
-												'name'     => get_the_title( $lp_place ),
-												'sub'      => $lp_sub,
-												'flagship' => true,
-											)
-										);
-										?>
-									</template>
-								<?php else : ?>
-									<?php
-									lp_part(
-										'components/map-pin',
-										array(
-											'variant' => 'icon',
-											'name'    => get_the_title( $lp_place ),
-											'sub'     => $lp_sub,
-										)
-									);
-									?>
-								<?php endif; ?>
+								<?php
+								lp_part(
+									'components/map-pin',
+									array(
+										'variant' => 'icon',
+										'name'    => get_the_title( $lp_place ),
+										'sub'     => $lp_sub,
+									)
+								);
+								?>
 							</div>
 						<?php endforeach; ?>
 					</template>
-				</div>
-
-				<div class="flex flex-wrap items-center justify-between gap-4 px-[22px] py-3 bg-base-100">
-					<div class="flex items-center gap-[24px]">
-						<?php
-						lp_part(
-							'elements/glyph-label',
-							array(
-								'label'   => 'CLASS',
-								'icon_id' => 'icon-map-pin',
-								'surface' => 'page',
-								'tone'    => 'ink',
-							)
-						);
-						lp_part(
-							'elements/glyph-label',
-							array(
-								'label'   => 'SPOT',
-								'icon_id' => 'icon-map-pin',
-								'surface' => 'page',
-								'tone'    => 'signal',
-							)
-						);
-						?>
-					</div>
 				</div>
 			</div>
 		</div>
