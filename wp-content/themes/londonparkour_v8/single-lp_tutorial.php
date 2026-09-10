@@ -201,6 +201,14 @@ while ( have_posts() ) :
 				'spaces'           => $lp_is_here ? 'NOW PLAYING' : ( $lp_is_new ? 'NEW' : 'WATCH' ),
 				'tone'             => $lp_is_here ? 'now_playing' : ( $lp_is_new ? 'new' : 'available' ),
 				'href'             => $lp_is_here ? '' : (string) get_permalink( $lp_sib ),
+				'data_attrs'       => $lp_is_here
+					? array()
+					: lp_select_content_attrs(
+						'tutorial',
+						(string) $lp_sib->ID,
+						get_the_title( $lp_sib ),
+						$lp_series_term ? $lp_series_term->name : ''
+					),
 			),
 		);
 	}
@@ -363,9 +371,12 @@ while ( have_posts() ) :
 							'command_for'    => '' !== $lp_video_id ? $lp_video_dlg : '',
 							'data_attrs'     => '' !== $lp_video_id
 								? array(
-									'data-video-type' => 'youtube',
-									'data-video-id'   => $lp_video_id,
-									'data-autoplay'   => 'true',
+									'data-video-type'        => 'youtube',
+									'data-video-id'          => $lp_video_id,
+									'data-autoplay'          => 'true',
+									'data-lp-tutorial-video' => '1',
+									'data-lp-video-title'    => $lp_title,
+									'data-lp-series-name'    => $lp_series_term ? $lp_series_term->name : '',
 								)
 								: array(),
 						)

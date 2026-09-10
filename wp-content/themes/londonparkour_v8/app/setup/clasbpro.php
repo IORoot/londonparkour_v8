@@ -379,12 +379,19 @@ function lp_clasbpro_purchase_marker( array $template_args, string $layout_path 
 		return;
 	}
 
+	$lp_newsletter = false;
+	if ( 'coupon' !== $kind && ! empty( $booking ) ) {
+		$booking_id      = (int) ( $booking['booking_id'] ?? 0 );
+		$lp_newsletter = $booking_id > 0 && 1 === (int) get_post_meta( $booking_id, '_clasbpro_mailchimp_opt_in', true );
+	}
+
 	printf(
-		'<div hidden data-lp-purchase="%1$s" data-lp-purchase-value="%2$s" data-lp-purchase-currency="%3$s" data-lp-purchase-items="%4$s"></div>',
+		'<div hidden data-lp-purchase="%1$s" data-lp-purchase-value="%2$s" data-lp-purchase-currency="%3$s" data-lp-purchase-items="%4$s"%5$s></div>',
 		esc_attr( $txn ),
 		esc_attr( (string) $value ),
 		esc_attr( $currency ),
-		esc_attr( wp_json_encode( $items ) )
+		esc_attr( wp_json_encode( $items ) ),
+		$lp_newsletter ? ' data-lp-newsletter="1"' : ''
 	);
 }
 add_action( 'clasbpro_after_render_status_template', 'lp_clasbpro_purchase_marker', 10, 2 );

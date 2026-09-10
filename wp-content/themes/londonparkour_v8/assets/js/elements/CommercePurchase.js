@@ -1,13 +1,12 @@
 /**
- * Fire purchase on clasbpro result pages.
+ * Fire dataLayer events from PHP markers and select_content clicks.
  */
 
-import { lpMaybePurchaseFromDom } from '../utils/analytics.js';
+import { lpBootAnalytics } from '../utils/analytics.js';
 
 /**
  * @returns {{ cleanup: () => void }}
  */
 export function initCommercePurchase() {
-  lpMaybePurchaseFromDom(document);
-  return { cleanup: () => {} };
+  return lpBootAnalytics(document);
 }

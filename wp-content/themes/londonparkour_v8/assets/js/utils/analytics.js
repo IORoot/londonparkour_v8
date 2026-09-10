@@ -233,3 +233,179 @@ export function lpMaybePurchaseFromDom(root = document) {
     items,
   });
 }
+
+/**
+ * @param {string} key
+ * @returns {boolean} true if this is the first time in the session
+ */
+function oncePerSession(key) {
+  try {
+    if (sessionStorage.getItem(key)) return false;
+    sessionStorage.setItem(key, '1');
+    return true;
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * @param {Array<Record<string, unknown>>} items
+ * @param {string} [currency]
+ */
+export function lpViewItem(items, currency = 'GBP') {
+  if (!Array.isArray(items) || !items.length) return;
+
+  let value = 0;
+  items.forEach((item) => {
+    value += (Number(item.price) || 0) * (Number(item.quantity) || 1);
+  });
+
+  const ecommerce = { currency, items };
+  if (value > 0) ecommerce.value = value;
+
+  lpPushDataLayer({ ecommerce: null });
+  lpPushDataLayer({ event: 'view_item', ecommerce });
+}
+
+export function lpGenerateLead() {
+  if (!oncePerSession('lp_generate_lead')) return;
+  lpPushDataLayer({ event: 'generate_lead' });
+}
+
+/**
+ * @param {'dispatch'|'booking_drawer'} method
+ * @param {string} [sessionKey]
+ */
+export function lpNewsletterSubscribe(method, sessionKey = '') {
+  const key =
+    method === 'booking_drawer'
+      ? `lp_newsletter_booking_${sessionKey || '1'}`
+      : 'lp_newsletter_dispatch';
+  if (!oncePerSession(key)) return;
+  lpPushDataLayer({ event: 'newsletter_subscribe', method });
+}
+
+/**
+ * @param {object} opts
+ * @param {string} opts.searchTerm
+ * @param {number} opts.resultCount
+ * @param {string} opts.searchFilter
+ */
+export function lpViewSearchResults(opts) {
+  const term = String(opts.searchTerm || '');
+  const filter = String(opts.searchFilter || 'all');
+  if (!oncePerSession(`lp_search_${filter}:${term}`)) return;
+  lpPushDataLayer({
+    event: 'view_search_results',
+    search_term: term,
+    result_count: Number(opts.resultCount) || 0,
+    search_filter: filter,
+  });
+}
+
+/**
+ * @param {object} opts
+ * @param {string} opts.videoTitle
+ * @param {string} [opts.seriesName]
+ */
+export function lpVideoStart(opts) {
+  lpPushDataLayer({
+    event: 'video_start',
+    video_title: opts.videoTitle || '',
+    video_provider: 'youtube',
+    series_name: opts.seriesName || '',
+  });
+}
+
+/**
+ * @param {object} opts
+ * @param {string} opts.videoTitle
+ * @param {string} [opts.seriesName]
+ * @param {number} opts.videoPercent
+ */
+export function lpVideoProgress(opts) {
+  lpPushDataLayer({
+    event: 'video_progress',
+    video_title: opts.videoTitle || '',
+    video_provider: 'youtube',
+    series_name: opts.seriesName || '',
+    video_percent: Number(opts.videoPercent) || 0,
+  });
+}
+
+/**
+ * @param {object} opts
+ * @param {string} opts.contentType
+ * @param {string|number} opts.contentId
+ * @param {string} opts.contentName
+ * @param {string} [opts.seriesName]
+ */
+export function lpSelectContent(opts) {
+  lpPushDataLayer({
+    event: 'select_content',
+    content_type: opts.contentType || '',
+    content_id: String(opts.contentId || ''),
+    content_name: opts.contentName || '',
+    series_name: opts.seriesName || '',
+  });
+}
+
+function fireDomEvent(el) {
+  const name = el.getAttribute('data-lp-event') || '';
+  if (name === 'generate_lead') {
+    lpGenerateLead();
+    return;
+  }
+  if (name === 'newsletter_subscribe') {
+    lpNewsletterSubscribe(el.getAttribute('data-lp-method') === 'booking_drawer' ? 'booking_drawer' : 'dispatch');
+    return;
+  }
+  if (name === 'view_search_results') {
+    lpViewSearchResults({
+      searchTerm: el.getAttribute('data-lp-search-term') || '',
+      resultCount: Number(el.getAttribute('data-lp-result-count') || 0),
+      searchFilter: el.getAttribute('data-lp-search-filter') || 'all',
+    });
+    return;
+  }
+  if (name === 'view_item') {
+    let items = [];
+    try {
+      items = JSON.parse(el.getAttribute('data-lp-items') || '[]');
+    } catch {
+      items = [];
+    }
+    lpViewItem(items);
+  }
+}
+
+/**
+ * Page-load markers + select_content click delegation.
+ *
+ * @param {ParentNode} [root]
+ * @returns {{ cleanup: () => void }}
+ */
+export function lpBootAnalytics(root = document) {
+  lpMaybePurchaseFromDom(root);
+
+  const purchase = root.querySelector('[data-lp-purchase]');
+  if (purchase && purchase.getAttribute('data-lp-newsletter') === '1') {
+    lpNewsletterSubscribe('booking_drawer', purchase.getAttribute('data-lp-purchase') || '');
+  }
+
+  root.querySelectorAll('[data-lp-event]').forEach((el) => fireDomEvent(el));
+
+  const onClick = (event) => {
+    const el = event.target instanceof Element ? event.target.closest('[data-lp-select-content]') : null;
+    if (!el) return;
+    lpSelectContent({
+      contentType: el.getAttribute('data-lp-content-type') || '',
+      contentId: el.getAttribute('data-lp-content-id') || '',
+      contentName: el.getAttribute('data-lp-content-name') || '',
+      seriesName: el.getAttribute('data-lp-series-name') || '',
+    });
+  };
+
+  document.addEventListener('click', onClick);
+  return { cleanup: () => document.removeEventListener('click', onClick) };
+}

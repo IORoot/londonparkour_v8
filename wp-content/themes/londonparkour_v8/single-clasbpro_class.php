@@ -40,6 +40,19 @@ while ( have_posts() ) :
 	$lp_post_id = get_the_ID();
 	$lp_classes = lp_classes_page_url( 'classes' );
 
+	if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
+		lp_analytics_view_item_marker(
+			array(
+				lp_analytics_commerce_item(
+					lp_commerce_category_for_class( (int) $lp_post_id ),
+					(int) $lp_post_id,
+					(string) get_the_title( $lp_post_id ),
+					lp_class_price_amount( (int) $lp_post_id )
+				),
+			)
+		);
+	}
+
 	/*
 	 * Run `the_content` so Gutenberg blocks and classic paragraphs keep
 	 * their markup. The wrapper is a div (not a <p>) so nested <p>s are valid.

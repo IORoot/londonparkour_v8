@@ -69,6 +69,11 @@ $lp_spacing = lp_section_spacing( $args );
 				<p class="<?php echo lp_classes( 'lg:hidden', $lp_note_class ); ?>"><?php echo esc_html( $lp_note ); ?></p>
 			</div>
 			<?php if ( $lp_is_success ) : ?>
+				<?php
+				if ( function_exists( 'lp_analytics_event_marker' ) ) {
+					lp_analytics_event_marker( 'newsletter_subscribe', array( 'method' => 'dispatch' ) );
+				}
+				?>
 				<div class="flex flex-col gap-[14px] w-full lg:w-[480px]" role="status" aria-live="polite">
 					<span class="font-label text-[12px] font-semibold tracking-[0.9px] text-success"><?php echo esc_html( $lp_success_kicker ); ?></span>
 					<p class="font-heading text-[22px] font-semibold tracking-[-0.4px] text-base-content m-0"><?php echo esc_html( $lp_success_headline ); ?></p>

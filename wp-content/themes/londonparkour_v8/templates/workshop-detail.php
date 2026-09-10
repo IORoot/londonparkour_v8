@@ -20,6 +20,19 @@ $lp_post_id = get_the_ID();
 $lp_classes = lp_classes_page_url( 'classes' );
 $lp_workshops = lp_workshops_url();
 
+if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
+	lp_analytics_view_item_marker(
+		array(
+			lp_analytics_commerce_item(
+				'workshop',
+				(int) $lp_post_id,
+				(string) get_the_title( $lp_post_id ),
+				lp_class_price_amount( (int) $lp_post_id )
+			),
+		)
+	);
+}
+
 $lp_about_raw = trim( (string) get_the_content() );
 $lp_about     = $lp_about_raw ? apply_filters( 'the_content', $lp_about_raw ) : '';
 

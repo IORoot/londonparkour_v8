@@ -65,7 +65,7 @@ const MODULES = {
 
   commercePurchase: {
     init: () => initCommercePurchase(),
-    selector: '[data-lp-purchase]',
+    selector: null,
     critical: false,
     lazy: false,
     timeout: 3000

@@ -85,6 +85,28 @@ $lp_buy_btn = static function ( int $pack_id, string $label, string $variant ) u
 };
 
 get_header();
+
+if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
+	$lp_view_packs = array();
+	foreach (
+		array(
+			$lp_drop_in_id,
+			$lp_five_pack_id,
+			$lp_ten_pack_id,
+		) as $lp_pack_id
+	) {
+		if ( $lp_pack_id < 1 ) {
+			continue;
+		}
+		$lp_view_packs[] = lp_analytics_commerce_item(
+			'coupon',
+			$lp_pack_id,
+			(string) get_the_title( $lp_pack_id ),
+			function_exists( 'lp_pack_price_amount' ) ? lp_pack_price_amount( $lp_pack_id ) : 0.0
+		);
+	}
+	lp_analytics_view_item_marker( $lp_view_packs );
+}
 ?>
 
 <main id="main">

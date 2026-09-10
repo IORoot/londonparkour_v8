@@ -2,6 +2,8 @@
  * DialogVideo - ES6 Class for managing video dialogs with YouTube, Vimeo, and HTML5 support
  */
 
+import { lpVideoProgress, lpVideoStart } from '../utils/analytics.js';
+
 // API loaders
 class APILoader {
     constructor() {
@@ -74,6 +76,12 @@ class APILoader {
       this.videoId = button.dataset.videoId || '';
       this.videoUrl = button.dataset.videoUrl || '';
       this.autoplay = button.dataset.autoplay === 'true';
+      this.trackTutorial = button.hasAttribute('data-lp-tutorial-video');
+      this.videoTitle = button.getAttribute('data-lp-video-title') || '';
+      this.seriesName = button.getAttribute('data-lp-series-name') || '';
+      this.didVideoStart = false;
+      this.progressMarks = new Set();
+      this.progressTimer = null;
   
       // If dialogElement not provided, find it by data attribute
       if (dialogElement) {
@@ -135,6 +143,7 @@ class APILoader {
     }
   
     onDialogClose() {
+      this.stopProgressWatch();
       // Stop video when dialog closes
       this.stop();
   
@@ -189,7 +198,8 @@ class APILoader {
                 this.constrainFrame(iframe);
               }
               resolve();
-            }
+            },
+            onStateChange: (event) => this.onYouTubeStateChange(event)
           }
         });
       });
@@ -216,6 +226,50 @@ class APILoader {
       this.isPlayerReady = true;
     }
   
+    onYouTubeStateChange(event) {
+      if (!this.trackTutorial || !window.YT) return;
+      if (event.data === window.YT.PlayerState.PLAYING) {
+        if (!this.didVideoStart) {
+          this.didVideoStart = true;
+          lpVideoStart({
+            videoTitle: this.videoTitle,
+            seriesName: this.seriesName,
+          });
+        }
+        this.startProgressWatch();
+      } else {
+        this.stopProgressWatch();
+      }
+    }
+
+    startProgressWatch() {
+      this.stopProgressWatch();
+      this.progressTimer = window.setInterval(() => {
+        if (!this.player || typeof this.player.getDuration !== 'function') return;
+        const duration = this.player.getDuration() || 0;
+        const current = typeof this.player.getCurrentTime === 'function' ? this.player.getCurrentTime() : 0;
+        if (duration <= 0) return;
+        const pct = (current / duration) * 100;
+        [25, 50, 75].forEach((mark) => {
+          if (pct >= mark && !this.progressMarks.has(mark)) {
+            this.progressMarks.add(mark);
+            lpVideoProgress({
+              videoTitle: this.videoTitle,
+              seriesName: this.seriesName,
+              videoPercent: mark,
+            });
+          }
+        });
+      }, 1000);
+    }
+
+    stopProgressWatch() {
+      if (this.progressTimer) {
+        window.clearInterval(this.progressTimer);
+        this.progressTimer = null;
+      }
+    }
+
     constrainFrame(frame) {
       if (!frame) return;
       frame.style.position = 'absolute';
@@ -340,6 +394,7 @@ class APILoader {
     }
   
     destroy() {
+      this.stopProgressWatch();
       this.stop();
   
       // Remove event listeners

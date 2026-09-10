@@ -152,6 +152,19 @@ $lp_book_button = static function ( string $variant ) use ( $lp_appt_id, $lp_boo
 };
 
 get_header();
+
+if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
+	lp_analytics_view_item_marker(
+		array(
+			lp_analytics_commerce_item(
+				'private',
+				$lp_appt_id,
+				(string) get_the_title( $lp_appt_id ),
+				lp_class_price_amount( $lp_appt_id )
+			),
+		)
+	);
+}
 ?>
 
 <main id="main">

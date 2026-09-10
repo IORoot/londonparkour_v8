@@ -104,6 +104,11 @@ $lp_spacing = lp_section_spacing( $args );
 				</div>
 
 				<?php if ( 'sent' === $lp_contact_status ) : ?>
+					<?php
+					if ( function_exists( 'lp_analytics_event_marker' ) ) {
+						lp_analytics_event_marker( 'generate_lead' );
+					}
+					?>
 					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-primary m-0" role="status"><?php echo esc_html( $lp_success_message ); ?></p>
 				<?php elseif ( 'error' === $lp_contact_status ) : ?>
 					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-error m-0" role="alert"><?php echo esc_html( $lp_error_message ); ?></p>

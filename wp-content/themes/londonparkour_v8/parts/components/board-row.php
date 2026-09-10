@@ -213,11 +213,12 @@ if ( '' !== $lp_detail_href ) {
 	$lp_root .= ' cursor-pointer';
 }
 $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
+$lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array() );
 ?>
 <?php if ( $lp_is_link ) : ?>
-<a class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?> href="<?php echo esc_url( $lp_href ); ?>">
+<a class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?><?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?> href="<?php echo esc_url( $lp_href ); ?>">
 <?php else : ?>
-<div class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?>>
+<div class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?><?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?>>
 <?php endif; ?>
 	<?php if ( '' !== $lp_detail_href ) : ?>
 		<a class="absolute inset-0 z-0" href="<?php echo esc_url( $lp_detail_href ); ?>" aria-hidden="true" tabindex="-1" data-slot="row-details"></a>

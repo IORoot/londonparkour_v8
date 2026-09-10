@@ -86,6 +86,18 @@ $lp_play_href = $lp_current_lessons
 	? (string) get_permalink( $lp_current_lessons[0] )
 	: $lp_term_url;
 
+$lp_lesson_card = static function ( WP_Post $lp_lesson, int $lp_index ) use ( $lp_term ): array {
+	$lp_args               = lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_index );
+	$lp_args['data_attrs'] = lp_select_content_attrs(
+		'tutorial',
+		(string) $lp_lesson->ID,
+		get_the_title( $lp_lesson ),
+		$lp_term->name
+	);
+
+	return $lp_args;
+};
+
 $lp_shelves = $lp_is_grid ? array() : lp_series_category_shelves( $lp_current_lessons );
 
 $lp_masthead = array(
@@ -315,9 +327,15 @@ get_header();
 									lp_part(
 										'elements/button',
 										array(
-											'label'   => $lp_cta_label,
-											'variant' => 'primary',
-											'href'    => $lp_play_href,
+											'label'      => $lp_cta_label,
+											'variant'    => 'primary',
+											'href'       => $lp_play_href,
+											'data_attrs' => lp_select_content_attrs(
+												'series',
+												(string) $lp_term_id,
+												$lp_term->name,
+												$lp_term->name
+											),
 										)
 									);
 									?>
@@ -361,7 +379,7 @@ get_header();
 						<?php if ( $lp_is_grid ) : ?>
 							<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" data-component="series-card-grid">
 								<?php foreach ( $lp_current_lessons as $lp_gi => $lp_lesson ) : ?>
-									<?php lp_part( 'components/video-card', lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_gi + 1 ) ); ?>
+									<?php lp_part( 'components/video-card', $lp_lesson_card( $lp_lesson, $lp_gi + 1 ) ); ?>
 								<?php endforeach; ?>
 							</div>
 						<?php else : ?>
@@ -381,7 +399,7 @@ get_header();
 										<div class="flex gap-4 overflow-x-auto min-w-0 w-full max-w-full snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-shelf-scroller>
 											<?php foreach ( $lp_shelf['posts'] as $lp_si => $lp_lesson ) : ?>
 												<div class="w-[248px] shrink-0 snap-start">
-													<?php lp_part( 'components/video-card', lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_si + 1 ) ); ?>
+													<?php lp_part( 'components/video-card', $lp_lesson_card( $lp_lesson, $lp_si + 1 ) ); ?>
 												</div>
 											<?php endforeach; ?>
 										</div>

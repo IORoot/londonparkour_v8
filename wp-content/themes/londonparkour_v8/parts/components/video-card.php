@@ -54,6 +54,7 @@ $lp_compact_root_interactive = 'cursor-pointer focus-visible:outline focus-visib
 
 $lp_is_compact = 'compact' === ( $args['variant'] ?? 'full' );
 $lp_is_lesson  = 'lesson' === ( $args['variant'] ?? 'full' );
+$lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array() );
 
 $lp_image_id  = ! empty( $args['image_id'] ) ? (int) $args['image_id'] : 0;
 $lp_image_url = (string) ( $args['image_url'] ?? '' );
@@ -128,9 +129,9 @@ if ( $lp_is_lesson ) :
 	);
 	?>
 	<?php if ( $lp_is_link ) : ?>
-	<a class="<?php echo $lp_root; ?>" data-component="video-card" data-variant="lesson" href="<?php echo esc_url( $lp_href ); ?>">
+	<a class="<?php echo $lp_root; ?>" data-component="video-card" data-variant="lesson" href="<?php echo esc_url( $lp_href ); ?>"<?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?>>
 	<?php else : ?>
-	<div class="<?php echo $lp_root; ?>" data-component="video-card" data-variant="lesson">
+	<div class="<?php echo $lp_root; ?>" data-component="video-card" data-variant="lesson"<?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?>>
 	<?php endif; ?>
 		<div class="relative aspect-[16/9] w-full bg-neutral overflow-hidden border-b border-neutral-content/10">
 			<?php

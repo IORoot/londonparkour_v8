@@ -154,6 +154,17 @@ $lp_found  = (int) $GLOBALS['wp_query']->found_posts;
 $lp_offset = ( max( 1, (int) get_query_var( 'paged' ) ) - 1 ) * (int) get_query_var( 'posts_per_page' );
 $lp_home   = home_url( '/' );
 
+if ( function_exists( 'lp_analytics_event_marker' ) ) {
+	lp_analytics_event_marker(
+		'view_search_results',
+		array(
+			'search_term'   => $lp_q,
+			'result_count'  => $lp_found,
+			'search_filter' => '' === $lp_active_type ? 'all' : $lp_active_type,
+		)
+	);
+}
+
 // `Zqc9v` Query Bar copy. `label` is also the page's <h1>.
 $lp_bar = array(
 	'label' => 'SEARCH',

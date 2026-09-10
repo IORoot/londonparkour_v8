@@ -150,6 +150,24 @@ function lp_classes( string ...$classes ): string {
 }
 
 /**
+ * Extra HTML attributes, already escaped. Leading space when non-empty.
+ *
+ * @param array<string,scalar> $attrs Attribute map.
+ */
+function lp_html_attrs( array $attrs ): string {
+	$out = '';
+	foreach ( $attrs as $key => $value ) {
+		$key = strtolower( trim( (string) $key ) );
+		if ( '' === $key || ! preg_match( '/^[a-z][a-z0-9:_-]*$/', $key ) ) {
+			continue;
+		}
+		$out .= sprintf( ' %s="%s"', esc_attr( $key ), esc_attr( (string) $value ) );
+	}
+
+	return $out;
+}
+
+/**
  * Emit an SVG icon from one of the two external sprites.
  *
  * Replaces the Storybook's createIcon() from assets/js/utils/svgHelper.js.
