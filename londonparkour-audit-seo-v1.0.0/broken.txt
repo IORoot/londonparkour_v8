@@ -1,6 +1,0 @@
-404  (linked 17x)  http://localhost:8102/about
-404  (linked 1x)  http://localhost:8102/classes/locations/
-404  (linked 1x)  http://localhost:8102/tutorials/page/3/
-404  (linked 1x)  http://localhost:8102/tutorials/page/4/
-404  (linked 1x)  http://localhost:8102/tutorials/page/5/
-404  (linked 3x)  http://localhost:8102/tutorials/page/2/

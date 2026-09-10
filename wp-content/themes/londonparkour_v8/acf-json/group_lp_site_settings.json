@@ -64,6 +64,14 @@
             "key": "field_54becc274fd82508"
         },
         {
+            "name": "gtm_container_id",
+            "label": "GTM container ID",
+            "type": "text",
+            "placeholder": "GTM-XXXXXXX",
+            "instructions": "Google Tag Manager container ID, e.g. GTM-XXXXXXX. Leave empty to omit GTM. The official head and body snippets print on every front-end page.",
+            "key": "field_fc81f7ecfcd6bd2b"
+        },
+        {
             "name": "tab_seo",
             "label": "SEO",
             "type": "tab",

@@ -2,7 +2,7 @@
  * Shared clasbpro panel drawer — loads booking or coupon shortcode HTML.
  */
 
-import { lpBeginCheckout, lpSelectItem } from '../utils/analytics.js';
+import { lpAddPaymentInfo, lpBeginCheckout, lpSelectItem } from '../utils/analytics.js';
 
 const DRAWER_ID = 'lp-booking-drawer';
 const LOADING_HTML =
@@ -94,7 +94,7 @@ function setTitle(type) {
 /**
  * @param {'booking'|'coupon'} type
  * @param {string|number} id
- * @param {{ presetDate?: string, presetSlot?: string, name?: string }} [extra]
+ * @param {{ presetDate?: string, presetSlot?: string, name?: string, category?: string, price?: number, listName?: string }} [extra]
  */
 async function loadPanel(type, id, extra = {}) {
   const mount = mountEl();
@@ -159,11 +159,13 @@ async function loadPanel(type, id, extra = {}) {
     }
     applyPayLabel(mount);
 
-    const itemType = type === 'coupon' ? 'pack' : 'class';
+    const category = extra.category || (type === 'coupon' ? 'coupon' : 'class');
     lpBeginCheckout({
-      itemType,
+      category,
       id,
       name: extra.name || '',
+      price: extra.price || 0,
+      listName: extra.listName || '',
     });
   } catch {
     mount.innerHTML = FAIL_HTML;
@@ -197,17 +199,46 @@ function onPanelClick(event) {
   const presetDate = trigger.getAttribute('data-preset-date') || '';
   const presetSlot = trigger.getAttribute('data-preset-slot-rule-id') || '';
   const name = trigger.getAttribute('data-lp-item-name') || '';
-  const itemType = panel.type === 'coupon' ? 'pack' : 'class';
+  const listName = trigger.getAttribute('data-lp-list') || 'site';
+  const category =
+    trigger.getAttribute('data-lp-item-category') || (panel.type === 'coupon' ? 'coupon' : 'class');
+  const price = Number(trigger.getAttribute('data-lp-price') || 0);
 
   lpSelectItem({
-    itemType,
+    category,
     id: panel.id,
     name,
-    listName: trigger.getAttribute('data-lp-list') || 'site',
+    price,
+    listName,
   });
 
   openDrawer();
-  loadPanel(panel.type, panel.id, { presetDate, presetSlot, name });
+  loadPanel(panel.type, panel.id, { presetDate, presetSlot, name, category, price, listName });
+}
+
+/**
+ * @param {Event} event
+ */
+function onPaySubmit(event) {
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement)) return;
+  if (!form.closest('#lp-booking-drawer')) return;
+  if (!form.classList.contains('cbfs-form__form') && !form.classList.contains('cbfs-packs__form')) {
+    return;
+  }
+
+  const packChoice = form.querySelector('[data-cbfs-pack-choice-pack]');
+  const usingPack = !!(packChoice && packChoice.checked && !packChoice.disabled);
+  const seats = form.querySelector('[name="seats"]');
+  const quantity =
+    seats instanceof HTMLSelectElement || seats instanceof HTMLInputElement
+      ? Number(seats.value) || 1
+      : 1;
+
+  lpAddPaymentInfo({
+    paymentType: usingPack ? 'coupon' : 'stripe',
+    quantity,
+  });
 }
 
 /**
@@ -216,9 +247,13 @@ function onPanelClick(event) {
  */
 export function initBookingDrawer() {
   document.addEventListener('click', onPanelClick, true);
+  document.addEventListener('submit', onPaySubmit, true);
   applyPayLabel(document);
 
   return {
-    cleanup: () => document.removeEventListener('click', onPanelClick, true),
+    cleanup: () => {
+      document.removeEventListener('click', onPanelClick, true);
+      document.removeEventListener('submit', onPaySubmit, true);
+    },
   };
 }

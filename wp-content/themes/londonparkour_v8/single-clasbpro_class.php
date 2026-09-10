@@ -105,6 +105,7 @@ while ( have_posts() ) :
 		'BOOK THIS SESSION',
 		'band'
 	);
+	$lp_book['data_attrs']['data-lp-list'] = 'class-detail';
 
 	// A dated session's board label, derived — never the fabricated "Saturday".
 	$lp_row_date_label = static function ( string $lp_date ): string {

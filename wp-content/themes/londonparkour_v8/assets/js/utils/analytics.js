@@ -1,6 +1,16 @@
 /**
  * GA4 ecommerce via dataLayer (GTM). CMP gates tags later — we always push.
+ *
+ * Funnel: select_item → begin_checkout → add_payment_info → purchase.
+ * item_category is one of: class | workshop | private | coupon.
  */
+
+/**
+ * @typedef {'class'|'workshop'|'private'|'coupon'} LpCommerceCategory
+ */
+
+/** @type {Record<string, unknown>|null} */
+let checkoutContext = null;
 
 /**
  * @param {Record<string, unknown>} payload
@@ -11,35 +21,69 @@ export function lpPushDataLayer(payload) {
 }
 
 /**
- * @param {'class'|'pack'} itemType
+ * @param {string} [raw]
+ * @param {string} [itemType]
+ * @returns {LpCommerceCategory}
+ */
+export function lpCommerceCategory(raw, itemType) {
+  if (raw === 'class' || raw === 'workshop' || raw === 'private' || raw === 'coupon') {
+    return raw;
+  }
+  return itemType === 'pack' || itemType === 'coupon' ? 'coupon' : 'class';
+}
+
+/**
+ * @param {LpCommerceCategory} category
  * @param {string|number} id
- * @param {string} [name]
- * @param {number} [price]
+ * @returns {string}
+ */
+function commerceItemId(category, id) {
+  const prefix = category === 'coupon' ? 'pack' : category;
+  return `${prefix}:${id}`;
+}
+
+/**
+ * @param {object} opts
+ * @param {LpCommerceCategory} opts.category
+ * @param {string|number} opts.id
+ * @param {string} [opts.name]
+ * @param {number} [opts.price]
+ * @param {number} [opts.quantity]
  * @returns {Record<string, unknown>}
  */
-function commerceItem(itemType, id, name = '', price = 0) {
-  const itemId = `${itemType}:${id}`;
+function commerceItem(opts) {
+  const quantity = opts.quantity && opts.quantity > 0 ? opts.quantity : 1;
   const item = {
-    item_id: itemId,
-    item_name: name || itemId,
-    item_category: itemType === 'pack' ? 'coupon' : 'class',
+    item_id: commerceItemId(opts.category, opts.id),
+    item_name: opts.name || commerceItemId(opts.category, opts.id),
+    item_category: opts.category,
+    quantity,
   };
-  if (price > 0) {
-    item.price = price;
+  if (opts.price && opts.price > 0) {
+    item.price = opts.price;
   }
   return item;
 }
 
 /**
  * @param {object} opts
- * @param {'class'|'pack'} opts.itemType
  * @param {string|number} opts.id
  * @param {string} [opts.name]
  * @param {number} [opts.price]
+ * @param {number} [opts.quantity]
  * @param {string} [opts.listName]
+ * @param {string} [opts.category]
+ * @param {'class'|'pack'} [opts.itemType]
  */
 export function lpSelectItem(opts) {
-  const item = commerceItem(opts.itemType, opts.id, opts.name, opts.price);
+  const category = lpCommerceCategory(opts.category, opts.itemType);
+  const item = commerceItem({
+    category,
+    id: opts.id,
+    name: opts.name,
+    price: opts.price,
+    quantity: opts.quantity,
+  });
   lpPushDataLayer({ ecommerce: null });
   lpPushDataLayer({
     event: 'select_item',
@@ -52,21 +96,88 @@ export function lpSelectItem(opts) {
 
 /**
  * @param {object} opts
- * @param {'class'|'pack'} opts.itemType
  * @param {string|number} opts.id
  * @param {string} [opts.name]
  * @param {number} [opts.price]
+ * @param {number} [opts.quantity]
  * @param {string} [opts.currency]
+ * @param {string} [opts.category]
+ * @param {'class'|'pack'} [opts.itemType]
+ * @param {string} [opts.listName]
  */
 export function lpBeginCheckout(opts) {
-  const item = commerceItem(opts.itemType, opts.id, opts.name, opts.price);
+  const category = lpCommerceCategory(opts.category, opts.itemType);
+  const item = commerceItem({
+    category,
+    id: opts.id,
+    name: opts.name,
+    price: opts.price,
+    quantity: opts.quantity,
+  });
+  const currency = opts.currency || 'GBP';
+  const value = item.price ? Number(item.price) * Number(item.quantity) : 0;
+  const ecommerce = {
+    currency,
+    items: [item],
+  };
+  if (value > 0) {
+    ecommerce.value = value;
+  }
+
+  checkoutContext = {
+    category,
+    id: opts.id,
+    name: opts.name || '',
+    price: opts.price || 0,
+    quantity: opts.quantity || 1,
+    currency,
+    listName: opts.listName || '',
+  };
+
   lpPushDataLayer({ ecommerce: null });
   lpPushDataLayer({
     event: 'begin_checkout',
-    ecommerce: {
-      currency: opts.currency || 'GBP',
-      items: [item],
-    },
+    ecommerce,
+  });
+}
+
+/**
+ * Pay CTA — Stripe checkout or book-with-coupon submit.
+ *
+ * @param {object} [opts]
+ * @param {string} [opts.paymentType]
+ * @param {number} [opts.price]
+ * @param {number} [opts.quantity]
+ * @param {string} [opts.currency]
+ */
+export function lpAddPaymentInfo(opts = {}) {
+  const ctx = checkoutContext;
+  if (!ctx) return;
+
+  const quantity = opts.quantity && opts.quantity > 0 ? opts.quantity : ctx.quantity || 1;
+  const price = opts.price && opts.price > 0 ? opts.price : ctx.price || 0;
+  const currency = opts.currency || ctx.currency || 'GBP';
+  const item = commerceItem({
+    category: ctx.category,
+    id: ctx.id,
+    name: ctx.name,
+    price,
+    quantity,
+  });
+  const value = price > 0 ? price * quantity : 0;
+  const ecommerce = {
+    currency,
+    payment_type: opts.paymentType || 'stripe',
+    items: [item],
+  };
+  if (value > 0) {
+    ecommerce.value = value;
+  }
+
+  lpPushDataLayer({ ecommerce: null });
+  lpPushDataLayer({
+    event: 'add_payment_info',
+    ecommerce,
   });
 }
 

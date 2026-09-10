@@ -917,6 +917,13 @@ return array(
 				'type'         => 'url',
 				'instructions' => __( 'School-wide chat.whatsapp.com invite. Used on paid booking confirmations when the class and site have no URL of their own. Never output on an unconfirmed visit.', 'londonparkour_v8' ),
 			),
+			array(
+				'name'         => 'gtm_container_id',
+				'label'        => __( 'GTM container ID', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'placeholder'  => 'GTM-XXXXXXX',
+				'instructions' => __( 'Google Tag Manager container ID, e.g. GTM-XXXXXXX. Leave empty to omit GTM. The official head and body snippets print on every front-end page.', 'londonparkour_v8' ),
+			),
 			lp_tab( __( 'SEO', 'londonparkour_v8' ) ),
 			array(
 				'name'         => 'seo_title',

@@ -107,6 +107,7 @@ $lp_book = lp_class_book_button_args(
 	'BOOK THIS DATE',
 	'band'
 );
+$lp_book['data_attrs']['data-lp-list'] = 'workshop-detail';
 
 $lp_upcoming = lp_class_upcoming_sessions( $lp_post_id, 1 );
 $lp_next     = $lp_upcoming[0] ?? null;

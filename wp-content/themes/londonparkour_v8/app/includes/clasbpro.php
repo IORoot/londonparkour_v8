@@ -396,6 +396,57 @@ function lp_class_is_appointment( int $class_id ): bool {
 }
 
 /**
+ * GA4 item_category for a clasbpro class: class, workshop, or private.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_commerce_category_for_class( int $class_id ): string {
+	if ( $class_id > 0 && lp_class_is_appointment( $class_id ) ) {
+		return 'private';
+	}
+	if ( $class_id > 0 && lp_class_is_one_off( $class_id ) ) {
+		return 'workshop';
+	}
+	return 'class';
+}
+
+/**
+ * Numeric class price in GBP, or 0.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_price_amount( int $class_id ): float {
+	$raw   = lp_clasbpro_raw( $class_id );
+	$price = $raw ? (float) ( $raw['price'] ?? 0 ) : 0.0;
+	if ( $price <= 0 && function_exists( 'get_field' ) ) {
+		$price = (float) get_field( 'price_gbp', $class_id );
+	}
+
+	return $price > 0 ? $price : 0.0;
+}
+
+/**
+ * Numeric coupon pack price in GBP, or 0.
+ *
+ * @param int $pack_id clasbpro_pack post ID.
+ */
+function lp_pack_price_amount( int $pack_id ): float {
+	if ( $pack_id < 1 ) {
+		return 0.0;
+	}
+
+	$price = 0.0;
+	if ( function_exists( 'get_field' ) ) {
+		$price = (float) get_field( 'pack_price', $pack_id );
+	}
+	if ( $price <= 0 ) {
+		$price = (float) get_post_meta( $pack_id, 'pack_price', true );
+	}
+
+	return $price > 0 ? $price : 0.0;
+}
+
+/**
  * Appointment (1:1) class singles are a booking product, not a ClassDetail
  * page. Send visitors to the Private 1:1 landing.
  */
@@ -1100,13 +1151,27 @@ function lp_class_glyph( int $class_id ): array {
  * @return array<string,mixed>
  */
 function lp_class_book_button_args( int $class_id, string $preset_date = '', string $label = 'BOOK', string $variant = 'primary' ): array {
-	$attrs = array(
-		'data-lp-panel'  => 'booking',
-		'data-lp-book'   => '1',
-		'data-class-id'  => (string) $class_id,
-		'data-lp-id'     => (string) $class_id,
-		'data-lp-list'   => 'classes',
+	$category = function_exists( 'lp_commerce_category_for_class' )
+		? lp_commerce_category_for_class( $class_id )
+		: 'class';
+	$list     = array(
+		'class'    => 'classes',
+		'workshop' => 'workshops',
+		'private'  => 'private',
 	);
+
+	$attrs = array(
+		'data-lp-panel'         => 'booking',
+		'data-lp-book'          => '1',
+		'data-class-id'         => (string) $class_id,
+		'data-lp-id'            => (string) $class_id,
+		'data-lp-list'          => $list[ $category ] ?? 'classes',
+		'data-lp-item-category' => $category,
+	);
+	$price = function_exists( 'lp_class_price_amount' ) ? lp_class_price_amount( $class_id ) : 0.0;
+	if ( $price > 0 ) {
+		$attrs['data-lp-price'] = (string) $price;
+	}
 	if ( '' !== $preset_date ) {
 		$attrs['data-preset-date'] = $preset_date;
 	}
@@ -1190,11 +1255,16 @@ function lp_hero_first_class_book_args( string $label, string $variant = 'primar
  */
 function lp_pack_buy_button_args( int $pack_id, string $label = 'BUY', string $variant = 'primary' ): array {
 	$attrs = array(
-		'data-lp-panel' => 'coupon',
-		'data-pack-id'  => (string) $pack_id,
-		'data-lp-id'    => (string) $pack_id,
-		'data-lp-list'  => 'pricing',
+		'data-lp-panel'         => 'coupon',
+		'data-pack-id'          => (string) $pack_id,
+		'data-lp-id'            => (string) $pack_id,
+		'data-lp-list'          => 'pricing',
+		'data-lp-item-category' => 'coupon',
 	);
+	$price = function_exists( 'lp_pack_price_amount' ) ? lp_pack_price_amount( $pack_id ) : 0.0;
+	if ( $price > 0 ) {
+		$attrs['data-lp-price'] = (string) $price;
+	}
 
 	$title = get_the_title( $pack_id );
 	if ( is_string( $title ) && '' !== $title ) {

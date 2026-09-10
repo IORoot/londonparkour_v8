@@ -16,11 +16,13 @@ defined( 'ABSPATH' ) || exit;
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php lp_gtm_print_head(); ?>
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
+<?php lp_gtm_print_noscript(); ?>
 <?php wp_body_open(); ?>
 
 <a class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:bg-primary focus:text-primary-content focus:px-4 focus:py-2 focus:font-label focus:text-[11px] focus:font-semibold focus:uppercase focus:tracking-[0.9px]" href="#main">
