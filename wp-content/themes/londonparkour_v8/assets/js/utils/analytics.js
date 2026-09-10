@@ -1,9 +1,26 @@
 /**
  * GA4 ecommerce via dataLayer (GTM). CMP gates tags later — we always push.
  *
- * Funnel: select_item → begin_checkout → add_payment_info → purchase.
+ * Funnel: v8_select_item → v8_begin_checkout → v8_add_payment_info → v8_purchase.
  * item_category is one of: class | workshop | private | coupon.
+ *
+ * Every dataLayer event name is prefixed `v8_` so V8 hits are distinct from
+ * the live V7 recommended events (`purchase`, `generate_lead`, …) in GA4.
  */
+
+const EVENT = {
+  viewItem: 'v8_view_item',
+  selectItem: 'v8_select_item',
+  beginCheckout: 'v8_begin_checkout',
+  addPaymentInfo: 'v8_add_payment_info',
+  purchase: 'v8_purchase',
+  generateLead: 'v8_generate_lead',
+  newsletterSubscribe: 'v8_newsletter_subscribe',
+  viewSearchResults: 'v8_view_search_results',
+  videoStart: 'v8_video_start',
+  videoProgress: 'v8_video_progress',
+  selectContent: 'v8_select_content',
+};
 
 /**
  * @typedef {'class'|'workshop'|'private'|'coupon'} LpCommerceCategory
@@ -53,16 +70,13 @@ function commerceItemId(category, id) {
  */
 function commerceItem(opts) {
   const quantity = opts.quantity && opts.quantity > 0 ? opts.quantity : 1;
-  const item = {
+  return {
     item_id: commerceItemId(opts.category, opts.id),
     item_name: opts.name || commerceItemId(opts.category, opts.id),
     item_category: opts.category,
+    price: Number(opts.price) || 0,
     quantity,
   };
-  if (opts.price && opts.price > 0) {
-    item.price = opts.price;
-  }
-  return item;
 }
 
 /**
@@ -86,9 +100,11 @@ export function lpSelectItem(opts) {
   });
   lpPushDataLayer({ ecommerce: null });
   lpPushDataLayer({
-    event: 'select_item',
+    event: EVENT.selectItem,
     ecommerce: {
       item_list_name: opts.listName || 'site',
+      currency: 'GBP',
+      value: Number(item.price) * Number(item.quantity) || 0,
       items: [item],
     },
   });
@@ -115,14 +131,12 @@ export function lpBeginCheckout(opts) {
     quantity: opts.quantity,
   });
   const currency = opts.currency || 'GBP';
-  const value = item.price ? Number(item.price) * Number(item.quantity) : 0;
+  const value = Number(item.price) * Number(item.quantity) || 0;
   const ecommerce = {
     currency,
+    value,
     items: [item],
   };
-  if (value > 0) {
-    ecommerce.value = value;
-  }
 
   checkoutContext = {
     category,
@@ -136,7 +150,7 @@ export function lpBeginCheckout(opts) {
 
   lpPushDataLayer({ ecommerce: null });
   lpPushDataLayer({
-    event: 'begin_checkout',
+    event: EVENT.beginCheckout,
     ecommerce,
   });
 }
@@ -164,19 +178,17 @@ export function lpAddPaymentInfo(opts = {}) {
     price,
     quantity,
   });
-  const value = price > 0 ? price * quantity : 0;
+  const value = (Number(price) || 0) * quantity;
   const ecommerce = {
     currency,
+    value,
     payment_type: opts.paymentType || 'stripe',
     items: [item],
   };
-  if (value > 0) {
-    ecommerce.value = value;
-  }
 
   lpPushDataLayer({ ecommerce: null });
   lpPushDataLayer({
-    event: 'add_payment_info',
+    event: EVENT.addPaymentInfo,
     ecommerce,
   });
 }
@@ -200,14 +212,15 @@ export function lpPurchase(opts) {
     // private mode — still fire once per page load via module flag
   }
 
+  const items = Array.isArray(opts.items) ? opts.items : [];
   lpPushDataLayer({ ecommerce: null });
   lpPushDataLayer({
-    event: 'purchase',
+    event: EVENT.purchase,
     ecommerce: {
       transaction_id: tid,
-      value: opts.value || 0,
+      value: Number(opts.value) || 0,
       currency: opts.currency || 'GBP',
-      items: opts.items || [],
+      items,
     },
   });
 }
@@ -260,16 +273,15 @@ export function lpViewItem(items, currency = 'GBP') {
     value += (Number(item.price) || 0) * (Number(item.quantity) || 1);
   });
 
-  const ecommerce = { currency, items };
-  if (value > 0) ecommerce.value = value;
+  const ecommerce = { currency, value, items };
 
   lpPushDataLayer({ ecommerce: null });
-  lpPushDataLayer({ event: 'view_item', ecommerce });
+  lpPushDataLayer({ event: EVENT.viewItem, ecommerce });
 }
 
 export function lpGenerateLead() {
   if (!oncePerSession('lp_generate_lead')) return;
-  lpPushDataLayer({ event: 'generate_lead' });
+  lpPushDataLayer({ event: EVENT.generateLead });
 }
 
 /**
@@ -282,7 +294,7 @@ export function lpNewsletterSubscribe(method, sessionKey = '') {
       ? `lp_newsletter_booking_${sessionKey || '1'}`
       : 'lp_newsletter_dispatch';
   if (!oncePerSession(key)) return;
-  lpPushDataLayer({ event: 'newsletter_subscribe', method });
+  lpPushDataLayer({ event: EVENT.newsletterSubscribe, method });
 }
 
 /**
@@ -296,7 +308,7 @@ export function lpViewSearchResults(opts) {
   const filter = String(opts.searchFilter || 'all');
   if (!oncePerSession(`lp_search_${filter}:${term}`)) return;
   lpPushDataLayer({
-    event: 'view_search_results',
+    event: EVENT.viewSearchResults,
     search_term: term,
     result_count: Number(opts.resultCount) || 0,
     search_filter: filter,
@@ -310,7 +322,7 @@ export function lpViewSearchResults(opts) {
  */
 export function lpVideoStart(opts) {
   lpPushDataLayer({
-    event: 'video_start',
+    event: EVENT.videoStart,
     video_title: opts.videoTitle || '',
     video_provider: 'youtube',
     series_name: opts.seriesName || '',
@@ -325,7 +337,7 @@ export function lpVideoStart(opts) {
  */
 export function lpVideoProgress(opts) {
   lpPushDataLayer({
-    event: 'video_progress',
+    event: EVENT.videoProgress,
     video_title: opts.videoTitle || '',
     video_provider: 'youtube',
     series_name: opts.seriesName || '',
@@ -342,7 +354,7 @@ export function lpVideoProgress(opts) {
  */
 export function lpSelectContent(opts) {
   lpPushDataLayer({
-    event: 'select_content',
+    event: EVENT.selectContent,
     content_type: opts.contentType || '',
     content_id: String(opts.contentId || ''),
     content_name: opts.contentName || '',
