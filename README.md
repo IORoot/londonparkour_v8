@@ -54,3 +54,6 @@ If the page still looks stale after Pull: **Servers → Manage Services → Varn
 Caching rules: [`docs/cloudways-caching.md`](docs/cloudways-caching.md). Staging import design: [`docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md`](docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md).
 
 
+# Cursor
+
+- Doesn't run git hooks. (So DB Dump never runs)
