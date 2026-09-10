@@ -15,17 +15,17 @@ Do not import `docs/gtm-ecommerce-import.json` — create tags via the API / UI.
 | Config tag | One `V8-Google Tag` on All Pages. Pause `V7-Google Tag` and `V7-Universal Google Tag` on publish |
 | Linker | `V8-Conversion Linker` on All Pages |
 | GA4 property | Keep `G-98XR7R92LT` (do not split a new property) |
-| Payments | Ecommerce funnel. `v8_purchase` is a key event (incl. £0 coupon redemptions). Always send `value`, `currency`, `items[].price` |
-| Ads (this publish) | **Deferred.** New “Website purchase” conversion (value > 0 only) in a second pass when a fresh Ads label exists. Leave V7 Ads tags running for live V7 |
-| Contact | `v8_generate_lead` (key event), theme dataLayer, sessionStorage |
-| Newsletter | `v8_newsletter_subscribe` (key event). `method`: `dispatch` \| `booking_drawer` |
+| Payments | Ecommerce funnel. `purchase` is a key event (incl. £0 coupon redemptions). Always send `value`, `currency`, `items[].price` |
+| Ads (this publish) | New “Website purchase” conversion `AW-810152772/EARlCKmfnfMcEMTmp4ID` (value > 0 only). Leave V7 Ads tags running for live V7 |
+| Contact | `generate_lead` (key event), theme dataLayer, sessionStorage |
+| Newsletter | `newsletter_subscribe` (key event). `method`: `dispatch` \| `booking_drawer` |
 | Dispatch | Fire on `?dispatch=sent` (Mailchimp thank-you), not a footer form |
 | Booking newsletter | Fire on `/booking-confirmed/` only if `_clasbpro_mailchimp_opt_in` |
-| Search | Custom `v8_view_search_results`. Do **not** enable GA4 Enhanced Measurement site search |
-| Video | Tutorial dialogs only: `v8_video_start` + `v8_video_progress` at 25 / 50 / 75 |
-| Series | `v8_select_content` on PLAY SERIES, series lesson cards, tutorial sibling board |
-| Product interest | `v8_view_item` on class / workshop / private / coupon **detail** load only |
-| Event names | Every V8 dataLayer event is prefixed `v8_` so it is distinct from live V7 events in the shared GA4 property |
+| Search | Recommended `view_search_results`. Do **not** enable GA4 Enhanced Measurement site search |
+| Video | Tutorial dialogs only: `video_start` + `video_progress` at 25 / 50 / 75 |
+| Series | `select_content` on PLAY SERIES, series lesson cards, tutorial sibling board |
+| Product interest | `view_item` on class / workshop / private / coupon **detail** load only |
+| Event names | GA4 recommended names (except `newsletter_subscribe`). Do not prefix — Monetization and the checkout funnel only recognise the exact names |
 | Out of scope | Map pins, timetable filters, outbound, 404, class/workshop/thank-you films |
 | GTM tags | Two GA4 Event tags: ecommerce vs leads/content |
 | Custom dimensions | `method`, `series_name`, `search_filter` (event-scoped) |
@@ -37,21 +37,22 @@ Each ecommerce push is preceded by `{ ecommerce: null }`.
 
 | User action | Event | `item_category` |
 |---|---|---|
-| Product detail load | `v8_view_item` | `class` / `workshop` / `private` / `coupon` |
-| Click Book / Buy | `v8_select_item` | same |
-| Drawer form loaded | `v8_begin_checkout` | same |
-| Click CONFIRM AND PAY | `v8_add_payment_info` | same (`payment_type`: `stripe` or `coupon`) |
-| Land on `/booking-confirmed/` | `v8_purchase` | same |
+| Product detail load | `view_item` | `class` / `workshop` / `private` / `coupon` |
+| Click Book / Buy | `select_item` | same |
+| Drawer form loaded | `begin_checkout` | same |
+| Click CONFIRM AND PAY | `add_payment_info` | same (`payment_type`: `stripe` or `coupon`) |
+| Land on `/booking-confirmed/` | `purchase` | same |
 
 `item_id` is `class:{id}`, `workshop:{id}`, `private:{id}`, or `pack:{id}`.
 Currency is `GBP`. Every commerce event includes `value` and `items[].price`.
-`v8_purchase` uses the Stripe session id as `transaction_id`
+`purchase` uses the Stripe session id as `transaction_id`
 (sessionStorage so refresh does not send a second hit).
 
-GA4 Monetization → Ecommerce purchases only counts the recommended event
-`purchase`. V8 revenue lives on the `v8_purchase` **key event** (`value` +
-`currency`) and on the event parameters / items array. Do not also fire a
-bare `purchase` from V8 — that would mix with V7.
+GA4 Monetization → Ecommerce purchases and Total revenue only count the
+recommended event `purchase`. V7 GTM tags use class-specific custom names
+(`adult_outdoor_class_east_purchase`, …), not `purchase`, so they do not
+double-fire. Staging tests will mix with any live `purchase` already in
+the shared property — split with `item_category` or hostname.
 
 ## Data layer — leads and content
 
@@ -59,16 +60,16 @@ No PII (no email, no name).
 
 | User action | Event | Parameters |
 |---|---|---|
-| Contact `?contact=sent` | `v8_generate_lead` | — |
-| Dispatch `?dispatch=sent` | `v8_newsletter_subscribe` | `method`: `dispatch` |
-| Booking confirmed + Mailchimp opt-in | `v8_newsletter_subscribe` | `method`: `booking_drawer` |
-| Search results (`/?s=`) | `v8_view_search_results` | `search_term`, `result_count`, `search_filter` (`all` or post type) |
-| Tutorial video actually plays | `v8_video_start` | `video_title`, `video_provider`: `youtube`, `series_name` |
-| Tutorial watch 25 / 50 / 75% | `v8_video_progress` | `video_percent`, plus the start params |
-| PLAY SERIES / lesson card / sibling row | `v8_select_content` | `content_type`, `content_id`, `content_name`, `series_name` |
+| Contact `?contact=sent` | `generate_lead` | — |
+| Dispatch `?dispatch=sent` | `newsletter_subscribe` | `method`: `dispatch` |
+| Booking confirmed + Mailchimp opt-in | `newsletter_subscribe` | `method`: `booking_drawer` |
+| Search results (`/?s=`) | `view_search_results` | `search_term`, `result_count`, `search_filter` (`all` or post type) |
+| Tutorial video actually plays | `video_start` | `video_title`, `video_provider`: `youtube`, `series_name` |
+| Tutorial watch 25 / 50 / 75% | `video_progress` | `video_percent`, plus the start params |
+| PLAY SERIES / lesson card / sibling row | `select_content` | `content_type`, `content_id`, `content_name`, `series_name` |
 
 Lead and search events use sessionStorage so a thank-you refresh is not a
-second conversion. `v8_select_content` fires on every click.
+second conversion. `select_content` fires on every click.
 
 ## GTM workspace (V8 folder)
 
@@ -105,8 +106,9 @@ Enable **Event** if it is not already on. Leave other built-ins unprefixed.
 
 | Name | Type | Fire on |
 |---|---|---|
-| `V8-CE ecommerce` | Custom Event, regex | `^(v8_view_item\|v8_select_item\|v8_begin_checkout\|v8_add_payment_info\|v8_purchase)$` |
-| `V8-CE leads and content` | Custom Event, regex | `^(v8_generate_lead\|v8_newsletter_subscribe\|v8_view_search_results\|v8_video_start\|v8_video_progress\|v8_select_content)$` |
+| `V8-CE ecommerce` | Custom Event, regex | `^(view_item\|select_item\|begin_checkout\|add_payment_info\|purchase)$` |
+| `V8-CE purchase value gt 0` | Custom Event | `purchase` **and** `{{V8-DLV - value}}` greater than 0 |
+| `V8-CE leads and content` | Custom Event, regex | `^(generate_lead\|newsletter_subscribe\|view_search_results\|video_start\|video_progress\|select_content)$` |
 | `V8-All Pages` | Page View — All Pages | (Initialization / All Pages as required by tag type) |
 
 ### Tags
@@ -115,6 +117,7 @@ Enable **Event** if it is not already on. Leave other built-ins unprefixed.
 |---|---|---|
 | `V8-Google Tag` | Google Tag | Tag ID `{{V8-GTM Tag ID}}`. All Pages. Pause both V7 googtags |
 | `V8-Conversion Linker` | Conversion Linker | All Pages |
+| `V8-Google Ads Purchase` | Google Ads Conversion Tracking | `AW-810152772/EARlCKmfnfMcEMTmp4ID`. Trigger `V8-CE purchase value gt 0` |
 | `V8-GA4 Ecommerce` | GA4 Event | Event name `{{Event}}`. Send ecommerce data from dataLayer. Extra params: `value`, `currency`, `transaction_id`, `item_category`, `item_id`, `item_name`, `price`, `payment_type`. Trigger `V8-CE ecommerce` |
 | `V8-GA4 Leads and Content` | GA4 Event | Event name `{{Event}}`. No ecommerce. Params: `method`, `series_name`, `search_filter`, `search_term`, `result_count`, `video_percent`, `video_title`, `content_type`, `content_id`, `content_name`. Trigger `V8-CE leads and content` |
 
@@ -122,26 +125,28 @@ Event tags inherit the Google Tag measurement ID (or override with `{{V8-GTM Tag
 
 ## GA4 Admin
 
-1. Mark as **key events**: `v8_purchase`, `v8_generate_lead`, `v8_newsletter_subscribe`.
+1. Mark as **key events**: `purchase` (already), `generate_lead` (already), `newsletter_subscribe`.
 2. Custom dimensions (event-scoped): `method`, `series_name`, `search_filter`, `item_category`.
-3. Do not enable Enhanced Measurement “site search” (would double-count `v8_view_search_results`).
+3. Do not enable Enhanced Measurement “site search” (would double-count `view_search_results`).
 
-## Google Ads (not this publish)
+## Google Ads
 
-Create a conversion action named **Website purchase**, then a GTM tag:
+Conversion action **Website purchase** (`customers/8689582919/conversionActions/7757844393`),
+primary, included in the Conversions column, `ONE_PER_CLICK`.
 
 | Field | Value |
 |---|---|
-| Tag | `V8-Google Ads Purchase` |
+| Tag | `V8-Google Ads Purchase` (`awct`, tag 158) |
 | Conversion ID | `810152772` |
-| Conversion Label | the new action’s label |
+| Conversion Label | `EARlCKmfnfMcEMTmp4ID` |
 | Value | `{{V8-DLV - value}}` |
 | Currency | GBP |
 | Transaction ID | `{{V8-DLV - transaction_id}}` |
-| Trigger | Custom Event `v8_purchase` **and** value greater than 0 |
+| Trigger | `V8-CE purchase value gt 0` (custom event `purchase` **and** value greater than 0) |
+| Linker | `V8-Conversion Linker` on `V8-All Pages` |
 
 Do not fire Ads on `select_item` or `begin_checkout`. Split product type in
-GA4 via ecommerce `item_category`, not as four Ads labels.
+GA4 via ecommerce `item_category`, not as four Ads labels. Do not reuse V7 labels.
 
 ## Staging vs live
 
@@ -149,23 +154,24 @@ Cloudways staging and live share `GTM-P5T257F`. Publishing the workspace is
 what makes tags fire on staging without Tag Assistant. Live V7 keeps its
 click / thank-you / Ads tags until the V8 theme is the public site.
 
-**Published:** container version **31** (`v8_` event prefix + purchase value)
-is Live. After that publish GTM opened workspace **35**.
+**Published:** container version **33** is Live (adds `V8-Google Ads Purchase`).
+Version 32 was `V8 recommended event names`. After this publish GTM opened
+workspace **37**.
 
 `V8-Google Tag` fires on the built-in **Initialization** trigger.
 `V8-Conversion Linker` fires on `V8-All Pages`.
 
 ## Preview checks (staging, after publish)
 
-1. Homepage → class detail: `v8_view_item`. Book: `v8_select_item` then `v8_begin_checkout`.
-2. Confirm and Pay: `v8_add_payment_info` (`payment_type: stripe`).
-3. Stripe test pay → `/booking-confirmed/` `v8_purchase` once with `value` / `currency` / item `price`. Refresh must not repeat.
+1. Homepage → class detail: `view_item`. Book: `select_item` then `begin_checkout`.
+2. Confirm and Pay: `add_payment_info` (`payment_type: stripe`).
+3. Stripe test pay → `/booking-confirmed/` `purchase` once with `value` / `currency` / item `price`. Refresh must not repeat.
 4. Repeat for coupon pack, workshop date, 1:1 (`private`).
-5. Contact form → `v8_generate_lead`. Refresh must not repeat.
-6. Dispatch join → Mailchimp return `?dispatch=sent` → `v8_newsletter_subscribe` / `dispatch`.
-7. Booking with newsletter ticked → `v8_newsletter_subscribe` / `booking_drawer` on confirmation.
-8. Search: `v8_view_search_results` with term, count, filter tab.
-9. Tutorial play: `v8_video_start`, then progress 25/50/75. Class/workshop films stay silent.
-10. PLAY SERIES / lesson card / sibling row: `v8_select_content` with `series_name`.
+5. Contact form → `generate_lead`. Refresh must not repeat.
+6. Dispatch join → Mailchimp return `?dispatch=sent` → `newsletter_subscribe` / `dispatch`.
+7. Booking with newsletter ticked → `newsletter_subscribe` / `booking_drawer` on confirmation.
+8. Search: `view_search_results` with term, count, filter tab.
+9. Tutorial play: `video_start`, then progress 25/50/75. Class/workshop films stay silent.
+10. PLAY SERIES / lesson card / sibling row: `select_content` with `series_name`.
 
 In GA4 DebugView the events should appear under the same device.

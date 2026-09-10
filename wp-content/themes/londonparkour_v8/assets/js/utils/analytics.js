@@ -1,25 +1,26 @@
 /**
  * GA4 ecommerce via dataLayer (GTM). CMP gates tags later — we always push.
  *
- * Funnel: v8_select_item → v8_begin_checkout → v8_add_payment_info → v8_purchase.
+ * Funnel: select_item → begin_checkout → add_payment_info → purchase.
  * item_category is one of: class | workshop | private | coupon.
  *
- * Every dataLayer event name is prefixed `v8_` so V8 hits are distinct from
- * the live V7 recommended events (`purchase`, `generate_lead`, …) in GA4.
+ * Names are GA4 recommended events (except newsletter_subscribe) so
+ * Monetization, the checkout funnel, and Total revenue work. Split product
+ * type with item_category, not a name prefix.
  */
 
 const EVENT = {
-  viewItem: 'v8_view_item',
-  selectItem: 'v8_select_item',
-  beginCheckout: 'v8_begin_checkout',
-  addPaymentInfo: 'v8_add_payment_info',
-  purchase: 'v8_purchase',
-  generateLead: 'v8_generate_lead',
-  newsletterSubscribe: 'v8_newsletter_subscribe',
-  viewSearchResults: 'v8_view_search_results',
-  videoStart: 'v8_video_start',
-  videoProgress: 'v8_video_progress',
-  selectContent: 'v8_select_content',
+  viewItem: 'view_item',
+  selectItem: 'select_item',
+  beginCheckout: 'begin_checkout',
+  addPaymentInfo: 'add_payment_info',
+  purchase: 'purchase',
+  generateLead: 'generate_lead',
+  newsletterSubscribe: 'newsletter_subscribe',
+  viewSearchResults: 'view_search_results',
+  videoStart: 'video_start',
+  videoProgress: 'video_progress',
+  selectContent: 'select_content',
 };
 
 /**
