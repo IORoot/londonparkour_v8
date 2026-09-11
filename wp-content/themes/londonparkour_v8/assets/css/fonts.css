@@ -1,9 +1,9 @@
 /*
  * LondonParkour "Concourse" — local @font-face declarations.
  *
- * Archivo (heading) and Inter (body/label) are self-hosted in
- * assets/fonts/faces.css (enqueued from PHP before main.css).
- * Only the brand display face is declared here.
+ * Archivo (heading) is self-hosted in assets/fonts/faces.css (enqueued from
+ * PHP before main.css). Body/label use Helvetica/Arial. Only the brand
+ * display face is declared here.
  *
  * ── Scope Trial ────────────────────────────────────────────────────────────
  * TRIAL LICENCE. Fine for Storybook and internal review; it must be replaced

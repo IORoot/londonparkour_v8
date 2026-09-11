@@ -1,8 +1,8 @@
 /* @layer theme, base, components, utilities; */
 
-/* Archivo + Inter are self-hosted (assets/fonts/faces.css), enqueued from PHP
-   before this file so first paint does not wait on a CSS @import. Scope Trial
-   stays local — see ./fonts.css. */
+/* Archivo is self-hosted (assets/fonts/faces.css), enqueued from PHP before
+   this file so first paint does not wait on a CSS @import. Body/label use
+   Helvetica/Arial. Scope Trial stays local — see ./fonts.css. */
 
 /* `source(none)` disables automatic detection so nothing outside this theme is
    scanned — the build runs inside wp-content, where auto-detection would walk

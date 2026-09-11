@@ -220,6 +220,40 @@ function lp_clasbpro_registered_style_url( string $handle ): string {
 }
 
 /**
+ * Whether this request renders clasbpro markup in the first HTML.
+ */
+function lp_clasbpro_is_status_request(): bool {
+	return is_page_template( 'templates/booking-status.php' )
+		|| is_page( array( 'booking-confirmed', 'booking-cancelled', 'booking-error' ) );
+}
+
+/**
+ * Clasbpro stylesheets that wait for the booking drawer.
+ *
+ * Status pages print plugin markup in the first HTML, so core CSS stays
+ * render-blocking there. Overlay/LCP pages do not use it until the drawer opens.
+ *
+ * @return string[] Style handles in cascade order (Concourse pack last).
+ */
+function lp_clasbpro_deferred_style_handles(): array {
+	if ( lp_clasbpro_is_status_request() ) {
+		return array(
+			'clasbpro-appointment-calendar',
+			'clasbpro-form-select',
+		);
+	}
+
+	return array(
+		'clasbpro',
+		'clasbpro-packs',
+		'clasbpro-appointment-calendar',
+		'clasbpro-form-select',
+		'clasbpro-theme-pack',
+		'clasbpro-status-themes',
+	);
+}
+
+/**
  * Localise the panel drawer REST endpoint onto the main bundle.
  */
 function lp_clasbpro_localize_booking(): void {
@@ -227,10 +261,14 @@ function lp_clasbpro_localize_booking(): void {
 		return;
 	}
 
-	// Drawer injects shortcode HTML after load — core booking CSS/JS must
-	// already be present. Calendar CSS waits for the drawer to open.
-	wp_enqueue_style( 'clasbpro' );
-	wp_enqueue_style( 'clasbpro-packs' );
+	$is_status = lp_clasbpro_is_status_request();
+
+	// JS stays in the footer (not render-blocking). CSS waits for the drawer
+	// except on status pages, which paint plugin markup immediately.
+	if ( $is_status ) {
+		wp_enqueue_style( 'clasbpro' );
+		wp_enqueue_style( 'clasbpro-packs' );
+	}
 	wp_enqueue_script( 'clasbpro' );
 	wp_enqueue_script( 'clasbpro-packs' );
 	if ( wp_script_is( 'clasbpro-calendar-core', 'registered' ) ) {
@@ -246,18 +284,12 @@ function lp_clasbpro_localize_booking(): void {
 		\IOROOT_STRIPE_BOOKINGS_PRO\Theme_Loader::enqueue_theme_style();
 	}
 
-	$is_status = is_page_template( 'templates/booking-status.php' )
-		|| is_page( array( 'booking-confirmed', 'booking-cancelled', 'booking-error' ) );
 	if ( $is_status && wp_style_is( 'clasbpro-status-themes', 'registered' ) ) {
 		wp_enqueue_style( 'clasbpro-status-themes' );
 	}
 
 	$calendar_styles = array();
-	$deferred        = array( 'clasbpro-appointment-calendar', 'clasbpro-form-select' );
-	if ( ! $is_status ) {
-		$deferred[] = 'clasbpro-status-themes';
-	}
-	foreach ( $deferred as $handle ) {
+	foreach ( lp_clasbpro_deferred_style_handles() as $handle ) {
 		$url = lp_clasbpro_registered_style_url( $handle );
 		if ( '' !== $url ) {
 			$calendar_styles[] = $url;
@@ -306,15 +338,7 @@ function lp_clasbpro_strip_style_deps( array $handles ): void {
  * Drop clasbpro's global enqueue on pages with no booking surface.
  */
 function lp_clasbpro_dequeue_unused_assets(): void {
-	$deferred_styles = array(
-		'clasbpro-appointment-calendar',
-		'clasbpro-form-select',
-	);
-	$is_status       = is_page_template( 'templates/booking-status.php' )
-		|| is_page( array( 'booking-confirmed', 'booking-cancelled', 'booking-error' ) );
-	if ( ! $is_status ) {
-		$deferred_styles[] = 'clasbpro-status-themes';
-	}
+	$deferred_styles = lp_clasbpro_deferred_style_handles();
 	lp_clasbpro_strip_style_deps( $deferred_styles );
 	foreach ( $deferred_styles as $handle ) {
 		wp_dequeue_style( $handle );

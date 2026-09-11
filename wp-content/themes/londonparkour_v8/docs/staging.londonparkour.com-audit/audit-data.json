@@ -52,10 +52,10 @@
           "recommendation": "Keep. Do not redeploy a web-root docs/ folder."
         },
         {
-          "title": "Lab LCP 7.6–7.7s",
+          "title": "Lab LCP still Poor after font/hero pass",
           "severity": "High",
-          "description": "Lighthouse 13.4.1 mobile Slow 4G. CLS good. TTFB ~80–210ms. Render-path bound.",
-          "recommendation": "Unblock CSS/fonts/hero before launch. Do not start an INP project; TBT is already good."
+          "description": "2026-09-11 13:47 BST: homepage 7.2s (was 7.6), FCP 1.8s (was 3.6). /classes/ 5.0s this run (was 7.7; TTFB 1.3s outlier). Ken Burns fetches only slide 0. Overlay/H1 text is still LCP.",
+          "recommendation": "Next: ClasbPro CSS/JS on drawer-open, inline faces.css, Scope Trial woff2 / delay H1 decode. Do not start an INP project; TBT is already good."
         }
       ]
     },
@@ -148,18 +148,19 @@
     },
     {
       "name": "Performance (CWV)",
-      "score": 32,
+      "score": 40,
       "what_works": [
-        "CLS 0.001 homepage / 0.041 classes (good)",
-        "TBT 170/90 ms (good INP proxy)",
-        "Staging TTFB ~80–210 ms"
+        "CLS 0.002 homepage / 0.001 classes (good)",
+        "TBT 180/50 ms (good INP proxy)",
+        "Homepage FCP 1.8s (was 3.6s)",
+        "Ken Burns slide 0 only; Leaflet off /; calendar CSS deferred; self-hosted fonts"
       ],
       "findings": [
         {
           "title": "Mobile lab LCP Poor",
           "severity": "High",
-          "description": "Homepage 7.6s, /classes/ 7.7s. No CrUX (API key missing). Live V7 TTFB ~0.95s.",
-          "recommendation": "Fix render-blocking CSS/fonts/hero. Keep slimmer tutorial hub; do not ship 1.48MB /tutorials-category/."
+          "description": "Homepage 7.2s, /classes/ 5.0s this run (was 7.6/7.7). No CrUX (API key missing). Live V7 TTFB ~0.95s.",
+          "recommendation": "ClasbPro CSS/JS on drawer-open; inline faces.css; Scope Trial woff2. Keep slimmer tutorial hub; do not ship 1.48MB /tutorials-category/."
         }
       ]
     },

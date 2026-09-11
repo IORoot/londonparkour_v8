@@ -51,12 +51,12 @@ function lp_asset_url( string $logical_path ): string {
 }
 
 /**
- * Latin woff2 files to preload. LCP body copy is Inter; headings are Archivo.
+ * Latin woff2 files to preload. Headings are Archivo. Body/label are system fonts.
  *
  * @return string[] Basenames under assets/fonts/.
  */
 function lp_font_preload_files(): array {
-	return array( 'inter-latin.woff2', 'archivo-latin.woff2' );
+	return array( 'archivo-latin.woff2' );
 }
 
 /**

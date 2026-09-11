@@ -92,33 +92,36 @@ function loadCalendarCss() {
     calendarCssPromise = Promise.resolve();
     return calendarCssPromise;
   }
-  const before = document.getElementById('clasbpro-theme-pack-css');
-  calendarCssPromise = Promise.all(
-    urls.map(
-      (href) =>
-        new Promise((resolve) => {
-          const absolute = new URL(href, window.location.origin).href;
-          const already = [...document.querySelectorAll('link[rel="stylesheet"]')].some(
-            (link) => link.href === absolute
-          );
-          if (already) {
-            resolve();
-            return;
-          }
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = href;
-          link.onload = () => resolve();
-          link.onerror = () => resolve();
-          // Keep Concourse pack last so it still wins over plugin calendar CSS.
-          if (before?.parentNode) {
-            before.parentNode.insertBefore(link, before);
-          } else {
-            document.head.appendChild(link);
-          }
+  calendarCssPromise = new Promise((resolve) => {
+    const pending = [];
+    urls.forEach((href) => {
+      const absolute = new URL(href, window.location.origin).href;
+      const already = [...document.querySelectorAll('link[rel="stylesheet"]')].some(
+        (link) => link.href === absolute
+      );
+      if (already) return;
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      if (/class-bookings-with-stripe\/style\.css/.test(href)) {
+        link.id = 'clasbpro-theme-pack-css';
+      }
+      pending.push(
+        new Promise((done) => {
+          link.onload = () => done();
+          link.onerror = () => done();
         })
-    )
-  );
+      );
+      // Keep Concourse pack last so it still wins over plugin calendar CSS.
+      const before = document.getElementById('clasbpro-theme-pack-css');
+      if (before?.parentNode && link.id !== 'clasbpro-theme-pack-css') {
+        before.parentNode.insertBefore(link, before);
+      } else {
+        document.head.appendChild(link);
+      }
+    });
+    Promise.all(pending).then(() => resolve());
+  });
   return calendarCssPromise;
 }
 
