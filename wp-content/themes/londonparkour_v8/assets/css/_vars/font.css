@@ -14,7 +14,7 @@
    * the system is monospaced — it is Inter at small sizes with open tracking.
    * The token is named for what it does, not what the design file calls it.
    *
-   * Archivo + Inter load from Google Fonts (@import at the top of main.css).
+   * Archivo + Inter are self-hosted (assets/fonts/faces.css).
    */
   --font-display: "Scope Trial", "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Archivo", ui-sans-serif, system-ui, sans-serif;

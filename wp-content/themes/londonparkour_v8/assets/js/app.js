@@ -4,8 +4,6 @@ import { initAllVideoDialogs } from './elements/DialogVideo.js';
 import { initAllFilterForms } from './elements/FilterForm.js';
 import { initBookingDrawer } from './elements/BookingDrawer.js';
 import { initCommercePurchase } from './elements/CommercePurchase.js';
-import { initSiteNetworkMap } from './elements/SiteNetworkMap.js';
-import { initClassDetailOsmMaps } from './elements/ClassDetailOsmMap.js';
 import { initAllSeriesShelves } from './elements/SeriesShelf.js';
 import { AppInitialiser } from './AppInitialiser.js';
 import { createDOMObserver } from './utils/createDOMObserver.js';
@@ -72,19 +70,25 @@ const MODULES = {
   },
 
   siteNetworkMap: {
-    init: () => initSiteNetworkMap(),
+    init: async () => {
+      const { initSiteNetworkMap } = await import('./elements/SiteNetworkMap.js');
+      return initSiteNetworkMap();
+    },
     selector: '[data-component="site-network-map"]',
     critical: false,
-    lazy: false,
-    timeout: 8000
+    lazy: true,
+    timeout: 20000
   },
 
   classDetailOsmMap: {
-    init: () => initClassDetailOsmMaps(),
+    init: async () => {
+      const { initClassDetailOsmMaps } = await import('./elements/ClassDetailOsmMap.js');
+      return initClassDetailOsmMaps();
+    },
     selector: '[data-component="class-detail-osm"]',
     critical: false,
-    lazy: false,
-    timeout: 8000
+    lazy: true,
+    timeout: 20000
   },
 
   seriesShelves: {

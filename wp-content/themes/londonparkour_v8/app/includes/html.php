@@ -51,15 +51,51 @@ function lp_asset_url( string $logical_path ): string {
 }
 
 /**
+ * Latin woff2 files to preload. LCP body copy is Inter; headings are Archivo.
+ *
+ * @return string[] Basenames under assets/fonts/.
+ */
+function lp_font_preload_files(): array {
+	return array( 'inter-latin.woff2', 'archivo-latin.woff2' );
+}
+
+/**
+ * Start latin font fetches in parallel with HTML parse (before main.css).
+ */
+function lp_preload_fonts(): void {
+	foreach ( lp_font_preload_files() as $file ) {
+		$path = get_theme_file_path( 'assets/fonts/' . $file );
+		if ( ! is_readable( $path ) ) {
+			continue;
+		}
+		printf(
+			'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
+			esc_url( get_theme_file_uri( 'assets/fonts/' . $file ) )
+		);
+	}
+}
+add_action( 'wp_head', 'lp_preload_fonts', 1 );
+
+/**
  * Enqueue the built stylesheet and the ES module bundle.
  */
 function lp_enqueue_assets(): void {
-	wp_enqueue_style( 'londonparkour', lp_asset_url( 'assets/css/main.css' ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	$lp_faces = get_theme_file_path( 'assets/fonts/faces.css' );
+	if ( is_readable( $lp_faces ) ) {
+		wp_enqueue_style(
+			'londonparkour-fonts',
+			get_theme_file_uri( 'assets/fonts/faces.css' ),
+			array(),
+			(string) filemtime( $lp_faces )
+		);
+	}
+
+	wp_enqueue_style( 'londonparkour', lp_asset_url( 'assets/css/main.css' ), array( 'londonparkour-fonts' ), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 
 	/*
-	 * Vite emits CSS imported by the JS entry (e.g. Leaflet) as a sibling
-	 * file listed on the manifest entry's `css` array. main.css alone does
-	 * not include it — enqueue those sheets or the map tiles render blank.
+	 * Vite used to emit Leaflet CSS as a sibling of the app.js entry. Maps
+	 * now dynamic-import Leaflet, so that sibling should be empty. Keep the
+	 * loop so any other sync CSS import on the entry still prints.
 	 */
 	$lp_manifest_path = get_theme_file_path( 'assets/dist/.vite/manifest.json' );
 	if ( is_readable( $lp_manifest_path ) ) {

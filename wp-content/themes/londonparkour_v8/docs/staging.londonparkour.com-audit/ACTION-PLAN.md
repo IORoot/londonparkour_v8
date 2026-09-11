@@ -18,40 +18,36 @@ ACF `seo_canonical` is **not filled** with a foreign URL on any checked page. Ca
 - **Fail check:** After cutover, view-source homepage canonical is still `staging.londonparkour.com`.
 - **Indicator:** GSC Inspection “user-declared canonical” = `https://londonparkour.com/`.
 
-### 2. Redirect map (live V7 → V8)
+### 2. Redirect map (live V7 → V8) — **done on staging 2026-09-11 12:50 BST**
 
-Must 301, not 302:
+Theme `app/includes/redirects.php`. Spot-checked live:
 
-| Live (indexed) | Staging V8 |
+| Live (indexed) | Staging now |
 |---|---|
-| `/tutorial/{slug}/` | `/tutorials/{slug}/` |
-| `/classes/outdoor-class-old-street-5/` (and dated clones) | `/classes/adult-beginners-outdoor/` (and the matching product) |
-| `/classes/teens-class-west-10-14s/` | `/classes/youth-class-west-10-14s/` |
-| `/bookings/` | real booking URL (not `/booking-cancelled/`) |
-| `/giftcards/` | `/docs/gift-cards/` (or a real gift-card page) |
+| `/tutorial/deadhang/` | **301** `/tutorials/deadhang/` |
+| `/classes/teens-class-west-10-14s/` | **301** `/classes/youth-class-west-10-14s/` |
+| `/bookings/`, `/book/` | **301** `/classes/` (not cancelled) |
+| `/giftcards/` | **301** `/docs/gift-cards/` |
+| `/support/pricing/` | **301** `/docs/pricing/` |
+| `/team/` | **301** `/about/` |
 
-Kids slug `/classes/kids-class-west-6-9s/` can stay; still 301 the `-2/-4/-5` clones.
+Keep this file. Do not regress. Cutover still needs Site Address so destinations use `londonparkour.com`.
 
-- **Fail check:** Inspection of `/tutorial/deadhang/` after launch is “not found” with no destination.
-- **Indicator:** UK impressions on those URLs do not fall to zero in the first 28 days.
+### 3. Delete Sample Page — **done**
 
-### 3. Delete or noindex junk
+`/sample-page/` is **404** `noindex, nofollow` (recheck 2026-09-11). `/clasbpro-theme-preview/` is `noindex, nofollow` and not in the page sitemap.
 
-`/sample-page/`: `noindex` + drop from sitemap, or delete. `/clasbpro-theme-preview/` is already in the theme slug noindex list (git); **deploy that** so staging/live stop emitting `index, follow`.
+- **Fail check:** curl `/sample-page/` is 200 with `index, follow`. (Currently 404.)
 
-- **Fail check:** they still appear in `wp-sitemap-posts-page-1.xml` or robots is still `index, follow`.
+### 4. Fix `/docs/` — **done**
 
-### 4. Fix `/docs/`
+`/docs/` is **200** WordPress (`Parkour FAQ & Docs | London Parkour`, `index, follow`). `/docs` (no slash) **301s to HTTPS** `/docs/`. FAQ 301 → `/docs/` → 200. Leftover `public_html/docs` was deleted on Cloudways.
 
-200 on `/docs/`, or remove from sitemap. FAQ doc must not 301 into a 403. `/docs` (no slash) must 301 to **HTTPS** `/docs/`.
+- **Fail check:** curl `/docs/` is nginx 403. (Currently 200.)
 
-- **Fail check:** curl `/docs/` is still nginx 403.
+### 5. Fix `/book/` — **done**
 
-### 5. Fix `/book/`
-
-Hero uses the booking drawer (correct). Closing CTA `href="/book/"` 301s to `/booking-cancelled/`. Point it at a working booking entry, or remove the href.
-
-- **Fail check:** curl `-I /book/` still lands on cancelled + `noindex`.
+`/book/` **301s to `/classes/`**. Rechecked 12:50 BST. Closing CTA `href="/book/"` is now a safe hop.
 
 **Parallel with Phase 1 (does not block DNS):** Cloudflare HSTS on HTML; `noindex` thin taxonomies (blog-tag, tutorial-tag, level, support-category).
 

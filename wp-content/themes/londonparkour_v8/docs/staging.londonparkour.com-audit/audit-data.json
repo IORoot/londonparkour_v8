@@ -1,6 +1,6 @@
 {
   "summary": {
-    "health_score": 51,
+    "health_score": 54,
     "business_type": "Hybrid local service (3 outdoor London sites) + publisher (609 tutorials) + class booking",
     "audited_url": "https://staging.londonparkour.com/",
     "live_url": "https://londonparkour.com/",
@@ -8,15 +8,13 @@
     "label": "Pre-launch V8 staging. GSC/GA4/CrUX are LIVE V7.",
     "top_findings": [
       "Canonicals follow home_url(); no ACF seo_canonical override to another host or path",
-      "/sample-page/ and /clasbpro-theme-preview/ are indexable and in the sitemap",
-      "/docs/ returns nginx 403; FAQ 301s into it; /docs no-slash 301s to HTTP",
-      "No 301 map from live /tutorial/ , /bookings/ , /giftcards/ , dated class slugs",
-      "/book/ 301s to noindex /booking-cancelled/"
+      "/docs/ is 200 index, follow; /docs no-slash 301s to HTTPS",
+      "/sample-page/ is 404 noindex",
+      "V7→V8 301 map is live (/tutorial/, /bookings/, /giftcards/, class aliases)",
+      "/clasbpro-theme-preview/ is noindex and out of the sitemap",
+      "/book/ 301s to /classes/ (not cancelled)"
     ],
     "quick_wins": [
-      "noindex or delete sample-page and clasbpro-theme-preview",
-      "Restore /docs/ to 200 and HTTPS-only redirects",
-      "Stop /book/ 301 to cancelled",
       "Delete stale GSC sitemaps (dev, http, www)",
       "Fix JOHN DOE, review 42 vs 43, Vauxhall SW8 1SR vs 1SS"
     ]
@@ -24,12 +22,15 @@
   "categories": [
     {
       "name": "Technical SEO",
-      "score": 54,
+      "score": 70,
       "what_works": [
         "HTTPS, Googlebot allowed, sitemap in robots.txt",
         "Titles, H1, JSON-LD in first HTML (not an SPA)",
         "Checkout utilities correctly noindex",
-        "Canonical / og:url / JSON-LD @id follow home_url(); no ACF override to another URL"
+        "Canonical / og:url / JSON-LD @id follow home_url(); no ACF override to another URL",
+        "V7→V8 301s live: /tutorial/, /bookings/, /giftcards/, class aliases; /book/ → /classes/",
+        "/docs/ is 200 index, follow; /docs no-slash 301s to HTTPS",
+        "/sample-page/ is 404 noindex; clasbpro preview is noindex and out of sitemap"
       ],
       "findings": [
         {
@@ -39,16 +40,16 @@
           "recommendation": "At cutover set Site Address / WP_HOME / WP_SITEURL to https://londonparkour.com and run search-replace. Do not hard-code londonparkour.com in the theme."
         },
         {
-          "title": "Junk pages in the sitemap",
-          "severity": "Critical",
-          "description": "/sample-page/ (WP Los Angeles boilerplate) and /clasbpro-theme-preview/ are 200, index, follow, listed first in the page sitemap.",
-          "recommendation": "Delete or noindex and omit from wp-sitemap-posts-page-1.xml."
+          "title": "Junk pages",
+          "severity": "Info",
+          "description": "Recheck 2026-09-11: /sample-page/ is 404 noindex, not in the page sitemap. /clasbpro-theme-preview/ is 200 noindex, nofollow and omitted from wp-sitemap-posts-page-1.xml.",
+          "recommendation": "Leave clasbpro preview unpublished or delete when convenient."
         },
         {
-          "title": "/docs/ is nginx 403",
-          "severity": "Critical",
-          "description": "Hub is in the sitemap. /docs/frequently-asked-questions/ 301s into the 403. /docs (no slash) 301s to http://.",
-          "recommendation": "Serve 200 or drop from sitemap. Force HTTPS on the slash redirect."
+          "title": "/docs/ hub",
+          "severity": "Info",
+          "description": "Recheck 2026-09-11: /docs/ is 200 WordPress (Parkour FAQ & Docs, index, follow). /docs no-slash 301s to HTTPS. FAQ 301s into the hub. public_html/docs was deleted on Cloudways.",
+          "recommendation": "Keep. Do not redeploy a web-root docs/ folder."
         },
         {
           "title": "Lab LCP 7.6–7.7s",
@@ -225,11 +226,7 @@
         "name": "Phase 1: Critical Fixes",
         "timeframe": "Before public DNS",
         "items": [
-          "Rewrite canonicals and JSON-LD @ids to londonparkour.com",
-          "301 map /tutorial/ → /tutorials/, class slugs, /bookings/, /giftcards/",
-          "noindex sample-page and clasbpro-theme-preview",
-          "Fix /docs/ 403 and HTTP redirect",
-          "Stop /book/ 301 to booking-cancelled"
+          "At cutover set Site Address / WP_HOME to https://londonparkour.com"
         ]
       },
       {

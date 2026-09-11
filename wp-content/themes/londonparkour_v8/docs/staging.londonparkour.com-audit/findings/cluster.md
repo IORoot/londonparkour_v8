@@ -18,7 +18,7 @@ Staging is **not ranked**. Cluster architecture is a launch design problem; traf
 | Classes hub + 6 products + 3 locations | 10 | `/classes/…` |
 | Docs | 15 | `/docs/…` including `/docs/gift-cards/` |
 | Blog posts | 10 | `/blog/…` |
-| Other | rest | coaches, tags, sample-page, clasbpro preview |
+| Other | rest | coaches, tags, clasbpro preview (noindex); sample-page 404 |
 
 Nav copy on staging gift-docs HTML: **“By category 11 CATEGORIES · By series 13 SERIES · By tutorial 609 VIDEOS”**. The 11 are parent movement families; the sitemap still lists **55** term archives (parents + children).
 
@@ -47,8 +47,8 @@ Fetched (staging, 200):
 | Class example | `/classes/outdoor-class-old-street-5/` | `/classes/adult-beginners-outdoor/` |
 | Kids class | `/classes/kids-class-west-6-9s/` (same slug) | `/classes/kids-class-west-6-9s/` |
 | Teens class | `/classes/teens-class-west-10-14s/` | `/classes/youth-class-west-10-14s/` |
-| Gift cards | `/giftcards/` | `/docs/gift-cards/` (`/gift-cards/` 301s here; `/giftcards/` 404) |
-| Bookings | `/bookings/` | no `/bookings/` (404); `/book/` 301s to cancelled |
+| Gift cards | `/giftcards/` | `/docs/gift-cards/` (`/giftcards/` and `/gift-cards/` **301** here) |
+| Bookings | `/bookings/` | `/bookings/` and `/book/` **301** → `/classes/` |
 
 GSC URL Inspection: live `/tutorial/deadhang/` and `/tutorial/step-vault-technical-details/` are **Submitted and indexed**. Staging spoke `https://staging.londonparkour.com/tutorials/deadhang/` is 200 with VideoObject JSON-LD.
 
@@ -110,7 +110,7 @@ Commercial cluster (separate from tutorials):
 
 ## Recommendations
 
-1. Ship a redirect spreadsheet: every live `/tutorial/*` 200 → staging `/tutorials/{same-slug}/` (confirm slug equality per URL; do not assume).
+1. Keep `redirects.php`: every live `/tutorial/*` 200 → `/tutorials/{same-slug}/` (spot-checked `deadhang`). Confirm remaining slug equality before cutover; do not assume.
 2. Canonical: keep `/tutorials/` as the pillar; 301 `/tutorials-category/` → `/tutorials/category/` (or the reverse) and the series pair the same way. Sitemap should list only the winner.
 3. Rewrite category term H1 to the movement name (`Vaulting`), and link every spoke to its parent category + series + the classes timetable where the move is taught.
 4. For `step vault` (88 UK impressions on tutorial URLs): pick **one** canonical lesson, point series hubs at it, 301 or rel-canonical near-duplicates.

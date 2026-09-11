@@ -34,7 +34,7 @@ No horizontal overflow on any of the six. H1 is in the fold on all six.
 2. **Mobile CTA stack is cramped.** H1 + body + button + watch link + full next-class board + “↓ SCROLL” all sit in 844px. The board’s “Reserve a place” row is at the fold edge; the proof stats (2,400+ / 4.9) are **below** the fold on mobile.
 3. **“Watch a session” contrast.** White/70% label on a mid-tone concrete photo. Desktop is worse because it sits over sky+brick with no plate.
 4. **GPS deco** “N 51.5074° / W 0.1278°” links to `https://google.com`, not a Maps/place URL.
-5. **Closing-band CTA is a trap (below fold, but conversion-critical).** `href="/book/"` **301s to `/booking-cancelled/`** (`noindex`). Hero uses the drawer; the yellow “Walk through the door.” band uses the broken URL. Copy there also says beginners are “Tuesday and Thursday at 18:30 in Vauxhall”, which does not match the live board (Saturday Old Street) or location schema (Vauxhall Sundays).
+5. **Closing-band CTA hops to `/classes/`.** `href="/book/"` **301s to `/classes/`** (recheck 2026-09-11). Hero still uses the drawer. Copy there also says beginners are “Tuesday and Thursday at 18:30 in Vauxhall”, which does not match the live board (Saturday Old Street) or location schema (Vauxhall Sundays).
 
 ---
 

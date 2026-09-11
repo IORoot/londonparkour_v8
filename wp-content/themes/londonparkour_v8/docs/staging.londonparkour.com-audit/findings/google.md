@@ -146,7 +146,7 @@ No LIVE field LCP/INP/CLS for this audit. Do not infer CWV from GSC. Lab numbers
 1. Search demand is **brand + local class intent**, not the 609-tutorial library. Homepage captures most UK clicks; `/classes/` does not.
 2. `london parkour school` / `academy` / `canary wharf` impressions are **competitor-brand leakage**, not proof LP ranks as those businesses.
 3. Indexation of the live sitemap (19 of 988) is a **live V7 fact**. Staging’s 752-URL `wp-sitemap.xml` is not in GSC yet. Launch will re-open coverage, especially the `/tutorial/` → `/tutorials/` move.
-4. `/bookings/` and `/giftcards/` are indexed on live. V8 moves or drops those paths — redirect map is required (see `ecommerce.md`, `cluster.md`).
+4. `/bookings/` and `/giftcards/` are indexed on live. Staging 301s them to `/classes/` and `/docs/gift-cards/` (`ecommerce.md`, `cluster.md`).
 5. GA4 “AI Assistant” (227 sessions) is a real channel on this property; it is not GSC AI Overviews.
 
 ---

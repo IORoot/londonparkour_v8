@@ -87,7 +87,7 @@ UK operator, `Europe/London` in `/wp-json/`. WebSite/WebPage `inLanguage` is `en
 
 ### 4. `aggregateRating` 4.9 / 42 — High (accuracy)
 
-Present on the org node on **every** sampled URL, including tutorials and sample-page.
+Present on the org node on **every** sampled URL, including tutorials. Sample Page is 404.
 
 - Schema: `ratingValue` 4.9, `reviewCount` **42**, `bestRating` 5, `worstRating` 1.
 - Homepage hero: 4.9 ★ **(43)** (`local.md`, `visual.md`).

@@ -10,16 +10,16 @@ Scores are this skill’s heuristics, not Google-internal signals.
 
 ---
 
-## Technical Score: 54/100
+## Technical Score: 70/100
 
 ### Category Breakdown
 
 | Category | Status | Score | Why |
 |---|---|---:|---|
-| Crawlability | warn | 58 | `robots.txt` 200, sitemap declared, Googlebot not blocked. `/docs/` nginx **403**. `/tutorials/` hub missing from sitemap. Junk URLs crawlable. Auth wall today. |
-| Indexability | warn | 52 | Canonical / `og:url` / JSON-LD `@id` follow `home_url()` — **not frozen**. Recheck 2026-09-11: no ACF `seo_canonical` to another host or path (`canonical-overrides.md`). `sample-page` and `clasbpro-theme-preview` still indexable on staging. `/legal/` is a PHP **301**, not a 200 with a foreign canonical. |
+| Crawlability | warn | 72 | `robots.txt` 200, sitemap declared, Googlebot not blocked. `/docs/` is **200**. `/tutorials/` hub missing from sitemap. `/sample-page/` is 404. Auth wall today. |
+| Indexability | warn | 74 | `/docs/` 200 `index, follow`. `/sample-page/` 404 `noindex`. `/clasbpro-theme-preview/` `noindex` and out of the sitemap. Canonicals follow `home_url()`. |
 | Security | warn | 48 | HTTPS + HTTP→HTTPS 301. HTML responses have **no** HSTS, CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, or X-Robots-Tag. `/wp-json/` is 200 (JSON `noindex`). Security headers are a lightweight ranking signal — do not over-weight. |
-| URL Structure | warn | 55 | Trailing-slash 301s work on `/about`, `/classes`, `/contact`, `/tutorials`. `/docs` (no slash) 301s to **http://**. `/book/` 301s to `/booking-cancelled/`. Live V7 paths (`/tutorial/`, `/bookings/`, `/giftcards/`) are a launch redirect map, not a staging 200. |
+| URL Structure | pass | 78 | Trailing-slash 301s work on `/about`, `/classes`, `/contact`, `/tutorials`, `/docs`. V7→V8 301s are live (`/tutorial/`, `/bookings/`, `/giftcards/`, class aliases). `/book/` 301s to `/classes/`. |
 | Mobile | pass | 72 | Viewport present. Visual audit: no horizontal overflow; H1 in the fold (`visual.md`). Lab LCP still fails (see CWV). |
 | Core Web Vitals | fail | 30 | Lab mobile LCP **7.6 s** `/`, **7.7 s** `/classes/` (`performance.md`). CLS good. No field INP. `/tutorials-category/` is 1.48 MB HTML. |
 | Structured Data | fail | 40 | JSON-LD in first HTML (good). Content of the graph is polluted — see `schema.md`. |
@@ -55,7 +55,7 @@ Homepage (matches `SHARED.md`):
 
 **Sampled 200 pages** send `index, follow` and a **self-canonical on the current host** (`home_url()`). That is correct for staging; it is not a hard-coded `staging.londonparkour.com` string. `/legal/` is **not** a 200 — it 301s (PHP) to `/docs/terms-of-service/`. See `canonical-overrides.md`.
 
-Utility page `/booking-cancelled/` (destination of `/book/`): `noindex, nofollow` — correct for that URL, wrong as a booking CTA target.
+Utility page `/booking-cancelled/` is `noindex, nofollow` — correct. `/book/` no longer lands here; it 301s to `/classes/`.
 
 No HTML `X-Robots-Tag` header on page responses. `/wp-json/` sends `x-robots-tag: noindex` (correct for the API index).
 
@@ -82,8 +82,8 @@ Selected from `sitemap-urls.txt` plus `/tutorials/` (hub is **not** in the sitem
 | URL | HTTP | Canonical | Robots | Title |
 |---|---|---|---|---|
 | `/` | 200 | `https://staging.londonparkour.com/` | index, follow | London Parkour \| Practical Movement Training & Classes |
-| `/sample-page/` | 200 | self, staging | index, follow | Sample Page \| London Parkour |
-| `/clasbpro-theme-preview/` | 200 | self, staging | index, follow | Booking Form Theme Preview \| London Parkour |
+| `/sample-page/` | **404** | — | **noindex, nofollow** | Page not found \| London Parkour |
+| `/clasbpro-theme-preview/` | 200 | self, staging | **noindex, nofollow** | Booking Form Theme Preview \| London Parkour |
 | `/classes/` | 200 | self, staging | index, follow | Parkour Classes in London \| Weekly Timetable |
 | `/about/` | 200 | self, staging | index, follow | About London Parkour \| Outdoor Classes Since 2018 |
 | `/contact/` | 200 | self, staging | index, follow | Contact London Parkour |
@@ -108,11 +108,11 @@ Selected from `sitemap-urls.txt` plus `/tutorials/` (hub is **not** in the sitem
 
 ### `sample-page` and `clasbpro-theme-preview`
 
-Both **200**, `index, follow`, self-canonical, **in the page sitemap**. Confirms `sitemap.md`. Default WP copy / `[clasbpro_theme_preview]` shortcode in the meta description. Must `noindex` + drop from sitemap, or delete, before public DNS.
+Recheck 2026-09-11: `/sample-page/` is **404**, `noindex, nofollow`, not in `wp-sitemap-posts-page-1.xml`. `/clasbpro-theme-preview/` is **200**, `noindex, nofollow`, **not** in that sitemap (13 page locs; `/docs/` still listed).
 
 ### `/book/`
 
-**301** `x-redirect-by: WordPress` → `/booking-cancelled/` (`noindex, nofollow`). Homepage closing CTA still points at `/book/` (`visual.md`, `ecommerce.md`). Do not add `/book/` to the sitemap until it is a real booking URL.
+**301** `x-redirect-by: WordPress` → `/classes/`. Closing CTA `href="/book/"` is a safe hop. Do not add `/book/` to the sitemap.
 
 ### Trailing slashes
 
@@ -120,20 +120,20 @@ Both **200**, `index, follow`, self-canonical, **in the page sitemap**. Confirms
 |---|---|
 | `/about`, `/classes`, `/contact`, `/tutorials` | **301** → HTTPS slash URL |
 | Slash URL of those four | **200** |
-| `/docs` (no slash) | **301** → `http://staging.londonparkour.com/docs/` (scheme downgrade) |
-| `/docs/` | **403** nginx (`<center>nginx</center>`), 548 bytes — not WordPress HTML |
+| `/docs` (no slash) | **301** → `https://staging.londonparkour.com/docs/` (`x-redirect-by: WordPress`) |
+| `/docs/` | **200** WordPress (`Parkour FAQ & Docs \| London Parkour`, `index, follow`) |
 
-Primary nav Docs href is `/docs` (no slash). That path is a dead end.
+Primary nav Docs href is `/docs` (no slash). That hop is now a safe HTTPS slash redirect.
 
 ### `/docs/` hub vs children
 
 | URL | HTTP |
 |---|---|
-| `/docs/` | **403** (in sitemap) |
-| `/docs/frequently-asked-questions/` | **301** → `/docs/` → **403** (also in sitemap) |
+| `/docs/` | **200** (in sitemap) |
+| `/docs/frequently-asked-questions/` | **301** → `/docs/` → **200** (also in sitemap) |
 | `/docs/gift-cards/`, `/docs/pricing/`, `/docs/privacy-policy/`, `/docs/beginners-class/`, `/docs/contacting-us/` | **200** |
 
-Nginx is blocking the hub; child guides still render.
+Hub and children render. Recheck 2026-09-11 after deleting `public_html/docs`.
 
 ### `/wp-json/`
 
@@ -145,30 +145,27 @@ Nginx is blocking the hub; child guides still render.
 
 - Critical SEO tags are in the first HTML (canonical, robots, title, JSON-LD). No AMP.
 - IndexNow key file 404.
-- Site is 752 URLs, not >10k. Crawl-budget risk is **quality** (junk + 55 category archives + 1.48 MB `/tutorials-category/`), documented in `sitemap.md` / `performance.md`.
+- Site is 752 URLs, not >10k. Crawl-budget risk is **quality** (55 category archives + 1.48 MB `/tutorials-category/`), documented in `sitemap.md` / `performance.md`.
 - HTML sizes sampled: `/` 262 KB; adult class 206 KB; `/tutorials/` hub  (prior) 323 KB — under Googlebot’s 2 MB HTML cap. `/tutorials-category/` at ~1.48 MB is the page that approaches the cap.
 
 ---
 
 ## Critical Issues (fix before public DNS)
 
-1. **`/sample-page/` and `/clasbpro-theme-preview/` are 200 + index + sitemap** on staging. Default WP and plugin-preview junk. Theme slug noindex for the preview page is in git, not deployed yet.
-2. **`/docs/` returns nginx 403** and is listed in `wp-sitemap.xml`. FAQ doc 301s into that 403. Nav “Docs” uses the no-slash URL that also 301s to **HTTP**.
-3. **`/book/` → `/booking-cancelled/`.** Conversion URL is a noindex utility page.
+None on staging HTML. At cutover: set Site Address so canonicals become `londonparkour.com`. After cutover, staging should be `noindex` (or auth-only).
 
 ## High Priority (before / in the first week of launch)
 
-4. **Redirect map vs live V7** (`cluster.md` / `ecommerce.md`): `/tutorial/{slug}/` → `/tutorials/{slug}/`; `/bookings/` (404 here); `/giftcards/` (404 here); teens slug → `youth-class-west-10-14s`. Live GSC already indexes the old paths.
-5. **Do not ship `index, follow` on a public staging hostname.** After cutover, staging should be `noindex` (or auth-only). Production HTML must stay `index, follow`.
-6. **Lab LCP 7.6–7.7 s** on `/` and `/classes/` (`performance.md`). Field CWV does not exist for this host.
+1. **V7→V8 redirect map is live** (`redirects.php`). Keep; do not regress.
+2. **Lab LCP 7.6–7.7 s** on `/` and `/classes/` (`performance.md`). Field CWV does not exist for this host.
+3. **`/docs/` is 200.** `/sample-page/` is 404. `/clasbpro-theme-preview/` is noindex.
 
 ## Medium Priority (within 1 month)
 
 7. Add HSTS (and the other missing headers) at Cloudflare. Ranking weight is small; they are still table-stakes for a booking site.
-8. `/docs` no-slash **HTTP** Location — force HTTPS in the redirect.
-9. `/tutorials/` hub is 200 and linked from nav but **absent from the sitemap**.
-10. `/wp-json/` 200 with ClasbPro namespace — decide whether live should keep it public.
-11. IndexNow only if Bing indexing speed matters.
+8. `/tutorials/` hub is 200 and linked from nav but **absent from the sitemap**.
+9. `/wp-json/` 200 with ClasbPro namespace — decide whether live should keep it public.
+10. IndexNow only if Bing indexing speed matters.
 
 ## Low Priority (backlog)
 

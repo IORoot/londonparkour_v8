@@ -48,13 +48,13 @@ Quotable homepage definition is ~40 words and defines *practical movement*, not 
 | `/tutorials/deadhang/` | 200 | Deadhang \| London Parkour (25) | Deadhang | 1991 | 2191 | — | **Title under 30.** Unique body is the lede: “Demonstrate a full-stretch dead-hang on a bar that is scaffolding-width or greater for thirty seconds.” Then “Two demonstrations.” + shared 609-item filter. Unique copy is thin. |
 | `/tutorials/vault-landing/` | 200 | Vault Landing \| London Parkour (31) | Vault Landing | 1383 | 1584 | — | Unique lede: “Perform any vault (Cat-Pass / slide / step / side / turn / etc… ) on a hip-height obstacle, but the landing must be a speed-step…” Same shared filter. |
 | `/tutorials/crouch-walk/` | 200 | Crouch walk \| London Parkour (30) | Crouch walk | 1535 | 1736 | — | Unique lede: “Staying in a crouched position, with the hips below the knees, walk along the bar as you would normally.” |
-| `/docs/` | **403** | 403 Forbidden | 403 Forbidden | 5 | 5 | — | Hub in sitemap; nginx 403. Cannot audit docs-hub copy. |
-| `/docs/frequently-asked-questions/` | 301→403 | — | — | — | — | FAQ 800 | Redirects to `/docs/` then 403. In sitemap. |
+| `/docs/` | **200** | Parkour FAQ & Docs \| London Parkour | Questions, answered. | — | — | — | Recheck 2026-09-11: WordPress wiki hub, `index, follow`. Same H1 masthead as other docs. |
+| `/docs/frequently-asked-questions/` | **301** → `/docs/` | — | — | — | — | FAQ 800 | 301 into the working hub. In sitemap. |
 | `/docs/gift-cards/` (proxy for docs template) | 200 | Parkour Gift Cards \| London Parkour (35) | **Questions, answered.** | — | — | — | Title is specific; H1 is the generic docs masthead. |
 | `/blog/definitive-guide-to-army-military-parkour-training/` | 200 | Definitive Guide to Army & Military Parkour Training (52) | same as title | 7839 | 8043 | Blog 1500 | Pass volume. Byline present. Dates in schema. Brand doctrine: avoid military positioning — the URL and H1 are explicitly military. |
 | `/blog/parkour-faq/` | 200 | Parkour FAQ \| London Parkour (28) | Parkour FAQ | 1281 | 1482 | Blog 1500 | **Below blog floor.** Schema is `BlogPosting`, not FAQPage. Meta truncates with “…”. |
 | `/coaches/andy-pearson/` | 200 | Andy Pearson \| Parkour Coach, London (36) | Andy Pearson | 213 | 415 | — | Short but specific: Head Coach, Old Street, Precision & balance, qualifications list. Unique body ~ four paragraphs + quals. No Person JSON-LD on this URL. |
-| `/sample-page/` | 200 | Sample Page \| London Parkour (28) | *(none)* | 159 | 360 | — | Default WP: “This is an example page… I live in Los Angeles, have a great dog…” |
+| `/sample-page/` | **404** | Sample Page gone | — | — | — | — | 404 `noindex` (recheck 2026-09-11) |
 | `/clasbpro-theme-preview/` | 200 | Booking Form Theme Preview \| London Parkour (43) | *(none)* | 11 | 214 | — | Body: “Select a theme from the Themes screen and open Live preview.” Meta description is the shortcode `[clasbpro_theme_preview]`. |
 
 Three locations only — doorway 30+/50+ gates do **not** apply.
@@ -75,7 +75,7 @@ When the tutorial unique text is a single sentence, the page exists to host a vi
 
 ## Thin / duplicate
 
-**Thin (unique body):** location pages (~260–280 words in main, much of it shared “Three sites. One network.” + footer); `/classes/` intro; tutorial spokes (one lede); coach (~213); contact; sample-page; theme-preview.
+**Thin (unique body):** location pages (~260–280 words in main, much of it shared “Three sites. One network.” + footer); `/classes/` intro; tutorial spokes (one lede); coach (~213); contact; theme-preview.
 
 **Duplicate / templated:**
 
@@ -86,7 +86,7 @@ When the tutorial unique text is a single sentence, the page exists to host a vi
 
 **Not duplicate:** the three location meeting-point sentences differ. Adult vs kids class ledes differ. Do not treat locations as doorway pages.
 
-**Junk that must not ship:** `/sample-page/` (Los Angeles bike-messenger WP boilerplate) and `/clasbpro-theme-preview/`.
+**Junk:** `/sample-page/` is **404**. `/clasbpro-theme-preview/` is `noindex` and out of the sitemap.
 
 ---
 
@@ -125,8 +125,12 @@ Do **not** recommend HowTo schema for tutorials (retired Sep 2023). If tutorials
 
 ### Critical
 
-1. **Indexable junk:** `/sample-page/` (WP default, “Los Angeles”) and `/clasbpro-theme-preview/` (plugin live-preview).
-2. **Docs hub 403** + FAQ doc 301→403 — cannot serve the docs index Google is asked to crawl.
+None remaining on staging HTML. Docs hub is 200.
+
+### Info (resolved)
+
+1. **Docs hub:** `/docs/` is **200**. FAQ 301 → `/docs/` → 200.
+2. **Junk pages:** `/sample-page/` is **404**. `/clasbpro-theme-preview/` is `noindex` and out of the sitemap.
 
 ### High
 
@@ -153,8 +157,8 @@ Do **not** recommend HowTo schema for tutorials (retired Sep 2023). If tutorials
 
 ## Recommendations (content, not invented copy)
 
-1. Delete or `noindex` sample-page and clasbpro preview.
-2. Restore `/docs/` (200) or remove it from the sitemap; stop 301ing the FAQ doc into a 403.
+1. Sample Page is 404. Clasbpro preview is already `noindex`.
+2. `/docs/` is 200. FAQ 301 into the hub is correct.
 3. On tutorial spokes: keep the video; add the rest of the standard as visible HTML (the lede is already truncated on-page). Do not add HowTo JSON-LD.
 4. On `/classes/` and the three location URLs: keep the existing unique sentences; put “parkour classes” + place in the H1 if design allows (location titles already have it).
 5. Replace “JOHN DOE” or remove that quote.
@@ -165,4 +169,4 @@ Do **not** recommend HowTo schema for tutorials (retired Sep 2023). If tutorials
 
 ## Limitations
 
-Word counts include in-`<main>` filter/agenda chrome. Unique-body judgements are from the visible lede/H1, not a stripped-chrome tokenizer. `/docs/` copy was not readable (403). No rater-style E-E-A-T panel; scores are heuristic. Live traffic cited from `google.md` is V7.
+Word counts include in-`<main>` filter/agenda chrome. Unique-body judgements are from the visible lede/H1, not a stripped-chrome tokenizer. `/docs/` hub copy was not fully word-counted in this recheck (200 confirmed). No rater-style E-E-A-T panel; scores are heuristic. Live traffic cited from `google.md` is V7.

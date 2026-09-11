@@ -83,6 +83,45 @@ function cfg() {
   return window.lpBooking || {};
 }
 
+let calendarCssPromise = null;
+
+function loadCalendarCss() {
+  if (calendarCssPromise) return calendarCssPromise;
+  const urls = (cfg().calendarStyles || []).filter(Boolean);
+  if (!urls.length) {
+    calendarCssPromise = Promise.resolve();
+    return calendarCssPromise;
+  }
+  const before = document.getElementById('clasbpro-theme-pack-css');
+  calendarCssPromise = Promise.all(
+    urls.map(
+      (href) =>
+        new Promise((resolve) => {
+          const absolute = new URL(href, window.location.origin).href;
+          const already = [...document.querySelectorAll('link[rel="stylesheet"]')].some(
+            (link) => link.href === absolute
+          );
+          if (already) {
+            resolve();
+            return;
+          }
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          link.onload = () => resolve();
+          link.onerror = () => resolve();
+          // Keep Concourse pack last so it still wins over plugin calendar CSS.
+          if (before?.parentNode) {
+            before.parentNode.insertBefore(link, before);
+          } else {
+            document.head.appendChild(link);
+          }
+        })
+    )
+  );
+  return calendarCssPromise;
+}
+
 function setTitle(type) {
   const title = titleEl();
   if (!title) return;
@@ -108,6 +147,7 @@ async function loadPanel(type, id, extra = {}) {
 
   setTitle(type);
   mount.innerHTML = LOADING_HTML;
+  const cssReady = loadCalendarCss();
 
   const url = new URL(restUrl, window.location.origin);
   // rest_url() is absolute and baked with the WP_SITEURL (often "localhost").
@@ -146,6 +186,7 @@ async function loadPanel(type, id, extra = {}) {
       mount.innerHTML = FAIL_HTML;
       return;
     }
+    await cssReady;
     mount.innerHTML = data.html;
 
     if (typeof window.CLASBOWPRO_initBookingForms === 'function') {

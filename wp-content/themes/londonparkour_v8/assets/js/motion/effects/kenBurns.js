@@ -104,8 +104,7 @@ export const kenBurnsEffect = {
       if (typeof result === 'function') stopDecode = result;
     };
 
-    const startIndex =
-      slides.length > 1 ? Math.floor(Math.random() * slides.length) : 0;
+    const startIndex = 0; // Always first paint = slide 0 (eager + fetchpriority).
 
     slides.forEach((img, i) => {
       img.style.position = 'absolute';
@@ -197,6 +196,7 @@ export const kenBurnsEffect = {
     const run = async () => {
       let i = startIndex;
       let elapsedOnCurrent = 0;
+      let firstTransition = slides.length > 1;
 
       slides[startIndex].style.opacity = '1';
       slides[startIndex].style.zIndex = '1';
@@ -223,7 +223,12 @@ export const kenBurnsEffect = {
           continue;
         }
 
-        const nextI = (i + 1) % slides.length;
+        let nextI = (i + 1) % slides.length;
+        if (firstTransition) {
+          const others = slides.map((_, idx) => idx).filter((idx) => idx !== i);
+          nextI = others[Math.floor(Math.random() * others.length)];
+          firstTransition = false;
+        }
         elapsedOnCurrent = await crossfade(img, slides[nextI]);
         i = nextI;
       }

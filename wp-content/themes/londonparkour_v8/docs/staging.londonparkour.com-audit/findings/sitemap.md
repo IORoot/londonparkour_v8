@@ -8,7 +8,7 @@
 
 ## Score / verdict
 
-Valid XML, well under the 50k / 50MB caps, HTTPS-only, referenced from `robots.txt`. **Quality is poor:** junk pages are indexable and listed, the tutorials hub is missing, taxonomy archives are bloated, and live GSC already shows this URL mix barely indexes.
+Valid XML, well under the 50k / 50MB caps, HTTPS-only, referenced from `robots.txt`. Recheck 2026-09-11: `/docs/` is **200**; `/sample-page/` is **404**; clasbpro preview is **out** of the page sitemap (13 locs). The tutorials hub is missing, taxonomy archives are bloated, and live GSC already shows this URL mix barely indexes.
 
 ---
 
@@ -20,7 +20,7 @@ Valid XML, well under the 50k / 50MB caps, HTTPS-only, referenced from `robots.t
 | Tutorial categories (`/tutorial-category/`) | 55 | Yes — **no `<lastmod>`** |
 | Support/docs | 15 | Yes |
 | Series tax (`/series/`) | 13 | Yes |
-| Pages | 15 | Yes — includes junk |
+| Pages | 13 | Recheck: sample-page 404; clasbpro preview omitted |
 | Blog posts + `/blog/` | 11 | Yes |
 | Blog tags | 10 | Yes |
 | Classes (6) + location pages (3) + `/classes/` | 10 | Yes |
@@ -34,14 +34,12 @@ Index file: 14 child sitemaps (pages, blog, coaches, locations, support, tutoria
 
 ## Issues
 
-### Critical — junk URLs are indexable and in the page sitemap
+### Info — Sample Page gone; clasbpro preview noindex
 
 | URL | Status | robots | Notes |
 |---|---|---|---|
-| `/sample-page/` | 200 | `index, follow` | Default WP copy: “This is an example page…” Canonical self. First URL in `wp-sitemap-posts-page-1.xml`. |
-| `/clasbpro-theme-preview/` | 200 | `index, follow` | Title “Booking Form Theme Preview”. Meta description is the shortcode `[clasbpro_theme_preview]`. Body: “Select a theme from the Themes screen and open Live preview.” |
-
-**Fix before launch:** delete or `noindex` + remove from sitemap. Do not ship either URL on the public domain.
+| `/sample-page/` | **404** | `noindex, nofollow` | Not in `wp-sitemap-posts-page-1.xml`. Resolved. |
+| `/clasbpro-theme-preview/` | 200 | `noindex, nofollow` | Out of the page sitemap. Resolved. |
 
 ### High — important URLs missing or broken
 
@@ -49,7 +47,7 @@ Index file: 14 child sitemaps (pages, blog, coaches, locations, support, tutoria
 |---|---|---|---|
 | `/tutorials/` (hub) | **200**, `index, follow`, canonical self, title “Parkour Tutorials” | **No** | CPT archive is not in core sitemaps. Nav, breadcrumbs, and “BY TUTORIAL” all point here. 609 children are listed; the hub is not. |
 | `/gift-cards/` (footer label) | **301 → `/docs/gift-cards/`** | Alias no; destination **yes** | Commerce URL is a docs article whose H1 is the generic docs heading “Questions, answered.” |
-| `/book/` | **301 → `/booking-cancelled/`** (`noindex, nofollow`) | No | Homepage closing CTA `href="/book/"`. This is not a missing sitemap row — it is a **broken booking URL**. Do not add `/book/` until it resolves to a real booking page. |
+| `/book/` | **301 → `/classes/`** | No | Homepage closing CTA `href="/book/"`. Safe hop. Do not add `/book/` to the sitemap. |
 
 `/tutorials/series/` and `/tutorials/category/` return 200 but canonicalize to `/tutorials-series/` and `/tutorials-category/`, which **are** in the page sitemap. Duplicate paths, not missing hubs.
 
@@ -99,18 +97,18 @@ Live `robots.txt` still declares `Sitemap: https://londonparkour.com/wp-sitemap.
 - Staging `robots.txt` → `Sitemap: https://staging.londonparkour.com/wp-sitemap.xml` (200, valid index).
 - All listed URLs are HTTPS on the staging host.
 - No image/video/news sitemap extensions.
-- Path change vs live: V7 tutorials are `/tutorial/` (singular); V8 is `/tutorials/`. Class slugs also changed. Redirect map is a launch blocker (out of sitemap scope, but it determines whether these 609 new locs inherit equity).
+- Path change vs live: V7 tutorials are `/tutorial/` (singular); V8 is `/tutorials/`. Class slugs also changed. The V7→V8 301 map is **live on staging** (`redirects.php`).
 
 ---
 
 ## Recommendations (priority)
 
-1. **Remove or noindex** `/sample-page/` and `/clasbpro-theme-preview/` and drop them from the page sitemap.
+1. **Sample Page is 404.** Clasbpro preview is already `noindex` and out of the page sitemap.
 2. **Include the tutorials archive** `/tutorials/` (or convert it to a real page that core sitemaps emit).
-3. **Fix `/book/`** so the homepage CTA does not 301 to a noindexed cancelled state. Only then consider listing the canonical booking URL.
+3. **`/book/` already 301s to `/classes/`.** Do not add it to the sitemap.
 4. Keep gift-card content at one canonical (`/docs/gift-cards/` or a real `/gift-cards/` page). Do not list both.
 5. **`noindex` thin taxonomies** (blog tags, tutorial tags, levels, support categories) and omit them from the sitemap. Revisit tutorial categories / series only if they have unique intro copy.
-6. On live GSC at launch: delete `dev.`, `http://`, and `http://www.` sitemaps; submit a single HTTPS index; do not carry 988 stale V7 locs into V8 without a redirect map.
+6. On live GSC at launch: delete `dev.`, `http://`, and `http://www.` sitemaps; submit a single HTTPS index. V7→V8 301s are already in `redirects.php`.
 
 ---
 

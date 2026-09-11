@@ -41,7 +41,7 @@ Hybrid **local service** (3 outdoor class sites in London) + **publisher** (609 
 | Source | Count | Notes |
 |---|---|---|
 | lp_tutorial | 609 | `/tutorials/{slug}/` — live V7 uses `/tutorial/` singular |
-| pages | 15 | includes `sample-page` and `clasbpro-theme-preview` |
+| pages | 13 in sitemap | sample-page 404; clasbpro preview omitted from sitemap |
 | support/docs | 15 | |
 | series tax | 13 | |
 | blog posts | 10 | |
@@ -51,7 +51,8 @@ Hybrid **local service** (3 outdoor class sites in London) + **publisher** (609 
 | locations | 3 | Vauxhall, Old Street, Kilburn Park |
 | other tax | rest | |
 
-Pages: `/` `/about/` `/blog/` `/legal/` `/classes/` `/classes-map/` `/contact/` `/docs/` `/tutorials-series/` `/tutorials-category/` `/workshops/` `/private-coaching/` `/coupons/` `/sample-page/` `/clasbpro-theme-preview/`
+Pages in sitemap (13): `/` `/about/` `/blog/` `/legal/` `/classes/` `/classes-map/` `/contact/` `/docs/` `/tutorials-series/` `/tutorials-category/` `/workshops/` `/private-coaching/` `/coupons/`  
+Not in sitemap: `/sample-page/` (**404** `noindex`); `/clasbpro-theme-preview/` (200 `noindex, nofollow`).
 
 ## Live GSC (sc-domain:londonparkour.com) — context only
 

@@ -19,19 +19,20 @@ Checked **756 URLs** (752 sitemap + booking utilities + `/blocks-qa/`). Head sca
 | HTTP 200, canonical path ≠ request path | **0** |
 | `og:url` ≠ canonical | **0** |
 | HTTP 301 (PHP, not ACF) | **3** |
-| `/docs/` nginx 403 | **1** |
+| `/docs/` nginx 403 | **0** (was 1; now 200) |
 | Incomplete head fetch (no status parsed) | 121 |
 
 Every **WordPress page** (19, from REST) was re-fetched in full (not a head scan):
 
 | Page | HTTP | Canonical | Notes |
 |---|---|---|---|
-| `/` `/about/` `/blog/` `/classes/` `/classes-map/` `/contact/` `/coupons/` `/private-coaching/` `/workshops/` `/tutorials-series/` `/tutorials-category/` `/sample-page/` `/clasbpro-theme-preview/` | 200 | self, staging host | ACF field empty or equal to current permalink |
+| `/` `/about/` `/blog/` `/classes/` `/classes-map/` `/contact/` `/coupons/` `/private-coaching/` `/workshops/` `/tutorials-series/` `/tutorials-category/` `/clasbpro-theme-preview/` | 200 | self, staging host | ACF field empty or equal to current permalink |
+| `/sample-page/` | **404** | — | Recheck 2026-09-11. Gone. |
 | `/booking-confirmed/` `/booking-cancelled/` `/booking-error/` `/blocks-qa/` | 200 | self, staging | already `noindex, nofollow` via slug list |
 | `/legal/` | **301** | — | `lp_docs_redirects()` → `/docs/terms-of-service/`. **Not** an ACF canonical. Earlier audit “200 with canonical to terms” was curl following the redirect. |
-| `/docs/` | 403 | none | nginx, still a launch bug |
+| `/docs/` | **200** | self, staging host | Recheck 2026-09-11. Wiki hub. |
 
-`/clasbpro-theme-preview/` is still `index, follow` on staging — the theme slug noindex is in git, not deployed yet.
+`/clasbpro-theme-preview/` is `noindex, nofollow` on staging (recheck 2026-09-11) and is omitted from the page sitemap.
 
 ## Local Docker DB (not staging)
 

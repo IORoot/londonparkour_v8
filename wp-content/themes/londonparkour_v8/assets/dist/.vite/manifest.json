@@ -1,6 +1,17 @@
 {
+  "_leaflet-CIGW-MKW.css": {
+    "file": "leaflet-CIGW-MKW.css",
+    "src": "_leaflet-CIGW-MKW.css"
+  },
+  "_leaflet-Ot5tJlA7.js": {
+    "file": "chunks/leaflet-Ot5tJlA7.js",
+    "name": "leaflet",
+    "css": [
+      "leaflet-CIGW-MKW.css"
+    ]
+  },
   "assets/css/main.css": {
-    "file": "main-CRmktIJq.css",
+    "file": "main-DB8MQUG6.css",
     "src": "assets/css/main.css",
     "isEntry": true
   },
@@ -9,12 +20,31 @@
     "src": "assets/fonts/ScopeTrial-Variable.ttf"
   },
   "assets/js/app.js": {
-    "file": "app-XQEc0UBB.js",
+    "file": "app-CCp_P8mw.js",
     "name": "app",
     "src": "assets/js/app.js",
     "isEntry": true,
-    "css": [
-      "app-CIGW-MKW.css"
+    "dynamicImports": [
+      "assets/js/elements/SiteNetworkMap.js",
+      "assets/js/elements/ClassDetailOsmMap.js"
+    ]
+  },
+  "assets/js/elements/ClassDetailOsmMap.js": {
+    "file": "chunks/ClassDetailOsmMap-CpTzGhy6.js",
+    "name": "ClassDetailOsmMap",
+    "src": "assets/js/elements/ClassDetailOsmMap.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_leaflet-Ot5tJlA7.js"
+    ]
+  },
+  "assets/js/elements/SiteNetworkMap.js": {
+    "file": "chunks/SiteNetworkMap-c539hyK8.js",
+    "name": "SiteNetworkMap",
+    "src": "assets/js/elements/SiteNetworkMap.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_leaflet-Ot5tJlA7.js"
     ]
   }
 }

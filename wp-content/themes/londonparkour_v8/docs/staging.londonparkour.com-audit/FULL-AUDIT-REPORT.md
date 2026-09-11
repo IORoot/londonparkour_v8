@@ -2,7 +2,7 @@
 
 **Target:** https://staging.londonparkour.com/ (HTTP basic auth)  
 **Live comparison:** https://londonparkour.com/ (V7, public)  
-**Date:** 2026-09-11  
+**Date:** 2026-09-11 (recheck: `/docs/` 200; Sample Page 404)  
 **Business type:** Hybrid local service (3 outdoor class sites in London) + publisher (609 tutorials) + light booking commerce.
 
 This is a **pre-launch** audit of the V8 theme on staging. Ranking, GSC, GA4, and CrUX numbers below are **LIVE V7** unless labelled staging lab.
@@ -11,29 +11,31 @@ This is a **pre-launch** audit of the V8 theme on staging. Ranking, GSC, GA4, an
 
 ## Executive summary
 
-**SEO Health Score: 51 / 100**
+**SEO Health Score: 54 / 100**
 
-The V8 site is a well-typed local class business with server-rendered titles, unique meeting-point copy, Course/SportsEvent/Offer JSON-LD, and a slimmer tutorial hub than live. It is **not launch-safe**. If DNS cut over today, Google would still hit two junk WordPress pages, a 403 docs hub, and 609 thin tutorial spokes at new URLs — while the live indexed paths (`/tutorial/`, `/bookings/`, `/giftcards/`, dated class slugs) 404.
+The V8 site is a well-typed local class business with server-rendered titles, unique meeting-point copy, Course/SportsEvent/Offer JSON-LD, and a slimmer tutorial hub than live. Recheck **2026-09-11**: staging **indexation leftovers are cleared**. V7→V8 301 map is live. `/book/` → `/classes/`. `/sample-page/` is 404. Clasbpro preview is `noindex`. **`/docs/` is 200** (`Parkour FAQ & Docs | London Parkour`, `index, follow`); `/docs` (no slash) 301s to **HTTPS** `/docs/`; FAQ 301s into a working hub.
+
+**Not yet launch-complete:** set Site Address at cutover; lab LCP 7.6–7.7 s; live GSC still has `dev.` / `http://` / `www.` sitemaps; NAP/schema (JOHN DOE, 42 vs 43, SW8 1SR vs 1SS). Canonicals follow `home_url()`.
 
 **Canonicals are dynamic.** A 2026-09-11 check of every WordPress page plus 631 other 200s found **no ACF `seo_canonical` pointing at another host or path.** Staging host in the tags follows `home_url()`. It will become `londonparkour.com` when Site Address / `WP_HOME` does. See `findings/canonical-overrides.md`.
 
-Highest-leverage constraint: **the cutover map**, not new content. Live UK search already concentrates on the homepage (183 of 545 UK clicks in 90 days). `/classes/` is indexed and commercially invisible (1 click, position 52.5). Fixing indexation hygiene and redirects protects the little equity that exists; rewriting slogan H1s does not.
+Highest-leverage constraint left is **cutover**: Site Address → `https://londonparkour.com`, then GSC sitemap hygiene. Live UK search already concentrates on the homepage (183 of 545 UK clicks in 90 days). `/classes/` is indexed and commercially invisible (1 click, position 52.5).
 
 ### Top 5 critical issues
 
-1. `/sample-page/` is 200, indexable, and in the page sitemap. `/clasbpro-theme-preview/` is the same **on staging today** (theme noindex is in git, not deployed yet).
-2. `/docs/` is nginx 403 (in sitemap); FAQ doc 301s into it; `/docs` (no slash) 301s to **HTTP**.
-3. No 301 map from live `/tutorial/{slug}/` → `/tutorials/{slug}/`, `/bookings/` → a real booking URL, `/giftcards/` → `/docs/gift-cards/`, or changed class slugs.
-4. Homepage closing CTA `href="/book/"` **301s to `/booking-cancelled/`** (`noindex`).
-5. Lab LCP 7.6–7.7 s on `/` and `/classes/` (not an indexing block, but it ships with the theme).
+1. Lab LCP 7.6–7.7 s on `/` and `/classes/` (not an indexing block, but it ships with the theme).
+2. Thin tutorial spokes (unique body one sentence) at new `/tutorials/{slug}/` URLs — 301s from `/tutorial/` are in place; Google still has to recrawl.
+3. Live GSC sitemap hygiene: `dev.`, `http://`, and `http://www.` indexes still submitted.
+4. At cutover, set Site Address so canonicals become `londonparkour.com`.
+5. `/clasbpro-theme-preview/` is 200 `noindex` (out of sitemap). Harmless if it stays unpublished; delete when convenient.
 
 ### Top 5 quick wins
 
-1. Delete or `noindex` the two junk pages and drop them from the sitemap.
-2. Restore `/docs/` to 200 (or remove it from the sitemap) and force HTTPS on the no-slash redirect.
-3. Point `/book/` at the booking drawer destination (or 404 it) — stop 301ing to cancelled.
-4. In live GSC, delete `dev.`, `http://`, and `http://www.` sitemaps; submit one HTTPS index after cutover.
-5. Replace “JOHN DOE”; sync review count 42 vs 43; fix Vauxhall `SW8 1SR` vs `SW8 1SS`.
+1. In live GSC, delete `dev.`, `http://`, and `http://www.` sitemaps; submit one HTTPS index after cutover.
+2. Replace “JOHN DOE”; sync review count 42 vs 43; fix Vauxhall `SW8 1SR` vs `SW8 1SS`.
+3. Add `/tutorials/` hub to the sitemap.
+4. Unblock lab LCP on `/` and `/classes/` (7.6–7.7 s).
+5. Set Site Address / `WP_HOME` to `https://londonparkour.com` at DNS cutover.
 
 ---
 
@@ -49,9 +51,9 @@ Highest-leverage constraint: **the cutover map**, not new content. Live UK searc
 ### Analyze (first principles)
 
 - Page types: homepage = brand/nav; `/classes/` should be the commercial service page; location pages = local; tutorials = how-to video; they currently mix jobs.
-- Eligibility floor: live is indexed, but coverage is ~2%. Staging auth hides V8 from Google until cutover. After cutover, **missing 301s** (not frozen staging canonicals) are the binding constraint. Canonicals follow `home_url()`.
+- Eligibility floor: live is indexed, but coverage is ~2%. Staging auth hides V8 from Google until cutover. The V7→V8 301 map is **live on staging**. `/docs/` is 200. Canonicals follow `home_url()`. Sample Page is 404.
 - Lateral: thin tutorial HTML × 0% tutorial indexation on live × `/tutorial/` → `/tutorials/` path change = shipping 609 new URLs that Google has already refused to index, at new addresses.
-- System: junk/noindex and `/docs/` 403 unblock sitemap quality; redirect map unblocks equity; `/book/` unblocks conversion; LCP is parallel, not a gate for the map.
+- System: staging indexation leftovers are cleared; cutover is Site Address + GSC sitemap hygiene; LCP is parallel.
 
 ### Validate
 
@@ -63,7 +65,7 @@ Highest-leverage constraint: **the cutover map**, not new content. Live UK searc
 
 ### Act
 
-See `ACTION-PLAN.md`. Leading indicators after launch: GSC indexed count on the HTTPS sitemap (from 19 toward class/location/hub URLs), UK clicks on `/classes/`, lab LCP under 4 s then 2.5 s, `/book/` no longer hitting cancelled.
+See `ACTION-PLAN.md`. Leading indicators after launch: GSC indexed count on the HTTPS sitemap (from 19 toward class/location/hub URLs), UK clicks on `/classes/`, lab LCP under 4 s then 2.5 s.
 
 ---
 
@@ -71,30 +73,30 @@ See `ACTION-PLAN.md`. Leading indicators after launch: GSC indexed count on the 
 
 | Category | Score | Weight | Weighted |
 |---|---:|---:|---:|
-| Technical SEO | 54 | 22% | 11.9 |
+| Technical SEO | 70 | 22% | 15.4 |
 | Content Quality | 56 | 23% | 12.9 |
 | On-Page SEO | 51 | 20% | 10.2 |
 | Schema / Structured Data | 44 | 10% | 4.4 |
 | Performance (CWV, lab) | 32 | 10% | 3.2 |
 | AI Search Readiness | 41 | 10% | 4.1 |
 | Images | 68 | 5% | 3.4 |
-| **Health** | **51** | 100% | **50.1 → 51** |
+| **Health** | **54** | 100% | **53.6 → 54** |
 
 ---
 
-## Technical SEO — 54
+## Technical SEO — 70
 
-**What works:** HTTPS, Googlebot allowed, sitemap declared, viewport, titles/H1/JSON-LD in first HTML (not an SPA), trailing-slash 301s on marketing URLs, checkout utilities correctly `noindex`. **Canonical / `og:url` / JSON-LD `@id` are `home_url()`-based** — not hard-coded. Rechecked 2026-09-11: no ACF canonical override to another host or path (`findings/canonical-overrides.md`).
+**What works:** HTTPS, Googlebot allowed, sitemap declared, viewport, titles/H1/JSON-LD in first HTML (not an SPA), trailing-slash 301s on marketing URLs, checkout utilities correctly `noindex`. **Canonical / `og:url` / JSON-LD `@id` are `home_url()`-based.** V7→V8 301s are live. `/docs/` is **200** (`index, follow`); `/docs` 301s to HTTPS. `/clasbpro-theme-preview/` is `noindex, nofollow` and omitted from the page sitemap. `/sample-page/` is **404 `noindex`**. `/book/` 301s to `/classes/`.
 
 **Fails**
 
 | Sev | Finding |
 |---|---|
-| Critical | `/sample-page/` indexable + sitemap; `/clasbpro-theme-preview/` still indexable on staging until the theme noindex deploys |
-| Critical | `/docs/` nginx 403; FAQ 301→403; `/docs` → HTTP |
-| High | No V7→V8 redirect map (see cluster/ecommerce) |
+| Info | `/docs/` resolved: 200 `index, follow`; no-slash 301s to HTTPS |
 | High | Lab LCP 7.6–7.7 s (`performance.md`) |
-| Info | `/legal/` already **301**s via `lp_docs_redirects()` to `/docs/terms-of-service/` (not an ACF canonical) |
+| Info | `/sample-page/` resolved: 404 `noindex` |
+| Info | `/clasbpro-theme-preview/` resolved: noindex + not in sitemap |
+| Info | `/legal/` already **301**s via `lp_docs_redirects()` to `/docs/terms-of-service/` |
 | Medium | No HSTS/CSP/X-CTO/X-FO/Referrer-Policy on HTML |
 | Medium | `/tutorials/` hub missing from sitemap |
 | Medium | `/tutorials-category/` 1.48 MB / 391 images |
