@@ -68,3 +68,26 @@ function lp_author_archive_404(): void {
 	nocache_headers();
 }
 add_action( 'template_redirect', 'lp_author_archive_404', 0 );
+
+/**
+ * Theme `docs/` is developer markdown, not a public URL.
+ */
+function lp_block_theme_docs_http(): void {
+	if ( is_admin() ) {
+		return;
+	}
+	$uri = (string) ( $_SERVER['REQUEST_URI'] ?? '' );
+	$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
+	$blocked = (
+		false !== strpos( $path, '/wp-content/themes/londonparkour_v8/docs' )
+		|| 0 === strpos( $path, '/staging.londonparkour.com-audit' )
+	);
+	if ( ! $blocked ) {
+		return;
+	}
+	global $wp_query;
+	$wp_query->set_404();
+	status_header( 404 );
+	nocache_headers();
+}
+add_action( 'template_redirect', 'lp_block_theme_docs_http', 0 );

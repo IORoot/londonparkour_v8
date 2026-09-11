@@ -1,0 +1,273 @@
+{
+  "summary": {
+    "health_score": 51,
+    "business_type": "Hybrid local service (3 outdoor London sites) + publisher (609 tutorials) + class booking",
+    "audited_url": "https://staging.londonparkour.com/",
+    "live_url": "https://londonparkour.com/",
+    "audit_date": "2026-09-11",
+    "label": "Pre-launch V8 staging. GSC/GA4/CrUX are LIVE V7.",
+    "top_findings": [
+      "Canonicals follow home_url(); no ACF seo_canonical override to another host or path",
+      "/sample-page/ and /clasbpro-theme-preview/ are indexable and in the sitemap",
+      "/docs/ returns nginx 403; FAQ 301s into it; /docs no-slash 301s to HTTP",
+      "No 301 map from live /tutorial/ , /bookings/ , /giftcards/ , dated class slugs",
+      "/book/ 301s to noindex /booking-cancelled/"
+    ],
+    "quick_wins": [
+      "noindex or delete sample-page and clasbpro-theme-preview",
+      "Restore /docs/ to 200 and HTTPS-only redirects",
+      "Stop /book/ 301 to cancelled",
+      "Delete stale GSC sitemaps (dev, http, www)",
+      "Fix JOHN DOE, review 42 vs 43, Vauxhall SW8 1SR vs 1SS"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 54,
+      "what_works": [
+        "HTTPS, Googlebot allowed, sitemap in robots.txt",
+        "Titles, H1, JSON-LD in first HTML (not an SPA)",
+        "Checkout utilities correctly noindex",
+        "Canonical / og:url / JSON-LD @id follow home_url(); no ACF override to another URL"
+      ],
+      "findings": [
+        {
+          "title": "Canonicals are dynamic (not a launch rewrite)",
+          "severity": "Info",
+          "description": "2026-09-11: 19 WP pages + 631 other 200s are self-canonical on the current host. 0 other host, 0 path mismatch, 0 og≠canonical. ACF seo_canonical is empty where checked. Staging host in tags follows home_url().",
+          "recommendation": "At cutover set Site Address / WP_HOME / WP_SITEURL to https://londonparkour.com and run search-replace. Do not hard-code londonparkour.com in the theme."
+        },
+        {
+          "title": "Junk pages in the sitemap",
+          "severity": "Critical",
+          "description": "/sample-page/ (WP Los Angeles boilerplate) and /clasbpro-theme-preview/ are 200, index, follow, listed first in the page sitemap.",
+          "recommendation": "Delete or noindex and omit from wp-sitemap-posts-page-1.xml."
+        },
+        {
+          "title": "/docs/ is nginx 403",
+          "severity": "Critical",
+          "description": "Hub is in the sitemap. /docs/frequently-asked-questions/ 301s into the 403. /docs (no slash) 301s to http://.",
+          "recommendation": "Serve 200 or drop from sitemap. Force HTTPS on the slash redirect."
+        },
+        {
+          "title": "Lab LCP 7.6–7.7s",
+          "severity": "High",
+          "description": "Lighthouse 13.4.1 mobile Slow 4G. CLS good. TTFB ~80–210ms. Render-path bound.",
+          "recommendation": "Unblock CSS/fonts/hero before launch. Do not start an INP project; TBT is already good."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 56,
+      "what_works": [
+        "Homepage 1384 main words; about 820; adult/kids class pages pass volume",
+        "Location meeting-point sentences are unique",
+        "Coach bios with real qualifications"
+      ],
+      "findings": [
+        {
+          "title": "Tutorial unique copy is one sentence",
+          "severity": "High",
+          "description": "deadhang / vault-landing / crouch-walk ledes are a single truncated standard; 609-item filter board inflates word count. Live tutorial sitemaps: ~841 submitted, 0 indexed.",
+          "recommendation": "Finish the standard as visible HTML. Do not add HowTo schema. Do not expect 609 spokes to index."
+        },
+        {
+          "title": "/classes/ is a timetable, not a service explainer",
+          "severity": "High",
+          "description": "296 main words. H1 “This week's sessions.” Live UK: 1 click, position 52.5.",
+          "recommendation": "Keep the timetable. Make outdoor-not-a-gym explicit. Do not chase parkour gym SERPs."
+        },
+        {
+          "title": "JOHN DOE testimonial",
+          "severity": "Medium",
+          "description": "Homepage quote board includes a placeholder-shaped attribution.",
+          "recommendation": "Replace with a real review or remove."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 51,
+      "what_works": [
+        "Commercial titles unique and mostly 30–60 characters",
+        "Kids class title/H1 include 6–9s",
+        "Strong internal nav"
+      ],
+      "findings": [
+        {
+          "title": "H1s are slogans",
+          "severity": "Medium",
+          "description": "Homepage H1 does not say parkour, classes, or London. Location H1s are place names only. Titles already carry the query.",
+          "recommendation": "Do not keyword-stuff against brand voice. Optional: include “parkour classes” in location H1s if design allows."
+        },
+        {
+          "title": "Contact title 22 characters",
+          "severity": "Medium",
+          "description": "Below the 30-character gate. No tel: on the page.",
+          "recommendation": "Lengthen the title. Add a phone only if the business wants calls (copy currently prefers email)."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 44,
+      "what_works": [
+        "JSON-LD in first HTML",
+        "SportsClub, Course, SportsEvent, Offer, VideoObject present",
+        "No HowTo (correct)"
+      ],
+      "findings": [
+        {
+          "title": "streetAddress is timetable text",
+          "severity": "High",
+          "description": "Vauxhall: “SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"”. Same pattern on Old Street and Kilburn.",
+          "recommendation": "Real thoroughfare or omit streetAddress. Hours in openingHoursSpecification."
+        },
+        {
+          "title": "logo is a page photo",
+          "severity": "High",
+          "description": "Organization.logo changes per URL (hero, location jpeg, tutorial still, coach portrait).",
+          "recommendation": "Stable mark on logo. Page photos stay on image / thumbnailUrl."
+        },
+        {
+          "title": "aggregateRating 42 vs on-page 43",
+          "severity": "High",
+          "description": "4.9/42 emitted on every sampled URL including tutorials.",
+          "recommendation": "One sourced count, only on the org/homepage, or omit until GBP is verified."
+        },
+        {
+          "title": "FAQPage present",
+          "severity": "Info",
+          "description": "Google retired FAQ rich results for all sites on 7 May 2026. Class FAQ names are labels, not questions.",
+          "recommendation": "Do not add new FAQPage for SERP. Do not remove accurate contact Q&A HTML."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 32,
+      "what_works": [
+        "CLS 0.001 homepage / 0.041 classes (good)",
+        "TBT 170/90 ms (good INP proxy)",
+        "Staging TTFB ~80–210 ms"
+      ],
+      "findings": [
+        {
+          "title": "Mobile lab LCP Poor",
+          "severity": "High",
+          "description": "Homepage 7.6s, /classes/ 7.7s. No CrUX (API key missing). Live V7 TTFB ~0.95s.",
+          "recommendation": "Fix render-blocking CSS/fonts/hero. Keep slimmer tutorial hub; do not ship 1.48MB /tutorials-category/."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 41,
+      "what_works": [
+        "SSR content",
+        "Googlebot not blocked",
+        "VideoObject on tutorials"
+      ],
+      "findings": [
+        {
+          "title": "Cloudflare AI crawler Disallow",
+          "severity": "Medium",
+          "description": "GPTBot, ClaudeBot, Google-Extended (Gemini grounding) Disallow: /. Same policy on live V7.",
+          "recommendation": "Product decision. Google-Extended does not block AI Overviews. Do not lift blocks without discussing training vs grounding."
+        },
+        {
+          "title": "Short citable passages",
+          "severity": "Medium",
+          "description": "Slogan H1; tutorial ledes truncated; /llms.txt 404 (Google ignores it).",
+          "recommendation": "Write self-contained 120–160 word answers on class/location pages. Do not add llms.txt for Google ranking."
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 68,
+      "what_works": [
+        "Homepage 44 images, 0 missing alt"
+      ],
+      "findings": [
+        {
+          "title": "Category hub inlines 391 images",
+          "severity": "High",
+          "description": "/tutorials-category/ is 1.48 MB HTML.",
+          "recommendation": "Paginate or lazy-link spokes. Keep /tutorials/ hub at ~323 KB."
+        }
+      ]
+    }
+  ],
+  "live_search": {
+    "property": "sc-domain:londonparkour.com",
+    "uk_90d": {
+      "clicks": 545,
+      "impressions": 19352,
+      "ctr": 0.028,
+      "position": 8.3
+    },
+    "worldwide_28d": {
+      "clicks": 251,
+      "impressions": 14093,
+      "ctr": 0.0178,
+      "position": 10
+    },
+    "sitemap_indexed": "988 submitted / 19 indexed on https sitemap (2%)",
+    "ga4_organic_sessions_90d": 1101,
+    "note": "LIVE V7. Staging not in GSC. Impression deltas vs previous 90d overlap a GSC logging error."
+  },
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Fixes",
+        "timeframe": "Before public DNS",
+        "items": [
+          "Rewrite canonicals and JSON-LD @ids to londonparkour.com",
+          "301 map /tutorial/ → /tutorials/, class slugs, /bookings/, /giftcards/",
+          "noindex sample-page and clasbpro-theme-preview",
+          "Fix /docs/ 403 and HTTP redirect",
+          "Stop /book/ 301 to booking-cancelled"
+        ]
+      },
+      {
+        "name": "Phase 2: High-Impact Improvements",
+        "timeframe": "Launch week",
+        "items": [
+          "Delete stale GSC sitemaps; submit one HTTPS index",
+          "Fix PostalAddress, logo, en-GB, review count, Person schema",
+          "Make /classes/ outdoor-not-a-gym explicit",
+          "Lab LCP under 4s then 2.5s",
+          "Stop inlining 391 images on /tutorials-category/"
+        ]
+      },
+      {
+        "name": "Phase 3: Content & Authority",
+        "timeframe": "Month 2",
+        "items": [
+          "Visible HTML on priority tutorial spokes (not 609 rewrites)",
+          "Kids hub only if it is a real combined product",
+          "Do not imply a seniors programme without a class",
+          "One gift-card commerce URL with Offer"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring & Iteration",
+        "timeframe": "Ongoing",
+        "items": [
+          "Drift baseline on live after cutover",
+          "Watch GSC indexed count, /classes/ UK clicks, redirected URL Inspection",
+          "Re-audit 30 days after DNS"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/",
+    "report": "FULL-AUDIT-REPORT.md",
+    "action_plan": "ACTION-PLAN.md"
+  }
+}

@@ -1,0 +1,11 @@
+HTTP/2 301 
+date: Fri, 11 Sep 2026 08:27:15 GMT
+content-type: text/html
+location: http://staging.londonparkour.com/docs/
+server: cloudflare
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=ilYa5wXcK7r673TbnTezDq0ZgdQ3od8159HozP5ttXoODwfFo%2BGgSSduvmUtYLnGyJcgs9qPRiFOjDwqMBxwbZyb9fIPbdMVUfP09LcKYFpZL0nywlxM2jf8ipScbwY%2FEE%2B2JFtmA3ODZAJq"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a3954aca2ff13695-LHR
+alt-svc: h3=":443"; ma=86400
+

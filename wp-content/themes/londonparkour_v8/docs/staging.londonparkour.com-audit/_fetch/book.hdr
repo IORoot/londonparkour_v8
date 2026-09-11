@@ -1,0 +1,31 @@
+HTTP/2 301 
+date: Fri, 11 Sep 2026 08:13:43 GMT
+content-type: text/html; charset=UTF-8
+location: https://staging.londonparkour.com/booking-cancelled/
+server: cloudflare
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0, no-store, private
+x-redirect-by: WordPress
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=46YXsDvslvEgv1n67x7AbN68m9HOtX7QwWkokDdYXsjMn5kQzFgBMBBUxAtSKWmVsW7xTgyjjv0fZJouFxrvkxnzIuiHJFnGinpQu20WEEduxaMq%2FXGjRrqcAv3bRdQNIxVc4t6FKHCQY0ij"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a39536fc1880cd7a-LHR
+alt-svc: h3=":443"; ma=86400
+
+HTTP/2 200 
+date: Fri, 11 Sep 2026 08:13:44 GMT
+content-type: text/html; charset=UTF-8
+server: cloudflare
+link: <https://staging.londonparkour.com/wp-json/>; rel="https://api.w.org/"
+link: <https://staging.londonparkour.com/wp-json/wp/v2/pages/61>; rel="alternate"; title="JSON"; type="application/json"
+link: <https://staging.londonparkour.com/?p=61>; rel=shortlink
+x-breeze-cache-write: SUCCESS
+cache-provider: CLOUDWAYS-CACHE-DC
+last-modified: Fri, 11 Sep 2026 08:13:44 GMT
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+vary: Accept-Encoding
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=DbNWybDsQHblVXwio5P7pBbkdMLqXROqOkaJ%2BZe5VB5DUQURoL1Rz2MBjVHT7pGKAMMJsQ5%2Bl93yt7G73Rd0kx67n3yg%2F4lrUiu5n4gA59zF2A%2Bo0xpUP7vDFTguweKKKyuYQfPUPXC%2B6iFo"}]}
+cf-ray: a39536fdf9c1cd7a-LHR
+alt-svc: h3=":443"; ma=86400
+

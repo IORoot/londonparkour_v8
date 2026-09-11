@@ -1,0 +1,14 @@
+HTTP/2 301 
+date: Fri, 11 Sep 2026 08:27:12 GMT
+content-type: text/html; charset=UTF-8
+location: https://staging.londonparkour.com/booking-cancelled/
+server: cloudflare
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0, no-store, private
+x-redirect-by: WordPress
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Yj%2FoNs54W8Ji4yoGQ5mH1UKKj5YoV8yorFFkfQ3%2BulZ2zHQ0sd8QuMQAeF1PV%2FJJ%2BK5dD1M1DzSmcHazemrCbtUmf586Ojr%2F%2BGZFrD4TxacT9huZSbcg99Ox0fn2jOMvl3lOLBZqnvepJtpu"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a3954abbf98bc616-LHR
+alt-svc: h3=":443"; ma=86400
+

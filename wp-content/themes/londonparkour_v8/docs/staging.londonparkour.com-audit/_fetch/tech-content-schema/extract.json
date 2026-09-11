@@ -1,0 +1,4072 @@
+{
+  "sample": [
+    {
+      "url": "https://staging.londonparkour.com/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "London Parkour | Practical Movement Training & Classes",
+      "h1": [
+        "the world is your playground."
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/sample-page/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/sample-page/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Sample Page | London Parkour",
+      "h1": [],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/clasbpro-theme-preview/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/clasbpro-theme-preview/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Booking Form Theme Preview | London Parkour",
+      "h1": [],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/classes/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Parkour Classes in London | Weekly Timetable",
+      "h1": [
+        "This week's sessions."
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/about/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/about/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "About London Parkour | Outdoor Classes Since 2018",
+      "h1": [
+        "London Parkour"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/contact/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/contact/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Contact London Parkour",
+      "h1": [
+        "Let's talk movement."
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/legal/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/docs/terms-of-service/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Terms of Service | London Parkour",
+      "h1": [
+        "Terms of service."
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/workshops/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/workshops/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Parkour Workshops in London",
+      "h1": [
+        "The workshops."
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Adult Beginners East | Parkour in London",
+      "h1": [
+        "Adult Beginners East"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Kids Class West (6-9s) | Parkour in London",
+      "h1": [
+        "Kids Class West (6-9s)"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/locations/vauxhall/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/classes/locations/vauxhall/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Parkour Classes at Vauxhall | London",
+      "h1": [
+        "Vauxhall"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/locations/old-street/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/classes/locations/old-street/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Parkour Classes at Old Street | London",
+      "h1": [
+        "Old Street"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/coaches/andy-pearson/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/coaches/andy-pearson/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Andy Pearson | Parkour Coach, London",
+      "h1": [
+        "Andy Pearson"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/blog/definitive-guide-to-army-military-parkour-training/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/blog/definitive-guide-to-army-military-parkour-training/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Definitive Guide to Army & Military Parkour Training",
+      "h1": [
+        "Definitive Guide to Army & Military Parkour Training"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/blog/parkour-faq/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/blog/parkour-faq/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Parkour FAQ | London Parkour",
+      "h1": [
+        "Parkour FAQ"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/deadhang/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/tutorials/deadhang/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Deadhang | London Parkour",
+      "h1": [
+        "Deadhang"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/vault-landing/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/tutorials/vault-landing/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Vault Landing | London Parkour",
+      "h1": [
+        "Vault Landing"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/crouch-walk/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/tutorials/crouch-walk/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Crouch walk | London Parkour",
+      "h1": [
+        "Crouch walk"
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/tutorials/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Parkour Tutorials | London Parkour",
+      "h1": [
+        "Tutorials."
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    },
+    {
+      "url": "https://staging.londonparkour.com/docs/gift-cards/",
+      "status": 200,
+      "canonical": "https://staging.londonparkour.com/docs/gift-cards/",
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "title": "Parkour Gift Cards | London Parkour",
+      "h1": [
+        "Questions, answered."
+      ],
+      "host_canonical_ok": true,
+      "indexable": true
+    }
+  ],
+  "content": [
+    {
+      "url": "https://staging.londonparkour.com/",
+      "status": 200,
+      "title": "London Parkour | Practical Movement Training & Classes",
+      "title_len": 54,
+      "h1": [
+        "the world is your playground."
+      ],
+      "h2": [
+        "Coming up. Book a place.",
+        "No contract. Ever.",
+        "One coach. Just you.",
+        "We don't teach tricks. We teach people to trust what their body can already do.",
+        "Series worth watching.",
+        "Three spots across London.",
+        "The people who teach the practice.",
+        "Walk through the door.",
+        "Subscribe to the monthly dispatch.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Practical movement is the practice of getting where you want to go. Taught across three London sites, to every age and every body.",
+      "desc_len": 130,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/",
+      "word_count_full": 1592,
+      "word_count_main": 1384,
+      "main_excerpt": " N 51.5074° / W 0.1278° 01 - PRACTICAL MOVEMENT CLASSES / EST 2018 the world is your playground. Practical movement is the practice of getting where you want to go. We teach it across three London sites, to every age and every body. No experience needed. BOOK YOUR FIRST CLASS — £15 Watch a session ↗ NEXT CLASS SAT - 12th Adult Beginners East Old Street 18 left DURATION 90 min START TIME 10:30 PRIC",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 261595
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/",
+      "status": 200,
+      "title": "Parkour Classes in London | Weekly Timetable",
+      "title_len": 44,
+      "h1": [
+        "This week's sessions."
+      ],
+      "h2": [
+        "Week 37 · 7th – 13th September 2026",
+        "AGENDA · WEEK 37",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Every session on the board for the week ahead. Coach-led, capped at twelve, £15 to drop in. Spaces update live.",
+      "desc_len": 111,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/classes/",
+      "word_count_full": 504,
+      "word_count_main": 296,
+      "main_excerpt": " HOME / CLASSES / AGENDA MAP VIEW ↗ This week's sessions. Every session on the board for the week ahead. Coach-led, capped at twelve, £15 to drop in. Spaces update live — take the slot while it is there. AGENDA 80 SESSIONS MAP 3 SITES PRIVATE 1:1 ANY SITE WORKSHOPS 1 DATES Week 37 · 7th – 13th September 2026 5 CLASSES THIS WEEK AGENDA · WEEK 37 UPDATED 16:57 · THU 10 SEP WED 9 SEPTEMBER 2026 1 SES",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 154926
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+      "status": 200,
+      "title": "Adult Beginners East | Parkour in London",
+      "title_len": 40,
+      "h1": [
+        "Adult Beginners East"
+      ],
+      "h2": [
+        "Old Street.",
+        "Upcoming sessions.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture…",
+      "desc_len": 153,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+      "word_count_full": 1363,
+      "word_count_main": 1155,
+      "main_excerpt": " HOME / CLASSES / ADULT BEGINNERS EAST ALL CLASSES ↗ Adult Beginners East 90 min · Practical. Movement. Training. SITE Old Street LEVEL All levels PRICE £15 drop-in WATCH THE CLASS 90 min · Practical. Movement. Training. ABOUT THIS CLASS You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — techniq",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 205682
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+      "status": 200,
+      "title": "Kids Class West (6-9s) | Parkour in London",
+      "title_len": 42,
+      "h1": [
+        "Kids Class West (6-9s)"
+      ],
+      "h2": [
+        "Vauxhall.",
+        "Upcoming sessions.",
+        "Youth class.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have…",
+      "desc_len": 152,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+      "word_count_full": 1744,
+      "word_count_main": 1534,
+      "main_excerpt": " HOME / CLASSES / KIDS CLASS WEST (6-9S) ALL CLASSES ↗ Kids Class West (6-9s) 90 min · Jump. Climb. Vault. Swing. SITE Vauxhall LEVEL Level 1 · Beginner PRICE £15 drop-in WATCH THE CLASS 90 min · Jump. Climb. Vault. Swing. ABOUT THIS CLASS Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never tr",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 211191
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/locations/vauxhall/",
+      "status": 200,
+      "title": "Parkour Classes at Vauxhall | London",
+      "title_len": 36,
+      "h1": [
+        "Vauxhall"
+      ],
+      "h2": [
+        "Vauxhall.",
+        "Vauxhall.",
+        "Three sites. One network.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Outdoor parkour classes at Vauxhall, London. Meet outside Tube station exit 2, next to metal pillars and open area. Victoria Line · Vauxhall Train (South…",
+      "desc_len": 154,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/classes/locations/vauxhall/",
+      "word_count_full": 485,
+      "word_count_main": 283,
+      "main_excerpt": " HOME / CLASSES / LOCATIONS / VAUXHALL LOCATION MAP ↗ Vauxhall Outside Tube station exit 2, next to metal pillars and open area. TYPE OUTDOOR SITE Youth Outdoor Site DETAILS SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\" MEETING POINT Vauxhall. STREETVIEW ↗ OUTDOOR · Youth Outdoor Site MEETING POINT Outside Tube station exit 2, next to metal pillars and open area. TRANSPORT Victoria Line ·",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 135955
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/locations/old-street/",
+      "status": 200,
+      "title": "Parkour Classes at Old Street | London",
+      "title_len": 38,
+      "h1": [
+        "Old Street"
+      ],
+      "h2": [
+        "Old Street.",
+        "Old Street.",
+        "Three sites. One network.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Outdoor parkour classes at Old Street, London. Meet outside main tube station exit. By big open area with benches. Northern Line - Southeastern Train.",
+      "desc_len": 150,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/classes/locations/old-street/",
+      "word_count_full": 480,
+      "word_count_main": 277,
+      "main_excerpt": " HOME / CLASSES / LOCATIONS / OLD STREET LOCATION MAP ↗ Old Street Outside main tube station exit. By big open area with benches. TYPE OUTDOOR SITE OUTDOOR EAST DETAILS OLD STREET ST - London EC1Y 1BE MEETING POINT Old Street. STREETVIEW ↗ OUTDOOR · OUTDOOR EAST MEETING POINT Outside main tube station exit. By big open area with benches. TRANSPORT Northern Line - Southeastern Train Buses - 55 · I3",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 135914
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/locations/kilburn-park/",
+      "status": 200,
+      "title": "Parkour Classes at Kilburn Park | London",
+      "title_len": 40,
+      "h1": [
+        "Kilburn Park"
+      ],
+      "h2": [
+        "Kilburn Park.",
+        "Kilburn Park.",
+        "Three sites. One network.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Outdoor parkour classes at Kilburn Park, London. Meet outside Kilburn Park Tube Station. Bakerloo Underground Line · Kilburn High Road (Lioness Line).",
+      "desc_len": 150,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/classes/locations/kilburn-park/",
+      "word_count_full": 461,
+      "word_count_main": 258,
+      "main_excerpt": " HOME / CLASSES / LOCATIONS / KILBURN PARK LOCATION MAP ↗ Kilburn Park Outside Kilburn Park Tube Station TYPE OUTDOOR SITE NORTH-WEST LONDON SITE DETAILS NW6 5AD · SUNDAYS · 11:00-12:30 MEETING POINT Kilburn Park. STREETVIEW ↗ OUTDOOR · NORTH-WEST LONDON SITE MEETING POINT Outside Kilburn Park Tube Station TRANSPORT Bakerloo Underground Line · Kilburn High Road (Lioness Line) Buses 31 · 32 · 206 ·",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 133265
+    },
+    {
+      "url": "https://staging.londonparkour.com/about/",
+      "status": 200,
+      "title": "About London Parkour | Outdoor Classes Since 2018",
+      "title_len": 49,
+      "h1": [
+        "London Parkour"
+      ],
+      "h2": [
+        "From the classes that made him to the ones he runs now.",
+        "The line before LondonParkour.",
+        "Army, palace, paper, punk.",
+        "Work hard. Enjoy it while you do.",
+        "Not functional.",
+        "The people who teach the practice.",
+        "Regulars. All abilities. All ages.",
+        "Take your first step.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Andy founded LondonParkour in 2018: high-quality, well-taught, reasonably priced outdoor parkour classes, private 1:1s and workshops across London.",
+      "desc_len": 147,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/about/",
+      "word_count_full": 1024,
+      "word_count_main": 820,
+      "main_excerpt": " HOME / ABOUT CLASSES ↗ N 51.5074° / W 0.1278° EST. 2018 London Parkour High-quality, well-taught, reasonably priced, accessible and fun coaching across London. That was the brief Andy set when he founded LondonParkour in 2018 — and it still is. BOOK A CLASS MEET THE TEAM ↓ BE STRONG TO BE USEFUL · OLD-SCHOOL STANDARDS · MODERN TWIST · INTENSE BUT SCALED · ALL AGES · ALL LEVELS · WORK HARD · ENJOY",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 167258
+    },
+    {
+      "url": "https://staging.londonparkour.com/contact/",
+      "status": 200,
+      "title": "Contact London Parkour",
+      "title_len": 22,
+      "h1": [
+        "Let's talk movement."
+      ],
+      "h2": [
+        "Send us a message",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Tell us what you're training for and we'll point you in the right direction. Email is faster than the phone — coaches are on the floor during sessions.",
+      "desc_len": 151,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/contact/",
+      "word_count_full": 473,
+      "word_count_main": 273,
+      "main_excerpt": " HOME / CONTACT FIND A SITE ↗ Let's talk movement. Questions about classes, private coaching, gift cards or partnerships. Send us a message Tell us what you're training for and we'll point you in the right direction. Company NAME REQUIRED FOCUS EMAIL REQUIRED FOCUS SUBJECT FOCUS MESSAGE REQUIRED FOCUS We reply within 36H. SEND MESSAGE REACH US NOW OPEN EMAIL [email protected] LOCATIONS Vauxhall · ",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 129003
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/",
+      "status": 200,
+      "title": "Parkour Tutorials | London Parkour",
+      "title_len": 34,
+      "h1": [
+        "Tutorials."
+      ],
+      "h2": [
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "609 coached videos, filed by movement. Filter by category, series or tag — or browse the whole board.",
+      "desc_len": 101,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/tutorials/",
+      "word_count_full": 2034,
+      "word_count_main": 1833,
+      "main_excerpt": " HOME / TUTORIALS BY SERIES ↗ Tutorials. 609 coached videos, filed by movement. Filter by category, series or tag — or browse the whole board. By series 13 series By category 11 categories By tutorial 609 videos Search FOCUS Category All categories Balancing — Mounting — Rail Balance Climbing — Arm-Jump — Ascents — Climbup — Dyno — Koala — Splat-Cat — Traversing — Wall-run Crawling — QM Basics — Q",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 323175
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/deadhang/",
+      "status": 200,
+      "title": "Deadhang | London Parkour",
+      "title_len": 25,
+      "h1": [
+        "Deadhang"
+      ],
+      "h2": [
+        "Two demonstrations.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Demonstrate a full-stretch dead-hang on a bar that is scaffolding-width or greater for thirty seconds.",
+      "desc_len": 102,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/tutorials/deadhang/",
+      "word_count_full": 2191,
+      "word_count_main": 1991,
+      "main_excerpt": " HOME / TUTORIALS / SWINGING / LACHE ALL TUTORIALS ↗ Deadhang Demonstrate a full-stretch dead-hang on a bar that is scaffolding-width or greater for thirty seconds. By series 13 series By category 11 categories By tutorial 609 videos Search FOCUS Category All categories Balancing — Mounting — Rail Balance Climbing — Arm-Jump — Ascents — Climbup — Dyno — Koala — Splat-Cat — Traversing — Wall-run Cr",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 212576
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/vault-landing/",
+      "status": 200,
+      "title": "Vault Landing | London Parkour",
+      "title_len": 30,
+      "h1": [
+        "Vault Landing"
+      ],
+      "h2": [
+        "Two demonstrations.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Perform any vault (Cat-Pass / slide / step / side / turn / etc… ) on a hip-height obstacle, but the landing must be a speed-step where one-foot lands…",
+      "desc_len": 150,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/tutorials/vault-landing/",
+      "word_count_full": 1584,
+      "word_count_main": 1383,
+      "main_excerpt": " HOME / TUTORIALS / VAULTING / SPEED-STEP ALL TUTORIALS ↗ Vault Landing Perform any vault (Cat-Pass / slide / step / side / turn / etc… ) on a hip-height obstacle, but the landing must be a speed-step where one-foot lands first, followed by the hand, vaulting out. By series 13 series By category 11 categories By tutorial 609 videos Search FOCUS Category All categories Balancing — Mounting — Rail B",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 194490
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/crouch-walk/",
+      "status": 200,
+      "title": "Crouch walk | London Parkour",
+      "title_len": 28,
+      "h1": [
+        "Crouch walk"
+      ],
+      "h2": [
+        "Two demonstrations.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Staying in a crouched position, with the hips below the knees, walk along the bar as you would normally.",
+      "desc_len": 104,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/tutorials/crouch-walk/",
+      "word_count_full": 1736,
+      "word_count_main": 1535,
+      "main_excerpt": " HOME / TUTORIALS / BALANCING / RAIL BALANCE ALL TUTORIALS ↗ Crouch walk Staying in a crouched position, with the hips below the knees, walk along the bar as you would normally. By series 13 series By category 11 categories By tutorial 609 videos Search FOCUS Category All categories Balancing — Mounting — Rail Balance Climbing — Arm-Jump — Ascents — Climbup — Dyno — Koala — Splat-Cat — Traversing ",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 205607
+    },
+    {
+      "url": "https://staging.londonparkour.com/docs/",
+      "status": 403,
+      "title": "403 Forbidden",
+      "title_len": 13,
+      "h1": [
+        "403 Forbidden"
+      ],
+      "h2": [],
+      "description": null,
+      "desc_len": 0,
+      "robots": null,
+      "canonical": null,
+      "word_count_full": 5,
+      "word_count_main": 5,
+      "main_excerpt": " 403 Forbidden 403 Forbidden nginx ",
+      "lang": null,
+      "og_locale": null,
+      "html_bytes": 548
+    },
+    {
+      "url": "https://staging.londonparkour.com/docs/frequently-asked-questions/",
+      "status": 403,
+      "title": "403 Forbidden",
+      "title_len": 13,
+      "h1": [
+        "403 Forbidden"
+      ],
+      "h2": [],
+      "description": null,
+      "desc_len": 0,
+      "robots": null,
+      "canonical": null,
+      "word_count_full": 5,
+      "word_count_main": 5,
+      "main_excerpt": " 403 Forbidden 403 Forbidden nginx ",
+      "lang": null,
+      "og_locale": null,
+      "html_bytes": 548
+    },
+    {
+      "url": "https://staging.londonparkour.com/blog/definitive-guide-to-army-military-parkour-training/",
+      "status": 200,
+      "title": "Definitive Guide to Army & Military Parkour Training",
+      "title_len": 52,
+      "h1": [
+        "Definitive Guide to Army & Military Parkour Training"
+      ],
+      "h2": [
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "In this comprehensive blog post, we take a deep dive into the parkour techniques taught at LondonParkour for military personnel. Covering a wide range of…",
+      "desc_len": 154,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/blog/definitive-guide-to-army-military-parkour-training/",
+      "word_count_full": 8043,
+      "word_count_main": 7839,
+      "main_excerpt": " HOME / DOCS / BLOG / DEFINITIVE GUIDE TO ARMY &AMP; MILITARY PARKOUR TRAINING ALL WRITING ↗ ARTICLE · 40 MIN READ 7 DEC 2023 · LONDONPARKOUR Definitive Guide to Army & Military Parkour Training In this comprehensive blog post, we take a deep dive into the parkour techniques taught at LondonParkour for military personnel. Covering a wide range of movements, this article serves as a potential train",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 215564
+    },
+    {
+      "url": "https://staging.londonparkour.com/blog/parkour-faq/",
+      "status": 200,
+      "title": "Parkour FAQ | London Parkour",
+      "title_len": 28,
+      "h1": [
+        "Parkour FAQ"
+      ],
+      "h2": [
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Our FAQ covers everything about parkour, from its definition and origin to safety, skills, and training tips. Learn about its benefits, the difference…",
+      "desc_len": 151,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/blog/parkour-faq/",
+      "word_count_full": 1482,
+      "word_count_main": 1281,
+      "main_excerpt": " HOME / DOCS / BLOG / PARKOUR FAQ ALL WRITING ↗ ARTICLE · 5 MIN READ 7 DEC 2023 · LONDONPARKOUR Parkour FAQ Our FAQ covers everything about parkour, from its definition and origin to safety, skills, and training tips. Learn about its benefits, the difference between parkour and freerunning, where to practice, and how to get started. Whether you're new or experienced, our FAQ helps you better under",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 142449
+    },
+    {
+      "url": "https://staging.londonparkour.com/coaches/andy-pearson/",
+      "status": 200,
+      "title": "Andy Pearson | Parkour Coach, London",
+      "title_len": 36,
+      "h1": [
+        "Andy Pearson"
+      ],
+      "h2": [
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "Andy has been solidly training and practicing parkour on the London streets since he started in 2005. With experience at the highest levels of coaching…",
+      "desc_len": 152,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/coaches/andy-pearson/",
+      "word_count_full": 415,
+      "word_count_main": 213,
+      "main_excerpt": " HOME / COACHES / ANDY PEARSON ALL COACHES ↗ Andy Pearson HEAD COACH / Training Since 2005 ROLE HEAD COACH / Training Since 2005 SPECIALTY Precision & balance SITE Old Street “The job isn't to make you brave. It's to break the thing you're scared of into six pieces small enough that you're not.” Andy has been solidly training and practicing parkour on the London streets since he started in 2005. W",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 114821
+    },
+    {
+      "url": "https://staging.londonparkour.com/sample-page/",
+      "status": 200,
+      "title": "Sample Page | London Parkour",
+      "title_len": 28,
+      "h1": [],
+      "h2": [
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "This is an example page. It's different from a blog post because it will stay in one place and will show up in your site navigation (in most themes)…",
+      "desc_len": 149,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/sample-page/",
+      "word_count_full": 360,
+      "word_count_main": 159,
+      "main_excerpt": " This is an example page. It’s different from a blog post because it will stay in one place and will show up in your site navigation (in most themes). Most people start with an About page that introduces them to potential site visitors. It might say something like this: Hi there! I’m a bike messenger by day, aspiring actor by night, and this is my website. I live in Los Angeles, have a great dog n",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 110946
+    },
+    {
+      "url": "https://staging.londonparkour.com/clasbpro-theme-preview/",
+      "status": 200,
+      "title": "Booking Form Theme Preview | London Parkour",
+      "title_len": 43,
+      "h1": [],
+      "h2": [
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "description": "[clasbpro_theme_preview]",
+      "desc_len": 24,
+      "robots": "max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1",
+      "canonical": "https://staging.londonparkour.com/clasbpro-theme-preview/",
+      "word_count_full": 214,
+      "word_count_main": 11,
+      "main_excerpt": " Select a theme from the Themes screen and open Live preview. ",
+      "lang": "en-US",
+      "og_locale": "en_US",
+      "html_bytes": 107481
+    }
+  ],
+  "schema": [
+    {
+      "url": "https://staging.londonparkour.com/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "Offer",
+          "QuantitativeValue"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30"
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#webpage",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#offer-pack-56656",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#offer-pack-56655",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#offer-pack-56654",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization"
+        ],
+        "faqpage": false,
+        "howto": false,
+        "person": false,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/#webpage",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour | Practical Movement Training & Classes",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Practical movement is the practice of getting where you want to go. Taught across three London sites, to every age and every body.",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+            },
+            {
+              "@type": "Offer",
+              "@id": "https://staging.londonparkour.com/#offer-pack-56656",
+              "name": "Ten Pack",
+              "price": 120,
+              "priceCurrency": "GBP",
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "url": "https://staging.londonparkour.com/",
+              "description": "Ten classes at the best rate we offer. Buy once, book when you want.",
+              "eligibleQuantity": {
+                "@type": "QuantitativeValue",
+                "value": 10,
+                "unitText": "class"
+              }
+            },
+            {
+              "@type": "Offer",
+              "@id": "https://staging.londonparkour.com/#offer-pack-56655",
+              "name": "Five-Pack",
+              "price": 65,
+              "priceCurrency": "GBP",
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "url": "https://staging.londonparkour.com/",
+              "description": "Five classes, bought once. Use them when you want — no membership.",
+              "eligibleQuantity": {
+                "@type": "QuantitativeValue",
+                "value": 5,
+                "unitText": "class"
+              }
+            },
+            {
+              "@type": "Offer",
+              "@id": "https://staging.londonparkour.com/#offer-pack-56654",
+              "name": "Single Class",
+              "price": 15,
+              "priceCurrency": "GBP",
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "url": "https://staging.londonparkour.com/",
+              "description": "Turn up when it suits. One session, paid at the door — no pack required.",
+              "eligibleQuantity": {
+                "@type": "QuantitativeValue",
+                "value": 1,
+                "unitText": "class"
+              }
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem",
+          "FAQPage",
+          "Question",
+          "Answer",
+          "Course",
+          "Offer",
+          "SportsEvent",
+          "VideoObject"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE",
+          "OLD STREET ST - London EC1Y 1BE"
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US",
+          "en-GB"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#webpage",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#course",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-09-12",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-09-19",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-09-26",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-03",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-10",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-17",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-24",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-31",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#organization"
+        ],
+        "faqpage": true,
+        "howto": false,
+        "person": false,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#webpage",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "name": "Adult Beginners East | Parkour in London",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture…",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "London Parkour",
+                  "item": "https://staging.londonparkour.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Classes",
+                  "item": "https://staging.londonparkour.com/all-classes/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Adult Beginners East",
+                  "item": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/"
+                }
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Beginners Welcome",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our classes are scaled to you. Which means that all abilities are catered for and that the challenges are specifically built for beginners to participate."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Class Contents",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Classes will always be different. There will always be different environments, themes, techniques, attributes to focus on and ideas to approach. The single continuous thread linking them all will be challenge. You will always be challenged, within your ability, but in a way that improves you as a human being. Which, at its core, is what parkour is all about."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Weather",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Parkour embraces the spirit of self-improvement through facing challenges. Many practitioners extend their training to different weather conditions, enhancing their adaptability in various environments. This is why classes always run in all weather conditions."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Age limits",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We have a number of different classes for different age-ranges. We have a 6 to 9 year olds class, older 10 to 14s, a 6 to 14s general youth class and 15+ adult classes. Please check the specific class details for more information."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Clothing",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Anything that allows for free un-restricted movement. Tracksuit bottoms, tee-shirt and trainers is your best bet. Anything heavy-duty (boots) or restrictive (jeans) will make life a little harder for you, but it's totally your call. All jewellery, watches, phones, wallets, etc… must be left out of the class. This is so it doesn't get caught or landed on. Safety is paramount in these classes."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Water",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Even though the classes are always different, we will always be moving a lot. You'll sweat a lot and will need to keep hydrated, so it's wise to bring water along with you to class."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Prejudice",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "In our classes, we promote an inclusive and welcoming environment, free from any form of prejudice. Everyone, regardless of their ethnicity, religious background, sexual orientation, or legal and political ideology, is encouraged to learn. Our commitment is to a discrimination-free space, and anyone found bringing prejudice into the class will be kindly asked to leave permanently."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Lateness",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "As classes begin, coaches will turn off their phones and stow them in their bags, making them temporarily unreachable. If you anticipate being late, please message the coach via WhatsApp or Slack before the class starts. They will respond with the map location of the class meeting point. You can find the WhatsApp/Slack details in your confirmation booking email."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Non-Competitive",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Parkour is all about challenging yourself. It's about making you a better person and individual. Our classes push towards cooperation and collaboration and helping each other become better, rather than place a single person above others. Competition can motivate some people, but not all. We want to help all."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Outdoors",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Parkour is primarily an outdoor discipline. Incorporating indoor training can serve as a valuable supplement, allowing you to refine techniques, practice movements, and engage in strength training or conditioning. Starting your training outdoors and using indoor classes to complement your skills can be beneficial. However, it's encouraged to train outdoors whenever possible, as it contributes to a more well-rounded skill set."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Secure",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The new standard in safe, online payments. Stripe is the best software platform for running an internet business. LondonParkour uses the most secure payment gateway on the internet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Roots.",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "LondonParkour tries to remain as close to the original ethos of parkour. We teach practical and useful movement that makes you a more versatile human. To remain safe, we also focus on strength and resilience to build a better structure."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Community.",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "With a large number of female practitioners, different ethnic minorities, pensioners and the disabled, parkour is a discipline that is open to anyone and everyone."
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "Course",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#course",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "provider": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-GB",
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "timeRequired": "PT90M",
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/InStock"
+              },
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              }
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-09-12",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-09-12T10:30:00+01:00",
+              "endDate": "2026-09-12T12:00:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 19,
+                "validFrom": "2026-09-12T10:30:00+01:00"
+              },
+              "remainingAttendeeCapacity": 19,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-09-19",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-09-19T10:30:00+01:00",
+              "endDate": "2026-09-19T12:00:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-09-19T10:30:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-09-26",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-09-26T10:30:00+01:00",
+              "endDate": "2026-09-26T12:00:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-09-26T10:30:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-03",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-10-03T10:30:00+01:00",
+              "endDate": "2026-10-03T12:00:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-03T10:30:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-10",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-10-10T10:30:00+01:00",
+              "endDate": "2026-10-10T12:00:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-10T10:30:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-17",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-10-17T10:30:00+01:00",
+              "endDate": "2026-10-17T12:00:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-17T10:30:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-24",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-10-24T10:30:00+01:00",
+              "endDate": "2026-10-24T12:00:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-24T10:30:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/#session-2026-10-31",
+              "name": "Adult Beginners East",
+              "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+              "startDate": "2026-10-31T10:30:00+00:00",
+              "endDate": "2026-10-31T12:00:00+00:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/adult-beginners-outdoor/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-31T10:30:00+00:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "VideoObject",
+              "name": "Adult Beginners East",
+              "embedUrl": "https://www.youtube.com/embed/8UEP-8yX7E0",
+              "contentUrl": "https://www.youtube.com/watch?v=8UEP-8yX7E0",
+              "thumbnailUrl": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "You don’t need to be fit, strong or experienced. Outdoor parkour for adults of every ability. You’ll vault, jump, climb and balance on real architecture — technique, drills and a challenge, always outdoors, always scaled to you. First-timers and experienced practitioners train side by side, on the…",
+              "uploadDate": "2026-08-10T07:25:57+01:00"
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/locations/vauxhall/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30"
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/Classes/Locations/location_Vauxhall-Large.jpeg"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#webpage",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization"
+        ],
+        "faqpage": false,
+        "howto": false,
+        "person": false,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/Classes/Locations/location_Vauxhall-Large.jpeg",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/Classes/Locations/location_Vauxhall-Large.jpeg",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#webpage",
+              "url": "https://staging.londonparkour.com/classes/locations/vauxhall/",
+              "name": "Parkour Classes at Vauxhall | London",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Outdoor parkour classes at Vauxhall, London. Meet outside Tube station exit 2, next to metal pillars and open area. Victoria Line · Vauxhall Train (South…",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/Classes/Locations/location_Vauxhall-Large.jpeg"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "London Parkour",
+                  "item": "https://staging.londonparkour.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Locations",
+                  "item": "https://staging.londonparkour.com/classes/locations/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Vauxhall",
+                  "item": "https://staging.londonparkour.com/classes/locations/vauxhall/"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    },
+    {
+      "url": "https://staging.londonparkour.com/tutorials/deadhang/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem",
+          "VideoObject"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30"
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/2026/08/Tutorial-swinging-lache-1-deadhang_16_9.jpg"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/tutorials/deadhang/#webpage",
+          "https://staging.londonparkour.com/tutorials/deadhang/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#organization"
+        ],
+        "faqpage": false,
+        "howto": false,
+        "person": false,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/Tutorial-swinging-lache-1-deadhang_16_9.jpg",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/2026/08/Tutorial-swinging-lache-1-deadhang_16_9.jpg",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/tutorials/deadhang/#webpage",
+              "url": "https://staging.londonparkour.com/tutorials/deadhang/",
+              "name": "Deadhang | London Parkour",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Demonstrate a full-stretch dead-hang on a bar that is scaffolding-width or greater for thirty seconds.",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/2026/08/Tutorial-swinging-lache-1-deadhang_16_9.jpg"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "London Parkour",
+                  "item": "https://staging.londonparkour.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tutorials",
+                  "item": "https://staging.londonparkour.com/tutorials/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Deadhang",
+                  "item": "https://staging.londonparkour.com/tutorials/deadhang/"
+                }
+              ]
+            },
+            {
+              "@type": "VideoObject",
+              "name": "Deadhang",
+              "embedUrl": "https://www.youtube.com/embed/YHpCqey3_3w",
+              "contentUrl": "https://www.youtube.com/watch?v=YHpCqey3_3w",
+              "thumbnailUrl": "https://staging.londonparkour.com/wp-content/uploads/2026/08/Tutorial-swinging-lache-1-deadhang_16_9.jpg",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Demonstrate a full-stretch dead-hang on a bar that is scaffolding-width or greater for thirty seconds.",
+              "duration": "PT179S",
+              "uploadDate": "2021-12-20T08:40:48+00:00"
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    },
+    {
+      "url": "https://staging.londonparkour.com/coaches/andy-pearson/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30"
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/Team/profile-upscaled2.png"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/coaches/andy-pearson/#webpage",
+          "https://staging.londonparkour.com/coaches/andy-pearson/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization"
+        ],
+        "faqpage": false,
+        "howto": false,
+        "person": false,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/Team/profile-upscaled2.png",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/Team/profile-upscaled2.png",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/coaches/andy-pearson/#webpage",
+              "url": "https://staging.londonparkour.com/coaches/andy-pearson/",
+              "name": "Andy Pearson | Parkour Coach, London",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Andy has been solidly training and practicing parkour on the London streets since he started in 2005. With experience at the highest levels of coaching…",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/Team/profile-upscaled2.png"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "London Parkour",
+                  "item": "https://staging.londonparkour.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Coaches",
+                  "item": "https://staging.londonparkour.com/coaches/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Andy Pearson",
+                  "item": "https://staging.londonparkour.com/coaches/andy-pearson/"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    },
+    {
+      "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem",
+          "FAQPage",
+          "Question",
+          "Answer",
+          "Course",
+          "Offer",
+          "SportsEvent",
+          "VideoObject"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US",
+          "en-GB"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#webpage",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#course",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-09-13",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-09-20",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-09-27",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-04",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-11",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-18",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-25",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-11-01",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#organization"
+        ],
+        "faqpage": true,
+        "howto": false,
+        "person": false,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#webpage",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "name": "Kids Class West (6-9s) | Parkour in London",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have…",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "London Parkour",
+                  "item": "https://staging.londonparkour.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Classes",
+                  "item": "https://staging.londonparkour.com/all-classes/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Kids Class West (6-9s)",
+                  "item": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/"
+                }
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Beginners Welcome",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our classes are scaled to you. Which means that all abilities are catered for and that the challenges are specifically built for beginners to participate."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Class Contents",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Classes will always be different. There will always be different environments, themes, techniques, attributes to focus on and ideas to approach. The single continuous thread linking them all will be challenge. You will always be challenged, within your ability, but in a way that improves you as a human being. Which, at its core, is what parkour is all about."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Weather",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Parkour embraces the spirit of self-improvement through facing challenges. Many practitioners extend their training to different weather conditions, enhancing their adaptability in various environments. This is why classes always run in all weather conditions."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Age limits",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We have a number of different classes for different age-ranges. We have a 6 to 9 year olds class, older 10 to 14s, a 6 to 14s general youth class and 15+ adult classes. Please check the specific class details for more information."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Clothing",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Anything that allows for free un-restricted movement. Tracksuit bottoms, tee-shirt and trainers is your best bet. Anything heavy-duty (boots) or restrictive (jeans) will make life a little harder for you, but it's totally your call. All jewellery, watches, phones, wallets, etc… must be left out of the class. This is so it doesn't get caught or landed on. Safety is paramount in these classes."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Water",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Even though the classes are always different, we will always be moving a lot. You'll sweat a lot and will need to keep hydrated, so it's wise to bring water along with you to class."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Prejudice",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "In our classes, we promote an inclusive and welcoming environment, free from any form of prejudice. Everyone, regardless of their ethnicity, religious background, sexual orientation, or legal and political ideology, is encouraged to learn. Our commitment is to a discrimination-free space, and anyone found bringing prejudice into the class will be kindly asked to leave permanently."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Lateness",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "As classes begin, coaches will turn off their phones and stow them in their bags, making them temporarily unreachable. If you anticipate being late, please message the coach via WhatsApp or Slack before the class starts. They will respond with the map location of the class meeting point. You can find the WhatsApp/Slack details in your confirmation booking email."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Non-Competitive",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Parkour is all about challenging yourself. It's about making you a better person and individual. Our classes push towards cooperation and collaboration and helping each other become better, rather than place a single person above others. Competition can motivate some people, but not all. We want to help all."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Outdoors",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Parkour is primarily an outdoor discipline. Incorporating indoor training can serve as a valuable supplement, allowing you to refine techniques, practice movements, and engage in strength training or conditioning. Starting your training outdoors and using indoor classes to complement your skills can be beneficial. However, it's encouraged to train outdoors whenever possible, as it contributes to a more well-rounded skill set."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Secure",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The new standard in safe, online payments. Stripe is the best software platform for running an internet business. LondonParkour uses the most secure payment gateway on the internet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Roots.",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "LondonParkour tries to remain as close to the original ethos of parkour. We teach practical and useful movement that makes you a more versatile human. To remain safe, we also focus on strength and resilience to build a better structure."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Community.",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "With a large number of female practitioners, different ethnic minorities, pensioners and the disabled, parkour is a discipline that is open to anyone and everyone."
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "Course",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#course",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "provider": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-GB",
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "timeRequired": "PT90M",
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/InStock"
+              },
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              }
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-09-13",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-09-13T09:00:00+01:00",
+              "endDate": "2026-09-13T10:30:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-09-13T09:00:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-09-20",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-09-20T09:00:00+01:00",
+              "endDate": "2026-09-20T10:30:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-09-20T09:00:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-09-27",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-09-27T09:00:00+01:00",
+              "endDate": "2026-09-27T10:30:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-09-27T09:00:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-04",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-10-04T09:00:00+01:00",
+              "endDate": "2026-10-04T10:30:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-04T09:00:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-11",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-10-11T09:00:00+01:00",
+              "endDate": "2026-10-11T10:30:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-11T09:00:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-18",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-10-18T09:00:00+01:00",
+              "endDate": "2026-10-18T10:30:00+01:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-18T09:00:00+01:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-10-25",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-10-25T09:00:00+00:00",
+              "endDate": "2026-10-25T10:30:00+00:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-10-25T09:00:00+00:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "SportsEvent",
+              "@id": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/#session-2026-11-01",
+              "name": "Kids Class West (6-9s)",
+              "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+              "startDate": "2026-11-01T09:00:00+00:00",
+              "endDate": "2026-11-01T10:30:00+00:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "organizer": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "location": {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": 15,
+                "priceCurrency": "GBP",
+                "url": "https://staging.londonparkour.com/classes/kids-class-west-6-9s/",
+                "seller": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                },
+                "availability": "https://schema.org/LimitedAvailability",
+                "inventoryLevel": 20,
+                "validFrom": "2026-11-01T09:00:00+00:00"
+              },
+              "remainingAttendeeCapacity": 20,
+              "maximumAttendeeCapacity": 20
+            },
+            {
+              "@type": "VideoObject",
+              "name": "Kids Class West (6-9s)",
+              "embedUrl": "https://www.youtube.com/embed/KRsCnj-t1eI",
+              "contentUrl": "https://www.youtube.com/watch?v=KRsCnj-t1eI",
+              "thumbnailUrl": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/zak-traverse.jpg",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "description": "Parkour for 6–9s. Real obstacles, small enough to start. An outdoor introduction: jump, climb, vault and land. Structured sessions so children who have never trained and children who already climb everything work in the same class, at their own level. A foundation they can actually use — balance…",
+              "uploadDate": "2026-08-10T08:02:39+01:00"
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    },
+    {
+      "url": "https://staging.londonparkour.com/contact/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem",
+          "FAQPage",
+          "Question",
+          "Answer"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30"
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/contact/#webpage",
+          "https://staging.londonparkour.com/contact/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization"
+        ],
+        "faqpage": true,
+        "howto": false,
+        "person": false,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/contact/#webpage",
+              "url": "https://staging.londonparkour.com/contact/",
+              "name": "Contact London Parkour",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Tell us what you're training for and we'll point you in the right direction. Email is faster than the phone — coaches are on the floor during sessions.",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "London Parkour",
+                  "item": "https://staging.londonparkour.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Contact",
+                  "item": "https://staging.londonparkour.com/contact/"
+                }
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Do I need any experience?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "None at all. Beginners sessions assume you have never done this before — we start on the floor, at ground level, and nothing is compulsory."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How much is a first class?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "First class is £15 for 90 minutes. There's no contract and no membership. If your first session isn't for you, we refund it — nobody has asked yet."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What should I bring?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Just trainers. Every session is coach-led, and it's free to cancel up to 12 hours before."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Where exactly do you train?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Three sites across London — Vauxhall, Old Street and Kilburn Park. Every one is next to a tube or overground station."
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    },
+    {
+      "url": "https://staging.londonparkour.com/blog/parkour-faq/",
+      "status": 200,
+      "facts": {
+        "types": [
+          "SportsClub",
+          "LocalBusiness",
+          "City",
+          "AggregateRating",
+          "Place",
+          "PostalAddress",
+          "GeoCoordinates",
+          "WebSite",
+          "SearchAction",
+          "EntryPoint",
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem",
+          "BlogPosting",
+          "Person",
+          "ImageObject"
+        ],
+        "streetAddress": [
+          "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+          "OLD STREET ST - London EC1Y 1BE",
+          "NW6 5AD · SUNDAYS · 11:00-12:30"
+        ],
+        "logo": [
+          "https://staging.londonparkour.com/wp-content/uploads/Blog/parkour_faq.jpg"
+        ],
+        "inLanguage": [
+          "en-US",
+          "en-US",
+          "en-US"
+        ],
+        "aggregateRating": [
+          {
+            "@type": "AggregateRating",
+            "ratingValue": 4.9,
+            "bestRating": 5,
+            "worstRating": 1,
+            "reviewCount": 42
+          }
+        ],
+        "url_ids": [
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+          "https://staging.londonparkour.com/classes/locations/old-street/#place",
+          "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/blog/parkour-faq/#webpage",
+          "https://staging.londonparkour.com/blog/parkour-faq/",
+          "https://staging.londonparkour.com/#website",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/blog/parkour-faq/#article",
+          "https://staging.londonparkour.com/blog/parkour-faq/#article",
+          "https://staging.londonparkour.com/blog/parkour-faq/",
+          "https://staging.londonparkour.com/blog/parkour-faq/#webpage",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/#organization",
+          "https://staging.londonparkour.com/wp-content/uploads/Blog/parkour_faq.jpg"
+        ],
+        "faqpage": false,
+        "howto": false,
+        "person": true,
+        "telephone": [],
+        "email": [
+          "contact@londonparkour.com"
+        ],
+        "issues": []
+      },
+      "jsonld": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": [
+                "SportsClub",
+                "LocalBusiness"
+              ],
+              "@id": "https://staging.londonparkour.com/#organization",
+              "name": "London Parkour",
+              "url": "https://staging.londonparkour.com/",
+              "email": "contact@londonparkour.com",
+              "areaServed": {
+                "@type": "City",
+                "name": "London"
+              },
+              "sameAs": [
+                "https://www.instagram.com/london_parkour",
+                "https://youtube.com/@londonparkour",
+                "https://www.facebook.com/ldnpk"
+              ],
+              "image": "https://staging.londonparkour.com/wp-content/uploads/Blog/parkour_faq.jpg",
+              "logo": "https://staging.londonparkour.com/wp-content/uploads/Blog/parkour_faq.jpg",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.9,
+                "bestRating": 5,
+                "worstRating": 1,
+                "reviewCount": 42
+              },
+              "location": [
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                  "name": "Vauxhall",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Vauxhall",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "SW8 1SS",
+                    "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.48585,
+                    "longitude": -0.12275
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                  "name": "Old Street",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Old Street",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "EC1Y 1BE",
+                    "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.52586666844253,
+                    "longitude": -0.0879811565357742
+                  }
+                },
+                {
+                  "@type": "Place",
+                  "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                  "name": "Kilburn Park",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kilburn Park",
+                    "addressRegion": "Greater London",
+                    "addressCountry": "GB",
+                    "postalCode": "NW6 5AD",
+                    "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 51.535135,
+                    "longitude": -0.193966
+                  }
+                }
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://staging.londonparkour.com/#website",
+              "url": "https://staging.londonparkour.com/",
+              "name": "London Parkour",
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://staging.londonparkour.com/blog/parkour-faq/#webpage",
+              "url": "https://staging.londonparkour.com/blog/parkour-faq/",
+              "name": "Parkour FAQ | London Parkour",
+              "isPartOf": {
+                "@id": "https://staging.londonparkour.com/#website"
+              },
+              "about": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Our FAQ covers everything about parkour, from its definition and origin to safety, skills, and training tips. Learn about its benefits, the difference…",
+              "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/Blog/parkour_faq.jpg",
+              "mainEntity": {
+                "@id": "https://staging.londonparkour.com/blog/parkour-faq/#article"
+              }
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "London Parkour",
+                  "item": "https://staging.londonparkour.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Parkour FAQ",
+                  "item": "https://staging.londonparkour.com/blog/parkour-faq/"
+                }
+              ]
+            },
+            {
+              "@type": "BlogPosting",
+              "@id": "https://staging.londonparkour.com/blog/parkour-faq/#article",
+              "headline": "Parkour FAQ",
+              "url": "https://staging.londonparkour.com/blog/parkour-faq/",
+              "mainEntityOfPage": {
+                "@id": "https://staging.londonparkour.com/blog/parkour-faq/#webpage"
+              },
+              "datePublished": "2023-12-07T08:33:50+00:00",
+              "dateModified": "2023-12-07T08:33:50+00:00",
+              "author": {
+                "@type": "Person",
+                "name": "Andy Pearson",
+                "jobTitle": "HEAD COACH",
+                "worksFor": {
+                  "@id": "https://staging.londonparkour.com/#organization"
+                }
+              },
+              "publisher": {
+                "@id": "https://staging.londonparkour.com/#organization"
+              },
+              "inLanguage": "en-US",
+              "description": "Our FAQ covers everything about parkour, from its definition and origin to safety, skills, and training tips. Learn about its benefits, the difference…",
+              "image": {
+                "@type": "ImageObject",
+                "url": "https://staging.londonparkour.com/wp-content/uploads/Blog/parkour_faq.jpg",
+                "width": 1280,
+                "height": 720
+              },
+              "articleSection": "ARTICLE"
+            }
+          ]
+        }
+      ],
+      "microdata": 0
+    }
+  ],
+  "booking_cancelled": {
+    "status": 200,
+    "location": null,
+    "bytes": 121333,
+    "security_headers_present": {
+      "content-type": "text/html; charset=utf-8",
+      "server": "cloudflare"
+    },
+    "all_header_names": [
+      "alt-svc",
+      "cache-provider",
+      "cf-cache-status",
+      "cf-ray",
+      "content-type",
+      "date",
+      "last-modified",
+      "nel",
+      "report-to",
+      "server",
+      "vary"
+    ],
+    "parse": {
+      "title": "Booking Cancelled | London Parkour",
+      "h1": [
+        "Booking cancelled."
+      ],
+      "h2": [
+        "You stopped before payment.",
+        "Practice",
+        "Explore",
+        "Company"
+      ],
+      "canonical": "https://staging.londonparkour.com/booking-cancelled/",
+      "robots": "max-image-preview:large, noindex, nofollow, max-snippet:-1, max-video-preview:-1",
+      "description": "[clasbpro_booking_status type=\"cancelled\"]",
+      "og_url": "https://staging.londonparkour.com/booking-cancelled/",
+      "og_locale": "en_US",
+      "lang": "en-US",
+      "viewport": "width=device-width, initial-scale=1",
+      "word_count_full": 320,
+      "word_count_main": 114,
+      "main_excerpt": " HOME / CLASSES / CLASS / CANCELLED TRY AGAIN ↗ Booking cancelled. No charge. You left checkout before payment completed. The Saturday seat is still on the board. WHEN — SITE — SEATS — TOTAL — STATUS NOT TAKEN CHECKOUT You stopped before payment. Stripe was never charged. Nobody has your seat. Book again when you are ready — Saturday 11 July, 10:30, is still listed. CLASS Class SESSION — AMOUNT — ",
+      "jsonld_count": 1,
+      "microdata_itemscope": 0,
+      "html_bytes": 121333
+    },
+    "schema_facts": {
+      "types": [
+        "SportsClub",
+        "LocalBusiness",
+        "City",
+        "AggregateRating",
+        "Place",
+        "PostalAddress",
+        "GeoCoordinates",
+        "WebSite",
+        "SearchAction",
+        "EntryPoint",
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem"
+      ],
+      "streetAddress": [
+        "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\"",
+        "OLD STREET ST - London EC1Y 1BE",
+        "NW6 5AD · SUNDAYS · 11:00-12:30"
+      ],
+      "logo": [
+        "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+      ],
+      "inLanguage": [
+        "en-US",
+        "en-US"
+      ],
+      "aggregateRating": [
+        {
+          "@type": "AggregateRating",
+          "ratingValue": 4.9,
+          "bestRating": 5,
+          "worstRating": 1,
+          "reviewCount": 42
+        }
+      ],
+      "url_ids": [
+        "https://staging.londonparkour.com/#organization",
+        "https://staging.londonparkour.com/",
+        "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+        "https://staging.londonparkour.com/classes/locations/old-street/#place",
+        "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+        "https://staging.londonparkour.com/#website",
+        "https://staging.londonparkour.com/",
+        "https://staging.londonparkour.com/#organization",
+        "https://staging.londonparkour.com/booking-cancelled/#webpage",
+        "https://staging.londonparkour.com/booking-cancelled/",
+        "https://staging.londonparkour.com/#website",
+        "https://staging.londonparkour.com/#organization"
+      ],
+      "faqpage": false,
+      "howto": false,
+      "person": false,
+      "telephone": [],
+      "email": [
+        "contact@londonparkour.com"
+      ],
+      "issues": []
+    },
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": [
+              "SportsClub",
+              "LocalBusiness"
+            ],
+            "@id": "https://staging.londonparkour.com/#organization",
+            "name": "London Parkour",
+            "url": "https://staging.londonparkour.com/",
+            "email": "contact@londonparkour.com",
+            "areaServed": {
+              "@type": "City",
+              "name": "London"
+            },
+            "sameAs": [
+              "https://www.instagram.com/london_parkour",
+              "https://youtube.com/@londonparkour",
+              "https://www.facebook.com/ldnpk"
+            ],
+            "image": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+            "logo": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg",
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": 4.9,
+              "bestRating": 5,
+              "worstRating": 1,
+              "reviewCount": 42
+            },
+            "location": [
+              {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/vauxhall/#place",
+                "name": "Vauxhall",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Vauxhall",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "SW8 1SS",
+                  "streetAddress": "SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15\""
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.48585,
+                  "longitude": -0.12275
+                }
+              },
+              {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/old-street/#place",
+                "name": "Old Street",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Old Street",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "EC1Y 1BE",
+                  "streetAddress": "OLD STREET ST - London EC1Y 1BE"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.52586666844253,
+                  "longitude": -0.0879811565357742
+                }
+              },
+              {
+                "@type": "Place",
+                "@id": "https://staging.londonparkour.com/classes/locations/kilburn-park/#place",
+                "name": "Kilburn Park",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Kilburn Park",
+                  "addressRegion": "Greater London",
+                  "addressCountry": "GB",
+                  "postalCode": "NW6 5AD",
+                  "streetAddress": "NW6 5AD · SUNDAYS · 11:00-12:30"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 51.535135,
+                  "longitude": -0.193966
+                }
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://staging.londonparkour.com/#website",
+            "url": "https://staging.londonparkour.com/",
+            "name": "London Parkour",
+            "publisher": {
+              "@id": "https://staging.londonparkour.com/#organization"
+            },
+            "inLanguage": "en-US",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://staging.londonparkour.com/?s={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://staging.londonparkour.com/booking-cancelled/#webpage",
+            "url": "https://staging.londonparkour.com/booking-cancelled/",
+            "name": "Booking Cancelled | London Parkour",
+            "isPartOf": {
+              "@id": "https://staging.londonparkour.com/#website"
+            },
+            "about": {
+              "@id": "https://staging.londonparkour.com/#organization"
+            },
+            "inLanguage": "en-US",
+            "description": "[clasbpro_booking_status type=\"cancelled\"]",
+            "primaryImageOfPage": "https://staging.londonparkour.com/wp-content/uploads/2026/08/lp_wide_lg/alfredo-strides.jpg"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "London Parkour",
+                "item": "https://staging.londonparkour.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Booking Cancelled",
+                "item": "https://staging.londonparkour.com/booking-cancelled/"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "curl_err": ""
+  },
+  "xmlrpc": {
+    "status": 520,
+    "location": null,
+    "bytes": 16,
+    "security_headers_present": {
+      "x-frame-options": "SAMEORIGIN",
+      "referrer-policy": "same-origin",
+      "content-type": "text/plain; charset=UTF-8",
+      "server": "cloudflare",
+      "cache-control": "private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0"
+    }
+  },
+  "feed": {
+    "status": 200,
+    "location": null,
+    "bytes": 841
+  },
+  "home_all_headers": [
+    "alt-svc",
+    "cache-provider",
+    "cf-cache-status",
+    "cf-ray",
+    "content-type",
+    "date",
+    "last-modified",
+    "nel",
+    "report-to",
+    "server",
+    "vary"
+  ]
+}

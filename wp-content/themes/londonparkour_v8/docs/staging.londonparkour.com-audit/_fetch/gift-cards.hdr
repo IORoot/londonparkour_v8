@@ -1,0 +1,31 @@
+HTTP/2 301 
+date: Fri, 11 Sep 2026 08:13:42 GMT
+content-type: text/html; charset=UTF-8
+location: https://staging.londonparkour.com/docs/gift-cards/
+server: cloudflare
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0, no-store, private
+x-redirect-by: WordPress
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=hFBXgBDeh3ChOk1vZGrY%2BK56Lc8JMLKm07vySE6QaZASeUNA0HwUaOX%2FbWlin95EBqUDzVjLASzGQ8kBitB5uJLXdWDIIhpXa2Q1%2BLKiyTkLEdcEpnFV3waAHezVEX4%2BDLK%2FAq43Ci2xsVbi"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a39536f2f881beda-LHR
+alt-svc: h3=":443"; ma=86400
+
+HTTP/2 200 
+date: Fri, 11 Sep 2026 08:13:43 GMT
+content-type: text/html; charset=UTF-8
+server: cloudflare
+link: <https://staging.londonparkour.com/wp-json/>; rel="https://api.w.org/"
+link: <https://staging.londonparkour.com/wp-json/wp/v2/support/56017>; rel="alternate"; title="JSON"; type="application/json"
+link: <https://staging.londonparkour.com/?p=56017>; rel=shortlink
+x-breeze-cache-write: SUCCESS
+cache-provider: CLOUDWAYS-CACHE-DC
+last-modified: Fri, 11 Sep 2026 08:13:43 GMT
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+vary: Accept-Encoding
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Ya0iIvrGG62jFN2v%2F%2B1QHQ3D5m6x9AJA8Q6FgAdnHq22J7HwacBC193J%2FZ%2BL1AyBjXRKGqDMRfL0EvdgBtCBaR09P5HDMM5xXM1Un4z8f0Q3Ga0%2BYQuMZaMp7LXsA%2Bt50RiMevs3ozj5%2Bwrx"}]}
+cf-ray: a39536f4a9d7beda-LHR
+alt-svc: h3=":443"; ma=86400
+

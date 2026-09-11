@@ -1,0 +1,13 @@
+HTTP/1.1 301 Moved Permanently
+Date: Fri, 11 Sep 2026 08:27:15 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: cloudflare
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Location: https://staging.londonparkour.com/
+cf-cache-status: DYNAMIC
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=YCCcfHfdqPvXHZt7wyYZr2plZoNnWCLWQx0lfF2uaTKL0cWovMnwS6RHs4c0bZQS%2FrWJ%2FhbsmtmbAPYC6jDJv%2FxLUTGEvVVY4pfZilUJHtYjFI8L8Wzd2fnTq7GuRAobkXaHGJXDCxfRhWOy"}]}
+CF-RAY: a3954acb88ab6401-LHR
+alt-svc: h3=":443"; ma=86400
+

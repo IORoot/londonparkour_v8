@@ -1,0 +1,172 @@
+[
+  {
+    "file": "home-mobile-390.png",
+    "status": 200,
+    "finalUrl": "https://staging.londonparkour.com/",
+    "viewport": "390x844",
+    "h1": "the world is your playground.",
+    "h1Box": {
+      "x": 24,
+      "y": 187.421875,
+      "width": 342,
+      "height": 65.421875
+    },
+    "h1InFold": true,
+    "aboveFoldCtas": [
+      {
+        "tag": "button",
+        "text": "BOOK YOUR FIRST CLASS \u2014 \u00a315",
+        "href": "lp-booking-drawer",
+        "top": 381,
+        "height": 50
+      },
+      {
+        "tag": "button",
+        "text": "NEXT CLASS SAT - 12th Adult Beginners East Old Street 18 LEFT DURATION 90 min START TIME 1",
+        "href": "lp-booking-drawer",
+        "top": 514,
+        "height": 298
+      }
+    ],
+    "overflowX": false,
+    "scrollWidth": 390
+  },
+  {
+    "file": "home-desktop-1440.png",
+    "status": 200,
+    "finalUrl": "https://staging.londonparkour.com/",
+    "viewport": "1440x900",
+    "h1": "the world is your playground.",
+    "h1Box": {
+      "x": 64,
+      "y": 256.734375,
+      "width": 664,
+      "height": 202.421875
+    },
+    "h1InFold": true,
+    "aboveFoldCtas": [
+      {
+        "tag": "button",
+        "text": "BOOK YOUR FIRST CLASS \u2014 \u00a315",
+        "href": "lp-booking-drawer",
+        "top": 586,
+        "height": 50
+      },
+      {
+        "tag": "button",
+        "text": "NEXT CLASS SAT - 12th Adult Beginners East Old Street 18 LEFT DURATION 90 min START TIME 1",
+        "href": "lp-booking-drawer",
+        "top": 582,
+        "height": 245
+      }
+    ],
+    "overflowX": false,
+    "scrollWidth": 1440
+  },
+  {
+    "file": "classes-mobile-390.png",
+    "status": 200,
+    "finalUrl": "https://staging.londonparkour.com/classes/",
+    "viewport": "390x844",
+    "h1": "This week's sessions.",
+    "h1Box": {
+      "x": 24,
+      "y": 180,
+      "width": 342,
+      "height": 117.75
+    },
+    "h1InFold": true,
+    "aboveFoldCtas": [
+      {
+        "tag": "a",
+        "text": "",
+        "href": "https://staging.londonparkour.com/classes/?week=-1",
+        "top": 630,
+        "height": 42
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "href": "https://staging.londonparkour.com/classes/?week=1",
+        "top": 630,
+        "height": 42
+      }
+    ],
+    "overflowX": false,
+    "scrollWidth": 390
+  },
+  {
+    "file": "classes-desktop-1440.png",
+    "status": 200,
+    "finalUrl": "https://staging.londonparkour.com/classes/",
+    "viewport": "1440x900",
+    "h1": "This week's sessions.",
+    "h1Box": {
+      "x": 64,
+      "y": 196,
+      "width": 1312,
+      "height": 58.875
+    },
+    "h1InFold": true,
+    "aboveFoldCtas": [
+      {
+        "tag": "a",
+        "text": "",
+        "href": "https://staging.londonparkour.com/classes/?week=-1",
+        "top": 510,
+        "height": 42
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "href": "https://staging.londonparkour.com/classes/?week=1",
+        "top": 510,
+        "height": 42
+      }
+    ],
+    "overflowX": false,
+    "scrollWidth": 1440
+  },
+  {
+    "file": "contact-mobile-390.png",
+    "status": 200,
+    "finalUrl": "https://staging.londonparkour.com/contact/",
+    "viewport": "390x844",
+    "h1": "Let's talk movement.",
+    "h1Box": {
+      "x": 24,
+      "y": 180,
+      "width": 342,
+      "height": 117.75
+    },
+    "h1InFold": true,
+    "aboveFoldCtas": [],
+    "overflowX": false,
+    "scrollWidth": 390
+  },
+  {
+    "file": "contact-desktop-1440.png",
+    "status": 200,
+    "finalUrl": "https://staging.londonparkour.com/contact/",
+    "viewport": "1440x900",
+    "h1": "Let's talk movement.",
+    "h1Box": {
+      "x": 64,
+      "y": 196,
+      "width": 1312,
+      "height": 58.875
+    },
+    "h1InFold": true,
+    "aboveFoldCtas": [
+      {
+        "tag": "a",
+        "text": "EMAIL US",
+        "href": "mailto:hello@londonparkour.com",
+        "top": 669,
+        "height": 60
+      }
+    ],
+    "overflowX": false,
+    "scrollWidth": 1440
+  }
+]

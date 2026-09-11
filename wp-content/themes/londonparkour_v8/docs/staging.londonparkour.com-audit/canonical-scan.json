@@ -1,0 +1,31 @@
+{
+  "checked": 756,
+  "status_counts": {
+    "403": 1,
+    "200": 631,
+    "301": 3,
+    "None": 121
+  },
+  "self_canonical_200": 631,
+  "no_canonical_200": [],
+  "canonical_other_host": [],
+  "canonical_path_mismatch": [],
+  "og_url_mismatch": [],
+  "redirects": [
+    {
+      "url": "https://staging.londonparkour.com/legal/",
+      "status": 301,
+      "location": "https://staging.londonparkour.com/docs/terms-of-service/"
+    },
+    {
+      "url": "https://staging.londonparkour.com/docs/class-locations/",
+      "status": 301,
+      "location": "https://staging.londonparkour.com/classes-map/"
+    },
+    {
+      "url": "https://staging.londonparkour.com/docs/frequently-asked-questions/",
+      "status": 301,
+      "location": "https://staging.londonparkour.com/docs/"
+    }
+  ]
+}

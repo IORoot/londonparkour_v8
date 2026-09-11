@@ -1,0 +1,12 @@
+HTTP/2 301 
+date: Fri, 11 Sep 2026 08:27:13 GMT
+content-type: text/html; charset=UTF-8
+location: https://staging.londonparkour.com/about/
+server: cloudflare
+x-redirect-by: WordPress
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=JSUfqjaXjaj%2FWZjAnI%2BDVJ%2FCbHHn9tkfOU5Tz6syRtUxEIHLzL0m80M9pUWQnyDSxkjFJ1%2Bh3n3%2F51F%2BlOxyjG4LNeAR814bsuGc4a3kx9dGPkVprZS1b5WKtpmDJZR71jOTEBSKcKa52FoG"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a3954abd99867e7d-LHR
+alt-svc: h3=":443"; ma=86400
+

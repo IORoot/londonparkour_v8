@@ -1,0 +1,13 @@
+HTTP/2 200 
+date: Fri, 11 Sep 2026 08:13:17 GMT
+content-type: text/plain; charset=utf-8
+content-length: 1962
+server: cloudflare
+vary: Accept-Encoding
+link: <https://staging.londonparkour.com/wp-json/>; rel="https://api.w.org/"
+cf-cache-status: BYPASS
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=CIev%2B5%2BzvXcKX0VYw64TGA%2Bk71xbc%2F859XnHjh4OTxMcxeOGS4gURr6rKMHyOURgqP3WHaS2PXuUJcbesEz7MGYIZl4KGGgoRnGRR3SkeZL6Fa4TRsN6PH9EGb1iarxFdCm47czPM9zDb2X4"}]}
+cf-ray: a39536582bc5f4a1-LHR
+alt-svc: h3=":443"; ma=86400
+

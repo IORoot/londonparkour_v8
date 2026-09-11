@@ -115,7 +115,7 @@ function lp_seo_sitemap_posts_query_args( array $args, string $post_type ): arra
 	$exclude = array();
 
 	if ( 'page' === $post_type ) {
-		foreach ( array( 'blocks-qa', 'booking-error', 'booking-cancelled', 'booking-confirmed' ) as $slug ) {
+		foreach ( array( 'blocks-qa', 'booking-error', 'booking-cancelled', 'booking-confirmed', 'clasbpro-theme-preview' ) as $slug ) {
 			$page = get_page_by_path( $slug );
 			if ( $page instanceof WP_Post ) {
 				$exclude[] = (int) $page->ID;
@@ -442,7 +442,7 @@ function lp_seo_is_noindex(): bool {
 		return true;
 	}
 
-	$slugs = array( 'blocks-qa', 'booking-error', 'booking-cancelled', 'booking-confirmed' );
+	$slugs = array( 'blocks-qa', 'booking-error', 'booking-cancelled', 'booking-confirmed', 'clasbpro-theme-preview' );
 	if ( is_singular() ) {
 		$post = get_queried_object();
 		if ( $post instanceof WP_Post && in_array( $post->post_name, $slugs, true ) ) {

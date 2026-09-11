@@ -1,0 +1,12 @@
+HTTP/2 301 
+date: Fri, 11 Sep 2026 08:27:14 GMT
+content-type: text/html; charset=UTF-8
+location: https://staging.londonparkour.com/tutorials/
+server: cloudflare
+x-redirect-by: WordPress
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=xu%2BS%2BNDgB8X7XkdHfPWI9tuIlta1gr5xuyziax%2FmFYm27VD3pJDhmiNHdPchZpM954EE3Tct3oq1uzfwRz2Lmtc7aijidwex86xCafjqDgfAJjiu2CGUUWNBSP%2BgOKwXTNw0I6L%2FzUlsAwk%2F"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a3954ac7784a55ea-LHR
+alt-svc: h3=":443"; ma=86400
+

@@ -1,0 +1,12 @@
+HTTP/2 301 
+date: Fri, 11 Sep 2026 08:27:13 GMT
+content-type: text/html; charset=UTF-8
+location: https://staging.londonparkour.com/classes/
+server: cloudflare
+x-redirect-by: WordPress
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=QvFsF2fE7h5oyfkl%2BiTc%2BIOUN9T09KhXSzEUabqcp2mzE93dYVkwbl6RQruwbnpcSya62Jml6jbJgdHLqsc%2BWNLJxsFc87lbDi40dwSkdam4nfcoxorNgY2nXd9%2F4i9zgcoBxxVXztSIeqxe"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a3954ac18f386541-LHR
+alt-svc: h3=":443"; ma=86400
+

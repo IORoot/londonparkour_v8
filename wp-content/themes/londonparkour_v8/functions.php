@@ -42,6 +42,7 @@ $lp_includes = array(
 	'app/includes/seo-copy.php',
 	'app/includes/gtm.php',
 	'app/includes/docs.php',
+	'app/includes/redirects.php',
 	'app/includes/contact.php',
 	'app/includes/tutorials.php',
 	// Setup.

@@ -739,30 +739,6 @@ function lp_classes_page_url( string $lp_slug ): string {
 }
 
 /**
- * Retired Storybook paths: `/classes/map/` is `/classes-map/`; there is no studio.
- */
-function lp_legacy_path_redirects(): void {
-	if ( is_admin() ) {
-		return;
-	}
-
-	$request = trim( (string) ( $GLOBALS['wp']->request ?? '' ), '/' );
-
-	if ( 'classes/map' === $request ) {
-		wp_safe_redirect( lp_classes_page_url( 'classes-map' ), 301 );
-		exit;
-	}
-
-	if ( 'studio' === $request ) {
-		$about = get_page_by_path( 'about' );
-		$to    = $about instanceof WP_Post ? (string) get_permalink( $about ) : home_url( '/about/' );
-		wp_safe_redirect( $to, 301 );
-		exit;
-	}
-}
-add_action( 'template_redirect', 'lp_legacy_path_redirects', 8 );
-
-/**
  * Private 1:1 sales landing (`/private-coaching/`).
  *
  * The clasbpro appointment product still lives at `/classes/private-sessions/`

@@ -16,7 +16,7 @@ Do not import `docs/gtm-ecommerce-import.json` — create tags via the API / UI.
 | Linker | `V8-Conversion Linker` on All Pages |
 | GA4 property | Keep `G-98XR7R92LT` (do not split a new property) |
 | Payments | Ecommerce funnel. `purchase` is a key event (incl. £0 coupon redemptions). Always send `value`, `currency`, `items[].price` |
-| Ads (this publish) | New “Website purchase” conversion `AW-810152772/EARlCKmfnfMcEMTmp4ID` (value > 0 only). Leave V7 Ads tags running for live V7 |
+| Ads (this publish) | New “Website purchase” conversion `AW-810152772/EARlCKmfnfMcEMTmp4ID` (value > 0 only). V7 Ads conversion tags paused in Live v34 |
 | Contact | `generate_lead` (key event), theme dataLayer, sessionStorage |
 | Newsletter | `newsletter_subscribe` (key event). `method`: `dispatch` \| `booking_drawer` |
 | Dispatch | Fire on `?dispatch=sent` (Mailchimp thank-you), not a footer form |
@@ -27,9 +27,9 @@ Do not import `docs/gtm-ecommerce-import.json` — create tags via the API / UI.
 | Product interest | `view_item` on class / workshop / private / coupon **detail** load only |
 | Event names | GA4 recommended names (except `newsletter_subscribe`). Do not prefix — Monetization and the checkout funnel only recognise the exact names |
 | Out of scope | Map pins, timetable filters, outbound, 404, class/workshop/thank-you films |
-| GTM tags | Two GA4 Event tags: ecommerce vs leads/content |
+| GTM tags | Two GA4 Event tags: ecommerce vs leads/content. V7 awct tags paused Live v34 |
 | Custom dimensions | `method`, `series_name`, `search_filter` (event-scoped) |
-| Publish | Publish to Live so Cloudways staging (same snippet) can be tested without Preview. V7 click/thank-you/Ads tags stay unpaused |
+| Publish | Publish to Live so Cloudways staging (same snippet) can be tested without Preview. V7 Ads conversion tags are paused (Live v34); V7 GA4 thank-you tags still fire |
 
 ## Data layer — commerce
 
@@ -151,12 +151,14 @@ GA4 via ecommerce `item_category`, not as four Ads labels. Do not reuse V7 label
 ## Staging vs live
 
 Cloudways staging and live share `GTM-P5T257F`. Publishing the workspace is
-what makes tags fire on staging without Tag Assistant. Live V7 keeps its
-click / thank-you / Ads tags until the V8 theme is the public site.
+what makes tags fire on staging without Tag Assistant. Live V7 still uses
+V7 GA4 purchase event names. V7 **Ads** conversion tags were paused in Live
+v34 so Ads only counts Website purchase (`purchase` AND value > 0). That
+tag will not fire until the V8 theme is public.
 
-**Published:** container version **33** is Live (adds `V8-Google Ads Purchase`).
-Version 32 was `V8 recommended event names`. After this publish GTM opened
-workspace **37**.
+**Published:** container version **34** is Live (`Pause V7 Ads conversion tags`).
+Version 33 added `V8-Google Ads Purchase`. After version 34, GTM opened
+workspace **38**.
 
 `V8-Google Tag` fires on the built-in **Initialization** trigger.
 `V8-Conversion Linker` fires on `V8-All Pages`.

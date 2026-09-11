@@ -8,7 +8,7 @@
 
 Thresholds from [web.dev Core Web Vitals](https://web.dev/articles/vitals) and [TTFB](https://web.dev/articles/ttfb): LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1, TTFB ≤ 0.8s. Lighthouse Performance weights (v10+): LCP 25%, TBT 30%, CLS 25%, FCP 10%, Speed Index 10% — see [Lighthouse performance scoring](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring).
 
-Related: [Cloudways caching](../../../docs/cloudways-caching.md) (production Varnish/Redis; this audit is local, uncached).
+Related: [Cloudways caching](cloudways-caching.md) (production Varnish/Redis; this audit is local, uncached).
 
 ---
 

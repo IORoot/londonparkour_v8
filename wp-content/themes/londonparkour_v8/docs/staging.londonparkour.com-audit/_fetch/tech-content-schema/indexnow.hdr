@@ -1,0 +1,14 @@
+HTTP/2 404 
+date: Fri, 11 Sep 2026 08:27:16 GMT
+content-type: text/html; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0, no-store, private
+link: <https://staging.londonparkour.com/wp-json/>; rel="https://api.w.org/"
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=1yjH4%2FAaBsORL%2BJfDSzwPkokeTeZY6%2BcesnTwkJzoCHZPbXgF%2B6zORESBJqwXLngWy9pO3a1F1rovbDroH8AeQZay5gQ%2FRWLNCDjAye1eGTRZq5B%2BRNjlovlfU2jfqMBlrvsRVTiC79%2FGA7f"}]}
+cf-ray: a3954ad0cefa1520-LHR
+alt-svc: h3=":443"; ma=86400
+

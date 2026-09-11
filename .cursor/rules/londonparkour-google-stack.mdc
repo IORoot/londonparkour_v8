@@ -1,0 +1,162 @@
+---
+description: How to read and write London Parkour Google Ads, GTM, GA4, Search Console, and the website. Use before any marketing-stack API or MCP call.
+alwaysApply: true
+---
+
+# London Parkour Google stack — read / write
+
+Paid **class bookings** are the outcome. Do not invent metrics. Never print
+private keys, service-account JSON, or app passwords.
+
+**Reads:** allowed. **Writes:** only after an explicit user request naming the
+change. `validate_only` / dry-run first, then mutate, then re-read and report
+IDs. Do not raise spend, scopes, or publish to Live unless asked.
+
+Shared identity: Cloud project `cursor-to-gtm`, SA
+`cursor-to-gtm@cursor-to-gtm.iam.gserviceaccount.com`, key file
+`~/.config/google-ads/service-account.json`. Same SA is in `~/.cursor/mcp.json`
+for GTM (env JSON) and GSC (key file). Never dump those files.
+
+Call `GetDynamicTools` on a namespace before the first tool in a session.
+
+## Google Ads
+
+| | |
+|---|---|
+| Customer | `8689582919` (UI `868-958-2919`) |
+| Conversion ID | `AW-810152772` — **not** the customer ID |
+| Read | MCP `user-google-ads` (official, **read-only**) |
+| Write | Python `~/.config/google-ads/venv/bin/python` + YAML `~/.config/google-ads/google-ads.yaml` |
+| API | v25+. Explorer on the Cloud project. Ads UI role Standard |
+| Skill | `.cursor/skills/google-ads/` |
+
+MCP: `customers_list_accessible_customers` → `metadata_get_resource_metadata`
+before each new `resource` → `search_search` with `customer_id`, `resource`,
+`fields[]`. Optional `conditions`, `orderings`, `limit`. **Never** pass a raw
+GAQL `query` string to MCP.
+
+Writes: `validate_only=True` first. Do not hardcode `v24`. Do not set
+`target_spend_micros` (overrides daily budget). Empty bidding oneofs are no-ops
+— set a real field (e.g. `target_spend.cpc_bid_ceiling_micros`). RSA
+`final_urls` / headlines: `AdService.mutate_ads`, not `AdGroupAdService` UPDATE.
+Some conversion actions are API-immutable (hide/remove in the Ads UI).
+
+Explorer cannot: billing, user-admin, Keyword/Reach Plan, `CreateCustomerClient`.
+
+Fallback if MCP is down: Python `GoogleAdsService.search_stream` in
+`.cursor/skills/google-ads/write.md` (**search only** unless the user asked
+for a mutate).
+
+## Google Tag Manager
+
+| | |
+|---|---|
+| Public ID | `GTM-P5T257F` |
+| Account / container | `2847440974` / `8738637` |
+| Read + write | MCP `user-gtm-mcp-server` |
+| Contract | `wp-content/themes/londonparkour_v8/docs/gtm.md` |
+| Skill | `.cursor/skills/google-tagmanager/` |
+
+Discover tools with `GetDynamicTools` (`gtm_tag`, `gtm_trigger`, `gtm_variable`,
+`gtm_workspace`, `gtm_version`, …). Edits land in the **workspace**. They are
+not live until `gtm_workspace` `createVersion` then `gtm_version` `publish`.
+Confirm published `gtm.js` after publish. Staging and live share this container.
+
+Do not reuse V7 Ads labels. Do not import `docs/gtm-ecommerce-import.json`.
+Pause/publish only when asked. Check Live version via MCP; do not trust a
+stale version number in a doc.
+
+## Google Analytics (GA4)
+
+| | |
+|---|---|
+| Property | `377511335` / measurement ID `G-98XR7R92LT` |
+| MCP | **None.** Do not invent a GA4 MCP |
+| Read | Data API v1beta REST |
+| Config | Admin API v1alpha REST (settings only; explicit ask) |
+
+Mint a Bearer token from the **same SA** (`google.oauth2.service_account`,
+scope `https://www.googleapis.com/auth/analytics.readonly`). POST:
+
+- `https://analyticsdata.googleapis.com/v1beta/properties/377511335:runReport`
+- `…:runRealtimeReport`
+
+Admin reads/writes: `https://analyticsadmin.googleapis.com/v1alpha/…`. Writes
+need `analytics.edit` **and** an explicit ask (key events, custom dimensions,
+property settings). Do not split a new GA4 property. Do not enable Enhanced
+Measurement site search.
+
+Do not use `gcloud` user ADC for these calls; `gcloud` was only used to enable
+the APIs on `cursor-to-gtm`. The SA must be a user on the GA4 property.
+
+Reports: `.cursor/skills/google-analytics/`. Admin:
+`.cursor/skills/google-analytics-admin/`. Do not use the global
+`google-analytics` skill’s `.env` helper — it is not configured here.
+
+## Google Search Console
+
+| | |
+|---|---|
+| Property | `sc-domain:londonparkour.com` |
+| Read | MCP `user-google-search-console` |
+| Write | **Off.** MCP scope is `webmasters.readonly` |
+| Skill | `.cursor/skills/google-search-console/` |
+
+Tools: `list_sites`, `get_site`, `get_performance_summary`,
+`get_search_analytics`, `inspect_url` / `batch_inspect_urls`, `list_sitemaps`.
+Default `site_url` to the domain property. Country filter `gbr` (alpha-3).
+Analytics lag 2–3 days. Do not sum query rows for totals. Do not raise
+`GSC_SCOPES` without an explicit ask.
+
+Impressions/CTR/position spanning 2025-05-13 to 2026-04-27 are unreliable
+(GSC logging error; clicks OK; no backfill).
+
+## Website
+
+| | |
+|---|---|
+| Live | `https://londonparkour.com` — still V7 HTML until V8 theme is public |
+| Staging | Cloudways staging; same GTM + same GA4 as live |
+| Local WP | `http://localhost:8102` (`docker compose up -d` from this repo) |
+| Theme | classic WP: `wp-content/themes/londonparkour_v8/` |
+| Design system | Storybook `londonparkour_v8_storybook_v2` |
+
+**Read live/staging:** `curl` or browser MCP. Do not use `Read`/`Grep` on
+`.pen` files (encrypted; Pencil MCP only).
+
+**Write theme:** only in the WP theme (and Storybook if the user asked for
+design-system work). Port rule: Tailwind class strings from Storybook are
+copied byte-for-byte. Emit UI via `lp_part` / `lp_icon` / `lp_classes`. WP-CLI
+is `themes/londonparkour_v8/bin/wp`, never host `wp`.
+
+Local WP MCP namespace `user-londonparkour_v8` talks to
+`http://localhost:8102/wp-json/mcp/…` — only when Docker is up. Do not put
+staging or admin passwords in chat or commits.
+
+V8 `purchase` (value > 0) is the Ads conversion. It will not fire on live V7
+thank-you pages. Do not import GA4 `purchase` into the Ads column until that
+event fires on live.
+
+## Conversion contract (do not freelance)
+
+- Ads primary website action: **Website purchase** `7757844393`, label
+  `EARlCKmfnfMcEMTmp4ID`, `ONE_PER_CLICK`, value from dataLayer, no default.
+- GTM tag `V8-Google Ads Purchase`: Conversion ID `810152772`, that label,
+  `{{V8-DLV - value}}`, `{{V8-DLV - transaction_id}}`, trigger purchase AND
+  value > 0.
+- Do not fire Ads on `select_item` or `begin_checkout`.
+- Do not split class / private / coupon / workshop into four Ads labels.
+- Details: `wp-content/themes/londonparkour_v8/docs/gtm.md`.
+
+## Skills vs this rule
+
+This rule is the **connection map**. Methodology lives in project skills
+under `.cursor/skills/`:
+
+- Ads mutate mechanics: `.cursor/skills/google-ads/`
+- Ads audit (read-only): `.cursor/skills/audit-google-ads/`
+- GTM: `.cursor/skills/google-tagmanager/`
+- GA4 reports: `.cursor/skills/google-analytics/`
+- GA4 Admin: `.cursor/skills/google-analytics-admin/`
+- GSC: `.cursor/skills/google-search-console/`
+- Business doctrine: `AGENTS.md` (bookings over CTR)
