@@ -30,7 +30,7 @@ function lp_vite_asset( string $logical_path ): string {
 
 	$key = ltrim( $logical_path, '/' );
 
-	// Both entry points are declared in vite.config.js, so each has its own
+	// Each Vite entry in vite.config.js has its own
 	// `file`. Falling back to the basename keeps the site rendering (unhashed,
 	// probably 404ing) rather than fatal-ing if the build is missing.
 	return $manifest[ $key ]['file'] ?? basename( $key );
@@ -77,20 +77,63 @@ function lp_preload_fonts(): void {
 add_action( 'wp_head', 'lp_preload_fonts', 1 );
 
 /**
- * Enqueue the built stylesheet and the ES module bundle.
+ * Make relative url() paths in a CSS file absolute so inlined CSS still loads fonts.
+ *
+ * @param string $css      Stylesheet text.
+ * @param string $base_uri Directory URL the CSS file lives in (no trailing slash).
+ * @return string
  */
-function lp_enqueue_assets(): void {
-	$lp_faces = get_theme_file_path( 'assets/fonts/faces.css' );
-	if ( is_readable( $lp_faces ) ) {
-		wp_enqueue_style(
-			'londonparkour-fonts',
-			get_theme_file_uri( 'assets/fonts/faces.css' ),
-			array(),
-			(string) filemtime( $lp_faces )
+function lp_css_absolutize_urls( string $css, string $base_uri ): string {
+	$base_uri = untrailingslashit( $base_uri );
+	return (string) preg_replace_callback(
+		'/url\(\s*([\'"]?)(\.\/)?([^\'")]+?\.(?:woff2?|ttf|otf|eot))\1\s*\)/i',
+		static function ( $m ) use ( $base_uri ) {
+			$file = $m[3];
+			if ( '' === $file || str_contains( $file, '..' ) || preg_match( '#^(https?:|data:|/)#i', $file ) ) {
+				return $m[0];
+			}
+			return 'url("' . esc_url( $base_uri . '/' . $file ) . '")';
+		},
+		$css
+	);
+}
+
+/**
+ * Archivo faces + fold CSS in <head>. main.css is async and must not be the first paint.
+ */
+function lp_print_critical_css(): void {
+	$chunks = array();
+
+	$faces = get_theme_file_path( 'assets/fonts/faces.css' );
+	if ( is_readable( $faces ) ) {
+		$chunks[] = lp_css_absolutize_urls(
+			(string) file_get_contents( $faces ), // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			get_theme_file_uri( 'assets/fonts' )
 		);
 	}
 
-	wp_enqueue_style( 'londonparkour', lp_asset_url( 'assets/css/main.css' ), array( 'londonparkour-fonts' ), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	$critical_rel  = lp_vite_asset( 'assets/css/critical.css' );
+	$critical_disk = get_theme_file_path( 'assets/dist/' . $critical_rel );
+	if ( is_readable( $critical_disk ) ) {
+		$chunks[] = lp_css_absolutize_urls(
+			(string) file_get_contents( $critical_disk ), // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			get_theme_file_uri( 'assets/dist' )
+		);
+	}
+
+	if ( ! $chunks ) {
+		return;
+	}
+
+	echo '<style id="londonparkour-critical">' . implode( "\n", $chunks ) . "</style>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- first-party CSS.
+}
+add_action( 'wp_head', 'lp_print_critical_css', 2 );
+
+/**
+ * Enqueue the built stylesheet and the ES module bundle.
+ */
+function lp_enqueue_assets(): void {
+	wp_enqueue_style( 'londonparkour', lp_asset_url( 'assets/css/main.css' ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 
 	/*
 	 * Vite used to emit Leaflet CSS as a sibling of the app.js entry. Maps
@@ -122,6 +165,29 @@ function lp_enqueue_assets(): void {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'lp_enqueue_assets' );
+
+/**
+ * Fold CSS is inlined. main.css (and Vite sibling CSS) must not block first paint.
+ *
+ * @param string $html   Full link tag.
+ * @param string $handle Style handle.
+ * @param string $href   Stylesheet URL.
+ * @param string $media  Media attribute.
+ * @return string
+ */
+function lp_async_theme_stylesheet( string $html, string $handle, string $href, $media = 'all' ): string {
+	unset( $media );
+	if ( 'londonparkour' !== $handle && ! str_starts_with( $handle, 'londonparkour-app-' ) ) {
+		return $html;
+	}
+
+	$href = esc_url( $href );
+	$id   = esc_attr( $handle . '-css' );
+
+	return '<link rel="stylesheet" id="' . $id . '" href="' . $href . '" media="print" onload="this.media=\'all\'">' . "\n"
+		. '<noscript><link rel="stylesheet" href="' . $href . '"></noscript>' . "\n";
+}
+add_filter( 'style_loader_tag', 'lp_async_theme_stylesheet', 10, 4 );
 
 /**
  * The bundle is an ES module — Vite emits `import`/`export` syntax.

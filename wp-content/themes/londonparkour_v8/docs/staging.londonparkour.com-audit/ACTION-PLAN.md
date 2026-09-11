@@ -80,11 +80,11 @@ Keep the timetable. Add a short outdoor-not-a-gym lede already implied by the pr
 
 - **Indicator:** UK clicks on `/classes/` leave “1”; position leaves ~52.
 
-### 9. Lab LCP — **partial (2026-09-11 13:47 BST)**
+### 9. Lab LCP — **partial (2026-09-11 14:10 BST)**
 
-Shipped: self-hosted Inter/Archivo, Leaflet off `/`, calendar CSS on drawer open, Ken Burns slide 0 only in first HTML. Homepage FCP **3.6 s → 1.8 s**. Render-blocking estimate **~2.1 s → 250 ms**. Hero extra JPEGs gone (image-delivery **271 → 56 KiB**).
+Shipped and verified on staging (`app-BACpot98.js`): Helvetica/Arial for body/label (no Inter); ClasbPro CSS off first paint on `/` and `/classes/`; fonts/Leaflet/Ken Burns from earlier. Homepage LCP **7.7 s** (was 7.2 s — within noise; first sample 8.5 s discarded). `/classes/` **4.4 s** (was 5.0 s; TTFB 1.2 s outlier). Fail check “under 4 s” still fails on `/`.
 
-Still Poor: `/` LCP **7.2 s** (overlay `p.font-body`). `/classes/` **5.0 s** this run (H1; lab TTFB 1.3 s outlier). Next: ClasbPro CSS/JS on drawer-open, inline `faces.css`, Scope Trial woff2 / delay H1 decode. CLS/TBT remain good — do not start an INP project.
+Next: inline `faces.css`, Scope Trial woff2 / delay H1 decode, optionally ClasbPro JS on drawer-open. CLS/TBT remain good — do not start an INP project.
 
 - **Fail check:** restaged Lighthouse mobile LCP still > 4 s. (**Still fails on `/`.**)
 - **Indicator:** Lighthouse LCP; then CrUX once a PSI key exists.

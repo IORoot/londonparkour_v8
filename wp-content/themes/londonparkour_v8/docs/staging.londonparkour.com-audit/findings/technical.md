@@ -21,7 +21,7 @@ Scores are this skill’s heuristics, not Google-internal signals.
 | Security | warn | 48 | HTTPS + HTTP→HTTPS 301. HTML responses have **no** HSTS, CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, or X-Robots-Tag. `/wp-json/` is 200 (JSON `noindex`). Security headers are a lightweight ranking signal — do not over-weight. |
 | URL Structure | pass | 78 | Trailing-slash 301s work on `/about`, `/classes`, `/contact`, `/tutorials`, `/docs`. V7→V8 301s are live (`/tutorial/`, `/bookings/`, `/giftcards/`, class aliases). `/book/` 301s to `/classes/`. |
 | Mobile | pass | 72 | Viewport present. Visual audit: no horizontal overflow; H1 in the fold (`visual.md`). Lab LCP still fails (see CWV). |
-| Core Web Vitals | fail | 38 | Lab mobile LCP **7.2 s** `/`, **5.0 s** `/classes/` this run (`performance.md`). FCP `/` 1.8 s. CLS good. No field INP. `/tutorials-category/` is 1.48 MB HTML. |
+| Core Web Vitals | fail | 38 | Lab mobile LCP **7.7 s** `/`, **4.4 s** `/classes/` this run (`performance.md`). FCP `/` 2.6 s. CLS good. No field INP. `/tutorials-category/` is 1.48 MB HTML. |
 | Structured Data | fail | 40 | JSON-LD in first HTML (good). Content of the graph is polluted — see `schema.md`. |
 | JS Rendering | pass | 85 | Titles, H1, copy, prices, JSON-LD are server-rendered. Booking drawer and OSM maps are JS. |
 | IndexNow | fail | 10 | `/indexnow-key.txt` **404**. Optional for Google; relevant for Bing/Yandex only. |
@@ -157,7 +157,7 @@ None on staging HTML. At cutover: set Site Address so canonicals become `londonp
 ## High Priority (before / in the first week of launch)
 
 1. **V7→V8 redirect map is live** (`redirects.php`). Keep; do not regress.
-2. **Lab LCP 7.2 s `/`, 5.0 s `/classes/`** this run (`performance.md`). Fonts/Leaflet/calendar CSS/Ken Burns shipped; still Poor. Field CWV does not exist for this host.
+2. **Lab LCP 7.7 s `/`, 4.4 s `/classes/`** this run (`performance.md`). Helvetica/Arial + ClasbPro CSS deferred; still Poor. Field CWV does not exist for this host.
 3. **`/docs/` is 200.** `/sample-page/` is 404. `/clasbpro-theme-preview/` is noindex.
 
 ## Medium Priority (within 1 month)

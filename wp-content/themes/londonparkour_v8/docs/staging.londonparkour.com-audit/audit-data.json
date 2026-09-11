@@ -52,10 +52,10 @@
           "recommendation": "Keep. Do not redeploy a web-root docs/ folder."
         },
         {
-          "title": "Lab LCP still Poor after font/hero pass",
+          "title": "Lab LCP still Poor after Helvetica + ClasbPro CSS defer",
           "severity": "High",
-          "description": "2026-09-11 13:47 BST: homepage 7.2s (was 7.6), FCP 1.8s (was 3.6). /classes/ 5.0s this run (was 7.7; TTFB 1.3s outlier). Ken Burns fetches only slide 0. Overlay/H1 text is still LCP.",
-          "recommendation": "Next: ClasbPro CSS/JS on drawer-open, inline faces.css, Scope Trial woff2 / delay H1 decode. Do not start an INP project; TBT is already good."
+          "description": "2026-09-11 14:10 BST: homepage 7.7s (was 7.2; first sample 8.5 discarded). FCP 2.6s. /classes/ 4.4s this run (was 5.0; TTFB 1.2s outlier). Overlay still LCP; Inter and ClasbPro CSS gone from first paint.",
+          "recommendation": "Next: inline faces.css, Scope Trial woff2 / delay H1 decode. Optionally ClasbPro JS on drawer-open. Do not start an INP project; TBT is already good."
         }
       ]
     },
@@ -151,16 +151,15 @@
       "score": 40,
       "what_works": [
         "CLS 0.002 homepage / 0.001 classes (good)",
-        "TBT 180/50 ms (good INP proxy)",
-        "Homepage FCP 1.8s (was 3.6s)",
-        "Ken Burns slide 0 only; Leaflet off /; calendar CSS deferred; self-hosted fonts"
+        "TBT 180/40 ms (good INP proxy)",
+        "ClasbPro CSS and Inter off first paint; Ken Burns slide 0 only; Leaflet off /"
       ],
       "findings": [
         {
           "title": "Mobile lab LCP Poor",
           "severity": "High",
-          "description": "Homepage 7.2s, /classes/ 5.0s this run (was 7.6/7.7). No CrUX (API key missing). Live V7 TTFB ~0.95s.",
-          "recommendation": "ClasbPro CSS/JS on drawer-open; inline faces.css; Scope Trial woff2. Keep slimmer tutorial hub; do not ship 1.48MB /tutorials-category/."
+          "description": "Homepage 7.7s, /classes/ 4.4s this run (was 7.2/5.0). No CrUX (API key missing). Live V7 TTFB ~0.95s.",
+          "recommendation": "Inline faces.css; Scope Trial woff2. Keep slimmer tutorial hub; do not ship 1.48MB /tutorials-category/."
         }
       ]
     },

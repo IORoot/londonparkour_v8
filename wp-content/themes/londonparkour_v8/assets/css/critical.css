@@ -1,0 +1,37 @@
+/* Critical above-the-fold CSS. Inlined in wp_head. main.css loads async.
+ *
+ * Sources are the fold PHP only (nav, hero shell, masthead, button) — not the
+ * overlay paragraph in isolation. Tokens + base + those utilities must paint
+ * before main.css arrives. Do not @source the rest of the theme.
+ */
+
+@import "tailwindcss" source(none);
+
+@import "./fonts.css";
+
+@source "../../header.php";
+@source "../../parts/site/nav.php";
+@source "../../parts/elements/nav-link.php";
+@source "../../parts/elements/button.php";
+@source "../../parts/brand/logo.php";
+@source "../../parts/brand/glyph.php";
+@source "../../blocks/hero/hero.php";
+@source "../../parts/components/page-masthead.php";
+@source "../../parts/components/media-photo.php";
+
+@plugin "daisyui" {
+  themes: false;
+  root: ":root";
+  logs: false;
+}
+
+@import "./themes/_index.css";
+@import "./_vars/_index.css";
+
+@layer base {
+  @import "./base/_index.css";
+}
+
+@layer components {
+  @import "./components/button.css";
+}

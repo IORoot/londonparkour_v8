@@ -1,8 +1,8 @@
 /*
  * LondonParkour "Concourse" — local @font-face declarations.
  *
- * Archivo (heading) is self-hosted in assets/fonts/faces.css (enqueued from
- * PHP before main.css). Body/label use Helvetica/Arial. Only the brand
+ * Archivo (heading) is self-hosted in assets/fonts/faces.css (inlined in
+ * wp_head). Body/label use Helvetica/Arial. Only the brand
  * display face is declared here.
  *
  * ── Scope Trial ────────────────────────────────────────────────────────────

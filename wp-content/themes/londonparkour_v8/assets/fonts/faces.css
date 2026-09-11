@@ -1,7 +1,6 @@
 /*
  * Self-hosted Archivo (OFL). Variable wght 400–700, latin + latin-ext.
- * Enqueued from PHP before main.css so the browser does not wait on an
- * @import inside the theme bundle. Preload the latin file from wp_head.
+ * Inlined in wp_head with the fold CSS. Preload the latin file from wp_head.
  * Body/label use Helvetica/Arial — Inter is not loaded.
  *
  * Source: Google Fonts css2 with display=swap, captured 2026-09-11.
