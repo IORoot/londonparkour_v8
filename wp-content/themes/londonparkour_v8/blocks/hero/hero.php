@@ -212,10 +212,18 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 		<?php // Ken Burns imgs get z-index from the effect — isolate so they stay behind scrim/grid/claim. ?>
 		<div class="absolute inset-0 z-0 isolate overflow-hidden" data-motion-ken-burns aria-hidden="true">
 			<?php
+			// Only slide 0 is in the document on first paint. Later slides sit in
+			// <template> (inert — no fetch). Ken Burns adopts each after the first hold.
+			// loading=lazy cannot help: these imgs are position:absolute covering the viewport.
+			$lp_in_template = false;
 			foreach ( $lp_slides as $lp_si => $lp_slide ) :
 				$lp_sid = (int) ( $lp_slide['image'] ?? 0 );
 				if ( ! $lp_sid ) {
 					continue;
+				}
+				if ( $lp_si > 0 && ! $lp_in_template ) {
+					echo '<template>';
+					$lp_in_template = true;
 				}
 				$lp_kb_attrs = array();
 				if ( isset( $lp_slide['duration'] ) && '' !== $lp_slide['duration'] ) {
@@ -261,6 +269,9 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 				}
 				lp_part( 'components/media-photo', $lp_photo );
 			endforeach;
+			if ( $lp_in_template ) {
+				echo '</template>';
+			}
 			?>
 		</div>
 		<div class="absolute inset-0 z-[1] bg-neutral/50" aria-hidden="true"></div>

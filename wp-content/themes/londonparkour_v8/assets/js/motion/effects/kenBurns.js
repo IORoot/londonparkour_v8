@@ -2,6 +2,9 @@
  * `data-motion-ken-burns` — continuous zoom on stacked `<img>` children with
  * optional crossfade between slides. Compositor-only (`transform` + `opacity`).
  *
+ * Later slides may live in a child `<template>` so they are not fetched on
+ * first paint. Each is adopted into the stack just before its crossfade.
+ *
  * Stack defaults (overridable per slide):
  *   data-kb-duration  hold+zoom seconds (default 8)
  *   data-kb-fade      crossfade seconds (default 1.2)
@@ -53,15 +56,44 @@ export function safeKbHref(url) {
   return '';
 }
 
+function collectSlides(stack) {
+  const live = Array.from(stack.querySelectorAll(':scope > img'));
+  const tpl = stack.querySelector(':scope > template');
+  const deferred = tpl ? Array.from(tpl.content.querySelectorAll('img')) : [];
+  return { live, deferred, slides: live.concat(deferred) };
+}
+
+function layoutSlide(img, visible) {
+  img.style.position = 'absolute';
+  img.style.inset = '0';
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
+  img.style.willChange = 'transform, opacity';
+  img.style.opacity = visible ? '1' : '0';
+  img.style.zIndex = visible ? '1' : '0';
+}
+
 export const kenBurnsEffect = {
   selector: '[data-motion-ken-burns]',
   init(stack, { reduced }) {
-    const slides = Array.from(stack.querySelectorAll(':scope > img'));
-    if (!slides.length) return;
+    const { live, slides } = collectSlides(stack);
+    if (!live.length) return;
 
     const defaults = readCfg(stack);
     const root = stack.closest('[data-component="hero"]') || stack.parentElement;
     let stopDecode = null;
+
+    const adopt = (img) => {
+      if (img.parentElement === stack) return img;
+      img.removeAttribute('loading');
+      layoutSlide(img, false);
+      const cfg = readCfg(img, defaults);
+      img.style.transformOrigin = cfg.origin;
+      img.style.transform = `scale(${zoomRange(cfg).from})`;
+      stack.appendChild(img);
+      return img;
+    };
 
     const syncCoords = (img) => {
       const coordsEl = root?.querySelector('[data-kb-live-coords]');
@@ -106,26 +138,14 @@ export const kenBurnsEffect = {
 
     const startIndex = 0; // Always first paint = slide 0 (eager + fetchpriority).
 
-    slides.forEach((img, i) => {
-      img.style.position = 'absolute';
-      img.style.inset = '0';
-      img.style.width = '100%';
-      img.style.height = '100%';
-      img.style.objectFit = 'cover';
-      img.style.willChange = 'transform, opacity';
-      img.style.opacity = i === startIndex ? '1' : '0';
-      img.style.zIndex = i === startIndex ? '1' : '0';
+    live.forEach((img, i) => {
+      layoutSlide(img, i === startIndex);
       const cfg = readCfg(img, defaults);
       img.style.transformOrigin = cfg.origin;
-      img.style.transform = `scale(${zoomRange(cfg).from})`;
+      img.style.transform = i === startIndex && reduced ? 'scale(1)' : `scale(${zoomRange(cfg).from})`;
     });
 
     if (reduced) {
-      slides.forEach((img, i) => {
-        img.style.opacity = i === startIndex ? '1' : '0';
-        img.style.zIndex = i === startIndex ? '1' : '0';
-        img.style.transform = i === startIndex ? 'scale(1)' : img.style.transform;
-      });
       syncCoords(slides[startIndex]);
       return () => {
         if (typeof stopDecode === 'function') stopDecode();
@@ -229,7 +249,7 @@ export const kenBurnsEffect = {
           nextI = others[Math.floor(Math.random() * others.length)];
           firstTransition = false;
         }
-        elapsedOnCurrent = await crossfade(img, slides[nextI]);
+        elapsedOnCurrent = await crossfade(img, adopt(slides[nextI]));
         i = nextI;
       }
     };
