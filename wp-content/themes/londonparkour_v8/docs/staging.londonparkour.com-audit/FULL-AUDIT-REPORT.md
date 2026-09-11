@@ -2,7 +2,7 @@
 
 **Target:** https://staging.londonparkour.com/ (HTTP basic auth)  
 **Live comparison:** https://londonparkour.com/ (V7, public)  
-**Date:** 2026-09-11 (recheck: `/docs/` 200; Sample Page 404; LCP pass 14:10 BST)  
+**Date:** 2026-09-11 (recheck: `/docs/` 200; Sample Page 404; LCP pass 14:33 BST)  
 **Business type:** Hybrid local service (3 outdoor class sites in London) + publisher (609 tutorials) + light booking commerce.
 
 This is a **pre-launch** audit of the V8 theme on staging. Ranking, GSC, GA4, and CrUX numbers below are **LIVE V7** unless labelled staging lab.
@@ -15,7 +15,7 @@ This is a **pre-launch** audit of the V8 theme on staging. Ranking, GSC, GA4, an
 
 The V8 site is a well-typed local class business with server-rendered titles, unique meeting-point copy, Course/SportsEvent/Offer JSON-LD, and a slimmer tutorial hub than live. Recheck **2026-09-11**: staging **indexation leftovers are cleared**. V7→V8 301 map is live. `/book/` → `/classes/`. `/sample-page/` is 404. Clasbpro preview is `noindex`. **`/docs/` is 200** (`Parkour FAQ & Docs | London Parkour`, `index, follow`); `/docs` (no slash) 301s to **HTTPS** `/docs/`; FAQ 301s into a working hub.
 
-**Not yet launch-complete:** set Site Address at cutover; lab LCP still Poor (**7.7 s** `/`, **4.4 s** `/classes/` this run); live GSC still has `dev.` / `http://` / `www.` sitemaps; NAP/schema (JOHN DOE, 42 vs 43, SW8 1SR vs 1SS). Canonicals follow `home_url()`. Helvetica/Arial + ClasbPro CSS-off-first-paint did not move homepage LCP.
+**Not yet launch-complete:** set Site Address at cutover; lab LCP still Poor (**7.8 s** `/`, **6.6 s** `/classes/` this run); live GSC still has `dev.` / `http://` / `www.` sitemaps; NAP/schema (JOHN DOE, 42 vs 43, SW8 1SR vs 1SS). Canonicals follow `home_url()`. Inlined fold CSS removed render-blocking stylesheets; simulated LCP did not fall under 4 s.
 
 **Canonicals are dynamic.** A 2026-09-11 check of every WordPress page plus 631 other 200s found **no ACF `seo_canonical` pointing at another host or path.** Staging host in the tags follows `home_url()`. It will become `londonparkour.com` when Site Address / `WP_HOME` does. See `findings/canonical-overrides.md`.
 
@@ -23,7 +23,7 @@ Highest-leverage constraint left is **cutover**: Site Address → `https://londo
 
 ### Top 5 critical issues
 
-1. Lab LCP still Poor on `/` (**7.7 s**, overlay text) and `/classes/` (**4.4 s** this run). Inter gone; ClasbPro CSS deferred; fail check “under 4 s” still fails.
+1. Lab LCP still Poor on `/` (**7.8 s**, overlay text) and `/classes/` (**6.6 s** this run). Render-blocking CSS is gone; fail check “under 4 s” still fails.
 2. Thin tutorial spokes (unique body one sentence) at new `/tutorials/{slug}/` URLs — 301s from `/tutorial/` are in place; Google still has to recrawl.
 3. Live GSC sitemap hygiene: `dev.`, `http://`, and `http://www.` indexes still submitted.
 4. At cutover, set Site Address so canonicals become `londonparkour.com`.
@@ -34,7 +34,7 @@ Highest-leverage constraint left is **cutover**: Site Address → `https://londo
 1. In live GSC, delete `dev.`, `http://`, and `http://www.` sitemaps; submit one HTTPS index after cutover.
 2. Replace “JOHN DOE”; sync review count 42 vs 43; fix Vauxhall `SW8 1SR` vs `SW8 1SS`.
 3. Add `/tutorials/` hub to the sitemap.
-4. Finish lab LCP: inline `faces.css`; Scope Trial woff2 / delay H1 decode (`/` still 7.7 s). ClasbPro CSS already waits for the drawer.
+4. Finish lab LCP: Scope Trial woff2 / keep that TTF off the homepage critical CSS (`/` still 7.8 s). ClasbPro CSS already waits for the drawer.
 5. Set Site Address / `WP_HOME` to `https://londonparkour.com` at DNS cutover.
 
 ---
@@ -43,7 +43,7 @@ Highest-leverage constraint left is **cutover**: Site Address → `https://londo
 
 ### Perceive
 
-- Staging: 752 sitemap URLs, 609 tutorials, Cloudflare AI-crawler blocks, no HSTS/CSP on HTML, lab LCP 7.7 s `/` / 4.4 s `/classes/` (FCP `/` 2.6 s this run).
+- Staging: 752 sitemap URLs, 609 tutorials, Cloudflare AI-crawler blocks, no HSTS/CSP on HTML, lab LCP 7.8 s `/` / 6.6 s `/classes/` (FCP `/` 2.3 s this run).
 - Live GSC (`sc-domain:londonparkour.com`, 90d UK): 545 clicks, 19,352 impressions, 2.8% CTR, pos 8.3. Sitemap: **988 submitted / 19 indexed (2%)**. Tutorial sitemaps: ~841 submitted / **0 indexed**.
 - Live GA4 90d: 1,101 organic search sessions; 227 AI Assistant sessions. No `purchase` events (V7 does not fire V8 ecommerce).
 - Demand is brand + local class intent (`parkour london`, `parkour classes london`, kids/seniors/near me). The tutorial library is not the traffic engine (5 UK clicks across top tutorial URLs).
@@ -93,7 +93,7 @@ See `ACTION-PLAN.md`. Leading indicators after launch: GSC indexed count on the 
 | Sev | Finding |
 |---|---|
 | Info | `/docs/` resolved: 200 `index, follow`; no-slash 301s to HTTPS |
-| High | Lab LCP 7.7 s `/`, 4.4 s `/classes/` this run (`performance.md`) |
+| High | Lab LCP 7.8 s `/`, 6.6 s `/classes/` this run (`performance.md`) |
 | Info | `/sample-page/` resolved: 404 `noindex` |
 | Info | `/clasbpro-theme-preview/` resolved: noindex + not in sitemap |
 | Info | `/legal/` already **301**s via `lp_docs_redirects()` to `/docs/terms-of-service/` |
@@ -133,7 +133,7 @@ Parse-valid `@graph` on every sampled page. Types are useful (`SportsClub`, `Cou
 
 ## Performance — 40 (lab)
 
-Staging mobile Lighthouse 13.4.1, Slow 4G, HTTP auth, **14:10 BST**: homepage LCP **7.7 s** (was 7.2; first sample 8.5 discarded), FCP **2.6 s**. `/classes/` LCP **4.4 s** (was 5.0; TTFB 1.2 s outlier). CLS 0.002 / 0.001 (good), TBT 180 / 40 ms (good). Helvetica/Arial for body; ClasbPro CSS off first paint. Remaining: `main.css` + `faces.css` + Scope Trial TTF. No field INP/CrUX (no API key). Live V7 TTFB ~0.95 s.
+Staging mobile Lighthouse 13.4.1, Slow 4G, HTTP auth, **14:33 BST**: homepage LCP **7.8 s** (was 7.7; other sample 6.9), FCP **2.3 s**. `/classes/` LCP **6.6 s** (was 4.4 with 1.2 s TTFB; first sample 8.8 discarded). CLS 0.003 / 0 (good), TBT 220 / 90 ms (good). Render-blocking CSS gone; Scope Trial TTF still on the critical path. No field INP/CrUX (no API key). Live V7 TTFB ~0.95 s.
 
 ---
 
