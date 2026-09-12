@@ -14,12 +14,12 @@ No Microdata (`itemscope` = 0 on sampled pages). No RDFa. Format is JSON-LD `@gr
 
 ## Schema score: 44/100
 
-Valid parse on every sampled page (no trailing-comma / `@context` failures). Types used are mostly **active**. The graph’s *content* fails PostalAddress, Organization.logo, language, review, and production-host rules.
+Valid parse on every sampled page (no trailing-comma / `@context` failures). Types used are mostly **active**. The graph’s *content* fails PostalAddress, Organization.logo, review, and production-host rules. Language tags were `en-US` in the 11 Sep capture; **fixed in source** (local 2026-09-12) to `en-GB`.
 
 | Page | Types (excerpt) | Status | Issues |
 |---|---|---|---|
-| `/` | SportsClub+LocalBusiness, WebSite, WebPage, Offer ×3, Place ×3 | ⚠️ | Staging `@id`. `logo` = photo `alfredo-strides.jpg`. `streetAddress` polluted. `inLanguage` `en-US`. `aggregateRating` 4.9/42. No `telephone`. SearchAction `?s={search_term_string}`. |
-| Adult class | + Course, SportsEvent ×8, Offer, VideoObject, FAQPage, BreadcrumbList | ⚠️ | Same org pollution. Course `inLanguage` `en-GB` vs WebPage `en-US`. No `hasCourseInstance`. Event capacity 20 / remaining 19 vs on-page “capped at twelve”. FAQPage **Info**. VideoObject missing `duration`. |
+| `/` | SportsClub+LocalBusiness, WebSite, WebPage, Offer ×3, Place ×3 | ⚠️ | Staging `@id`. `logo` = photo `alfredo-strides.jpg`. `streetAddress` polluted. `inLanguage` was `en-US` (11 Sep); **fixed in source** to `en-GB`. `aggregateRating` 4.9/42. No `telephone`. SearchAction `?s={search_term_string}`. |
+| Adult class | + Course, SportsEvent ×8, Offer, VideoObject, FAQPage, BreadcrumbList | ⚠️ | Same org pollution. Course was `en-GB` vs WebPage `en-US` (11 Sep); **fixed in source** — both `en-GB`. No `hasCourseInstance`. Event capacity 20 / remaining 19 vs on-page “capped at twelve”. FAQPage **Info**. VideoObject missing `duration`. |
 | Kids class | same pattern as adult | ⚠️ | `logo` swapped to `zak-traverse.jpg`. Events inherit Vauxhall polluted `streetAddress`. FAQPage **Info**. |
 | Location Vauxhall | SportsClub+LocalBusiness (sitewide), WebPage, BreadcrumbList | ❌ | **Not** a per-location LocalBusiness/`SportsActivityLocation`. `logo` = `location_Vauxhall-Large.jpeg` (photo) on the **organization** node. Still lists all three Places. |
 | Tutorial deadhang | SportsClub+LocalBusiness, WebPage, BreadcrumbList, VideoObject | ❌ | Vault/deadhang URL asserts the sports club. `logo` = tutorial still `Tutorial-swinging-lache-1-deadhang_16_9.jpg`. VideoObject otherwise usable (`duration` PT179S, YouTube embed). No HowTo (correct). |
@@ -81,9 +81,9 @@ Google Organization `logo` is a mark, not a hero photograph.
 
 The generator copies the page image onto `SportsClub.logo`. A deadhang still image must not be the business logo. `image` may be the page photo; `logo` must be the identity mark and stable across URLs.
 
-### 3. `inLanguage: en-US` — Medium
+### 3. `inLanguage: en-US` — **fixed in source** (local 2026-09-12)
 
-UK operator, `Europe/London` in `/wp-json/`. WebSite/WebPage `inLanguage` is `en-US`; `og:locale` `en_US`; `<html lang="en-US">`. Adult `Course` is `en-GB` — the only GB language tag found — so the graph disagrees with itself. Use `en-GB` (or `en`) consistently. Matches `SHARED.md`.
+UK operator, `Europe/London` in `/wp-json/`. The 11 Sep capture had WebSite/WebPage `inLanguage` `en-US`, `og:locale` `en_US`, `<html lang="en-US">`, while Adult `Course` was already `en-GB`. Theme `lp_british_locale` now maps empty/`en_US` → `en_GB`. Local `/`: `lang="en-GB"`, `og:locale` `en_GB`, JSON-LD `inLanguage` `en-GB`. Staging HTML not re-fetched.
 
 ### 4. `aggregateRating` 4.9 / 42 — High (accuracy)
 
@@ -155,7 +155,7 @@ Vauxhall URL reuses `https://staging.londonparkour.com/#organization` and lists 
 1. **Confirm Site Address at cutover** so `home_url()` emits `https://londonparkour.com/…` on every `@id`, `url`, SearchAction template, and Place `@id`. Keep the same path suffixes (`#organization`, `/classes/locations/vauxhall/#place`). Do not hard-code the host in the theme.
 2. **Fix `streetAddress`:** real thoroughfare or omit; move hours to `openingHoursSpecification` on each Place. Strip the Vauxhall trailing `"`.
 3. **Stable logo file** (the mark) on Organization. Page photos stay on `image` / `primaryImageOfPage` / VideoObject `thumbnailUrl` only.
-4. **`inLanguage` / `lang` / `og:locale` → `en-GB`.** Align Course and WebPage.
+4. **`inLanguage` / `lang` / `og:locale` → `en-GB`.** **Done in source** (local 2026-09-12). Confirm on staging after theme deploy.
 5. **Source or remove `aggregateRating`.** One count, only on the org (and maybe homepage), not on every tutorial.
 6. **Coach URL:** `ProfilePage` + `Person` with `url` `https://londonparkour.com/coaches/andy-pearson/`, `jobTitle`, `worksFor`. Point BlogPosting `author` at that `@id`.
 7. **Location URL:** `SportsActivityLocation` or `SportsClub` with its own `@id`, `branchOf` the org, `geo` already present.

@@ -183,6 +183,7 @@ $lp_coords_class = $lp_under_nav
 
 $lp_headline_html = nl2br( esc_html( $lp_headline ), false );
 $lp_headline_decode = esc_attr( str_replace( array( "\r\n", "\n", "\r" ), '\\n', $lp_headline ) );
+$lp_headline_label  = trim( preg_replace( '/\s+/u', ' ', $lp_headline ) );
 
 $lp_initial_coords = $lp_coordinates;
 $lp_initial_link   = $lp_coordinates_link;
@@ -317,7 +318,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 		<div class="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10 xl:gap-x-[72px] flex-1">
 			<div class="flex flex-col gap-6 lg:gap-8 xl:max-w-[664px]" data-slot="claim">
 				<p class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></p>
-				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.92] text-neutral-content m-0" data-motion-decode="<?php echo $lp_headline_decode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped via esc_attr above. ?>" data-motion-decode-charset="board"><?php echo $lp_headline_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped then nl2br. ?></h1>
+				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.92] text-neutral-content m-0" aria-label="<?php echo esc_attr( $lp_headline_label ); ?>" data-motion-decode="<?php echo $lp_headline_decode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped via esc_attr above. ?>" data-motion-decode-charset="board"><?php echo $lp_headline_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped then nl2br. ?></h1>
 				<p class="font-body text-step--1 text-neutral-content/70 max-w-[470px] m-0"><?php echo esc_html( $lp_lead ); ?></p>
 				<div class="flex items-center gap-[28px] flex-wrap">
 					<?php

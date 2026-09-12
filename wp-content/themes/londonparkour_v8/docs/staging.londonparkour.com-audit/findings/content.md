@@ -25,7 +25,7 @@ Weights follow the skill (Trust 30 / Expertise 25 / Authoritativeness 25 / Exper
 
 ### AI Citation Readiness: 44/100
 
-Quotable homepage definition is ~40 words and defines *practical movement*, not “parkour classes in London” (`geo.md`). Tutorial ledes are one truncated sentence. Contact `<details>` + FAQPage Q&A is the strongest extractable block. `en-US` on a UK operator. Staging auth blocks AI crawlers until launch; robots already `Disallow` GPTBot/ClaudeBot/Google-Extended (`geo.md`).
+Quotable homepage definition is ~40 words and defines *practical movement*, not “parkour classes in London” (`geo.md`). Tutorial ledes are one truncated sentence. Contact `<details>` + FAQPage Q&A is the strongest extractable block. Language was `en-US` on a UK operator (11 Sep); **fixed in source** (local 2026-09-12) to `en-GB`. Staging auth blocks AI crawlers until launch; robots already `Disallow` GPTBot/ClaudeBot/Google-Extended (`geo.md`).
 
 ---
 

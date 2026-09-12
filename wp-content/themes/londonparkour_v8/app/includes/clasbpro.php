@@ -447,6 +447,55 @@ function lp_pack_price_amount( int $pack_id ): float {
 }
 
 /**
+ * Coupon pack expiry in months from purchase. 0 means no expiry.
+ *
+ * @param int $pack_id clasbpro_pack post ID.
+ */
+function lp_pack_expiry_months( int $pack_id ): int {
+	if ( $pack_id < 1 ) {
+		return 0;
+	}
+
+	$months = 0;
+	if ( function_exists( 'get_field' ) ) {
+		$months = (int) get_field( 'pack_expiry_months', $pack_id );
+	}
+	if ( $months <= 0 ) {
+		$months = (int) get_post_meta( $pack_id, 'pack_expiry_months', true );
+	}
+
+	return max( 0, $months );
+}
+
+/**
+ * Display label for a pack expiry window.
+ *
+ * @param int    $months  Months from purchase; 0 = no expiry.
+ * @param string $variant `table` (3 months), `board` (3 MONTHS), `full` (3 months from purchase).
+ */
+function lp_pack_expiry_label( int $months, string $variant = 'table' ): string {
+	if ( $months <= 0 ) {
+		return 'board' === $variant ? 'NO EXPIRY' : __( 'No expiry', 'londonparkour_v8' );
+	}
+
+	if ( 'full' === $variant ) {
+		return sprintf(
+			/* translators: %d: months the coupon is valid after purchase */
+			_n( '%d month from purchase', '%d months from purchase', $months, 'londonparkour_v8' ),
+			$months
+		);
+	}
+
+	$label = sprintf(
+		/* translators: %d: months of validity */
+		_n( '%d month', '%d months', $months, 'londonparkour_v8' ),
+		$months
+	);
+
+	return 'board' === $variant ? strtoupper( $label ) : $label;
+}
+
+/**
  * Appointment (1:1) class singles are a booking product, not a ClassDetail
  * page. Send visitors to the Private 1:1 landing.
  */
@@ -2140,27 +2189,9 @@ function lp_clasbpro_status_context( $view ): array {
 			_n( '%d class', '%d classes', max( 0, $uses ), 'londonparkour_v8' ),
 			max( 0, $uses )
 		);
-		$months         = 0;
-		if ( $pack_id > 0 && function_exists( 'get_field' ) ) {
-			$months = (int) get_field( 'pack_expiry_months', $pack_id );
-		}
-		if ( $months <= 0 && $pack_id > 0 ) {
-			$months = (int) get_post_meta( $pack_id, 'pack_expiry_months', true );
-		}
-		$validity_full  = $months > 0
-			? sprintf(
-				/* translators: %d: months the coupon is valid after purchase */
-				_n( '%d month from purchase', '%d months from purchase', $months, 'londonparkour_v8' ),
-				$months
-			)
-			: __( 'No expiry', 'londonparkour_v8' );
-		$validity_short = $months > 0
-			? sprintf(
-				/* translators: %d: months of validity */
-				_n( '%d month', '%d months', $months, 'londonparkour_v8' ),
-				$months
-			)
-			: __( 'No expiry', 'londonparkour_v8' );
+		$months         = $pack_id > 0 ? lp_pack_expiry_months( $pack_id ) : 0;
+		$validity_full  = lp_pack_expiry_label( $months, 'full' );
+		$validity_short = lp_pack_expiry_label( $months, 'table' );
 		$code           = (string) ( $purchase['code'] ?? '' );
 		$purchase_id    = (int) ( $purchase['purchase_id'] ?? 0 );
 		$ref            = $purchase_id ? ( '#' . $purchase_id ) : $ref;
@@ -2194,7 +2225,13 @@ function lp_clasbpro_status_context( $view ): array {
 			array(
 				'index'    => '01',
 				'question' => 'VALIDITY',
-				'answer'   => 'Each coupon pack has a validity window from the date of purchase: single coupons are valid for 3 months, 5-packs for 6 months, and 10-packs for 12 months. Unused coupons expire at the end of this period.',
+				'answer'   => $months > 0
+					? sprintf(
+						/* translators: %s: validity window, e.g. "3 months from purchase" */
+						__( 'This pack is valid for %s. Unused coupons expire at the end of this period.', 'londonparkour_v8' ),
+						$validity_full
+					)
+					: __( 'This pack has no expiry. Unused classes remain available until they are booked.', 'londonparkour_v8' ),
 			),
 			array(
 				'index'    => '02',

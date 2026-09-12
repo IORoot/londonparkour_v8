@@ -123,7 +123,7 @@ Parse-valid `@graph` on every sampled page. Types are useful (`SportsClub`, `Cou
 
 - `streetAddress` is timetable text (Vauxhall trailing `"`).
 - `logo` is whatever photo is on the page.
-- `inLanguage` `en-US` vs Course `en-GB`.
+- `inLanguage` was `en-US` vs Course `en-GB` (11 Sep capture). **Fixed in source** (local 2026-09-12): `lang` / `og:locale` / WebPage `inLanguage` are `en-GB`. Staging not re-fetched.
 - `aggregateRating` 4.9/42 on **every** URL including tutorials.
 - Coach URL has no `Person`/`ProfilePage`.
 - Location URL is not its own LocalBusiness.

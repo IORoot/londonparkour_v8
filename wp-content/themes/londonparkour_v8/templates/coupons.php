@@ -13,6 +13,7 @@
  * Pack IDs are set in the ACF group `group_lp_coupons` (drop_in_pack,
  * five_pack, ten_pack) on the Coupons page in the WordPress admin. When a
  * pack field is empty the button falls back to an anchor href of `#`.
+ * Validity windows come from each pack's `pack_expiry_months` field (0 = none).
  *
  * Section images (drop_in_image, five_pack_image, ten_pack_image) are ACF
  * image fields (return_format: id). Unset images are skipped gracefully.
@@ -45,6 +46,13 @@ $lp_ten_pack_id  = $lp_page_id && function_exists( 'get_field' ) ? absint( get_f
 $lp_drop_in_img  = $lp_page_id && function_exists( 'get_field' ) ? absint( get_field( 'drop_in_image', $lp_page_id ) ) : 0;
 $lp_five_img     = $lp_page_id && function_exists( 'get_field' ) ? absint( get_field( 'five_pack_image', $lp_page_id ) ) : 0;
 $lp_ten_img      = $lp_page_id && function_exists( 'get_field' ) ? absint( get_field( 'ten_pack_image', $lp_page_id ) ) : 0;
+
+$lp_pack_expiry = static function ( int $pack_id, string $variant ): string {
+	if ( $pack_id < 1 || ! function_exists( 'lp_pack_expiry_label' ) ) {
+		return '—';
+	}
+	return lp_pack_expiry_label( lp_pack_expiry_months( $pack_id ), $variant );
+};
 
 /* ── Adjacent page URLs ──────────────────────────────────────────────*/
 $lp_classes  = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' );
@@ -189,6 +197,7 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					'ppc'       => '£15.00',
 					'sessions'  => 'One',
 					'saving'    => '—',
+					'validity'  => $lp_pack_expiry( $lp_drop_in_id, 'table' ),
 					'cta'       => 'BUY 1 COUPON',
 					'highlight' => false,
 					'pack_id'   => $lp_drop_in_id,
@@ -200,10 +209,11 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					'badge'     => 'MOST POPULAR',
 					'price'     => '£65',
 					'unit'      => 'for 5 classes',
-					'desc'      => 'Five classes, bought once. Use them when you want — no expiry.',
+					'desc'      => 'Five classes, bought once. Use them when you want.',
 					'ppc'       => '£13.00',
 					'sessions'  => '5 classes',
 					'saving'    => '13% vs drop-in',
+					'validity'  => $lp_pack_expiry( $lp_five_pack_id, 'table' ),
 					'cta'       => 'BUY 5 CLASSES',
 					'highlight' => true,
 					'pack_id'   => $lp_five_pack_id,
@@ -219,6 +229,7 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					'ppc'       => '£12.00',
 					'sessions'  => '10 classes',
 					'saving'    => '20% vs drop-in',
+					'validity'  => $lp_pack_expiry( $lp_ten_pack_id, 'table' ),
 					'cta'       => 'BUY 10 CLASSES',
 					'highlight' => false,
 					'pack_id'   => $lp_ten_pack_id,
@@ -227,7 +238,7 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 			);
 			$lp_tier_count  = count( $lp_table_tiers );
 			$lp_board_style = sprintf(
-				'--pricing-tiers: %d; grid-template-rows: 3px minmax(193px, auto) 38px 38px 38px 80px',
+				'--pricing-tiers: %d; grid-template-rows: 3px minmax(193px, auto) 38px 38px 38px 38px 80px',
 				$lp_tier_count
 			);
 			?>
@@ -251,6 +262,9 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					</div>
 					<div class="pr-7 border-t border-base-300/60 h-[38px] flex items-center">
 						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">SAVING</span>
+					</div>
+					<div class="pr-7 border-t border-base-300/60 h-[38px] flex items-center">
+						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">VALIDITY</span>
 					</div>
 					<div class="pr-7 border-t border-base-300/60 h-[80px] flex items-center">
 						<span class="font-label text-[10px] font-normal tracking-[0.9px] leading-[1.6] uppercase text-base-content/65">PRICES HELD UNTIL 1 APRIL 2027</span>
@@ -289,6 +303,9 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					</div>
 					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
 						<span class="<?php echo esc_attr( '—' !== $lp_tier['saving'] ? 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content' : 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content/65' ); ?>"><?php echo esc_html( (string) $lp_tier['saving'] ); ?></span>
+					</div>
+					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
+						<span class="<?php echo esc_attr( $lp_val ); ?>"><?php echo esc_html( (string) $lp_tier['validity'] ); ?></span>
 					</div>
 					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[80px] min-w-0">
 						<?php $lp_buy_btn( (int) $lp_tier['pack_id'], (string) $lp_tier['cta'], (string) $lp_tier['variant'] ); ?>
@@ -375,7 +392,7 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					</div>
 				</div>
 				<div class="flex flex-col gap-6 lg:items-end lg:max-w-[420px]">
-					<p class="font-label text-[13px] font-normal leading-[1.65] tracking-[0.1px] text-neutral-content m-0 lg:text-right">Five classes, bought once. Use them when you want — any site, any coach. No membership, no expiry pressure.</p>
+					<p class="font-label text-[13px] font-normal leading-[1.65] tracking-[0.1px] text-neutral-content m-0 lg:text-right">Five classes, bought once. Use them when you want — any site, any coach. No membership.</p>
 					<?php $lp_buy_btn( $lp_five_pack_id, 'BUY 5 CLASSES', 'primary' ); ?>
 				</div>
 			</div>
@@ -450,9 +467,21 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 		<div class="flex flex-col lg:flex-row border-t border-base-300">
 			<?php
 			$lp_validity = array(
-				array( 'pack' => '1 COUPON', 'period' => '3 MONTHS' ),
-				array( 'pack' => '5-PACK',   'period' => '6 MONTHS' ),
-				array( 'pack' => '10-PACK',  'period' => '12 MONTHS' ),
+				array(
+					'pack'   => '1 COUPON',
+					'period' => $lp_pack_expiry( $lp_drop_in_id, 'board' ),
+					'months' => $lp_drop_in_id > 0 ? lp_pack_expiry_months( $lp_drop_in_id ) : 0,
+				),
+				array(
+					'pack'   => '5-PACK',
+					'period' => $lp_pack_expiry( $lp_five_pack_id, 'board' ),
+					'months' => $lp_five_pack_id > 0 ? lp_pack_expiry_months( $lp_five_pack_id ) : 0,
+				),
+				array(
+					'pack'   => '10-PACK',
+					'period' => $lp_pack_expiry( $lp_ten_pack_id, 'board' ),
+					'months' => $lp_ten_pack_id > 0 ? lp_pack_expiry_months( $lp_ten_pack_id ) : 0,
+				),
 			);
 			foreach ( $lp_validity as $lp_vi => $lp_v ) :
 				$lp_border = $lp_vi < 2 ? 'border-b lg:border-b-0 lg:border-r border-base-300' : '';
@@ -463,7 +492,9 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					<?php lp_icon( 'icon-arrow-right', 'w-3 h-3 text-base-content/40' ); ?>
 				</div>
 				<span class="font-heading text-[24px] font-semibold tracking-[-0.8px] text-base-content"><?php echo esc_html( (string) $lp_v['period'] ); ?></span>
-				<span class="font-label text-[10px] font-normal tracking-[0.3px] text-base-content/65">from date of purchase</span>
+				<?php if ( (int) $lp_v['months'] > 0 ) : ?>
+					<span class="font-label text-[10px] font-normal tracking-[0.3px] text-base-content/65">from date of purchase</span>
+				<?php endif; ?>
 			</div>
 			<?php endforeach; ?>
 		</div>
@@ -474,7 +505,12 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 			$lp_detail_rows = array(
 				array(
 					'label' => 'VALIDITY',
-					'text'  => 'Each coupon pack has a validity window from the date of purchase: single coupons are valid for 3 months, 5-packs for 6 months, and 10-packs for 12 months. Unused coupons expire at the end of this period.',
+					'text'  => sprintf(
+						'Each coupon pack has a validity window from the date of purchase: single coupons are valid for %1$s, 5-packs for %2$s, and 10-packs for %3$s. Unused coupons expire at the end of this period.',
+						$lp_pack_expiry( $lp_drop_in_id, 'table' ),
+						$lp_pack_expiry( $lp_five_pack_id, 'table' ),
+						$lp_pack_expiry( $lp_ten_pack_id, 'table' )
+					),
 				),
 				array(
 					'label' => 'YOUR CODE',

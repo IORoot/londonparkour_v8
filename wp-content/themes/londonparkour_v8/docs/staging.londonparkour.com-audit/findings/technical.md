@@ -51,7 +51,7 @@ Homepage (matches `SHARED.md`):
 - Title: `London Parkour | Practical Movement Training & Classes`
 - Meta robots: `max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1`
 - Canonical / og:url: `https://staging.londonparkour.com/`
-- `<html lang="en-US">`, `og:locale` `en_US`
+- `<html lang="en-US">`, `og:locale` `en_US` in the 11 Sep capture. **Fixed in source** (local 2026-09-12): `lang="en-GB"`, `og:locale` `en_GB`. Staging not re-fetched.
 
 **Sampled 200 pages** send `index, follow` and a **self-canonical on the current host** (`home_url()`). That is correct for staging; it is not a hard-coded `staging.londonparkour.com` string. `/legal/` is **not** a 200 — it 301s (PHP) to `/docs/terms-of-service/`. See `canonical-overrides.md`.
 

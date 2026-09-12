@@ -11,6 +11,12 @@ const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
+const nameMapContainer = (map, label) => {
+  const el = map.getContainer();
+  el.setAttribute('role', 'region');
+  el.setAttribute('aria-label', label);
+};
+
 const enableModifierWheelZoom = (map) => {
   const el = map.getContainer();
   const onWheel = (event) => {
@@ -52,6 +58,7 @@ const initOne = (root) => {
       attributionControl: false,
       zoomControl: true,
     });
+    nameMapContainer(map, `Map of ${name}`);
     removeWheel = enableModifierWheelZoom(map);
 
     L.tileLayer(TILE_URL, {

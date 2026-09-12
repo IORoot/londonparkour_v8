@@ -6,6 +6,9 @@
  *
  * Final string comes from `data-motion-decode` when set, otherwise the element's
  * current textContent. Newlines become `<br>` and are never scrambled.
+ *
+ * Per-glyph spans are `aria-hidden`; the host `aria-label` is the final sentence
+ * so assistive tech does not spell the scramble or the locked letters.
  */
 import { animate } from 'motion';
 import { num } from '../utils.js';
@@ -27,9 +30,14 @@ function pick(pool) {
   return pool[Math.floor(Math.random() * pool.length)] || ' ';
 }
 
+function accessibleName(text) {
+  return text.replace(/\s+/g, ' ').trim();
+}
+
 function appendGlyph(parent, ch, spans, { nbspSpaces }) {
   const span = document.createElement('span');
   span.dataset.decodeChar = ch;
+  span.setAttribute('aria-hidden', 'true');
   const wrapSpace = ch === ' ' && !nbspSpaces;
   span.textContent = wrapSpace ? ' ' : ch === ' ' ? '\u00a0' : ch;
   if (wrapSpace) {
@@ -49,14 +57,20 @@ function appendGlyph(parent, ch, spans, { nbspSpaces }) {
  *
  * `wrap: true` groups words into nowrap spans so wrapping happens at spaces —
  * quotes at 32px must wrap; hero titles must not.
+ *
+ * The host keeps the final sentence as `aria-label`; glyph spans are hidden
+ * from the accessibility tree so AT does not spell the headline or the scramble.
  */
 export function buildDecodeNodes(el, finalText, { wrap = false } = {}) {
   el.textContent = '';
+  const label = accessibleName(finalText);
+  if (label) el.setAttribute('aria-label', label);
   const spans = [];
   const lines = finalText.split('\n');
 
   lines.forEach((line) => {
     const lineEl = document.createElement('span');
+    lineEl.setAttribute('aria-hidden', 'true');
     lineEl.style.display = 'block';
     if (!wrap) lineEl.style.whiteSpace = 'nowrap';
     // Avoid a totally empty block collapsing oddly when a line is blank.
@@ -77,6 +91,7 @@ export function buildDecodeNodes(el, finalText, { wrap = false } = {}) {
           return;
         }
         const wordEl = document.createElement('span');
+        wordEl.setAttribute('aria-hidden', 'true');
         wordEl.style.whiteSpace = 'nowrap';
         wordEl.style.display = 'inline-block';
         for (const ch of token) appendGlyph(wordEl, ch, spans, { nbspSpaces: true });

@@ -97,7 +97,7 @@ Emitted as a sitewide `@graph` on every sampled URL, `@id` `https://staging.lond
 - `streetAddress` is not a street — it concatenates postcode, station, and hours, plus a stray `"` on Vauxhall.
 - Location pages do **not** get their own LocalBusiness `@id`; they reuse the org graph and list all three Places. No `branchOf`.
 - Tutorial/class pages still emit the full local graph (logo swapped to the page image). A vault tutorial should not claim to be the sports club’s logo.
-- `inLanguage` / `og:locale`: `en-US`.
+- `inLanguage` / `og:locale`: was `en-US` (11 Sep). **Fixed in source** (local 2026-09-12): `en-GB` / `en_GB`.
 
 Valid JSON-LD parse (no syntax error on homepage). Content of `streetAddress` will fail Google’s PostalAddress expectations even if the JSON is well-formed.
 

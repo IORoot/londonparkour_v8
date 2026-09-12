@@ -29,7 +29,7 @@ Hybrid **local service** (3 outdoor class sites in London) + **publisher** (609 
 - Canonical / og:url: `https://staging.londonparkour.com/` (follows `home_url()`; ACF `seo_canonical` not overriding — `findings/canonical-overrides.md`)
 - H1: "the world is your playground."
 - JSON-LD `@graph`: SportsClub+LocalBusiness, WebSite, WebPage
-- Schema `inLanguage`: `en-US` (UK business)
+- Schema `inLanguage`: was `en-US` in the 11 Sep capture (UK business). **Fixed in source** (local 2026-09-12): `en-GB` on `lang` / `og:locale` / `inLanguage`.
 - `streetAddress` fields mixed with schedule text
 - `logo` is a photo (`alfredo-strides.jpg`)
 - robots.txt: Cloudflare AI crawler blocks (GPTBot, Google-Extended, ClaudeBot, CCBot…) + WP disallow `/wp-admin/` + Sitemap `wp-sitemap.xml`

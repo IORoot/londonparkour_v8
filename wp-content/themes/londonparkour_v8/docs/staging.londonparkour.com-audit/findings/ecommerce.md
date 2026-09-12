@@ -61,7 +61,7 @@ Not `Product` + `Offer` (Merchant listings). Fine for a local service; will not 
 
 - `streetAddress` values mix postcode, station, and **timetable text**, e.g. `SW8 1SS · VAUXHALL TUBE STATION · SUNDAYS 09:00–12:15`. Invalid PostalAddress.
 - Org `logo` is a photo (`alfredo-strides.jpg` / class-specific stills), not a mark.
-- `inLanguage` on Course nodes is `en-GB` (good); SHARED homepage graph still had `en-US` in an earlier capture — class Course is GB.
+- `inLanguage` on Course nodes was already `en-GB`. Homepage WebPage/`lang` was `en-US` in the 11 Sep capture; **fixed in source** (local 2026-09-12) so WebPage, `lang`, and `og:locale` match Course (`en-GB`).
 
 ---
 

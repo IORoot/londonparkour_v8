@@ -182,7 +182,7 @@ get_header();
 				</div>
 
 				<div class="relative w-full min-h-[480px] lg:min-h-[640px] h-[min(75vh,800px)] overflow-hidden bg-neutral" data-component="site-network-map">
-					<div class="absolute inset-0 z-0" data-mount="leaflet"></div>
+					<div class="absolute inset-0 z-0" data-mount="leaflet" role="region" aria-label="<?php echo esc_attr__( 'Map of class locations', 'londonparkour_v8' ); ?>"></div>
 					<template data-site-pins>
 						<?php
 						foreach ( $lp_sites as $lp_place ) :

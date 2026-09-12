@@ -733,25 +733,16 @@ function lp_clasbpro_email_fill_coupon_tags( array $tags, array $context ): arra
 	$months = 0;
 	if ( $purchase_id > 0 ) {
 		$pack_id = (int) get_post_meta( $purchase_id, '_clasbpro_pack_id', true );
-		if ( $pack_id > 0 && function_exists( 'get_field' ) ) {
-			$months = (int) get_field( 'pack_expiry_months', $pack_id );
-		}
-		if ( $months <= 0 && $pack_id > 0 ) {
-			$months = (int) get_post_meta( $pack_id, 'pack_expiry_months', true );
+		if ( $pack_id > 0 && function_exists( 'lp_pack_expiry_months' ) ) {
+			$months = lp_pack_expiry_months( $pack_id );
 		}
 	} elseif ( $sample ) {
 		$months = 6;
 	}
 
-	if ( $months > 0 ) {
-		$tags['{pack_expiry_label}'] = sprintf(
-			/* translators: %d: months the coupon is valid after purchase */
-			_n( '%d month from purchase', '%d months from purchase', $months, 'londonparkour_v8' ),
-			$months
-		);
-	} else {
-		$tags['{pack_expiry_label}'] = __( 'No expiry', 'londonparkour_v8' );
-	}
+	$tags['{pack_expiry_label}'] = function_exists( 'lp_pack_expiry_label' )
+		? lp_pack_expiry_label( $months, 'full' )
+		: __( 'No expiry', 'londonparkour_v8' );
 
 	$tags['{receipt_link}'] = lp_clasbpro_email_receipt_link( $tags );
 

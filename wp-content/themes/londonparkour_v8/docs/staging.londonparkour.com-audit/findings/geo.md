@@ -13,7 +13,7 @@ Fetched 2026-09-11: `robots.txt`, `/llms.txt`, homepage, `/tutorials/`, `/tutori
 | Citability | 25 | 8 | Slogan H1; short lead paras; tutorial intros truncated; few 134–167 word self-contained answers. |
 | Structural readability | 20 | 12 | Clean H1→H2, lists, FAQ on contact. Few question headings. Docs gift-card H1 is the generic “Questions, answered.” |
 | Multi-modal | 15 | 11 | Real photos, YouTube, `VideoObject` on tutorials. Maps are JS Leaflet (OSM), not in the initial HTML. |
-| Authority / brand | 20 | 6 | `sameAs` IG/YT/FB. No Person/author. `inLanguage: en-US`. Logo in schema is a photo. Wikipedia/Reddit not evidenced on-page. |
+| Authority / brand | 20 | 6 | `sameAs` IG/YT/FB. No Person/author. `inLanguage` was `en-US` (11 Sep); **fixed in source** to `en-GB`. Logo in schema is a photo. Wikipedia/Reddit not evidenced on-page. |
 | Technical accessibility | 20 | 4 | **GPTBot + ClaudeBot + Google-Extended disallowed.** SSR is good. `/llms.txt` 404. |
 
 **Platform (relative, not live citation measurements — staging is auth-gated):**
@@ -110,7 +110,7 @@ Present on every sampled page: `SportsClub` + `LocalBusiness`, `WebSite`, `WebPa
 
 Gaps:
 
-- `inLanguage: en-US` on a UK business.
+- `inLanguage` was `en-US` on a UK business (11 Sep). **Fixed in source** (local 2026-09-12): `en-GB`.
 - `logo` / `image` often a class photo (`alfredo-strides.jpg`), not a mark.
 - `streetAddress` is schedule text (see `local.md`) — poison for extraction.
 - No `HowTo` / `Article` on tutorials.

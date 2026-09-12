@@ -235,7 +235,7 @@ while ( have_posts() ) :
 									data-lon="<?php echo esc_attr( $lp_lon ); ?>"
 									data-name="<?php echo esc_attr( $lp_title ? $lp_title : 'Meeting point' ); ?>"
 								>
-									<div class="absolute inset-0 z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:!z-0" data-mount="leaflet"></div>
+									<div class="absolute inset-0 z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:!z-0" data-mount="leaflet" role="region" aria-label="<?php echo esc_attr( sprintf( 'Map of %s', $lp_title ? $lp_title : 'Meeting point' ) ); ?>"></div>
 									<div class="absolute inset-x-0 top-0 z-[500] flex items-center justify-between h-10 px-4 bg-base-100 border-b border-base-300 pointer-events-none">
 										<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content">OPENSTREETMAP</span>
 										<?php if ( '' !== $lp_coords_label ) : ?>

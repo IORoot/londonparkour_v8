@@ -67,7 +67,7 @@ Delete `https://dev.londonparkour.com/sitemap_index.xml`, `http://londonparkour.
 - Real `streetAddress` or omit it; hours in `openingHoursSpecification`.
 - One Vauxhall postcode (1SR vs 1SS — ops must pick).
 - Stable logo file on Organization (not the page photo).
-- `en-GB` on `lang` / `inLanguage` / `og:locale`.
+- `en-GB` on `lang` / `inLanguage` / `og:locale` — **done in source** (local 2026-09-12). Confirm on staging after theme deploy.
 - One review count (42 vs 43), only on the org/homepage — not on tutorials.
 - `Person` + `ProfilePage` on `/coaches/andy-pearson/`.
 - Align Event capacity with on-page “capped at twelve”.

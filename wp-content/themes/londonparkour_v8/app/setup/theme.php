@@ -8,6 +8,26 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * British English for a UK site.
+ *
+ * WordPress installs as en_US, which is why html lang, og:locale and schema
+ * inLanguage were all American. Empty / en_US become en_GB so they agree with
+ * the Course nodes (already en-GB) and with live V7. A non-English WPLANG is
+ * left alone.
+ *
+ * @param string $locale Current locale.
+ * @return string
+ */
+function lp_british_locale( string $locale ): string {
+	if ( '' === $locale || 'en_US' === $locale ) {
+		return 'en_GB';
+	}
+
+	return $locale;
+}
+add_filter( 'locale', 'lp_british_locale' );
+
+/**
  * Theme setup.
  */
 function lp_setup(): void {
