@@ -68,18 +68,20 @@ if ( false !== stripos( $lp_success_message, 'working day' ) ) {
 
 $lp_field_defs = array(
 	array(
-		'key'         => 'name',
-		'label'       => 'NAME',
-		'type'        => 'text',
-		'placeholder' => 'Your full name',
-		'required'    => true,
+		'key'           => 'name',
+		'label'         => 'NAME',
+		'type'          => 'text',
+		'placeholder'   => 'Your full name',
+		'required'      => true,
+		'autocomplete'  => 'name',
 	),
 	array(
-		'key'         => 'email',
-		'label'       => 'EMAIL',
-		'type'        => 'email',
-		'placeholder' => 'you@email.com',
-		'required'    => true,
+		'key'           => 'email',
+		'label'         => 'EMAIL',
+		'type'          => 'email',
+		'placeholder'   => 'you@email.com',
+		'required'      => true,
+		'autocomplete'  => 'email',
 	),
 	array(
 		'key'         => 'subject',
@@ -117,8 +119,9 @@ $lp_spacing = lp_section_spacing( $args );
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" aria-label="<?php echo esc_attr__( 'Contact enquiry form', 'londonparkour_v8' ); ?>">
 					<?php wp_nonce_field( 'lp_contact', 'lp_contact_nonce' ); ?>
 					<input type="hidden" name="action" value="lp_contact" />
-					<label class="sr-only" for="lp-company"><?php esc_html_e( 'Company', 'londonparkour_v8' ); ?></label>
-					<input type="text" name="lp_company" id="lp-company" value="" tabindex="-1" autocomplete="off" class="sr-only" />
+					<div class="sr-only" aria-hidden="true">
+						<input type="text" name="lp_company" id="lp-company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" />
+					</div>
 
 					<div class="flex flex-col gap-10">
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-11">
@@ -127,13 +130,14 @@ $lp_spacing = lp_section_spacing( $args );
 								lp_part(
 									'forms/field',
 									array(
-										'variant'     => 'boxed',
-										'surface'     => 'board',
-										'label'       => $lp_def['label'],
-										'name'        => $lp_def['key'],
-										'type'        => $lp_def['type'],
-										'placeholder' => $lp_def['placeholder'],
-										'required'    => $lp_def['required'],
+										'variant'       => 'boxed',
+										'surface'       => 'board',
+										'label'         => $lp_def['label'],
+										'name'          => $lp_def['key'],
+										'type'          => $lp_def['type'],
+										'placeholder'   => $lp_def['placeholder'],
+										'required'      => $lp_def['required'],
+										'autocomplete'  => $lp_def['autocomplete'] ?? '',
 									)
 								);
 							}

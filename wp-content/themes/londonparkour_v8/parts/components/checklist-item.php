@@ -27,7 +27,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
-$lp_numeral_class = 'shrink-0 w-[44px] font-heading text-[24px] font-semibold leading-none tracking-[-0.8px] text-base-content/40';
+$lp_numeral_class = 'shrink-0 w-[44px] font-heading text-[24px] font-semibold leading-none tracking-[-0.8px] text-base-content/65';
 
 $lp_text  = (string) ( $args['text'] ?? 'Start with your feet hitting the wall first to control impact.' );
 $lp_index = (string) ( $args['index'] ?? '' );

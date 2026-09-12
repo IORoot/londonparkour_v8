@@ -486,6 +486,7 @@ while ( have_posts() ) :
 					'board_title' => $lp_listing_term instanceof WP_Term
 						? strtoupper( $lp_listing_term->name ) . ' — LESSON BOARD'
 						: ( $lp_series_term ? strtoupper( $lp_series_term->name ) . ' — LESSON BOARD' : 'LESSON BOARD' ),
+					'title_tag'   => 'h2',
 					'columns'     => array( 'RUNTIME', 'LESSON', 'MOVE', 'LEVEL', 'STATUS' ),
 					'rows'        => $lp_board_rows,
 					'foot_left'   => $lp_listing_term instanceof WP_Term

@@ -125,7 +125,7 @@ $lp_last    = count( $lp_visible ) - 1;
 						<footer class="flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65">
 							<span data-quote-name><?php echo esc_html( $lp_name ); ?></span>
 							<span class="w-px h-2.5 bg-base-300 shrink-0" aria-hidden="true"></span>
-							<span class="flex items-center gap-0.5" aria-label="5 out of 5 stars">
+							<span class="flex items-center gap-0.5" role="img" aria-label="5 out of 5 stars">
 								<?php
 								for ( $lp_star = 1; $lp_star <= 5; $lp_star++ ) {
 									lp_icon( 'icon-star', 'w-3 h-3 text-accent' );
@@ -154,7 +154,7 @@ $lp_last    = count( $lp_visible ) - 1;
 					<footer class="flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65">
 						<span data-quote-name></span>
 						<span class="w-px h-2.5 bg-base-300 shrink-0" aria-hidden="true"></span>
-						<span class="flex items-center gap-0.5" aria-label="5 out of 5 stars">
+						<span class="flex items-center gap-0.5" role="img" aria-label="5 out of 5 stars">
 							<?php
 							for ( $lp_star = 1; $lp_star <= 5; $lp_star++ ) {
 								lp_icon( 'icon-star', 'w-3 h-3 text-accent' );
