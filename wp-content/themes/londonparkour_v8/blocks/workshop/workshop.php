@@ -40,7 +40,7 @@ $description = (string) ( get_field( 'acf_logline', $lead_id ) ?? '' );
 // Session data: date, time, urgency.
 $sessions   = lp_class_upcoming_sessions( $lead_id, 1 );
 $session    = $sessions[0] ?? null;
-$date_label = $session ? (string) ( $session['date_label'] ?? '' ) : lp_class_workshop_date_label( $lead_id );
+$date_label = lp_class_workshop_date_label( $lead_id, $session ? (string) ( $session['date'] ?? '' ) : '' );
 $time_label = $session ? (string) ( $session['time'] ?? '' ) : '';
 $sold_out   = $session && ! empty( $session['sold_out'] );
 $remaining  = $session ? (int) ( $session['remaining'] ?? 0 ) : 0;

@@ -826,14 +826,20 @@ function lp_class_workshops_split(): array {
 }
 
 /**
- * Uppercase sitting date for overview rows, e.g. SAT 12 SEP.
+ * Uppercase sitting date for workshop chrome, e.g. SAT 12 SEP.
  *
- * @param int $class_id Post ID.
+ * Board `date_label` is day-only (SAT / TODAY) and must not be used here —
+ * a one-off workshop needs the calendar date or it reads as "this week".
+ *
+ * @param int    $class_id Post ID.
+ * @param string $date     Optional Y-m-d. Empty: class start_date.
  */
-function lp_class_workshop_date_label( int $class_id ): string {
-	$raw  = lp_clasbpro_raw( $class_id );
-	$date = $raw ? (string) ( $raw['start_date'] ?? '' ) : '';
-	$dt   = DateTimeImmutable::createFromFormat( 'Y-m-d', $date );
+function lp_class_workshop_date_label( int $class_id, string $date = '' ): string {
+	if ( '' === $date ) {
+		$raw  = lp_clasbpro_raw( $class_id );
+		$date = $raw ? (string) ( $raw['start_date'] ?? '' ) : '';
+	}
+	$dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $date );
 	return $dt ? strtoupper( $dt->format( 'D j M' ) ) : '';
 }
 
