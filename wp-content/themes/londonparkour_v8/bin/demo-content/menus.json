@@ -21,7 +21,8 @@
       "children": [
         { "label": "Blog", "url": "/blog" },
         { "label": "Class Maps", "url": "/classes-map" },
-        { "label": "Gift Cards", "url": "/gift-cards" }
+        { "label": "Gift Cards", "url": "/gift-cards" },
+        { "label": "Search", "url": "/search" }
       ]
     },
     {

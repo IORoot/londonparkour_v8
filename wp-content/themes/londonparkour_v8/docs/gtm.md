@@ -63,7 +63,7 @@ No PII (no email, no name).
 | Contact `?contact=sent` | `generate_lead` | — |
 | Dispatch `?dispatch=sent` | `newsletter_subscribe` | `method`: `dispatch` |
 | Booking confirmed + Mailchimp opt-in | `newsletter_subscribe` | `method`: `booking_drawer` |
-| Search results (`/?s=`) | `view_search_results` | `search_term`, `result_count`, `search_filter` (`all` or post type) |
+| Search results (`/search/?s=`) | `view_search_results` | `search_term`, `result_count`, `search_filter` (`all` or post type) |
 | Tutorial video actually plays | `video_start` | `video_title`, `video_provider`: `youtube`, `series_name` |
 | Tutorial watch 25 / 50 / 75% | `video_progress` | `video_percent`, plus the start params |
 | PLAY SERIES / lesson card / sibling row | `select_content` | `content_type`, `content_id`, `content_name`, `series_name` |

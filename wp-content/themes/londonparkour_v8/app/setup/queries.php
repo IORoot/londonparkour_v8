@@ -354,8 +354,143 @@ function lp_filter_search( WP_Query $lp_query ): void {
 
 	$lp_query->set( 'posts_per_page', 8 );
 	$lp_query->set( 'ignore_sticky_posts', true );
+
+	/*
+	 * Empty `s` (the /search/ landing) would otherwise list every public post
+	 * of the four kinds. Force zero hits so the page is a search form, not a
+	 * dump of the site.
+	 */
+	if ( '' === trim( (string) $lp_query->get( 's' ) ) ) {
+		$lp_query->set( 'post__in', array( 0 ) );
+	}
 }
 add_action( 'pre_get_posts', 'lp_filter_search' );
+
+/**
+ * Public search URL at `/search/`. Empty query is the landing page.
+ *
+ * @param string               $query      Search term.
+ * @param array<string, mixed> $extra_args Extra query args (`post_type`, etc).
+ * @return string
+ */
+function lp_search_url( string $query = '', array $extra_args = array() ): string {
+	$url  = home_url( '/search/' );
+	$args = $extra_args;
+
+	if ( '' !== $query ) {
+		$args['s'] = $query;
+	}
+
+	return $args ? add_query_arg( $args, $url ) : $url;
+}
+
+/**
+ * Pretty search permalinks: `/search/` and `/search/page/2/`.
+ *
+ * The term stays in `?s=` so punctuation does not have to live in the path.
+ * `top` so a Page with slug `search` cannot steal the URL.
+ */
+function lp_search_rewrite(): void {
+	add_rewrite_rule( '^search/?$', 'index.php?s=', 'top' );
+	add_rewrite_rule( '^search/page/([0-9]{1,})/?$', 'index.php?s=&paged=$matches[1]', 'top' );
+}
+add_action( 'init', 'lp_search_rewrite', 10 );
+
+/**
+ * Flush rewrites once after the /search/ rules are registered.
+ */
+function lp_search_maybe_flush(): void {
+	$flag = 'lp_search_pretty_rewrite_v1';
+	if ( get_option( $flag ) ) {
+		return;
+	}
+	flush_rewrite_rules( false );
+	update_option( $flag, 1, true );
+}
+add_action( 'init', 'lp_search_maybe_flush', 99 );
+
+/**
+ * Whether this request is already the pretty `/search/` path.
+ */
+function lp_search_request_is_pretty(): bool {
+	$path      = (string) wp_parse_url( (string) ( $_SERVER['REQUEST_URI'] ?? '' ), PHP_URL_PATH );
+	$home_path = (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+
+	if ( $home_path && '/' !== $home_path && str_starts_with( $path, $home_path ) ) {
+		$path = substr( $path, strlen( untrailingslashit( $home_path ) ) ) ?: '/';
+	}
+
+	$path = '/' . trim( $path, '/' );
+
+	return (bool) preg_match( '#^/search(?:/page/[0-9]+)?$#', $path );
+}
+
+/**
+ * `get_search_link()` → `/search/?s=term` (or `/search/` when empty).
+ *
+ * @param string $link   Default search URL.
+ * @param string $search Search term.
+ * @return string
+ */
+function lp_filter_search_link( string $link, string $search ): string {
+	unset( $link );
+
+	return lp_search_url( $search );
+}
+add_filter( 'search_link', 'lp_filter_search_link', 10, 2 );
+
+/**
+ * 301 `/?s=` (and paginated variants) onto `/search/`.
+ */
+function lp_redirect_search_pretty(): void {
+	if ( is_admin() || wp_doing_ajax() || ! is_search() ) {
+		return;
+	}
+
+	if ( lp_search_request_is_pretty() ) {
+		return;
+	}
+
+	$extra = array();
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- public read-only filter, see the file docblock.
+	if ( isset( $_GET['post_type'] ) && is_string( $_GET['post_type'] ) ) {
+		$extra['post_type'] = sanitize_key( wp_unslash( $_GET['post_type'] ) );
+	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+	$paged = max( 1, (int) get_query_var( 'paged' ) );
+	$base  = $paged > 1
+		? home_url( '/search/page/' . $paged . '/' )
+		: home_url( '/search/' );
+	$args  = $extra;
+	$s     = (string) get_query_var( 's' );
+	if ( '' !== $s ) {
+		$args['s'] = $s;
+	}
+	$to = $args ? add_query_arg( $args, $base ) : $base;
+
+	wp_safe_redirect( $to, 301 );
+	exit;
+}
+add_action( 'template_redirect', 'lp_redirect_search_pretty', 1 );
+
+/**
+ * Stop `redirect_canonical` sending `/search/?s=` back to `/?s=`.
+ *
+ * @param string|false $redirect_url  Canonical URL WordPress wants.
+ * @param string       $requested_url The request.
+ * @return string|false
+ */
+function lp_search_disable_canonical( $redirect_url, string $requested_url ) {
+	unset( $requested_url );
+
+	if ( is_search() && lp_search_request_is_pretty() ) {
+		return false;
+	}
+
+	return $redirect_url;
+}
+add_filter( 'redirect_canonical', 'lp_search_disable_canonical', 10, 2 );
 
 /**
  * Posts page lists the `blog` CPT, 24 to a page.

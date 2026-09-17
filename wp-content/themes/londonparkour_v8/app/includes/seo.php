@@ -1077,7 +1077,7 @@ function lp_seo_website_node(): array {
 		'@type'       => 'SearchAction',
 		'target'      => array(
 			'@type'       => 'EntryPoint',
-			'urlTemplate' => home_url( '/?s={search_term_string}' ),
+			'urlTemplate' => home_url( '/search/?s={search_term_string}' ),
 		),
 		'query-input' => 'required name=search_term_string',
 	);

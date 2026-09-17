@@ -43,7 +43,7 @@
  *
  * The mobile drawer nests indented children under Classes, Tutorials and Docs
  * from each drop panel's landing column (Agenda / Private 1:1 / Workshops;
- * By series / By category / By tutorial; Wiki / Blog). Map stays on the
+ * By series / By category / By tutorial; Wiki / Blog / Coaches / Search). Map stays on the
  * desktop Classes panel only. Contact has none. Coupons stays on the
  * desktop panel only.
  *
@@ -363,6 +363,17 @@ $lp_default_docs_panel = array(
 					'name' => 'Coaches',
 					'meta' => '04 PEOPLE',
 					'href' => '/coaches',
+				),
+			),
+		),
+		array(
+			'title' => 'SEARCH',
+			'note'  => 'FIND',
+			'rows'  => array(
+				array(
+					'name' => 'Search',
+					'meta' => 'FIND',
+					'href' => '/search',
 				),
 			),
 		),

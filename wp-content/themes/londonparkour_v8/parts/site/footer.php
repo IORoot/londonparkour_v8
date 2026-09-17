@@ -93,6 +93,10 @@ $lp_default_columns = array(
 				'label' => 'Gift Cards',
 				'href'  => '/gift-cards',
 			),
+			array(
+				'label' => 'Search',
+				'href'  => '/search',
+			),
 		),
 	),
 	array(

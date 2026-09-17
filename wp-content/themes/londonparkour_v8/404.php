@@ -24,7 +24,7 @@
  *
  * ONE DELIBERATE DEPARTURE: the source's form is inert (`preventDefault`)
  * because the Storybook has no results route. WordPress does — `search.php` —
- * so the form gets `method="get"`, `action` on the site root and `name="s"`,
+ * so the form gets `method="get"`, `action` on `/search/` and `name="s"`,
  * and actually works. The source's own comment says it is inert only for want
  * of a route.
  *
@@ -146,7 +146,7 @@ get_header();
 							<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-neutral-content/50"><?php echo esc_html( $lp_search['label'] ); ?></span>
 							<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php echo esc_html( $lp_search['hint'] ); ?></span>
 						</div>
-						<form class="flex items-stretch gap-3 flex-wrap" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+						<form class="flex items-stretch gap-3 flex-wrap" role="search" method="get" action="<?php echo esc_url( lp_search_url() ); ?>">
 							<label class="sr-only" for="not-found-search"><?php echo esc_html( $lp_search['label'] ); ?></label>
 							<div class="flex-1 min-w-[220px] flex items-center gap-3 h-[52px] px-4 bg-neutral border border-neutral-content/[.14]">
 								<span class="text-neutral-content/50 shrink-0" aria-hidden="true"><?php lp_icon( 'icon-magnifying-glass', 'w-3.5 h-3.5' ); ?></span>

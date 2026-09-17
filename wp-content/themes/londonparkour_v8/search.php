@@ -43,11 +43,11 @@
  *    not on the rail; `lp_filter_search` keeps them out so ALL equals the
  *    sum of the four tabs.
  *
- * 5. **`CLEAR SEARCH ✕` and `CLEAR ✕` are links to home.** The source's
+ * 5. **`CLEAR SEARCH ✕` and `CLEAR ✕` are links to `/search/`.** The source's
  *    breadcrumb action has no href and the query-bar control is
  *    `<button type="reset">`, which on a submitted query restores the
- *    submitted value rather than clearing the search. Home is the honest
- *    empty-search destination this theme has.
+ *    submitted value rather than clearing the search. The pretty search
+ *    landing is the empty-search destination.
  *
  * 6. **No zero-results state**, because the design has none. With no hits
  *    the query bar reports `0 RESULTS` and the filter rail still renders
@@ -78,6 +78,10 @@ $lp_types = lp_search_types();
  */
 $lp_counts = array();
 foreach ( array_keys( $lp_types ) as $lp_type ) {
+	if ( '' === trim( $lp_q ) ) {
+		$lp_counts[ $lp_type ] = 0;
+		continue;
+	}
 	$lp_count_query        = new WP_Query(
 		array(
 			's'                   => $lp_q,
@@ -103,12 +107,7 @@ if ( ! isset( $lp_types[ $lp_active_type ] ) ) {
 
 /** Build a filter-rail href. An empty type is the ALL tab. */
 $lp_tab_href = static function ( string $lp_type ) use ( $lp_q ): string {
-	$lp_args = array( 's' => $lp_q );
-	if ( '' !== $lp_type ) {
-		$lp_args['post_type'] = $lp_type;
-	}
-
-	return add_query_arg( $lp_args, home_url( '/' ) );
+	return lp_search_url( $lp_q, '' !== $lp_type ? array( 'post_type' => $lp_type ) : array() );
 };
 
 $lp_tabs = array(
@@ -153,8 +152,9 @@ while ( have_posts() ) {
 $lp_found  = (int) $GLOBALS['wp_query']->found_posts;
 $lp_offset = ( max( 1, (int) get_query_var( 'paged' ) ) - 1 ) * (int) get_query_var( 'posts_per_page' );
 $lp_home   = home_url( '/' );
+$lp_search = lp_search_url();
 
-if ( function_exists( 'lp_analytics_event_marker' ) ) {
+if ( function_exists( 'lp_analytics_event_marker' ) && '' !== $lp_q ) {
 	lp_analytics_event_marker(
 		'view_search_results',
 		array(
@@ -189,7 +189,7 @@ get_header();
 			),
 			'action' => array(
 				'label' => 'CLEAR SEARCH ✕',
-				'href'  => $lp_home,
+				'href'  => $lp_search,
 			),
 		)
 	);
@@ -202,7 +202,7 @@ get_header();
 				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php printf( '%d RESULTS', (int) $lp_found ); ?></span>
 			</div>
 
-			<form role="search" method="get" action="<?php echo esc_url( $lp_home ); ?>" class="mt-6 flex items-center gap-4 h-[68px] px-[22px] bg-secondary border border-neutral-content/[.14]">
+			<form role="search" method="get" action="<?php echo esc_url( $lp_search ); ?>" class="mt-6 flex items-center gap-4 h-[68px] px-[22px] bg-secondary border border-neutral-content/[.14]">
 				<?php if ( '' !== $lp_active_type ) : ?>
 					<input type="hidden" name="post_type" value="<?php echo esc_attr( $lp_active_type ); ?>" />
 				<?php endif; ?>
@@ -215,7 +215,7 @@ get_header();
 					'elements/button',
 					array(
 						'variant' => 'band_text',
-						'href'    => $lp_home,
+						'href'    => $lp_search,
 						'label'   => $lp_bar['clear'],
 						'class'   => 'shrink-0',
 					)
