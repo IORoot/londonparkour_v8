@@ -115,7 +115,7 @@ get_header();
 				?>
 			</span>
 			<div class="flex flex-col items-center gap-[10px] min-w-0 flex-1">
-				<h2 class="font-heading text-[26px] font-semibold tracking-[-0.3px] text-base-content text-center"><?php echo esc_html( lp_agenda_week_label( $lp_week ) ); ?></h2>
+				<h2 class="font-heading text-[18px] font-semibold tracking-[-0.3px] lg:text-[26px] text-base-content text-center"><?php echo esc_html( lp_agenda_week_label( $lp_week ) ); ?></h2>
 				<div class="flex items-center gap-[16px]">
 					<span>
 						<?php
