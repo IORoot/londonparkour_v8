@@ -579,6 +579,32 @@ abstract class ACF_Fields {
 			],
 		];
 
+		// Listing fields for the public class page — weekly, one-off, and
+		// external-link (external still books off-site; the page needs the same facts).
+		$listed_schedule_condition = [
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '==',
+					'value'    => 'recurring',
+				],
+			],
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '==',
+					'value'    => 'one_off',
+				],
+			],
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '==',
+					'value'    => 'external_link',
+				],
+			],
+		];
+
 		$cancelled_dates_display_field = [
 			'key'           => 'field_clasbpro_cancelled_dates_display',
 			'label'         => __( 'Cancelled dates display', 'class-bookings-with-stripe-pro' ),
@@ -662,7 +688,7 @@ abstract class ACF_Fields {
 						'default_value' => 'recurring',
 						'allow_null'    => 0,
 						'required'      => 1,
-						'instructions'  => __( 'Weekly class, one-off event, appointments, or a single button linking to an external booking page.', 'class-bookings-with-stripe-pro' ),
+						'instructions'  => __( 'Weekly class, one-off event, appointments, or an external booking page. External-link classes still need schedule, price, and location so they can appear on the site; the booking button goes to the URL instead of Stripe.', 'class-bookings-with-stripe-pro' ),
 					],
 					[
 						'key'           => 'field_clasbpro_class_active',
@@ -698,7 +724,7 @@ abstract class ACF_Fields {
 						'wrapper'           => [
 							'width' => '25',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'               => 'field_clasbpro_end_date',
@@ -713,7 +739,7 @@ abstract class ACF_Fields {
 						'wrapper'           => [
 							'width' => '25',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_day',
@@ -750,7 +776,7 @@ abstract class ACF_Fields {
 						'wrapper'        => [
 							'width' => '20',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_duration',
@@ -764,7 +790,7 @@ abstract class ACF_Fields {
 						'wrapper'       => [
 							'width' => '20',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_price',
@@ -779,7 +805,7 @@ abstract class ACF_Fields {
 						'wrapper'       => [
 							'width' => '20',
 						],
-						'conditional_logic' => $internal_booking_condition,
+						'conditional_logic' => 0,
 					],
 					[
 						'key'           => 'field_clasbpro_capacity',
@@ -789,11 +815,11 @@ abstract class ACF_Fields {
 						'default_value' => 20,
 						'min'           => 1,
 						'required'      => 1,
-						'instructions'  => __( 'Maximum people per booking (per slot for appointments).', 'class-bookings-with-stripe-pro' ),
+						'instructions'  => __( 'Maximum people per booking (per slot for appointments). Shown on the class page; Stripe occupancy is not tracked for external-link classes.', 'class-bookings-with-stripe-pro' ),
 						'wrapper'       => [
 							'width' => '20',
 						],
-						'conditional_logic' => $internal_booking_condition,
+						'conditional_logic' => 0,
 					],
 					[
 						'key'           => 'field_clasbpro_show_seats_remaining',
@@ -886,7 +912,7 @@ abstract class ACF_Fields {
 						'type'          => 'text',
 						'instructions'  => __( 'Optional, e.g. "Orpington Studio".', 'class-bookings-with-stripe-pro' ),
 						'required'      => 0,
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_description',

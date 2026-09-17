@@ -20,6 +20,7 @@
  * @param string $args['cta_label']
  * @param string $args['cta_icon_id'] Default 'icon-arrow-right'.
  * @param string $args['href']        Renders the CTA as an <a>.
+ * @param string $args['target']      Anchor target when href is set.
  * @param string $args['command']     @tailwindplus/elements dialog trigger.
  * @param string $args['command_for']
  * @param array  $args['data_attrs']  Passed through to elements/button.php.
@@ -103,6 +104,7 @@ $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours befo
 			'variant'          => 'band',
 			'label'            => $lp_cta_label,
 			'href'             => $args['href'] ?? '',
+			'target'           => $args['target'] ?? '',
 			'trailing_icon_id' => $args['cta_icon_id'] ?? 'icon-arrow-right',
 			'command'          => $args['command'] ?? '',
 			'command_for'      => $args['command_for'] ?? '',

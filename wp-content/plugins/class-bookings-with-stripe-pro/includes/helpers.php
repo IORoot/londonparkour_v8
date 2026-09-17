@@ -659,7 +659,7 @@ abstract class Helpers {
 
 		$start_date = function_exists( 'get_field' ) ? self::normalise_date_string( (string) get_field( 'start_date', $class_id ) ) : '';
 		$end_date   = function_exists( 'get_field' ) ? self::normalise_date_string( (string) get_field( 'end_date', $class_id ) ) : '';
-		if ( 'one_off' === $schedule_type && '' === $end_date ) {
+		if ( in_array( $schedule_type, [ 'one_off', 'external_link' ], true ) && '' === $end_date ) {
 			$end_date = $start_date;
 		}
 
@@ -706,7 +706,7 @@ abstract class Helpers {
 			'external_link_url' => function_exists( 'get_field' ) ? esc_url_raw( (string) get_field( 'external_link_url', $class_id ) ) : '',
 			'location'        => function_exists( 'get_field' ) ? (string) get_field( 'location', $class_id ) : '',
 			'schedule_type'   => $schedule_type,
-			'is_one_off_event' => 'one_off' === $schedule_type,
+			'is_one_off_event' => in_array( $schedule_type, [ 'one_off', 'external_link' ], true ),
 			'is_appointments' => $is_appointments,
 			'day_of_week'     => function_exists( 'get_field' ) ? (string) get_field( 'day_of_week', $class_id ) : '',
 			'start_date'      => $start_date,

@@ -10,8 +10,9 @@
  * `past` = true greys the card out and removes the link (session already started).
  *
  * When `book_class_id` is set, the BOOK rail opens the shared clasbpro drawer
- * (same path as board-row sell). Optional `href` then wraps media+body in a
- * flex-row link to the class detail page (rail stays a sibling button).
+ * (same path as board-row sell), or an outbound <a> when that class is an
+ * external-link type. Optional `href` then wraps media+body in a flex-row
+ * link to the class detail page (rail stays a sibling control).
  *
  * @param string $args['day']
  * @param string $args['time']
@@ -273,7 +274,29 @@ if ( $lp_can_book ) {
 		</a>
 	<?php endif; ?>
 
-	<?php if ( $lp_can_book ) : ?>
+	<?php if ( $lp_can_book && ! empty( $lp_book['href'] ) ) : ?>
+		<a
+			href="<?php echo esc_url( (string) $lp_book['href'] ); ?>"
+			<?php if ( ! empty( $lp_book['target'] ) ) : ?>
+				target="<?php echo esc_attr( (string) $lp_book['target'] ); ?>"
+				rel="noopener"
+			<?php endif; ?>
+			class="<?php echo lp_classes( $lp_rail_book[ $lp_size ] ); ?>"
+			<?php echo $lp_book_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above. ?>
+		>
+			<div class="flex flex-col gap-0.5 items-start text-left">
+				<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_fare_lbl ); ?></span>
+				<span class="<?php echo lp_classes( $lp_fare_book[ $lp_size ] ); ?>"><?php echo esc_html( $lp_fare_t ); ?></span>
+				<?php if ( '' !== $lp_spaces_d ) : ?>
+					<span class="font-label text-[9px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_spaces_d ); ?></span>
+				<?php endif; ?>
+			</div>
+			<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover/rail:border-primary">
+				<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover/rail:text-primary"><?php echo esc_html( $lp_cta ); ?></span>
+				<span class="font-label text-[14px] font-extrabold text-primary-content group-hover/rail:text-primary" aria-hidden="true">→</span>
+			</div>
+		</a>
+	<?php elseif ( $lp_can_book && ! empty( $lp_book['command'] ) ) : ?>
 		<button
 			type="button"
 			class="<?php echo lp_classes( $lp_rail_book[ $lp_size ] ); ?>"
