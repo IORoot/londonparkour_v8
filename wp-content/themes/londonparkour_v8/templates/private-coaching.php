@@ -199,7 +199,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 							'layout'        => 'fill',
 							'size'          => 'lp_portrait_lg',
 							'sizes'         => '(min-width: 1024px) 50vw, 100vw',
-							'class'         => 'absolute inset-0 h-full w-full object-cover',
+							'class'         => 'object-top',
 							'loading'       => 'eager',
 							'fetchpriority' => 'high',
 						)
