@@ -768,7 +768,7 @@ function lp_field_testimonial_source(): array {
 				'random' => __( 'Random', 'londonparkour_v8' ),
 				'choose' => __( 'Choose', 'londonparkour_v8' ),
 			),
-			'default_value' => 'latest',
+			'default_value' => 'random',
 		),
 		array(
 			'name'           => 'source_items',
@@ -816,7 +816,7 @@ function lp_testimonial_project( int $post_id ): ?array {
  * @return array<int, array{quote:string,attribution:string}>
  */
 function lp_resolve_testimonial_quotes( array $args ): array {
-	$mode = (string) ( $args['quote_source'] ?? 'latest' );
+	$mode = (string) ( $args['quote_source'] ?? 'random' );
 
 	$ids = array();
 

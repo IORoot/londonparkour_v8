@@ -3,7 +3,8 @@
  *
  * Visible slots stay 01 / 02 / 03. Existing rows move up; the incoming quote
  * runs `data-motion-decode` (charset board, wrap). Dwell starts after decode
- * finishes. Pauses while off-screen or while a control inside the section is
+ * finishes. A hairline under the stack fills for the dwell, then resets.
+ * Pauses while off-screen or while a control inside the section is
  * focused. Hover does not pause — sitting on the quotes to watch them would
  * otherwise freeze the board. Reduced motion leaves the three static rows.
  */
@@ -106,22 +107,53 @@ export const quoteBoardEffect = {
     let stopped = false;
     let shiftControls = null;
     let stopDecode = null;
+    let loaderAnim = null;
+    const loaderFill = section.querySelector('[data-quote-board-loader-fill]');
 
     const isPaused = () => stopped || cycling || !inView || focusing;
+
+    const stopFill = () => {
+      loaderAnim?.stop?.();
+      loaderAnim = null;
+    };
+
+    const fillProgress = () => 1 - Math.max(0, remaining) / dwellMs;
+
+    const resetFill = () => {
+      stopFill();
+      if (loaderFill) loaderFill.style.transform = 'scaleX(0)';
+    };
+
+    const startFill = () => {
+      if (!loaderFill || isPaused()) return;
+      stopFill();
+      const from = fillProgress();
+      loaderFill.style.transform = `scaleX(${from})`;
+      loaderAnim = animate(
+        loaderFill,
+        { transform: [`scaleX(${from})`, 'scaleX(1)'] },
+        { duration: Math.max(0, remaining) / 1000, ease: 'linear' }
+      );
+    };
 
     const clearDwell = () => {
       window.clearTimeout(dwellTimer);
       dwellTimer = 0;
-      if (dwellStartedAt && !isPaused()) {
-        remaining -= performance.now() - dwellStartedAt;
+      if (dwellStartedAt) {
+        remaining = Math.max(0, remaining - (performance.now() - dwellStartedAt));
       }
       dwellStartedAt = 0;
+      stopFill();
+      if (loaderFill && remaining < dwellMs) {
+        loaderFill.style.transform = `scaleX(${fillProgress()})`;
+      }
     };
 
     const armDwell = () => {
       clearDwell();
       if (isPaused()) return;
       dwellStartedAt = performance.now();
+      startFill();
       dwellTimer = window.setTimeout(() => {
         dwellTimer = 0;
         dwellStartedAt = 0;
@@ -133,6 +165,7 @@ export const quoteBoardEffect = {
     const shift = async () => {
       if (stopped || cycling) return;
       cycling = true;
+      resetFill();
 
       const outgoing = el.querySelector(':scope > [data-quote-row]');
       const outgoingRule = el.querySelector(':scope > [data-quote-rule]');
@@ -230,12 +263,20 @@ export const quoteBoardEffect = {
       { threshold: 0 }
     );
     io.observe(el);
+    requestAnimationFrame(() => {
+      const next = isElementInView(el);
+      if (next === inView && dwellTimer) return;
+      inView = next;
+      if (inView) armDwell();
+      else clearDwell();
+    });
 
     armDwell();
 
     return () => {
       stopped = true;
       clearDwell();
+      resetFill();
       io.disconnect();
       section.removeEventListener('focusin', onFocusIn);
       section.removeEventListener('focusout', onFocusOut);

@@ -10,7 +10,7 @@
  * Index numerals use `text-accent` on the page ground (never `text-primary`).
  *
  * @param string $args['eyebrow']
- * @param string $args['quote_source']  latest|random|choose.
+ * @param string $args['quote_source']  latest|random|choose. Default random.
  * @param array  $args['source_items']  Chosen lp_testimonial IDs.
  * @param array  $args['see_all_action']
  * @param array  $args['review_action']
@@ -98,15 +98,16 @@ $lp_last    = count( $lp_visible ) - 1;
 			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
 		</header>
 
-		<div
-			class="flex flex-col gap-12"
-			data-quote-board-list
-			<?php if ( $lp_can_rotate ) : ?>
-				data-motion-quote-board
-				data-motion-quote-board-dwell="10"
-				data-quotes="<?php echo esc_attr( $lp_quotes_json ); ?>"
-			<?php endif; ?>
-		>
+		<div class="flex flex-col gap-12">
+			<div
+				class="flex flex-col gap-12"
+				data-quote-board-list
+				<?php if ( $lp_can_rotate ) : ?>
+					data-motion-quote-board
+					data-motion-quote-board-dwell="10"
+					data-quotes="<?php echo esc_attr( $lp_quotes_json ); ?>"
+				<?php endif; ?>
+			>
 			<?php
 			foreach ( $lp_visible as $lp_i => $lp_q ) :
 				$lp_index       = str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT );
@@ -140,6 +141,16 @@ $lp_last    = count( $lp_visible ) - 1;
 					<div class="h-px w-full bg-base-300" aria-hidden="true" data-quote-rule></div>
 				<?php endif; ?>
 			<?php endforeach; ?>
+			</div>
+			<?php if ( $lp_can_rotate ) : ?>
+			<div
+				class="relative h-0.5 w-full bg-base-300 overflow-hidden"
+				data-quote-board-loader
+				aria-hidden="true"
+			>
+				<div class="absolute inset-0 origin-left bg-accent" data-quote-board-loader-fill style="transform: scaleX(0)"></div>
+			</div>
+			<?php endif; ?>
 		</div>
 		<template data-quote-row-template>
 			<blockquote class="flex flex-col sm:flex-row gap-6 sm:gap-[48px] items-start" data-component="testimonial-quote" data-quote-row>
