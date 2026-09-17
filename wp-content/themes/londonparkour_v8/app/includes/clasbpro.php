@@ -1914,7 +1914,7 @@ function lp_clasbpro_status_product( $view ): string {
  *
  * @param int $class_id   Class post ID.
  * @param int $booking_id Booking post ID, or 0 when unknown.
- * @return list<array{name:string,secondary:string,bio:string,photo_id:int}>
+ * @return list<array{name:string,secondary:string,bio:string,photo_id:int,href:string}>
  */
 function lp_clasbpro_status_coaches( int $class_id, int $booking_id = 0 ): array {
 	if ( $class_id <= 0 ) {
@@ -1938,6 +1938,7 @@ function lp_clasbpro_status_coaches( int $class_id, int $booking_id = 0 ): array
 				? lp_first_sentences( (string) get_field( 'bio', $cid ), 2 )
 				: '',
 			'photo_id'  => has_post_thumbnail( $cid ) ? (int) get_post_thumbnail_id( $cid ) : 0,
+			'href'      => (string) get_permalink( $cid ),
 		);
 	}
 
@@ -1949,6 +1950,7 @@ function lp_clasbpro_status_coaches( int $class_id, int $booking_id = 0 ): array
 				'secondary' => '',
 				'bio'       => '',
 				'photo_id'  => 0,
+				'href'      => '',
 			);
 		}
 	}

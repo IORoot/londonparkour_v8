@@ -31,6 +31,7 @@
  * @param string $args['surface']   page|board|accent. Default 'page'.
  * @param int    $args['photo_id']  Attachment id — renders a photo avatar.
  * @param string $args['photo_url'] Raw URL fallback when there is no attachment.
+ * @param string $args['href']      Optional coach permalink — wraps the photo.
  *
  * @package londonparkour_v8
  */
@@ -99,6 +100,7 @@ $lp_secondary = (string) ( $args['secondary'] ?? 'HEAD COACH' );
 $lp_bio       = (string) ( $args['bio'] ?? '' );
 $lp_photo_id  = ! empty( $args['photo_id'] ) ? (int) $args['photo_id'] : 0;
 $lp_photo_url = (string) ( $args['photo_url'] ?? '' );
+$lp_href      = (string) ( $args['href'] ?? '' );
 $lp_has_photo = $lp_photo_id || '' !== $lp_photo_url;
 
 // The source tightens the text column only when a bio is present, so every
@@ -108,24 +110,45 @@ $lp_column_gap = '' !== $lp_bio ? 'gap-[9px]' : 'gap-[2px]';
 <div class="<?php echo lp_classes( 'flex', $lp_size['align'], $lp_size['gap'] ); ?>" data-component="byline">
 	<?php if ( $lp_has_photo ) : ?>
 		<?php /* daisyUI sizes via a nested box — classes on the photo alone expand. */ ?>
-		<div class="avatar shrink-0" aria-hidden="true">
-			<div class="<?php echo esc_attr( $lp_size['avatar_box'] . ' shrink-0 overflow-hidden' ); ?>">
-				<?php
-				lp_part(
-					'components/media-photo',
-					array(
-						'image_id'  => $lp_photo_id,
-						'image_url' => $lp_photo_url,
-						'alt'       => '',
-						'layout'    => 'none',
-						'class'     => 'w-full h-full object-cover',
-						'size'      => $lp_size['crop'],
-						'sizes'     => $lp_size['sizes_attr'],
-					)
-				);
-				?>
+		<?php if ( '' !== $lp_href ) : ?>
+			<a href="<?php echo esc_url( $lp_href ); ?>" class="avatar shrink-0" aria-label="<?php echo esc_attr( $lp_name ); ?>">
+				<div class="<?php echo esc_attr( $lp_size['avatar_box'] . ' shrink-0 overflow-hidden' ); ?>">
+					<?php
+					lp_part(
+						'components/media-photo',
+						array(
+							'image_id'  => $lp_photo_id,
+							'image_url' => $lp_photo_url,
+							'alt'       => '',
+							'layout'    => 'none',
+							'class'     => 'w-full h-full object-cover',
+							'size'      => $lp_size['crop'],
+							'sizes'     => $lp_size['sizes_attr'],
+						)
+					);
+					?>
+				</div>
+			</a>
+		<?php else : ?>
+			<div class="avatar shrink-0" aria-hidden="true">
+				<div class="<?php echo esc_attr( $lp_size['avatar_box'] . ' shrink-0 overflow-hidden' ); ?>">
+					<?php
+					lp_part(
+						'components/media-photo',
+						array(
+							'image_id'  => $lp_photo_id,
+							'image_url' => $lp_photo_url,
+							'alt'       => '',
+							'layout'    => 'none',
+							'class'     => 'w-full h-full object-cover',
+							'size'      => $lp_size['crop'],
+							'sizes'     => $lp_size['sizes_attr'],
+						)
+					);
+					?>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 	<?php else : ?>
 		<?php
 		lp_part(

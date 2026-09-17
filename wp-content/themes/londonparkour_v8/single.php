@@ -186,7 +186,7 @@ while ( have_posts() ) :
 				);
 				lp_part( 'elements/rule', array( 'tone' => 'hairline' ) );
 				?>
-				<h1 class="font-display font-bold text-[76px] leading-[0.92] tracking-[-3.2px] text-base-content"><?php echo esc_html( get_the_title() ); ?></h1>
+				<h1 class="font-display font-bold text-[36px] leading-[0.95] tracking-[-1.2px] sm:text-[48px] lg:text-[76px] lg:leading-[0.92] lg:tracking-[-3.2px] text-base-content break-words"><?php echo esc_html( get_the_title() ); ?></h1>
 				<p class="max-w-[640px] font-body text-[15px] leading-[1.6] tracking-[0.1px] text-base-content/65"><?php echo esc_html( $lp_standfirst ); ?></p>
 				<?php
 				lp_part(

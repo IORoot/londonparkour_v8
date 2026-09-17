@@ -39,12 +39,12 @@ $lp_note  = (string) ( $args['note'] ?? '' );
 $lp_pad   = $lp_has_media ? $lp_pads['media'] : $lp_pads['plain'];
 
 $lp_title_sizes = array(
-	'default' => 'w-full font-display font-bold text-neutral-content text-[64px] leading-[0.92] tracking-[-3px] [text-box:normal]',
-	'error'   => 'w-full font-display font-bold text-neutral-content text-[57px] leading-[0.92] tracking-[-3px] [text-box:normal]',
+	'default' => 'w-full font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'error'   => 'w-full font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
 );
 $lp_title_sizes_glyph = array(
-	'default' => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[64px] leading-[0.92] tracking-[-3px] [text-box:normal]',
-	'error'   => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[57px] leading-[0.92] tracking-[-3px] [text-box:normal]',
+	'default' => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'error'   => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
 );
 $lp_title_scale = $args['title_scale'] ?? 'default';
 $lp_glyph_svg   = (string) ( $args['glyph_svg'] ?? '' );
@@ -88,7 +88,7 @@ if ( array_key_exists( 'media_alt', $args ) ) {
 					}
 					?>
 				</span>
-				<span class="min-w-0"><?php echo esc_html( $lp_title ); ?></span>
+				<span class="min-w-0 break-words"><?php echo esc_html( $lp_title ); ?></span>
 			<?php else : ?>
 				<?php echo esc_html( $lp_title ); ?>
 			<?php endif; ?>

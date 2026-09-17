@@ -159,7 +159,7 @@ class Booking_Form_View extends Abstract_View {
 				'waiver_page_link_text' => __( 'View full waiver', CLASBOWPRO_TEXT_DOMAIN ),
 				'mailchimp_optin_label' => (string) Helpers::get_option(
 					'mailchimp_optin_label',
-					__( 'Yes, I would like to join the mailing list for class updates and news.', CLASBOWPRO_TEXT_DOMAIN )
+					__( 'Yes, sign up to newsletter', CLASBOWPRO_TEXT_DOMAIN )
 				),
 			],
 			$this->class_data,

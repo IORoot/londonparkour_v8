@@ -34,7 +34,7 @@
   padding-inline: 24px !important;
   padding-block: 15px;
   font-family: var(--font-label);
-  font-size: 12px !important;
+  font-size: 14px !important; /* type-step bump: was 12 (label) → 14 */
   text-transform: uppercase;
   letter-spacing: 1px;
 }

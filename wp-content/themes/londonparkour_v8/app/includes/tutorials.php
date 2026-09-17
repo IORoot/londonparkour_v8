@@ -147,21 +147,20 @@ function lp_tutorials_published_count(): int {
 }
 
 /**
- * Parent movement families with at least one tutorial.
+ * Category-board shelf count.
  *
- * Child moves (Step-Vault, Precisions, …) are shelves inside a family,
- * not extra categories.
+ * Dynamically counts the shelves `/tutorials/category/` shows under the
+ * default kind filter (tutorials + challenges, demos off) — child moves
+ * with content, plus any parent-only leftovers. Not the 11 parent families.
  */
 function lp_tutorials_category_count(): int {
-	$terms = get_terms(
-		array(
-			'taxonomy'   => 'tutorial-category',
-			'parent'     => 0,
-			'hide_empty' => true,
-		)
-	);
+	static $count = null;
+	if ( null !== $count ) {
+		return $count;
+	}
 
-	return is_array( $terms ) ? count( $terms ) : 0;
+	$count = count( lp_category_board_shelves( '', lp_tutorial_kind_defaults() ) );
+	return $count;
 }
 
 /**

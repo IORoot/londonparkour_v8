@@ -1779,7 +1779,7 @@ abstract class ACF_Fields {
 						'label'             => __( 'Mailchimp opt-in label', 'class-bookings-with-stripe-pro' ),
 						'name'              => 'mailchimp_optin_label',
 						'type'              => 'textarea',
-						'default_value'     => __( 'Yes, I would like to join the mailing list for class updates and news.', 'class-bookings-with-stripe-pro' ),
+						'default_value'     => __( 'Yes, sign up to newsletter', 'class-bookings-with-stripe-pro' ),
 						'rows'              => 3,
 						'new_lines'         => '',
 						'conditional_logic' => [

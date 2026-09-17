@@ -452,7 +452,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 			<?php endif; ?>
 		</div>
 
-		<div class="flex items-center justify-between gap-4 flex-wrap mt-auto pt-scale-s border-t border-neutral-content/20">
+		<div class="flex items-center justify-between gap-4 flex-wrap mt-auto pt-scale-s">
 			<span class="font-label text-step--2 font-normal tracking-[1px] uppercase text-neutral-content/80"><?php echo esc_html( $lp_scroll ); ?></span>
 			<div class="flex items-center gap-[22px] flex-wrap">
 				<?php foreach ( $lp_trust as $lp_ti => $lp_mark ) : ?>

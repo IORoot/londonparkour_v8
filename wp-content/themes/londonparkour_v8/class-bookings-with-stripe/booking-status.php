@@ -383,6 +383,7 @@ $lp_facts = $lp_compact
 							'size'      => 'lg',
 							'surface'   => 'accent',
 							'photo_id'  => (int) $lp['coach']['photo_id'],
+							'href'      => (string) ( $lp['coach']['href'] ?? '' ),
 						)
 					);
 					?>
@@ -408,6 +409,7 @@ $lp_facts = $lp_compact
 									'size'      => 'lg',
 									'surface'   => 'accent',
 									'photo_id'  => (int) $lp_coach_row['photo_id'],
+									'href'      => (string) ( $lp_coach_row['href'] ?? '' ),
 								)
 							);
 							?>

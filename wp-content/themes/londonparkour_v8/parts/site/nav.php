@@ -80,7 +80,7 @@ $lp_bar_heights = array(
 );
 
 $lp_logo_widths = array(
-	'default'   => 124,
+	'default'   => 177,
 	'condensed' => 96,
 );
 
@@ -272,7 +272,7 @@ $lp_default_tutorials_panel = array(
 				),
 				array(
 					'name' => 'By category',
-					'meta' => '11 CATEGORIES',
+					'meta' => '42 CATEGORIES',
 					'href' => '/tutorials/category',
 				),
 				array(
@@ -352,6 +352,17 @@ $lp_default_docs_panel = array(
 					'name' => 'Blog',
 					'meta' => '12 STORIES',
 					'href' => '/blog',
+				),
+			),
+		),
+		array(
+			'title' => 'COACHES',
+			'note'  => '04 PEOPLE',
+			'rows'  => array(
+				array(
+					'name' => 'Coaches',
+					'meta' => '04 PEOPLE',
+					'href' => '/coaches',
 				),
 			),
 		),
@@ -610,7 +621,7 @@ $lp_header_ground = $lp_over_hero
 				lp_part(
 					'brand/logo',
 					array(
-						'width'       => 88,
+						'width'       => 133,
 						'color_class' => 'text-current',
 						'label'       => $lp_brand,
 					)
@@ -637,7 +648,7 @@ $lp_header_ground = $lp_over_hero
 						lp_part(
 							'brand/logo',
 							array(
-								'width'       => 96,
+								'width'       => 133,
 								'color_class' => 'text-neutral-content',
 								'label'       => $lp_brand,
 							)

@@ -198,11 +198,13 @@ while ( have_posts() ) :
 	$lp_coach_role  = '';
 	$lp_coach_bio   = '';
 	$lp_coach_photo = 0;
+	$lp_coach_href  = '';
 	if ( $lp_coach_id ) {
 		$lp_coach_name  = get_the_title( $lp_coach_id );
 		$lp_coach_role  = (string) get_field( 'role', $lp_coach_id );
 		$lp_coach_bio   = lp_first_sentences( (string) get_field( 'bio', $lp_coach_id ), 2 );
 		$lp_coach_photo = has_post_thumbnail( $lp_coach_id ) ? (int) get_post_thumbnail_id( $lp_coach_id ) : 0;
+		$lp_coach_href  = (string) get_permalink( $lp_coach_id );
 	}
 
 	// Upcoming Sessions board.
@@ -570,6 +572,7 @@ while ( have_posts() ) :
 								'size'      => 'lg',
 								'surface'   => 'accent',
 								'photo_id'  => $lp_coach_photo,
+								'href'      => $lp_coach_href,
 							)
 						);
 						?>

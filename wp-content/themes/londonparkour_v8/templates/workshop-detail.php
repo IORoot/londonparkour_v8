@@ -551,6 +551,7 @@ $lp_grid = $lp_show_book
 									'size'      => 'lg',
 									'surface'   => 'accent',
 									'photo_id'  => has_post_thumbnail( $lp_coach_id ) ? (int) get_post_thumbnail_id( $lp_coach_id ) : 0,
+									'href'      => (string) get_permalink( $lp_coach_id ),
 								)
 							);
 							?>
