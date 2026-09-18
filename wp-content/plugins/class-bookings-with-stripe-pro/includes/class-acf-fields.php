@@ -316,12 +316,13 @@ abstract class ACF_Fields {
 
 		add_filter( 'admin_body_class', [ self::class, 'filter_booking_edit_body_class' ] );
 
+		$settings_css = CLASBOWPRO_DIR . 'assets/cbfs-booking-admin-settings.css';
 		wp_enqueue_style( 'dashicons' );
 		wp_enqueue_style(
 			'clasbowi-admin-settings',
 			CLASBOWPRO_URL . 'assets/cbfs-booking-admin-settings.css',
 			[],
-			CLASBOWPRO_VERSION
+			is_readable( $settings_css ) ? (string) filemtime( $settings_css ) : CLASBOWPRO_VERSION
 		);
 	}
 
@@ -3464,10 +3465,10 @@ abstract class ACF_Fields {
 				<?php endif; ?>
 				<div class="cbfs-admin-summary__kv-row">
 					<span class="cbfs-admin-summary__kv-label"><?php esc_html_e( 'Uses', 'class-bookings-with-stripe-pro' ); ?></span>
-					<div class="cbfs-admin-summary__kv-value">
+					<div class="cbfs-admin-summary__kv-value cbfs-admin-summary__uses">
 						<?php
 						$usages      = Packs::get_purchase_usages( $purchase_id );
-						$used_count  = count( $usages );
+						$used_count  = Packs::count_consumed_uses( $purchase_id );
 						$uses_total  = max( 0, $uses );
 						if ( $uses_total > 0 ) {
 							echo esc_html(
@@ -3481,7 +3482,10 @@ abstract class ACF_Fields {
 						} else {
 							echo esc_html( (string) $used_count );
 						}
-						?>
+						if ( Packs::can_add_purchase_use( $purchase_id ) ) :
+							?>
+							<a class="button button-small cbfs-admin-summary__add-use" href="<?php echo esc_url( Packs::add_purchase_use_url( $purchase_id ) ); ?>"><?php esc_html_e( 'Add 1 use', 'class-bookings-with-stripe-pro' ); ?></a>
+						<?php endif; ?>
 					</div>
 				</div>
 				<?php if ( '' !== $unit_price ) : ?>

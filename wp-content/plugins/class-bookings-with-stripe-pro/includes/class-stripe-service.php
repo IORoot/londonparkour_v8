@@ -168,9 +168,7 @@ abstract class Stripe_Service {
 					],
 				],
 			],
-			'discounts'   => [
-				[ 'promotion_code' => $promotion_code_id ],
-			],
+			'discounts'   => self::pack_booking_discounts( $promotion_code_id ),
 			'metadata'    => [
 				'booking_id'             => (string) $booking_id,
 				'class_id'               => (string) ( $class_data['id'] ?? 0 ),
@@ -186,6 +184,64 @@ abstract class Stripe_Service {
 		}
 
 		return $client->checkout->sessions->create( $params );
+	}
+
+	/**
+	 * Apply the promotion code while Stripe still has redemption headroom.
+	 * After max_redemptions is exhausted, fall back to the shared 100% coupon
+	 * so WordPress can still grant extra unpaid uses on the same PACK code.
+	 *
+	 * @return list<array{promotion_code: string}|array{coupon: string}>
+	 */
+	private static function pack_booking_discounts( string $promotion_code_id ): array {
+		$promotion_code_id = trim( $promotion_code_id );
+		if ( '' === $promotion_code_id ) {
+			return [];
+		}
+
+		try {
+			$promo           = self::retrieve_promotion_code( $promotion_code_id );
+			$stripe_total    = $promo ? (int) ( $promo->max_redemptions ?? 0 ) : 0;
+			$stripe_redeemed = $promo ? (int) ( $promo->times_redeemed ?? 0 ) : 0;
+			$has_headroom    = $stripe_total <= 0 || $stripe_redeemed < $stripe_total;
+			if ( $promo && ! $has_headroom ) {
+				return [ [ 'coupon' => self::ensure_pack_coupon_id() ] ];
+			}
+		} catch ( \Throwable $e ) {
+			Helpers::debug_log( '[class-bookings-with-stripe-pro] Pack discount lookup failed: ' . $e->getMessage() );
+		}
+
+		return [ [ 'promotion_code' => $promotion_code_id ] ];
+	}
+
+	/**
+	 * Persist the live WordPress allowance on the Stripe promotion code.
+	 * max_redemptions is not editable after create.
+	 *
+	 * @throws \Stripe\Exception\ApiErrorException|\RuntimeException
+	 */
+	public static function update_promotion_code_pack_uses( string $promo_id, int $uses ): void {
+		$client = self::client();
+		if ( ! $client ) {
+			throw new \RuntimeException( 'Stripe secret key is not configured.' );
+		}
+		$promo_id = trim( $promo_id );
+		if ( '' === $promo_id ) {
+			throw new \RuntimeException( 'Missing promotion code.' );
+		}
+
+		$promo    = $client->promotionCodes->retrieve( $promo_id, [] );
+		$existing = [];
+		if ( isset( $promo->metadata ) && is_iterable( $promo->metadata ) ) {
+			foreach ( $promo->metadata as $key => $value ) {
+				$existing[ (string) $key ] = (string) $value;
+			}
+		}
+		$existing['clasbpro_pack_uses'] = (string) max( 1, $uses );
+
+		$client->promotionCodes->update( $promo_id, [
+			'metadata' => $existing,
+		] );
 	}
 
 	/**
@@ -324,6 +380,7 @@ abstract class Stripe_Service {
 				'clasbpro_unit_price'   => (string) ( $pack['unit_price'] ?? '' ),
 				'clasbpro_class_ids'    => implode( ',', array_map( 'strval', $pack['class_ids'] ?? [] ) ),
 				'clasbpro_email'        => strtolower( sanitize_email( $email ) ),
+				'clasbpro_pack_uses'    => (string) max( 1, (int) $pack['uses'] ),
 			],
 		];
 		if ( $expires_at > 0 ) {
