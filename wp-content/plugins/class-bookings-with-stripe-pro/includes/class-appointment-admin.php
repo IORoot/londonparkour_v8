@@ -168,10 +168,16 @@ abstract class Appointment_Admin {
 					<span><?php echo esc_html( sprintf( __( 'Price override (%s)', 'class-bookings-with-stripe-pro' ), trim( Helpers::currency_config()['symbol'] ) ) ); ?></span>
 					<input type="number" min="0" step="<?php echo esc_attr( Helpers::price_input_step() ); ?>" name="<?php echo esc_attr( $prefix ); ?>[price_gbp]" value="<?php echo esc_attr( $price_val ); ?>" placeholder="<?php esc_attr_e( 'Class default', 'class-bookings-with-stripe-pro' ); ?>">
 				</label>
-				<label class="clasbpro-slot-rule__full">
-					<span><?php esc_html_e( 'Skip dates (one per line)', 'class-bookings-with-stripe-pro' ); ?></span>
-					<textarea name="<?php echo esc_attr( $prefix ); ?>[skip_dates]" rows="2" placeholder="YYYY-MM-DD"><?php echo esc_textarea( $skip_text ); ?></textarea>
-				</label>
+				<div class="clasbpro-slot-rule__split">
+					<label>
+						<span><?php esc_html_e( 'Skip dates (one per line)', 'class-bookings-with-stripe-pro' ); ?></span>
+						<textarea name="<?php echo esc_attr( $prefix ); ?>[skip_dates]" rows="2" placeholder="YYYY-MM-DD"><?php echo esc_textarea( $skip_text ); ?></textarea>
+					</label>
+					<label>
+						<span><?php esc_html_e( 'Admin notification email override', 'class-bookings-with-stripe-pro' ); ?></span>
+						<input type="email" name="<?php echo esc_attr( $prefix ); ?>[admin_email]" value="<?php echo esc_attr( (string) ( $rule['admin_email'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'Class / global default', 'class-bookings-with-stripe-pro' ); ?>">
+					</label>
+				</div>
 			</div>
 		</div>
 		<?php

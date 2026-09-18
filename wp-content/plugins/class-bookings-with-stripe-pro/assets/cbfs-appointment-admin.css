@@ -93,6 +93,14 @@
 	grid-column: 1 / -1;
 }
 
+.clasbpro-slot-rule__split {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: 3fr 1fr;
+	gap: 10px;
+	align-items: start;
+}
+
 /* Higher specificity than `.clasbpro-slot-rule__grid label` (display:flex). */
 .clasbpro-slot-rule__grid label.clasbpro-slot-rule__field--oneoff {
 	display: none;

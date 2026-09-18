@@ -80,6 +80,11 @@ abstract class Slot_Rules {
 		$price_raw = $row['price_gbp'] ?? '';
 		$price_gbp = ( '' === $price_raw || null === $price_raw ) ? null : max( 0, (float) $price_raw );
 
+		$admin_email = sanitize_email( (string) ( $row['admin_email'] ?? '' ) );
+		if ( ! is_email( $admin_email ) ) {
+			$admin_email = '';
+		}
+
 		// Form POSTs a textarea string; stored meta is already a Y-m-d list.
 		$skip_dates = self::normalise_skip_dates( $row['skip_dates'] ?? '' );
 
@@ -91,6 +96,7 @@ abstract class Slot_Rules {
 			'location'         => $location,
 			'label'            => $label,
 			'price_gbp'        => $price_gbp,
+			'admin_email'      => $admin_email,
 			'skip_dates'       => $skip_dates,
 		];
 
@@ -212,6 +218,17 @@ abstract class Slot_Rules {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @return array<string, mixed>|null
+	 */
+	public static function get_rule( int $class_id, string $rule_id ): ?array {
+		if ( $class_id <= 0 || '' === $rule_id ) {
+			return null;
+		}
+
+		return self::find_rule( [ 'slot_rules' => self::get_rules( $class_id ) ], $rule_id );
 	}
 
 	/**
