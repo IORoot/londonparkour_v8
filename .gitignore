@@ -6,6 +6,10 @@ wp-content/themes/twentytwenty*/
 wp-content/plugins/akismet/
 wp-content/plugins/hello.php
 
+# Core / plugin language packs. `bin/bootstrap.sh` installs en_GB; WordPress
+# updates the files on its own, so they are not source.
+wp-content/languages/
+
 # `bin/bootstrap.sh` installs Classic Editor from wp.org when it is absent,
 # so the checked-out copy is a build artefact, not source.
 wp-content/plugins/classic-editor/
