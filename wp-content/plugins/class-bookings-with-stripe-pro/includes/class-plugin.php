@@ -29,6 +29,7 @@ final class Plugin {
 		Appointment_Admin::init();
 		Bookings::init();
 		Packs::init();
+		Manual_Coupons::init();
 		Extra_Fields::init();
 		REST::init();
 		Shortcode::init();

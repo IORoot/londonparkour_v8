@@ -24,6 +24,8 @@ abstract class ACF_Fields {
 		add_filter( 'acf/load_field/key=field_clasbpro_b_summary', [ self::class, 'populate_booking_summary_field' ], 10 );
 		add_filter( 'acf/load_field/key=field_clasbpro_pp_summary', [ self::class, 'filter_booking_summary_field_format' ], 5 );
 		add_filter( 'acf/load_field/key=field_clasbpro_pp_summary', [ self::class, 'populate_pack_purchase_summary_field' ], 10 );
+		add_filter( 'acf/load_field/key=field_clasbpro_mc_summary', [ self::class, 'filter_booking_summary_field_format' ], 5 );
+		add_filter( 'acf/load_field/key=field_clasbpro_mc_summary', [ self::class, 'populate_manual_coupon_summary_field' ], 10 );
 		add_action( 'acf/render_field/key=field_clasbpro_cancelled_dates_fallback', [ self::class, 'render_cancelled_dates_quick_add' ] );
 		add_filter( 'acf/load_value/name=schedule_classes', [ self::class, 'load_schedule_classes_value' ], 10, 3 );
 		add_filter( 'acf/update_value/name=schedule_classes', [ self::class, 'update_schedule_classes_value' ], 10, 3 );
@@ -307,7 +309,7 @@ abstract class ACF_Fields {
 	 */
 	public static function maybe_enqueue_booking_edit_admin(): void {
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( ! $screen || ! in_array( $screen->post_type, [ CPT::BOOKING_PT, CPT::PACK_PURCHASE_PT ], true ) ) {
+		if ( ! $screen || ! in_array( $screen->post_type, [ CPT::BOOKING_PT, CPT::PACK_PURCHASE_PT, CPT::MANUAL_COUPON_PT ], true ) ) {
 			return;
 		}
 		if ( ! in_array( $screen->base, [ 'post', 'post-new' ], true ) ) {
@@ -2114,6 +2116,133 @@ abstract class ACF_Fields {
 				],
 			]
 		);
+
+		acf_add_local_field_group(
+			[
+				'key'      => 'group_clasbpro_manual_coupon',
+				'title'    => __( 'Manual coupon', 'class-bookings-with-stripe-pro' ),
+				'fields'   => [
+					[
+						'key'           => 'field_clasbpro_mc_active',
+						'label'         => __( 'Active', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_active',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+						'instructions'  => __( 'Pause to stop redemptions without deleting the Stripe coupon.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'          => 'field_clasbpro_mc_code',
+						'label'        => __( 'Coupon code', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'manual_code',
+						'type'         => 'text',
+						'required'     => 1,
+						'instructions' => __( 'Customer-facing code. Locked after Stripe registration.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'           => 'field_clasbpro_mc_discount_type',
+						'label'         => __( 'Discount type', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_discount_type',
+						'type'          => 'select',
+						'choices'       => [
+							'percent' => __( 'Percent off', 'class-bookings-with-stripe-pro' ),
+							'amount'  => __( 'Amount off', 'class-bookings-with-stripe-pro' ),
+						],
+						'default_value' => 'percent',
+						'required'      => 1,
+					],
+					[
+						'key'           => 'field_clasbpro_mc_discount_value',
+						'label'         => __( 'Discount', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_discount_value',
+						'type'          => 'number',
+						'step'          => '0.01',
+						'min'           => 0,
+						'required'      => 1,
+						'instructions'  => __( 'Percent (e.g. 20 or 100) or pounds off the class price. Frozen after Stripe registration.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'           => 'field_clasbpro_mc_uses',
+						'label'         => __( 'Uses', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_uses',
+						'type'          => 'number',
+						'default_value' => 0,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'Total redemptions across everyone. 0 = unlimited. One use = one seat.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'          => 'field_clasbpro_mc_email',
+						'label'        => __( 'Email lock', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'manual_email',
+						'type'         => 'email',
+						'instructions' => __( 'Leave blank for a shared code. Set an email to restrict the code to that person.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'            => 'field_clasbpro_mc_expires_on',
+						'label'          => __( 'Expires on', 'class-bookings-with-stripe-pro' ),
+						'name'           => 'manual_expires_on',
+						'type'           => 'date_picker',
+						'display_format' => 'd/m/Y',
+						'return_format'  => 'Y-m-d',
+						'first_day'      => 1,
+						'instructions'   => __( 'Leave blank for no expiry. End of that day, site timezone.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'           => 'field_clasbpro_mc_expiry_amount',
+						'label'         => __( 'Or expire after', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_expiry_amount',
+						'type'          => 'number',
+						'default_value' => 0,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'Shortcut used only when Expires on is empty. Writes a date on first save, then clears.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '50' ],
+					],
+					[
+						'key'           => 'field_clasbpro_mc_expiry_unit',
+						'label'         => __( 'Duration unit', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_expiry_unit',
+						'type'          => 'select',
+						'choices'       => [
+							'days'   => __( 'Days', 'class-bookings-with-stripe-pro' ),
+							'months' => __( 'Months', 'class-bookings-with-stripe-pro' ),
+						],
+						'default_value' => 'months',
+						'wrapper'       => [ 'width' => '50' ],
+					],
+					[
+						'key'           => 'field_clasbpro_mc_classes',
+						'label'         => __( 'Eligible classes', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_classes',
+						'type'          => 'relationship',
+						'post_type'     => [ Constants::CPT_CLASS ],
+						'filters'       => [ 'search' ],
+						'return_format' => 'id',
+						'min'           => 0,
+						'max'           => 0,
+						'instructions'  => __( 'Leave empty to allow every active class.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'       => 'field_clasbpro_mc_summary',
+						'label'     => __( 'Stripe & usage', 'class-bookings-with-stripe-pro' ),
+						'name'      => '_clasbpro_manual_summary',
+						'type'      => 'message',
+						'esc_html'  => 0,
+						'new_lines' => '',
+					],
+				],
+				'location' => [
+					[
+						[
+							'param'    => 'post_type',
+							'operator' => '==',
+							'value'    => Constants::CPT_MANUAL_COUPON,
+						],
+					],
+				],
+			]
+		);
 	}
 
 	private static function webhook_url_message(): string {
@@ -3640,6 +3769,95 @@ abstract class ACF_Fields {
 			</div>
 
 			<?php echo Booking_Email_Status::render_purchase_panel( $purchase_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+		<?php
+		$field['message'] = (string) ob_get_clean();
+		return $field;
+	}
+
+	/**
+	 * Stripe IDs, copyable code, and usage on the manual coupon edit screen.
+	 *
+	 * @param array<string,mixed> $field
+	 * @return array<string,mixed>
+	 */
+	public static function populate_manual_coupon_summary_field( array $field ): array {
+		$post_id = get_the_ID();
+		if ( ! $post_id || CPT::MANUAL_COUPON_PT !== get_post_type( $post_id ) ) {
+			return $field;
+		}
+
+		$coupon   = Manual_Coupons::get_coupon_data( (int) $post_id );
+		$promo_id = $coupon['promo_id'] ?? '';
+		$coupon_id = $coupon['coupon_id'] ?? '';
+		$code     = (string) ( $coupon['code'] ?? '' );
+		$usages   = Manual_Coupons::get_usages( (int) $post_id );
+
+		ob_start();
+		?>
+		<div class="cbfs-admin-summary cbfs-admin-summary--modern">
+			<div class="cbfs-admin-summary__stripe">
+				<h4 class="cbfs-admin-summary__stripe-title"><?php esc_html_e( 'Stripe', 'class-bookings-with-stripe-pro' ); ?></h4>
+				<div class="cbfs-admin-summary__mono-block">
+					<span class="cbfs-admin-summary__mono-label"><?php esc_html_e( 'Code', 'class-bookings-with-stripe-pro' ); ?></span>
+					<code class="cbfs-admin-summary__code"><?php echo esc_html( $code ) ?: '—'; ?></code>
+				</div>
+				<div class="cbfs-admin-summary__mono-block">
+					<span class="cbfs-admin-summary__mono-label"><?php esc_html_e( 'Coupon ID', 'class-bookings-with-stripe-pro' ); ?></span>
+					<code class="cbfs-admin-summary__code"><?php echo esc_html( (string) $coupon_id ) ?: '—'; ?></code>
+				</div>
+				<div class="cbfs-admin-summary__mono-block">
+					<span class="cbfs-admin-summary__mono-label"><?php esc_html_e( 'Promotion code ID', 'class-bookings-with-stripe-pro' ); ?></span>
+					<code class="cbfs-admin-summary__code"><?php echo esc_html( (string) $promo_id ) ?: '—'; ?></code>
+				</div>
+			</div>
+			<div class="cbfs-admin-summary__extras cbfs-admin-summary__usages">
+				<h4 class="cbfs-admin-summary__extras-title"><?php esc_html_e( 'Usage', 'class-bookings-with-stripe-pro' ); ?></h4>
+				<?php if ( empty( $usages ) ) : ?>
+					<p class="cbfs-admin-summary__empty"><?php esc_html_e( 'This coupon has not been used on any bookings yet.', 'class-bookings-with-stripe-pro' ); ?></p>
+				<?php else : ?>
+					<table class="cbfs-admin-summary__table cbfs-admin-summary__table--usages">
+						<thead>
+							<tr>
+								<th scope="col"><?php esc_html_e( 'Class', 'class-bookings-with-stripe-pro' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'When', 'class-bookings-with-stripe-pro' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Status', 'class-bookings-with-stripe-pro' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Booking', 'class-bookings-with-stripe-pro' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php foreach ( $usages as $usage ) : ?>
+							<?php
+							$when = trim(
+								(string) ( $usage['class_date'] ?? '' )
+								. ( ! empty( $usage['class_time'] ) ? ' · ' . $usage['class_time'] : '' )
+							);
+							$status_label = '' !== (string) ( $usage['status'] ?? '' )
+								? ucfirst( (string) $usage['status'] )
+								: '—';
+							?>
+							<tr>
+								<td>
+									<?php echo esc_html( (string) ( $usage['class_name'] ?? '—' ) ); ?>
+									<?php if ( ! empty( $usage['location'] ) ) : ?>
+										<br /><span class="cbfs-admin-summary__muted"><?php echo esc_html( (string) $usage['location'] ); ?></span>
+									<?php endif; ?>
+								</td>
+								<td><?php echo esc_html( $when !== '' ? $when : '—' ); ?></td>
+								<td><?php echo esc_html( $status_label ); ?></td>
+								<td>
+									<?php if ( ! empty( $usage['edit_url'] ) ) : ?>
+										<a href="<?php echo esc_url( (string) $usage['edit_url'] ); ?>">#<?php echo esc_html( (string) ( $usage['booking_id'] ?? '' ) ); ?></a>
+									<?php else : ?>
+										#<?php echo esc_html( (string) ( $usage['booking_id'] ?? '' ) ); ?>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php endif; ?>
+			</div>
 		</div>
 		<?php
 		$field['message'] = (string) ob_get_clean();

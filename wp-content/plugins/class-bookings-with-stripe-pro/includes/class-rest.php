@@ -13,6 +13,37 @@ abstract class REST {
 
 	public static function init(): void {
 		add_action( 'rest_api_init', [ self::class, 'register' ] );
+		// After WP's rest_cookie_check_errors (priority 100). Cached HTML can
+		// send an expired X-WP-Nonce; these routes are public, so demote to
+		// anonymous instead of 403ing the booking drawer.
+		add_filter( 'rest_authentication_errors', [ self::class, 'allow_anonymous_on_stale_nonce' ], 101 );
+	}
+
+	/**
+	 * Public clasbpro routes do not need cookie auth. A stale X-WP-Nonce still
+	 * 403s via rest_cookie_check_errors — treat that as logged-out.
+	 *
+	 * @param \WP_Error|null|true $result
+	 * @return \WP_Error|null|true
+	 */
+	public static function allow_anonymous_on_stale_nonce( $result ) {
+		if ( ! is_wp_error( $result ) || 'rest_cookie_invalid_nonce' !== $result->get_error_code() ) {
+			return $result;
+		}
+
+		$route = '';
+		if ( isset( $GLOBALS['wp']->query_vars['rest_route'] ) && is_string( $GLOBALS['wp']->query_vars['rest_route'] ) ) {
+			$route = $GLOBALS['wp']->query_vars['rest_route'];
+		} elseif ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+			$route = (string) wp_unslash( $_SERVER['REQUEST_URI'] );
+		}
+
+		if ( '' === $route || false === strpos( $route, 'clasbpro' ) ) {
+			return $result;
+		}
+
+		wp_set_current_user( 0 );
+		return true;
 	}
 
 	public static function register(): void {
@@ -493,7 +524,7 @@ abstract class REST {
 		$code     = (string) $request['code'];
 		$email    = (string) ( $request['customer_email'] ?? '' );
 		$class_id = (int) ( $request['class_id'] ?? 0 );
-		$result   = Packs::attach_by_code( $code, $email );
+		$result   = Packs::attach_by_code( $code, $email, $class_id );
 		if ( empty( $result['ok'] ) ) {
 			return self::error( 422, 'pack_attach_failed', (string) ( $result['message'] ?? __( 'Could not attach that coupon.', 'class-bookings-with-stripe-pro' ) ) );
 		}

@@ -16,6 +16,8 @@ abstract class CPT {
 	public const PACK_PT          = 'clasbpro_pack';
 	/** Must stay ≤ 20 chars (wp_posts.post_type). */
 	public const PACK_PURCHASE_PT = 'clasbpro_pack_ord';
+	/** Must stay ≤ 20 chars (wp_posts.post_type). */
+	public const MANUAL_COUPON_PT = 'clasbpro_mcoupon';
 
 	public static function init(): void {
 		add_action( 'init', [ self::class, 'register' ] );
@@ -105,6 +107,28 @@ abstract class CPT {
 					'new_item'      => __( 'New Coupon', 'class-bookings-with-stripe-pro' ),
 					'search_items'  => __( 'Search Coupons', 'class-bookings-with-stripe-pro' ),
 					'menu_name'     => __( 'Coupons', 'class-bookings-with-stripe-pro' ),
+				],
+				'public'       => false,
+				'show_ui'      => true,
+				'show_in_menu' => 'edit.php?post_type=' . self::CLASS_PT,
+				'supports'     => [ 'title' ],
+				'has_archive'  => false,
+				'rewrite'      => false,
+				'show_in_rest' => false,
+			]
+		);
+
+		register_post_type(
+			self::MANUAL_COUPON_PT,
+			[
+				'labels'       => [
+					'name'          => __( 'Manual coupons', 'class-bookings-with-stripe-pro' ),
+					'singular_name' => __( 'Manual coupon', 'class-bookings-with-stripe-pro' ),
+					'add_new_item'  => __( 'Add Manual coupon', 'class-bookings-with-stripe-pro' ),
+					'edit_item'     => __( 'Edit Manual coupon', 'class-bookings-with-stripe-pro' ),
+					'new_item'      => __( 'New Manual coupon', 'class-bookings-with-stripe-pro' ),
+					'search_items'  => __( 'Search Manual coupons', 'class-bookings-with-stripe-pro' ),
+					'menu_name'     => __( 'Manual coupons', 'class-bookings-with-stripe-pro' ),
 				],
 				'public'       => false,
 				'show_ui'      => true,

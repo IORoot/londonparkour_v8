@@ -34,6 +34,7 @@ require_once CLASBOWPRO_DIR . 'includes/class-slot-rules.php';
 require_once CLASBOWPRO_DIR . 'includes/class-appointment-admin.php';
 require_once CLASBOWPRO_DIR . 'includes/class-bookings.php';
 require_once CLASBOWPRO_DIR . 'includes/class-packs.php';
+require_once CLASBOWPRO_DIR . 'includes/class-manual-coupons.php';
 require_once CLASBOWPRO_DIR . 'includes/class-schedule-calendar.php';
 require_once CLASBOWPRO_DIR . 'includes/class-extra-fields.php';
 require_once CLASBOWPRO_DIR . 'includes/class-stripe-service.php';

@@ -38,6 +38,18 @@
 
 	window.CLASBOWPRO_buildRestUrl = buildRestUrl;
 
+	/**
+	 * Public clasbpro REST is permission_callback __return_true. Sending a
+	 * cached/stale X-WP-Nonce 403s as rest_cookie_invalid_nonce.
+	 *
+	 * @param {Record<string, string>} extra
+	 * @return {Record<string, string>}
+	 */
+	function restHeaders( extra ) {
+		const headers = extra && typeof extra === 'object' ? extra : {};
+		return headers;
+	}
+
 	function $$( root, sel ) {
 		return Array.prototype.slice.call( root.querySelectorAll( sel ) );
 	}
@@ -191,6 +203,13 @@
 		const seatsSel = form.querySelector( '[name="seats"]' );
 		const totalEl = form.querySelector( '.cbfs-form__total' );
 		if ( ! seatsSel || ! totalEl ) return;
+		if ( shouldUsePack( form ) ) {
+			const status = getRememberedPackStatus( form );
+			if ( status && status.pay_formatted ) {
+				totalEl.textContent = status.pay_formatted;
+				return;
+			}
+		}
 		const seats = parseInt( seatsSel.value, 10 ) || 1;
 		let unit = parseFloat( totalEl.dataset.cbfsUnitPrice || '0' );
 		if ( isAppointmentForm( form ) ) {
@@ -352,10 +371,7 @@
 			const res = await fetch( buildRestUrl( 'checkout' ), {
 				method: 'POST',
 				credentials: 'same-origin',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-WP-Nonce': cfg.nonce,
-				},
+				headers: restHeaders( { 'Content-Type': 'application/json' } ),
 				body: JSON.stringify( payload ),
 			} );
 
@@ -420,10 +436,7 @@
 					const res = await fetch( url, {
 						credentials: 'same-origin',
 						cache: 'no-store',
-						headers: {
-							'X-WP-Nonce': cfg.nonce,
-							'Cache-Control': 'no-cache',
-						},
+						headers: restHeaders( { 'Cache-Control': 'no-cache' } ),
 					} );
 					if ( res.ok ) {
 						const data = await res.json();
@@ -571,10 +584,15 @@
 				const used = typeof status.uses_used === 'number'
 					? status.uses_used
 					: Math.max( 0, ( status.uses_total || 0 ) - ( status.uses_remaining || 0 ) );
-				summary.textContent = ( status.pack_name || 'Coupon' )
-					+ ': ' + used + ' used, ' + ( status.uses_remaining || 0 ) + ' left'
-					+ ( status.uses_total ? ' of ' + status.uses_total : '' )
-					+ '.';
+				if ( status.uses_unlimited ) {
+					summary.textContent = ( status.pack_name || 'Coupon' )
+						+ ': ' + used + ' used.';
+				} else {
+					summary.textContent = ( status.pack_name || 'Coupon' )
+						+ ': ' + used + ' used, ' + ( status.uses_remaining || 0 ) + ' left'
+						+ ( status.uses_total ? ' of ' + status.uses_total : '' )
+						+ '.';
+				}
 			}
 			if ( packChoice ) {
 				packChoice.disabled = ! status.eligible;
@@ -589,6 +607,8 @@
 				const code = String( status.code || '' ).trim();
 				if ( ! status.eligible ) {
 					choiceLabel.textContent = unavailable;
+				} else if ( status.choice_label ) {
+					choiceLabel.textContent = status.choice_label;
 				} else if ( code ) {
 					choiceLabel.textContent = recognised;
 				} else {
@@ -601,12 +621,17 @@
 				choiceCode.textContent = code;
 			}
 			if ( choiceLeft ) {
-				const left = typeof status.uses_remaining === 'number'
-					? status.uses_remaining
-					: 0;
-				const tpl = choiceLeft.getAttribute( 'data-left-template' ) || '(%s left)';
-				choiceLeft.hidden = false;
-				choiceLeft.textContent = tpl.replace( '%s', String( left ) );
+				if ( status.uses_unlimited ) {
+					choiceLeft.hidden = true;
+					choiceLeft.textContent = '';
+				} else {
+					const left = typeof status.uses_remaining === 'number'
+						? status.uses_remaining
+						: 0;
+					const tpl = choiceLeft.getAttribute( 'data-left-template' ) || '(%s left)';
+					choiceLeft.hidden = false;
+					choiceLeft.textContent = tpl.replace( '%s', String( left ) );
+				}
 			}
 			if ( message ) {
 				const reason = status.eligible
@@ -728,10 +753,7 @@
 			const res = await fetch( buildRestUrl( 'pack-restore' ), {
 				method: 'POST',
 				credentials: 'same-origin',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-WP-Nonce': cfg.nonce,
-				},
+				headers: restHeaders( { 'Content-Type': 'application/json' } ),
 				body: JSON.stringify( {
 					token: token,
 					class_id: classId,
@@ -766,7 +788,7 @@
 				customer_email: email,
 			} ), {
 				credentials: 'same-origin',
-				headers: { 'X-WP-Nonce': cfg.nonce },
+				headers: restHeaders(),
 			} );
 			let data = await res.json().catch( function () { return {}; } );
 			if ( ! data.recognised ) {
@@ -816,10 +838,7 @@
 			const res = await fetch( buildRestUrl( 'pack-attach' ), {
 				method: 'POST',
 				credentials: 'same-origin',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-WP-Nonce': cfg.nonce,
-				},
+				headers: restHeaders( { 'Content-Type': 'application/json' } ),
 				body: JSON.stringify( {
 					code: code,
 					customer_email: email,

@@ -205,6 +205,10 @@ abstract class Stripe_Service {
 			$stripe_redeemed = $promo ? (int) ( $promo->times_redeemed ?? 0 ) : 0;
 			$has_headroom    = $stripe_total <= 0 || $stripe_redeemed < $stripe_total;
 			if ( $promo && ! $has_headroom ) {
+				$manual_coupon = (string) ( $promo->metadata->clasbpro_stripe_coupon_id ?? '' );
+				if ( '' !== $manual_coupon ) {
+					return [ [ 'coupon' => $manual_coupon ] ];
+				}
 				return [ [ 'coupon' => self::ensure_pack_coupon_id() ] ];
 			}
 		} catch ( \Throwable $e ) {
@@ -427,6 +431,150 @@ abstract class Stripe_Service {
 			return null;
 		}
 		return $client->promotionCodes->retrieve( $promo_id, [] );
+	}
+
+	/**
+	 * Create a Stripe Coupon + Promotion Code for an admin-issued manual coupon.
+	 *
+	 * @param array<string, mixed> $coupon
+	 * @return array{coupon_id: string, promo_id: string}
+	 * @throws \Stripe\Exception\ApiErrorException|\RuntimeException
+	 */
+	public static function create_manual_coupon( array $coupon ): array {
+		$client = self::client();
+		if ( ! $client ) {
+			throw new \RuntimeException( 'Stripe secret key is not configured.' );
+		}
+
+		$code = Manual_Coupons::normalize_code( (string) ( $coupon['code'] ?? '' ) );
+		if ( '' === $code ) {
+			throw new \RuntimeException( 'Missing coupon code.' );
+		}
+
+		$type  = 'amount' === ( $coupon['discount_type'] ?? '' ) ? 'amount' : 'percent';
+		$value = (float) ( $coupon['discount_value'] ?? 0 );
+		$name  = substr( (string) ( $coupon['name'] ?? $code ), 0, 40 );
+		$id    = (int) ( $coupon['id'] ?? 0 );
+
+		$coupon_params = [
+			'duration' => 'once',
+			'name'     => $name ?: $code,
+			'metadata' => [
+				'clasbpro_manual'    => '1',
+				'clasbpro_manual_id' => (string) $id,
+			],
+		];
+		if ( 'amount' === $type ) {
+			$off = Helpers::to_pence( $value );
+			if ( $off <= 0 ) {
+				throw new \RuntimeException( 'Amount off must be greater than zero.' );
+			}
+			$coupon_params['amount_off'] = $off;
+			$coupon_params['currency']   = Helpers::currency();
+		} else {
+			if ( $value <= 0 || $value > 100 ) {
+				throw new \RuntimeException( 'Percent off must be between 0 and 100, exclusive of 0 unless 100.' );
+			}
+			$coupon_params['percent_off'] = $value;
+		}
+
+		$stripe_coupon = $client->coupons->create( $coupon_params );
+
+		$promo_params = [
+			'coupon'   => (string) $stripe_coupon->id,
+			'code'     => $code,
+			'metadata' => [
+				'clasbpro_manual'            => '1',
+				'clasbpro_manual_id'         => (string) $id,
+				'clasbpro_pack_name'         => substr( (string) ( $coupon['name'] ?? $code ), 0, 100 ),
+				'clasbpro_email'             => (string) ( $coupon['email'] ?? '' ),
+				'clasbpro_class_ids'         => implode( ',', array_map( 'strval', $coupon['class_ids'] ?? [] ) ),
+				'clasbpro_manual_uses'       => (string) max( 0, (int) ( $coupon['uses'] ?? 0 ) ),
+				'clasbpro_stripe_coupon_id'  => (string) $stripe_coupon->id,
+			],
+		];
+		$uses = max( 0, (int) ( $coupon['uses'] ?? 0 ) );
+		if ( $uses > 0 ) {
+			$promo_params['max_redemptions'] = $uses;
+		}
+		$expires_at = (int) ( $coupon['expires_at'] ?? 0 );
+		if ( $expires_at > time() ) {
+			$promo_params['expires_at'] = $expires_at;
+		}
+
+		$promo = $client->promotionCodes->create( $promo_params );
+
+		$active = ! empty( $coupon['active'] );
+		if ( ! $active ) {
+			$client->promotionCodes->update( (string) $promo->id, [ 'active' => false ] );
+		}
+
+		return [
+			'coupon_id' => (string) $stripe_coupon->id,
+			'promo_id'  => (string) $promo->id,
+		];
+	}
+
+	/**
+	 * Update mutable Promotion Code fields for a manual coupon.
+	 *
+	 * @param array<string, mixed> $coupon
+	 * @throws \Stripe\Exception\ApiErrorException|\RuntimeException
+	 */
+	public static function update_manual_promotion_code( array $coupon ): void {
+		$client = self::client();
+		if ( ! $client ) {
+			throw new \RuntimeException( 'Stripe secret key is not configured.' );
+		}
+		$promo_id = trim( (string) ( $coupon['promo_id'] ?? '' ) );
+		if ( '' === $promo_id ) {
+			throw new \RuntimeException( 'Missing promotion code.' );
+		}
+
+		$promo    = $client->promotionCodes->retrieve( $promo_id, [] );
+		$existing = [];
+		if ( isset( $promo->metadata ) && is_iterable( $promo->metadata ) ) {
+			foreach ( $promo->metadata as $key => $value ) {
+				$existing[ (string) $key ] = (string) $value;
+			}
+		}
+		$existing['clasbpro_manual']           = '1';
+		$existing['clasbpro_manual_id']        = (string) ( $coupon['id'] ?? '' );
+		$existing['clasbpro_pack_name']        = substr( (string) ( $coupon['name'] ?? '' ), 0, 100 );
+		$existing['clasbpro_email']            = (string) ( $coupon['email'] ?? '' );
+		$existing['clasbpro_class_ids']        = implode( ',', array_map( 'strval', $coupon['class_ids'] ?? [] ) );
+		$existing['clasbpro_manual_uses']      = (string) max( 0, (int) ( $coupon['uses'] ?? 0 ) );
+		if ( ! empty( $coupon['coupon_id'] ) ) {
+			$existing['clasbpro_stripe_coupon_id'] = (string) $coupon['coupon_id'];
+		}
+
+		$params = [
+			'metadata' => $existing,
+			'active'   => ! empty( $coupon['active'] ),
+		];
+		$expires_at = (int) ( $coupon['expires_at'] ?? 0 );
+		if ( $expires_at > time() ) {
+			$params['expires_at'] = $expires_at;
+		}
+
+		$client->promotionCodes->update( $promo_id, $params );
+	}
+
+	/**
+	 * @throws \Stripe\Exception\ApiErrorException|\RuntimeException
+	 */
+	public static function set_promotion_code_active( string $promo_id, bool $active ): void {
+		$client = self::client();
+		if ( ! $client ) {
+			throw new \RuntimeException( 'Stripe secret key is not configured.' );
+		}
+		$promo_id = trim( $promo_id );
+		if ( '' === $promo_id ) {
+			throw new \RuntimeException( 'Missing promotion code.' );
+		}
+		$client->promotionCodes->update( $promo_id, [
+			'active' => $active,
+		] );
 	}
 
 	private static function generate_pack_code(): string {

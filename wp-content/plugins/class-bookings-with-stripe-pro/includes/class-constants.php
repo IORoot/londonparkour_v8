@@ -21,6 +21,8 @@ abstract class Constants {
 	public const CPT_PACK          = 'clasbpro_pack';
 	/** Must stay ≤ 20 chars (wp_posts.post_type). */
 	public const CPT_PACK_PURCHASE = 'clasbpro_pack_ord';
+	/** Must stay ≤ 20 chars (wp_posts.post_type). */
+	public const CPT_MANUAL_COUPON = 'clasbpro_mcoupon';
 
 	public const OPTIONS_POST_ID = 'clasbpro_options';
 

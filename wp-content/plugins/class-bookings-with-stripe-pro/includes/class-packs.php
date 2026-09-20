@@ -173,21 +173,27 @@ abstract class Packs {
 			return null;
 		}
 		$promo_id = sanitize_text_field( (string) ( $payload['promo_id'] ?? '' ) );
-		$email    = sanitize_email( (string) ( $payload['email'] ?? '' ) );
+		$email    = strtolower( sanitize_email( (string) ( $payload['email'] ?? '' ) ) );
 		$exp      = (int) ( $payload['exp'] ?? 0 );
-		if ( '' === $promo_id || ! is_email( $email ) || ( $exp > 0 && $exp < time() ) ) {
+		if ( '' === $promo_id || ( $exp > 0 && $exp < time() ) ) {
+			return null;
+		}
+		if ( '' !== $email && ! is_email( $email ) ) {
 			return null;
 		}
 		return [
 			'promo_id' => $promo_id,
-			'email'    => strtolower( $email ),
+			'email'    => $email,
 			'exp'      => $exp,
 		];
 	}
 
 	public static function set_active_cookie( string $promo_id, string $email, int $expires_at = 0 ): void {
 		$email = strtolower( sanitize_email( $email ) );
-		if ( '' === $promo_id || ! is_email( $email ) ) {
+		if ( '' === $promo_id ) {
+			return;
+		}
+		if ( '' !== $email && ! is_email( $email ) ) {
 			return;
 		}
 		$exp = $expires_at > time() ? $expires_at : ( time() + YEAR_IN_SECONDS );
@@ -255,7 +261,7 @@ abstract class Packs {
 		$promo_id = sanitize_text_field( (string) ( $payload['promo_id'] ?? '' ) );
 		$email    = sanitize_email( (string) ( $payload['email'] ?? '' ) );
 		$exp      = (int) ( $payload['exp'] ?? 0 );
-		if ( '' === $promo_id || ! is_email( $email ) ) {
+		if ( '' === $promo_id || ( '' !== $email && ! is_email( $email ) ) ) {
 			return;
 		}
 		self::set_active_cookie( $promo_id, $email, $exp );
@@ -271,10 +277,15 @@ abstract class Packs {
 	/**
 	 * @return array{ok: bool, message?: string, promo_id?: string, email?: string, uses_remaining?: int, uses_total?: int, pack_id?: int, pack_name?: string, expires_at?: int}
 	 */
-	public static function attach_by_code( string $code, string $email = '' ): array {
+	public static function attach_by_code( string $code, string $email = '', int $class_id = 0 ): array {
 		$code = strtoupper( trim( $code ) );
 		if ( '' === $code ) {
 			return [ 'ok' => false, 'message' => __( 'Please enter a coupon code.', 'class-bookings-with-stripe-pro' ) ];
+		}
+
+		$manual = Manual_Coupons::find_by_code( $code );
+		if ( $manual ) {
+			return Manual_Coupons::attach( $manual, $email, $class_id );
 		}
 
 		try {
@@ -442,7 +453,29 @@ abstract class Packs {
 		$pack_name = $pack ? (string) $pack['name'] : (string) ( $promo->metadata->clasbpro_pack_name ?? '' );
 
 		$form_email = strtolower( sanitize_email( $form_email ) );
-		$email_ok   = '' === $form_email || $form_email === $cookie['email'];
+		$email_ok   = '' === $form_email || $form_email === $cookie['email'] || '' === $cookie['email'];
+
+		$manual = Manual_Coupons::is_manual_promo( $promo )
+			? Manual_Coupons::find_by_promo_id( (string) $promo->id )
+			: null;
+		if ( Manual_Coupons::is_manual_promo( $promo ) ) {
+			if ( $manual ) {
+				return Manual_Coupons::status_for_class( $manual, $class_id, $form_email, (string) $cookie['email'] );
+			}
+			return [
+				'recognised'     => true,
+				'eligible'       => false,
+				'is_manual'      => true,
+				'uses_remaining' => 0,
+				'uses_total'     => 0,
+				'pack_name'      => (string) ( $promo->metadata->clasbpro_pack_name ?? '' ),
+				'promo_id'       => (string) $promo->id,
+				'code'           => strtoupper( (string) ( $promo->code ?? '' ) ),
+				'email'          => $cookie['email'],
+				'message'        => __( 'This coupon is no longer available.', 'class-bookings-with-stripe-pro' ),
+				'reason_code'    => 'manual_missing',
+			];
+		}
 
 		$eligible    = false;
 		$reason      = '';
@@ -501,7 +534,7 @@ abstract class Packs {
 		$promo_id = sanitize_text_field( (string) ( $payload['promo_id'] ?? '' ) );
 		$email    = sanitize_email( (string) ( $payload['email'] ?? '' ) );
 		$exp      = (int) ( $payload['exp'] ?? 0 );
-		if ( '' === $promo_id || ! is_email( $email ) || ( $exp > 0 && $exp < time() ) ) {
+		if ( '' === $promo_id || ( '' !== $email && ! is_email( $email ) ) || ( $exp > 0 && $exp < time() ) ) {
 			return [
 				'recognised' => false,
 				'eligible'   => false,
@@ -537,10 +570,16 @@ abstract class Packs {
 			);
 		}
 		$email = strtolower( sanitize_email( $customer_email ) );
-		if ( $email !== (string) $status['email'] ) {
+		if ( empty( $status['is_manual'] ) && $email !== (string) $status['email'] ) {
 			return new \WP_Error(
 				'pack_email_mismatch',
 				__( 'Use the same email you bought the coupon with to redeem it.', 'class-bookings-with-stripe-pro' )
+			);
+		}
+		if ( ! empty( $status['is_manual'] ) && ! empty( $status['email_locked'] ) && $email !== (string) $status['email'] ) {
+			return new \WP_Error(
+				'pack_email_mismatch',
+				__( 'That coupon belongs to a different email address.', 'class-bookings-with-stripe-pro' )
 			);
 		}
 		return [
