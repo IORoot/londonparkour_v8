@@ -1872,6 +1872,44 @@ abstract class ACF_Fields {
 						],
 					],
 					[
+						'key'   => 'field_clasbpro_tab_checkout',
+						'label' => __( 'Checkout', 'class-bookings-with-stripe-pro' ),
+						'type'  => 'tab',
+					],
+					[
+						'key'           => 'field_clasbpro_checkout_rate_limit_ip',
+						'label'         => __( 'Max attempts from the same IP', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'checkout_rate_limit_ip',
+						'type'          => 'number',
+						'default_value' => 8,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'How many times one IP can start Stripe Checkout in the window. Applies to class bookings and coupon packs. 0 = no IP limit.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '33' ],
+					],
+					[
+						'key'           => 'field_clasbpro_checkout_rate_limit_email',
+						'label'         => __( 'Max attempts from the same email', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'checkout_rate_limit_email',
+						'type'          => 'number',
+						'default_value' => 5,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'How many times one email can start Stripe Checkout in the window. 0 = no email limit.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '33' ],
+					],
+					[
+						'key'           => 'field_clasbpro_checkout_rate_limit_window_minutes',
+						'label'         => __( 'Window length (minutes)', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'checkout_rate_limit_window_minutes',
+						'type'          => 'number',
+						'default_value' => 15,
+						'min'           => 1,
+						'step'          => 1,
+						'instructions'  => __( 'How long the counters last. Minimum 1 minute. After this, the “Too many checkout attempts” block clears.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '33' ],
+					],
+					[
 						'key'   => 'field_clasbpro_tab_pages_2',
 						'label' => __( 'Result pages', 'class-bookings-with-stripe-pro' ),
 						'type'  => 'tab',
@@ -4720,7 +4758,7 @@ curl -I http://127.0.0.1:8101/wp-json/</code></pre>
 		?>
 <div class="clasbpro-doc">
 	<h3 class="clasbpro-doc__h"><?php echo esc_html( '[' . $packs_tag . ']' ); ?></h3>
-	<p class="clasbpro-doc__lead"><?php esc_html_e( 'Lists purchasable coupons. Create coupons under Classes → Coupons, then place this shortcode on a page.', 'class-bookings-with-stripe-pro' ); ?></p>
+	<p class="clasbpro-doc__lead"><?php esc_html_e( 'Lists purchasable coupons. Create packs under Classes → Coupon Packs, then place this shortcode on a page.', 'class-bookings-with-stripe-pro' ); ?></p>
 	<pre class="clasbpro-doc__pre"><code>[<?php echo esc_html( $packs_tag ); ?> id="1"]</code></pre>
 	<pre class="clasbpro-doc__pre"><code>[<?php echo esc_html( $packs_tag ); ?> id="1,2,3"]</code></pre>
 	<p class="clasbpro-doc__muted"><?php esc_html_e( 'Omit id to list every active coupon. After purchase, Stripe creates a unique coupon code. Customers can redeem it on eligible class booking forms (1 seat per use).', 'class-bookings-with-stripe-pro' ); ?></p>

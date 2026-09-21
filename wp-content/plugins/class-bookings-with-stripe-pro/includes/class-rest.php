@@ -1046,26 +1046,59 @@ abstract class REST {
 	}
 
 	/**
+	 * Clamp checkout rate-limit settings. 0 on IP or email disables that bucket.
+	 *
+	 * @return array{ip: int, email: int, ttl: int}
+	 */
+	public static function sanitize_checkout_rate_limit_config( int $ip, int $email, int $minutes ): array {
+		$ttl = $minutes * MINUTE_IN_SECONDS;
+		if ( $ttl < MINUTE_IN_SECONDS ) {
+			$ttl = MINUTE_IN_SECONDS;
+		}
+
+		return [
+			'ip'    => max( 0, $ip ),
+			'email' => max( 0, $email ),
+			'ttl'   => $ttl,
+		];
+	}
+
+	/**
+	 * @return array{ip: int, email: int, ttl: int}
+	 */
+	public static function checkout_rate_limit_config(): array {
+		$ip      = (int) apply_filters( 'clasbpro_checkout_rate_limit_ip', (int) Helpers::get_option( 'checkout_rate_limit_ip', 8 ) );
+		$email   = (int) apply_filters( 'clasbpro_checkout_rate_limit_email', (int) Helpers::get_option( 'checkout_rate_limit_email', 5 ) );
+		$minutes = (int) Helpers::get_option( 'checkout_rate_limit_window_minutes', 15 );
+		$minutes = (int) apply_filters( 'clasbpro_checkout_rate_limit_window_minutes', $minutes );
+		$config  = self::sanitize_checkout_rate_limit_config( $ip, $email, $minutes );
+		$ttl     = (int) apply_filters( 'clasbpro_checkout_rate_limit_window', $config['ttl'] );
+		if ( $ttl < MINUTE_IN_SECONDS ) {
+			$ttl = MINUTE_IN_SECONDS;
+		}
+		$config['ttl'] = $ttl;
+
+		return $config;
+	}
+
+	/**
 	 * Limit public checkout attempts that create soft-holds / Stripe sessions.
 	 *
 	 * @return \WP_REST_Response|null
 	 */
 	private static function checkout_rate_limit_error( string $email ): ?\WP_REST_Response {
-		$email = strtolower( sanitize_email( $email ) );
-		$ip    = self::client_ip();
-		$ttl   = (int) apply_filters( 'clasbpro_checkout_rate_limit_window', 15 * MINUTE_IN_SECONDS );
-		if ( $ttl < MINUTE_IN_SECONDS ) {
-			$ttl = MINUTE_IN_SECONDS;
-		}
+		$email  = strtolower( sanitize_email( $email ) );
+		$ip     = self::client_ip();
+		$config = self::checkout_rate_limit_config();
 
 		$buckets = [
 			[
 				'key' => 'clasbpro_chk_ip_' . md5( $ip ),
-				'max' => (int) apply_filters( 'clasbpro_checkout_rate_limit_ip', 8 ),
+				'max' => $config['ip'],
 			],
 			[
 				'key' => 'clasbpro_chk_em_' . md5( $email ),
-				'max' => (int) apply_filters( 'clasbpro_checkout_rate_limit_email', 5 ),
+				'max' => $config['email'],
 			],
 		];
 
@@ -1087,7 +1120,7 @@ abstract class REST {
 				continue;
 			}
 			$count = (int) get_transient( $bucket['key'] );
-			set_transient( $bucket['key'], $count + 1, $ttl );
+			set_transient( $bucket['key'], $count + 1, $config['ttl'] );
 		}
 
 		return null;
