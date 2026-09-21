@@ -2186,7 +2186,7 @@ abstract class ACF_Fields {
 						'display_format' => 'd/m/Y',
 						'return_format'  => 'Y-m-d',
 						'first_day'      => 1,
-						'instructions'   => __( 'Leave blank for no expiry. End of that day, site timezone.', 'class-bookings-with-stripe-pro' ),
+						'instructions'   => __( 'Leave blank for no expiry. End of that day, site timezone. Sent to Stripe on first save; Stripe cannot change it afterwards. WordPress still enforces the date.', 'class-bookings-with-stripe-pro' ),
 					],
 					[
 						'key'           => 'field_clasbpro_mc_expiry_amount',

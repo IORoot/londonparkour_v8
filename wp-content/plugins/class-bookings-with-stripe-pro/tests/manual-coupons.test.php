@@ -98,6 +98,25 @@ if ( $post_id > 0 ) {
 	$block = Manual_Coupons::ineligibility_reason( $found, 99, '' );
 	$assert( is_array( $block ) && 'class_not_covered' === $block['code'], 'ineligibility_reason reports the wrong class' );
 
+	$update = \IOROOT_STRIPE_BOOKINGS_PRO\Stripe_Service::manual_promotion_update_params(
+		[
+			'id'         => $post_id,
+			'name'       => 'Intro',
+			'email'      => 'andy@example.com',
+			'class_ids'  => [ 12 ],
+			'uses'       => 5,
+			'coupon_id'  => 'coupon_abc',
+			'active'     => true,
+			'expires_at' => time() + WEEK_IN_SECONDS,
+		],
+		[ 'keep_me' => 'yes' ]
+	);
+	$assert( ! array_key_exists( 'expires_at', $update ), 'Stripe promotion update does not send expires_at' );
+	$assert( ! array_key_exists( 'max_redemptions', $update ), 'Stripe promotion update does not send max_redemptions' );
+	$assert( 'andy@example.com' === ( $update['metadata']['clasbpro_email'] ?? '' ), 'email lock is stored in metadata' );
+	$assert( true === ( $update['active'] ?? null ), 'active is sent on promotion update' );
+	$assert( 'yes' === ( $update['metadata']['keep_me'] ?? '' ), 'existing Stripe metadata is preserved' );
+
 	wp_delete_post( $post_id, true );
 }
 

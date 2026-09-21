@@ -516,6 +516,31 @@ abstract class Stripe_Service {
 	}
 
 	/**
+	 * Fields Stripe accepts on Promotion Code update.
+	 * expires_at and max_redemptions are create-only.
+	 *
+	 * @param array<string, mixed>  $coupon
+	 * @param array<string, string> $existing_metadata
+	 * @return array{metadata: array<string, string>, active: bool}
+	 */
+	public static function manual_promotion_update_params( array $coupon, array $existing_metadata = [] ): array {
+		$existing_metadata['clasbpro_manual']      = '1';
+		$existing_metadata['clasbpro_manual_id']   = (string) ( $coupon['id'] ?? '' );
+		$existing_metadata['clasbpro_pack_name']   = substr( (string) ( $coupon['name'] ?? '' ), 0, 100 );
+		$existing_metadata['clasbpro_email']       = (string) ( $coupon['email'] ?? '' );
+		$existing_metadata['clasbpro_class_ids']   = implode( ',', array_map( 'strval', $coupon['class_ids'] ?? [] ) );
+		$existing_metadata['clasbpro_manual_uses'] = (string) max( 0, (int) ( $coupon['uses'] ?? 0 ) );
+		if ( ! empty( $coupon['coupon_id'] ) ) {
+			$existing_metadata['clasbpro_stripe_coupon_id'] = (string) $coupon['coupon_id'];
+		}
+
+		return [
+			'metadata' => $existing_metadata,
+			'active'   => ! empty( $coupon['active'] ),
+		];
+	}
+
+	/**
 	 * Update mutable Promotion Code fields for a manual coupon.
 	 *
 	 * @param array<string, mixed> $coupon
@@ -538,26 +563,11 @@ abstract class Stripe_Service {
 				$existing[ (string) $key ] = (string) $value;
 			}
 		}
-		$existing['clasbpro_manual']           = '1';
-		$existing['clasbpro_manual_id']        = (string) ( $coupon['id'] ?? '' );
-		$existing['clasbpro_pack_name']        = substr( (string) ( $coupon['name'] ?? '' ), 0, 100 );
-		$existing['clasbpro_email']            = (string) ( $coupon['email'] ?? '' );
-		$existing['clasbpro_class_ids']        = implode( ',', array_map( 'strval', $coupon['class_ids'] ?? [] ) );
-		$existing['clasbpro_manual_uses']      = (string) max( 0, (int) ( $coupon['uses'] ?? 0 ) );
-		if ( ! empty( $coupon['coupon_id'] ) ) {
-			$existing['clasbpro_stripe_coupon_id'] = (string) $coupon['coupon_id'];
-		}
 
-		$params = [
-			'metadata' => $existing,
-			'active'   => ! empty( $coupon['active'] ),
-		];
-		$expires_at = (int) ( $coupon['expires_at'] ?? 0 );
-		if ( $expires_at > time() ) {
-			$params['expires_at'] = $expires_at;
-		}
-
-		$client->promotionCodes->update( $promo_id, $params );
+		$client->promotionCodes->update(
+			$promo_id,
+			self::manual_promotion_update_params( $coupon, $existing )
+		);
 	}
 
 	/**

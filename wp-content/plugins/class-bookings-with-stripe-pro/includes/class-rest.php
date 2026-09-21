@@ -675,8 +675,6 @@ abstract class REST {
 			Merge_Tags::persist_receipt_url( $booking_id, $payment_intent );
 		}
 
-		Merge_Tags::persist_booking_coupon_snapshot( $booking_id );
-
 		// Update post title to reflect customer.
 		wp_update_post( [
 			'ID'         => $booking_id,
@@ -689,6 +687,7 @@ abstract class REST {
 		] );
 
 		Bookings::set_status( $booking_id, Bookings::STATUS_PAID );
+		Merge_Tags::persist_booking_coupon_snapshot( $booking_id );
 		Mailchimp::subscribe_booking( $booking_id );
 
 		Emails::send_for_booking( $booking_id );

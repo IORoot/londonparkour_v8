@@ -756,6 +756,12 @@ abstract class Packs {
 		return $count;
 	}
 
+	public static function forget_consumed_uses( int $purchase_id ): void {
+		if ( $purchase_id > 0 ) {
+			unset( self::$consumed_uses_cache[ $purchase_id ] );
+		}
+	}
+
 	public static function can_add_purchase_use( int $purchase_id ): bool {
 		if ( $purchase_id <= 0 || ! current_user_can( 'edit_post', $purchase_id ) ) {
 			return false;
@@ -806,7 +812,7 @@ abstract class Packs {
 		}
 
 		update_post_meta( $purchase_id, '_clasbpro_pack_uses', $new_uses );
-		unset( self::$consumed_uses_cache[ $purchase_id ] );
+		self::forget_consumed_uses( $purchase_id );
 		return $new_uses;
 	}
 

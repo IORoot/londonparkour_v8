@@ -627,12 +627,15 @@ abstract class Manual_Coupons {
 			Stripe_Service::update_manual_promotion_code( $coupon );
 		} catch ( \Throwable $e ) {
 			Helpers::debug_log( '[class-bookings-with-stripe-pro] Manual coupon Stripe sync failed: ' . $e->getMessage() );
+			$fail = ( '' === $coupon['coupon_id'] || '' === $coupon['promo_id'] )
+				? __( 'Could not register this coupon in Stripe: %s', 'class-bookings-with-stripe-pro' )
+				: __( 'Could not update this coupon in Stripe: %s', 'class-bookings-with-stripe-pro' );
 			self::set_notice(
 				$post_id,
 				'error',
 				sprintf(
 					/* translators: %s: error message */
-					__( 'Could not register this coupon in Stripe: %s', 'class-bookings-with-stripe-pro' ),
+					$fail,
 					$e->getMessage()
 				)
 			);
