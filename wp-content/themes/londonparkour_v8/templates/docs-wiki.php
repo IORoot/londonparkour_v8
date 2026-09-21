@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 $lp_post   = get_post();
 $lp_title  = $lp_post instanceof WP_Post ? get_the_title( $lp_post ) : '';
 $lp_crumb  = strtoupper( $lp_title );
-$lp_active = lp_docs_is_gift_cards( $lp_post ) ? 'gift-cards' : 'wiki';
+$lp_active = 'wiki';
 
 get_header();
 ?>
