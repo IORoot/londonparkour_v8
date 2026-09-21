@@ -27,6 +27,7 @@ final class Plugin {
 		CPT::init();
 		ACF_Fields::init();
 		Appointment_Admin::init();
+		Party_Prices::init();
 		Bookings::init();
 		Packs::init();
 		Manual_Coupons::init();

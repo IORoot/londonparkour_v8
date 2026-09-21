@@ -344,8 +344,19 @@ abstract class REST {
 				'start_time' => (string) ( $slot_snapshot['start_time'] ?? '' ),
 				'location'   => (string) ( $slot_snapshot['location'] ?? '' ),
 				'duration'   => (int) ( $slot_snapshot['duration_minutes'] ?? 0 ),
-				'price'      => (float) ( $slot_snapshot['price_gbp'] ?? 0 ),
 			] );
+
+			$party_unit = Party_Prices::unit_price_for_seats( (array) ( $class_data['party_prices'] ?? [] ), $seats );
+			if ( null === $party_unit ) {
+				return self::error(
+					422,
+					'party_price_missing',
+					__( 'That group size isn’t priced for this appointment. Please choose another number of people.', 'class-bookings-with-stripe-pro' ),
+					[ 'field' => 'seats' ]
+				);
+			}
+			$checkout_class_data['price'] = $party_unit;
+			$slot_snapshot['price_gbp']   = $party_unit;
 		}
 
 		$unit_pence   = Helpers::to_pence( $checkout_class_data['price'] );

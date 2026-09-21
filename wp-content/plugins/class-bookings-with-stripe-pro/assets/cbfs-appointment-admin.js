@@ -80,6 +80,113 @@
 			} );
 		}
 
+		initPartyPrices();
+	}
+
+	function formatPartyTotal( seats, rate, symbol, step ) {
+		if ( isNaN( rate ) ) {
+			return '—';
+		}
+		const total = seats * rate;
+		const decimals = step === '1' ? 0 : 2;
+		return symbol + total.toFixed( decimals );
+	}
+
+	function updatePartyRow( row, symbol, step ) {
+		const input = row.querySelector( '.clasbpro-party-prices__input' );
+		const total = row.querySelector( '.clasbpro-party-prices__total' );
+		if ( ! input || ! total ) {
+			return;
+		}
+		const seats = parseInt( row.getAttribute( 'data-seats' ), 10 ) || 0;
+		const raw = String( input.value || '' ).trim();
+		if ( raw === '' ) {
+			total.textContent = '—';
+			return;
+		}
+		total.textContent = formatPartyTotal( seats, parseFloat( raw ), symbol, step );
+	}
+
+	function bindPartyRow( row, symbol, step ) {
+		const input = row.querySelector( '.clasbpro-party-prices__input' );
+		if ( input ) {
+			input.addEventListener( 'input', function () {
+				updatePartyRow( row, symbol, step );
+			} );
+		}
+		updatePartyRow( row, symbol, step );
+	}
+
+	function buildPartyRow( template, seats, symbol, step ) {
+		const html = template.innerHTML.replace( /__SEATS__/g, String( seats ) );
+		const wrap = document.createElement( 'div' );
+		wrap.innerHTML = html.trim();
+		const row = wrap.firstElementChild;
+		if ( ! row ) {
+			return null;
+		}
+		row.setAttribute( 'data-seats', String( seats ) );
+		bindPartyRow( row, symbol, step );
+		return row;
+	}
+
+	function capacityInput() {
+		return document.querySelector( '.acf-field[data-key="field_clasbpro_capacity"] input' );
+	}
+
+	function syncPartyCapacity( root ) {
+		const rowsWrap = root.querySelector( '.clasbpro-party-prices__rows' );
+		const template = document.getElementById( 'clasbpro-party-price-row-template' );
+		const capEl = capacityInput();
+		if ( ! rowsWrap || ! template || ! capEl ) {
+			return;
+		}
+		const symbol = root.getAttribute( 'data-symbol' ) || '£';
+		const step = root.getAttribute( 'data-step' ) || '0.01';
+		let capacity = parseInt( capEl.value, 10 ) || 1;
+		if ( capacity < 1 ) {
+			capacity = 1;
+		}
+		const existing = {};
+		rowsWrap.querySelectorAll( '.clasbpro-party-prices__row' ).forEach( function ( row ) {
+			existing[ row.getAttribute( 'data-seats' ) ] = row;
+		} );
+		for ( let seats = 1; seats <= capacity; seats++ ) {
+			if ( existing[ String( seats ) ] ) {
+				continue;
+			}
+			const row = buildPartyRow( template, seats, symbol, step );
+			if ( row ) {
+				rowsWrap.appendChild( row );
+			}
+		}
+		rowsWrap.querySelectorAll( '.clasbpro-party-prices__row' ).forEach( function ( row ) {
+			const seats = parseInt( row.getAttribute( 'data-seats' ), 10 ) || 0;
+			if ( seats > capacity ) {
+				row.remove();
+			}
+		} );
+	}
+
+	function initPartyPrices() {
+		const root = document.getElementById( 'clasbpro-party-prices' );
+		if ( ! root ) {
+			return;
+		}
+		const symbol = root.getAttribute( 'data-symbol' ) || '£';
+		const step = root.getAttribute( 'data-step' ) || '0.01';
+		root.querySelectorAll( '.clasbpro-party-prices__row' ).forEach( function ( row ) {
+			bindPartyRow( row, symbol, step );
+		} );
+		const capEl = capacityInput();
+		if ( capEl ) {
+			capEl.addEventListener( 'input', function () {
+				syncPartyCapacity( root );
+			} );
+			capEl.addEventListener( 'change', function () {
+				syncPartyCapacity( root );
+			} );
+		}
 	}
 
 	if ( document.readyState === 'loading' ) {

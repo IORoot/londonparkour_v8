@@ -154,7 +154,21 @@ function lp_class_composed_subtitle( int $class_id ): string {
  * @param int $class_id Post ID.
  */
 function lp_class_price_display( int $class_id ): string {
-	$raw   = lp_clasbpro_raw( $class_id );
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw && ! empty( $raw['is_appointments'] ) ) {
+		$from = null;
+		if ( class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices' ) ) {
+			$from = \IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices::cheapest_session_total( (array) ( $raw['party_prices'] ?? [] ) );
+		}
+		if ( null === $from || $from <= 0 ) {
+			return '';
+		}
+		$formatted = ( floor( $from ) === $from )
+			? (string) (int) $from
+			: number_format( $from, 2, '.', '' );
+		return 'from £' . $formatted;
+	}
+
 	$price = $raw ? (float) ( $raw['price'] ?? 0 ) : 0.0;
 	if ( $price <= 0 && function_exists( 'get_field' ) ) {
 		$price = (float) get_field( 'price_gbp', $class_id );
@@ -462,7 +476,12 @@ function lp_commerce_category_for_class( int $class_id ): string {
  * @param int $class_id Post ID.
  */
 function lp_class_price_amount( int $class_id ): float {
-	$raw   = lp_clasbpro_raw( $class_id );
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw && ! empty( $raw['is_appointments'] ) && class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices' ) ) {
+		$from = \IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices::cheapest_session_total( (array) ( $raw['party_prices'] ?? [] ) );
+		return ( null !== $from && $from > 0 ) ? (float) $from : 0.0;
+	}
+
 	$price = $raw ? (float) ( $raw['price'] ?? 0 ) : 0.0;
 	if ( $price <= 0 && function_exists( 'get_field' ) ) {
 		$price = (float) get_field( 'price_gbp', $class_id );

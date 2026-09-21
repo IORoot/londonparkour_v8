@@ -31,6 +31,7 @@ require_once CLASBOWPRO_DIR . 'includes/helpers.php';
 require_once CLASBOWPRO_DIR . 'includes/class-cpt.php';
 require_once CLASBOWPRO_DIR . 'includes/class-acf-fields.php';
 require_once CLASBOWPRO_DIR . 'includes/class-slot-rules.php';
+require_once CLASBOWPRO_DIR . 'includes/class-party-prices.php';
 require_once CLASBOWPRO_DIR . 'includes/class-appointment-admin.php';
 require_once CLASBOWPRO_DIR . 'includes/class-bookings.php';
 require_once CLASBOWPRO_DIR . 'includes/class-packs.php';

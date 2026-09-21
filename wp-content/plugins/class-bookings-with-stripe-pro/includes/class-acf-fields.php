@@ -565,6 +565,16 @@ abstract class ACF_Fields {
 			],
 		];
 
+		$not_appointments_condition = [
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '!=',
+					'value'    => 'appointments',
+				],
+			],
+		];
+
 		$standard_schedule_condition = [
 			[
 				[
@@ -808,7 +818,7 @@ abstract class ACF_Fields {
 						'wrapper'       => [
 							'width' => '20',
 						],
-						'conditional_logic' => 0,
+						'conditional_logic' => $not_appointments_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_capacity',
@@ -823,6 +833,46 @@ abstract class ACF_Fields {
 							'width' => '20',
 						],
 						'conditional_logic' => 0,
+					],
+					[
+						'key'           => 'field_clasbpro_calendar_months_ahead',
+						'label'         => __( 'Calendar months ahead', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'calendar_months_ahead',
+						'type'          => 'number',
+						'default_value' => 3,
+						'min'           => 1,
+						'max'           => 12,
+						'step'          => 1,
+						'instructions'  => __( 'How many months customers can browse ahead.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [
+							'width' => '20',
+						],
+						'conditional_logic' => $calendar_months_condition,
+					],
+					[
+						'key'           => 'field_clasbpro_minimum_lead_time_hours',
+						'label'         => __( 'Minimum lead time (hours)', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'minimum_lead_time_hours',
+						'type'          => 'number',
+						'default_value' => 0,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'Slots inside this window are hidden. 0 = book until start time.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [
+							'width' => '20',
+						],
+						'conditional_logic' => $appointments_booking_condition,
+					],
+					[
+						'key'               => 'field_clasbpro_party_prices',
+						'label'             => __( 'Party size prices', 'class-bookings-with-stripe-pro' ),
+						'name'              => '_clasbpro_party_prices_ui',
+						'type'              => 'message',
+						'message'           => '',
+						'new_lines'         => '',
+						'esc_html'          => 0,
+						'instructions'      => __( 'One row per number of people, from 1 up to Capacity.', 'class-bookings-with-stripe-pro' ),
+						'conditional_logic' => $appointments_booking_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_show_seats_remaining',
@@ -855,21 +905,6 @@ abstract class ACF_Fields {
 						'conditional_logic' => $recurring_booking_condition,
 					],
 					[
-						'key'           => 'field_clasbpro_calendar_months_ahead',
-						'label'         => __( 'Calendar months ahead', 'class-bookings-with-stripe-pro' ),
-						'name'          => 'calendar_months_ahead',
-						'type'          => 'number',
-						'default_value' => 3,
-						'min'           => 1,
-						'max'           => 12,
-						'step'          => 1,
-						'instructions'  => __( 'How many months customers can browse ahead.', 'class-bookings-with-stripe-pro' ),
-						'wrapper'       => [
-							'width' => '20',
-						],
-						'conditional_logic' => $calendar_months_condition,
-					],
-					[
 						'key'           => 'field_clasbpro_class_upcoming_dates_count',
 						'label'         => __( 'Dates in dropdown', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'upcoming_dates_count',
@@ -882,20 +917,6 @@ abstract class ACF_Fields {
 							'width' => '20',
 						],
 						'conditional_logic' => $dropdown_dates_count_condition,
-					],
-					[
-						'key'           => 'field_clasbpro_minimum_lead_time_hours',
-						'label'         => __( 'Minimum lead time (hours)', 'class-bookings-with-stripe-pro' ),
-						'name'          => 'minimum_lead_time_hours',
-						'type'          => 'number',
-						'default_value' => 0,
-						'min'           => 0,
-						'step'          => 1,
-						'instructions'  => __( 'Slots inside this window are hidden. 0 = book until start time.', 'class-bookings-with-stripe-pro' ),
-						'wrapper'       => [
-							'width' => '25',
-						],
-						'conditional_logic' => $appointments_booking_condition,
 					],
 					[
 						'key'               => 'field_clasbpro_appointment_slot_rules',

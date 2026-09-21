@@ -684,6 +684,12 @@ abstract class Helpers {
 		$upcoming_n   = max( 1, min( 12, $upcoming_n ) );
 
 		$is_appointments = 'appointments' === $schedule_type;
+		$capacity        = function_exists( 'get_field' ) ? (int) get_field( 'capacity', $class_id ) : 0;
+		$party_prices    = $is_appointments ? Party_Prices::get_map( $class_id, $capacity ) : [];
+		$price           = function_exists( 'get_field' ) ? (float) get_field( 'price_gbp', $class_id ) : 0.0;
+		if ( $is_appointments ) {
+			$price = Party_Prices::one_person_rate( $party_prices );
+		}
 		$calendar_months = function_exists( 'get_field' ) ? (int) get_field( 'calendar_months_ahead', $class_id ) : 3;
 		$calendar_months = max( 1, min( 12, $calendar_months ?: 3 ) );
 		$lead_hours      = function_exists( 'get_field' ) ? (int) get_field( 'minimum_lead_time_hours', $class_id ) : 0;
@@ -713,8 +719,9 @@ abstract class Helpers {
 			'end_date'        => $end_date,
 			'start_time'      => $start_time,
 			'duration'        => function_exists( 'get_field' ) ? (int) get_field( 'duration_minutes', $class_id ) : 0,
-			'price'           => function_exists( 'get_field' ) ? (float) get_field( 'price_gbp', $class_id ) : 0.0,
-			'capacity'        => function_exists( 'get_field' ) ? (int) get_field( 'capacity', $class_id ) : 0,
+			'price'           => $price,
+			'party_prices'    => $party_prices,
+			'capacity'        => $capacity,
 			'show_seats_remaining' => function_exists( 'get_field' ) ? (bool) get_field( 'show_seats_remaining', $class_id ) : true,
 			'upcoming_dates_count' => $upcoming_n,
 			'calendar_months_ahead' => $calendar_months,

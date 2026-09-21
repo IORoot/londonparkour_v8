@@ -180,22 +180,45 @@
 
 		const remaining = getDateRemaining( dateField, form );
 		const max = Math.max( 1, remaining );
+		const partyMap = totalEl ? readPartyPrices( totalEl ) : null;
 
 		const previous = parseInt( seatsSel.value, 10 ) || 1;
 		seatsSel.innerHTML = '';
 		for ( let i = 1; i <= max; i++ ) {
+			if ( partyMap && typeof partyMap[ String( i ) ] === 'undefined' ) {
+				continue;
+			}
 			const o = document.createElement( 'option' );
 			o.value = String( i );
 			o.textContent = String( i );
 			seatsSel.appendChild( o );
 		}
 		seatsSel.value = String( Math.min( previous, max ) );
+		if ( seatsSel.selectedIndex < 0 && seatsSel.options.length ) {
+			seatsSel.selectedIndex = 0;
+		}
 		updateTotal( form );
 
 		if ( remaining === 0 ) {
 			seatsSel.disabled = true;
 		} else {
 			seatsSel.disabled = false;
+		}
+	}
+
+	function readPartyPrices( totalEl ) {
+		const raw = totalEl.getAttribute( 'data-cbfs-party-prices' ) || '';
+		if ( ! raw ) {
+			return null;
+		}
+		try {
+			const parsed = JSON.parse( raw );
+			if ( ! parsed || typeof parsed !== 'object' || Array.isArray( parsed ) ) {
+				return null;
+			}
+			return parsed;
+		} catch ( err ) {
+			return null;
 		}
 	}
 
@@ -211,6 +234,17 @@
 			}
 		}
 		const seats = parseInt( seatsSel.value, 10 ) || 1;
+		const partyMap = readPartyPrices( totalEl );
+		if ( partyMap ) {
+			const partyUnit = parseFloat( partyMap[ String( seats ) ] );
+			if ( isNaN( partyUnit ) ) {
+				totalEl.textContent = '';
+				return;
+			}
+			const eachLabel = totalEl.dataset.cbfsEachLabel || 'each';
+			totalEl.textContent = formatPrice( partyUnit ) + ' ' + eachLabel + ' · ' + formatPrice( partyUnit * seats );
+			return;
+		}
 		let unit = parseFloat( totalEl.dataset.cbfsUnitPrice || '0' );
 		if ( isAppointmentForm( form ) ) {
 			const ruleInput = form.querySelector( '[name="slot_rule_id"]' );
