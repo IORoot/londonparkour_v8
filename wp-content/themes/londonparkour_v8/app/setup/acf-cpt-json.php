@@ -144,6 +144,9 @@ function lp_acf_write_cpt_taxonomy_json(): array {
 		}
 
 		$labels = lp_labels( $tax['singular'], $tax['plural'] );
+		if ( ! empty( $tax['menu_name'] ) ) {
+			$labels['menu_name'] = $tax['menu_name'];
+		}
 
 		$data = array(
 			'key'                    => $key,

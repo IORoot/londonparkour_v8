@@ -163,7 +163,7 @@ $lp_still_body    = (string) ( $lp_still['body'] ?? 'Send the form above, or ema
 if ( false !== stripos( $lp_still_body, 'working day' ) || false !== stripos( $lp_still_body, '24h' ) || false !== stripos( $lp_still_body, '36h' ) ) {
 	$lp_still_body = 'Send the form above, or email us direct. A coach reads every message.';
 }
-$lp_still_email   = (string) ( $lp_still['email'] ?? 'hello@londonparkour.com' );
+$lp_still_email   = (string) ( $lp_still['email'] ?? 'contact@londonparkour.com' );
 $lp_still_mailto  = 'mailto:' . $lp_still_email;
 ?>
 <section class="<?php echo lp_classes( 'w-full bg-base-100', $lp_spacing ); ?>" data-component="contact-faq" data-surface="page"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>

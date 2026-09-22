@@ -154,7 +154,21 @@ function lp_class_composed_subtitle( int $class_id ): string {
  * @param int $class_id Post ID.
  */
 function lp_class_price_display( int $class_id ): string {
-	$raw   = lp_clasbpro_raw( $class_id );
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw && ! empty( $raw['is_appointments'] ) ) {
+		$from = null;
+		if ( class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices' ) ) {
+			$from = \IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices::cheapest_session_total( (array) ( $raw['party_prices'] ?? [] ) );
+		}
+		if ( null === $from || $from <= 0 ) {
+			return '';
+		}
+		$formatted = ( floor( $from ) === $from )
+			? (string) (int) $from
+			: number_format( $from, 2, '.', '' );
+		return 'from £' . $formatted;
+	}
+
 	$price = $raw ? (float) ( $raw['price'] ?? 0 ) : 0.0;
 	if ( $price <= 0 && function_exists( 'get_field' ) ) {
 		$price = (float) get_field( 'price_gbp', $class_id );
@@ -371,12 +385,23 @@ function lp_coach_names_for_booking( int $booking_id, int $class_id ): array {
 function lp_class_is_one_off( int $class_id ): bool {
 	$raw = lp_clasbpro_raw( $class_id );
 	if ( $raw ) {
-		return ! empty( $raw['is_one_off_event'] );
+		if ( ! empty( $raw['is_one_off_event'] ) ) {
+			return true;
+		}
+		// Checkout method is not the schedule identity: an external-link
+		// class is still a one-off workshop for listings.
+		return 'external_link' === (string) ( $raw['schedule_type'] ?? '' )
+			|| ! empty( $raw['use_external_link'] );
 	}
 	if ( function_exists( 'get_field' ) ) {
-		return 'one_off' === (string) get_field( 'schedule_type', $class_id );
+		$type = (string) get_field( 'schedule_type', $class_id );
+		return in_array( $type, array( 'one_off', 'external_link' ), true );
 	}
-	return 'one_off' === (string) get_post_meta( $class_id, 'schedule_type', true );
+	return in_array(
+		(string) get_post_meta( $class_id, 'schedule_type', true ),
+		array( 'one_off', 'external_link' ),
+		true
+	);
 }
 
 /**
@@ -393,6 +418,41 @@ function lp_class_is_appointment( int $class_id ): bool {
 		return 'appointments' === (string) get_field( 'schedule_type', $class_id );
 	}
 	return 'appointments' === (string) get_post_meta( $class_id, 'schedule_type', true );
+}
+
+/**
+ * Class booked on an external page (ClassFor, Eventbrite, …) rather than Stripe.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_is_external_link( int $class_id ): bool {
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw ) {
+		return ! empty( $raw['use_external_link'] ) || 'external_link' === (string) ( $raw['schedule_type'] ?? '' );
+	}
+	if ( function_exists( 'get_field' ) ) {
+		if ( 'external_link' === (string) get_field( 'schedule_type', $class_id ) ) {
+			return true;
+		}
+		return (bool) get_field( 'use_external_link', $class_id );
+	}
+	return 'external_link' === (string) get_post_meta( $class_id, 'schedule_type', true );
+}
+
+/**
+ * External booking URL for an external-link class, or empty.
+ *
+ * @param int $class_id Post ID.
+ */
+function lp_class_external_url( int $class_id ): string {
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw ) {
+		return esc_url_raw( (string) ( $raw['external_link_url'] ?? '' ) );
+	}
+	if ( function_exists( 'get_field' ) ) {
+		return esc_url_raw( (string) get_field( 'external_link_url', $class_id ) );
+	}
+	return esc_url_raw( (string) get_post_meta( $class_id, 'external_link_url', true ) );
 }
 
 /**
@@ -416,7 +476,12 @@ function lp_commerce_category_for_class( int $class_id ): string {
  * @param int $class_id Post ID.
  */
 function lp_class_price_amount( int $class_id ): float {
-	$raw   = lp_clasbpro_raw( $class_id );
+	$raw = lp_clasbpro_raw( $class_id );
+	if ( $raw && ! empty( $raw['is_appointments'] ) && class_exists( '\IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices' ) ) {
+		$from = \IOROOT_STRIPE_BOOKINGS_PRO\Party_Prices::cheapest_session_total( (array) ( $raw['party_prices'] ?? [] ) );
+		return ( null !== $from && $from > 0 ) ? (float) $from : 0.0;
+	}
+
 	$price = $raw ? (float) ( $raw['price'] ?? 0 ) : 0.0;
 	if ( $price <= 0 && function_exists( 'get_field' ) ) {
 		$price = (float) get_field( 'price_gbp', $class_id );
@@ -544,7 +609,7 @@ add_filter( 'post_type_link', 'lp_class_appointment_permalink', 10, 2 );
 
 /**
  * Published, active, recurring weekly group classes — not workshops, 1:1s, or
- * external-link listings.
+ * external-link events (those list with workshops).
  *
  * @return int[]
  */
@@ -569,10 +634,6 @@ function lp_weekly_class_ids(): array {
 	foreach ( $ids as $id ) {
 		$id = (int) $id;
 		if ( $id <= 0 || lp_class_is_appointment( $id ) || lp_class_is_one_off( $id ) ) {
-			continue;
-		}
-		$raw = lp_clasbpro_raw( $id );
-		if ( $raw && 'external_link' === (string) ( $raw['schedule_type'] ?? '' ) ) {
 			continue;
 		}
 		$weekly[] = $id;
@@ -685,8 +746,9 @@ function lp_weekly_class_foot_note(): string {
  */
 function lp_class_one_off_meta_clause(): array {
 	return array(
-		'key'   => 'schedule_type',
-		'value' => 'one_off',
+		'key'     => 'schedule_type',
+		'value'   => array( 'one_off', 'external_link' ),
+		'compare' => 'IN',
 	);
 }
 
@@ -704,8 +766,8 @@ function lp_class_not_one_off_meta_clause(): array {
 		),
 		array(
 			'key'     => 'schedule_type',
-			'value'   => 'one_off',
-			'compare' => '!=',
+			'value'   => array( 'one_off', 'external_link' ),
+			'compare' => 'NOT IN',
 		),
 	);
 }
@@ -917,6 +979,7 @@ function lp_class_upcoming_sessions( int $class_id, int $limit = 3 ): array {
 
 	$limit    = max( 1, $limit );
 	$capacity = max( 0, (int) ( $raw['capacity'] ?? 0 ) );
+	$external = lp_class_is_external_link( $class_id );
 	$time     = lp_clasbpro_ready()
 		? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::normalise_time_string( (string) $raw['start_time'] )
 		: (string) $raw['start_time'];
@@ -960,19 +1023,28 @@ function lp_class_upcoming_sessions( int $class_id, int $limit = 3 ): array {
 
 	$rows = array();
 	foreach ( $dates as $date ) {
-		$remaining = lp_clasbpro_ready()
-			? \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::seats_remaining( $raw, $date )
-			: $capacity;
-		$sold_out = $remaining <= 0;
+		if ( $external ) {
+			$remaining = $capacity;
+			$sold_out  = false;
+			$spaces    = '';
+			$label     = 'BOOK';
+		} else {
+			$remaining = lp_clasbpro_ready()
+				? \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::seats_remaining( $raw, $date )
+				: $capacity;
+			$sold_out = $remaining <= 0;
+			$spaces   = lp_class_spaces_label( $remaining, $capacity );
+			$label    = $sold_out ? 'WAITLIST' : 'BOOK';
+		}
 		$rows[]   = array(
 			'date'       => $date,
 			'date_label' => lp_class_date_label( $date ),
 			'time'       => $time,
-			'spaces'     => lp_class_spaces_label( $remaining, $capacity ),
+			'spaces'     => $spaces,
 			'sold_out'   => $sold_out,
 			'remaining'  => $remaining,
 			'capacity'   => $capacity,
-			'book_label' => $sold_out ? 'WAITLIST' : 'BOOK',
+			'book_label' => $label,
 		);
 	}
 
@@ -1091,22 +1163,32 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 			$time = substr( $time, 0, 5 );
 		}
 		$capacity = max( 0, (int) ( $raw['capacity'] ?? 0 ) );
+		$external = lp_class_is_external_link( $class_id );
 		$board    = lp_class_board_fields( $class_id );
 
 		foreach ( lp_class_dates_between( $class_id, $start, $end ) as $date ) {
-			$remaining = lp_clasbpro_ready()
-				? \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::seats_remaining( $raw, $date )
-				: $capacity;
-			$sold_out = $remaining <= 0;
+			if ( $external ) {
+				$remaining = $capacity;
+				$sold_out  = false;
+				$spaces    = '';
+				$label     = 'BOOK';
+			} else {
+				$remaining = lp_clasbpro_ready()
+					? \IOROOT_STRIPE_BOOKINGS_PRO\Bookings::seats_remaining( $raw, $date )
+					: $capacity;
+				$sold_out = $remaining <= 0;
+				$spaces   = lp_class_spaces_label( $remaining, $capacity );
+				$label    = $sold_out ? 'WAITLIST' : 'BOOK';
+			}
 			$session  = array(
 				'date'       => $date,
 				'date_label' => lp_class_date_label( $date ),
 				'time'       => $time,
-				'spaces'     => lp_class_spaces_label( $remaining, $capacity ),
+				'spaces'     => $spaces,
 				'sold_out'   => $sold_out,
 				'remaining'  => $remaining,
 				'capacity'   => $capacity,
-				'book_label' => $sold_out ? 'WAITLIST' : 'BOOK',
+				'book_label' => $label,
 			);
 			$rows[] = array_merge( $board, $session );
 		}
@@ -1197,7 +1279,8 @@ function lp_class_glyph( int $class_id ): array {
 }
 
 /**
- * Args for elements/button.php that open the shared booking drawer.
+ * Args for elements/button.php that open the shared booking drawer, or an
+ * outbound href when the class is an external-link type.
  *
  * @param int    $class_id    Post ID.
  * @param string $preset_date Optional Y-m-d.
@@ -1215,6 +1298,35 @@ function lp_class_book_button_args( int $class_id, string $preset_date = '', str
 		'private'  => 'private',
 	);
 
+	$price = function_exists( 'lp_class_price_amount' ) ? lp_class_price_amount( $class_id ) : 0.0;
+	$title = get_the_title( $class_id );
+
+	if ( lp_class_is_external_link( $class_id ) ) {
+		$url   = lp_class_external_url( $class_id );
+		$attrs = array(
+			'data-lp-id'            => (string) $class_id,
+			'data-lp-list'          => $list[ $category ] ?? 'classes',
+			'data-lp-item-category' => $category,
+		);
+		if ( $price > 0 ) {
+			$attrs['data-lp-price'] = (string) $price;
+		}
+		if ( is_string( $title ) && '' !== $title ) {
+			$attrs['data-lp-item-name'] = $title;
+		}
+
+		$args = array(
+			'variant'    => $variant,
+			'label'      => $label,
+			'data_attrs' => $attrs,
+		);
+		if ( '' !== $url ) {
+			$args['href']   = $url;
+			$args['target'] = '_blank';
+		}
+		return $args;
+	}
+
 	$attrs = array(
 		'data-lp-panel'         => 'booking',
 		'data-lp-book'          => '1',
@@ -1223,7 +1335,6 @@ function lp_class_book_button_args( int $class_id, string $preset_date = '', str
 		'data-lp-list'          => $list[ $category ] ?? 'classes',
 		'data-lp-item-category' => $category,
 	);
-	$price = function_exists( 'lp_class_price_amount' ) ? lp_class_price_amount( $class_id ) : 0.0;
 	if ( $price > 0 ) {
 		$attrs['data-lp-price'] = (string) $price;
 	}
@@ -1231,7 +1342,6 @@ function lp_class_book_button_args( int $class_id, string $preset_date = '', str
 		$attrs['data-preset-date'] = $preset_date;
 	}
 
-	$title = get_the_title( $class_id );
 	if ( is_string( $title ) && '' !== $title ) {
 		$attrs['data-lp-item-name'] = $title;
 	}
@@ -1914,7 +2024,7 @@ function lp_clasbpro_status_product( $view ): string {
  *
  * @param int $class_id   Class post ID.
  * @param int $booking_id Booking post ID, or 0 when unknown.
- * @return list<array{name:string,secondary:string,bio:string,photo_id:int}>
+ * @return list<array{name:string,secondary:string,bio:string,photo_id:int,href:string}>
  */
 function lp_clasbpro_status_coaches( int $class_id, int $booking_id = 0 ): array {
 	if ( $class_id <= 0 ) {
@@ -1938,6 +2048,7 @@ function lp_clasbpro_status_coaches( int $class_id, int $booking_id = 0 ): array
 				? lp_first_sentences( (string) get_field( 'bio', $cid ), 2 )
 				: '',
 			'photo_id'  => has_post_thumbnail( $cid ) ? (int) get_post_thumbnail_id( $cid ) : 0,
+			'href'      => (string) get_permalink( $cid ),
 		);
 	}
 
@@ -1949,6 +2060,7 @@ function lp_clasbpro_status_coaches( int $class_id, int $booking_id = 0 ): array
 				'secondary' => '',
 				'bio'       => '',
 				'photo_id'  => 0,
+				'href'      => '',
 			);
 		}
 	}

@@ -10,8 +10,9 @@
  * `past` = true greys the card out and removes the link (session already started).
  *
  * When `book_class_id` is set, the BOOK rail opens the shared clasbpro drawer
- * (same path as board-row sell). Optional `href` then wraps media+body in a
- * flex-row link to the class detail page (rail stays a sibling button).
+ * (same path as board-row sell), or an outbound <a> when that class is an
+ * external-link type. Optional `href` then wraps media+body in a flex-row
+ * link to the class detail page (rail stays a sibling control).
  *
  * @param string $args['day']
  * @param string $args['time']
@@ -56,8 +57,19 @@ $lp_body = array(
 );
 
 $lp_body_hover = array(
-	'card'   => 'group-hover:bg-neutral',
-	'detail' => 'group-hover/detail:bg-neutral',
+	'card'   => 'group-hover:bg-primary group-hover:border-neutral',
+	'detail' => 'group-hover/detail:bg-primary group-hover/detail:border-neutral',
+);
+
+/* Ink/rules follow the details link only. The BOOK rail is outside that group. */
+$lp_ink_hover = array(
+	'card'   => 'group-hover:text-neutral',
+	'detail' => 'group-hover/detail:text-neutral',
+);
+
+$lp_rule_hover = array(
+	'card'   => 'group-hover:border-neutral',
+	'detail' => 'group-hover/detail:border-neutral',
 );
 
 $lp_media_scrim = array(
@@ -169,6 +181,8 @@ if ( ! $lp_past ) {
 		$lp_hover_mode = 'card';
 	}
 }
+$lp_ink  = '' !== $lp_hover_mode ? $lp_ink_hover[ $lp_hover_mode ] : '';
+$lp_rule = '' !== $lp_hover_mode ? $lp_rule_hover[ $lp_hover_mode ] : '';
 
 $lp_book_attrs = '';
 if ( $lp_can_book ) {
@@ -249,20 +263,20 @@ if ( $lp_can_book ) {
 				<?php if ( $lp_past ) : ?>
 					<span class="font-label text-[10px] font-bold tracking-[1.2px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_kicker ); ?></span>
 				<?php else : ?>
-					<span class="font-label text-[10px] font-bold tracking-[1.2px] uppercase text-primary"><?php echo esc_html( $lp_kicker ); ?></span>
+					<span class="<?php echo lp_classes( 'font-label text-[10px] font-bold tracking-[1.2px] uppercase text-primary', $lp_ink ); ?>"><?php echo esc_html( $lp_kicker ); ?></span>
 				<?php endif; ?>
 			<?php endif; ?>
-			<h3 class="<?php echo lp_classes( $lp_title[ $lp_tone ] ); ?>"><?php echo esc_html( $lp_title_t ); ?></h3>
+			<h3 class="<?php echo lp_classes( $lp_title[ $lp_tone ], $lp_past ? '' : $lp_ink ); ?>"><?php echo esc_html( $lp_title_t ); ?></h3>
 			<?php if ( '' !== $lp_sub ) : ?>
-				<p class="font-label text-[11px] font-normal leading-[1.5] tracking-[0.2px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_sub ); ?></p>
+				<p class="<?php echo lp_classes( 'font-label text-[11px] font-normal leading-[1.5] tracking-[0.2px] text-neutral-content/50 m-0', $lp_ink ); ?>"><?php echo esc_html( $lp_sub ); ?></p>
 			<?php endif; ?>
 		</div>
 		<?php if ( $lp_facts ) : ?>
 			<div class="grid grid-cols-2 md:grid-cols-4 w-full">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
-					<div class="min-w-0 flex flex-col gap-[3px] pt-3 pr-3 border-t border-neutral-content/10">
-						<span class="font-label text-[9px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( (string) ( $lp_fact['key'] ?? '' ) ); ?></span>
-						<span class="<?php echo lp_classes( $lp_fact_val[ $lp_tone ] ); ?>"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+					<div class="<?php echo lp_classes( 'min-w-0 flex flex-col gap-[3px] pt-3 pr-3 border-t border-neutral-content/10', $lp_rule ); ?>">
+						<span class="<?php echo lp_classes( 'font-label text-[9px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50', $lp_ink ); ?>"><?php echo esc_html( (string) ( $lp_fact['key'] ?? '' ) ); ?></span>
+						<span class="<?php echo lp_classes( $lp_fact_val[ $lp_tone ], $lp_past ? '' : $lp_ink ); ?>"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -273,7 +287,29 @@ if ( $lp_can_book ) {
 		</a>
 	<?php endif; ?>
 
-	<?php if ( $lp_can_book ) : ?>
+	<?php if ( $lp_can_book && ! empty( $lp_book['href'] ) ) : ?>
+		<a
+			href="<?php echo esc_url( (string) $lp_book['href'] ); ?>"
+			<?php if ( ! empty( $lp_book['target'] ) ) : ?>
+				target="<?php echo esc_attr( (string) $lp_book['target'] ); ?>"
+				rel="noopener"
+			<?php endif; ?>
+			class="<?php echo lp_classes( $lp_rail_book[ $lp_size ] ); ?>"
+			<?php echo $lp_book_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above. ?>
+		>
+			<div class="flex flex-col gap-0.5 items-start text-left">
+				<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_fare_lbl ); ?></span>
+				<span class="<?php echo lp_classes( $lp_fare_book[ $lp_size ] ); ?>"><?php echo esc_html( $lp_fare_t ); ?></span>
+				<?php if ( '' !== $lp_spaces_d ) : ?>
+					<span class="font-label text-[9px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_spaces_d ); ?></span>
+				<?php endif; ?>
+			</div>
+			<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover/rail:border-primary">
+				<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover/rail:text-primary"><?php echo esc_html( $lp_cta ); ?></span>
+				<span class="font-label text-[14px] font-extrabold text-primary-content group-hover/rail:text-primary" aria-hidden="true">→</span>
+			</div>
+		</a>
+	<?php elseif ( $lp_can_book && ! empty( $lp_book['command'] ) ) : ?>
 		<button
 			type="button"
 			class="<?php echo lp_classes( $lp_rail_book[ $lp_size ] ); ?>"

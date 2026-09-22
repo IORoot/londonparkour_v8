@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Migration {
 
 	private const OPTION_VERSION = 'clasbpro_db_version';
-	private const DB_VERSION     = 10;
+	private const DB_VERSION     = 11;
 
 	public static function maybe_run(): void {
 		$current = (int) get_option( self::OPTION_VERSION, 0 );
@@ -58,6 +58,10 @@ abstract class Migration {
 
 		if ( $current < 10 ) {
 			Scheduled_Emails::reopen_dedup_skipped_for_live_bookings();
+		}
+
+		if ( $current < 11 ) {
+			Secrets::encrypt_stored_plaintext();
 		}
 
 		update_option( self::OPTION_VERSION, self::DB_VERSION, false );

@@ -742,7 +742,8 @@ abstract class Emails {
 	 * @param array<string, string> $tags
 	 */
 	private static function send_admin( int $booking_id, array $tags ): void {
-		$class_id = (int) ( Bookings::get_meta( $booking_id )['class_id'] ?? 0 );
+		$meta     = Bookings::get_meta( $booking_id );
+		$class_id = (int) ( $meta['class_id'] ?? 0 );
 		if ( ! Class_Email_Overrides::instant_enabled( $class_id, 'admin' ) ) {
 			Booking_Email_Status::record_instant_delivery(
 				$booking_id,
@@ -755,7 +756,10 @@ abstract class Emails {
 			return;
 		}
 
-		$admin_email = Class_Email_Overrides::resolve_admin_recipient( $class_id );
+		$admin_email = Class_Email_Overrides::resolve_admin_recipient(
+			$class_id,
+			(string) ( $meta['slot_rule_id'] ?? '' )
+		);
 		if ( ! $admin_email || ! is_email( $admin_email ) ) {
 			Booking_Email_Status::record_instant_delivery(
 				$booking_id,

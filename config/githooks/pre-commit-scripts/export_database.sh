@@ -169,8 +169,35 @@ function extract_database()
 		printf "\n%s  ${TEXT_EMERALD_500}%s${RESET_TEXT}" ${ICON_TICK} "Database dumped into ./database folder."
     fi
 
+	redact_secrets
 
 	printf "\n\n"
+}
+
+# Mailchimp (and any other) API keys must not land in the committed dump.
+# The live key belongs in wp-config.php (CLASBPRO_MAILCHIMP_API_KEY).
+function redact_secrets()
+{
+	if ! python3 - ./database/${DUMP_FILENAME} << 'PY'
+import re, sys
+path = sys.argv[1]
+with open(path, "r", encoding="utf-8", errors="surrogateescape") as handle:
+    text = handle.read()
+pattern = re.compile(
+    r"('(?:clasbpro_options_mailchimp_api_key|options_mailchimp_api_key)',')(?:\\'|[^'])*'"
+)
+text, n = pattern.subn(lambda match: match.group(1) + "'", text)
+leftover = re.findall(r"[0-9a-f]{32}-[a-z]{2}\d{1,2}", text)
+if leftover:
+    print(f"refusing dump: {len(leftover)} Mailchimp-shaped key(s) remain", file=sys.stderr)
+    sys.exit(1)
+with open(path, "w", encoding="utf-8", errors="surrogateescape") as handle:
+    handle.write(text)
+PY
+	then
+		printf "\n${TEXT_RED_500}Error: database dump still contains a Mailchimp API key"
+		exit $FAIL_DUMP_DB
+	fi
 }
 
 function add_to_git_staging()

@@ -45,6 +45,8 @@ function lp_nav_row_glyph( string $name, string $meta = '', int $index = 0 ): st
 		'by tutorial' => 'glyph-jumping',
 		'wiki'        => 'glyph-rolling',
 		'blog'        => 'glyph-spirit',
+		'coaches'     => 'glyph-teamwork',
+		'search'      => 'glyph-understanding',
 		'class map'   => 'glyph-traverse',
 		'agenda'      => 'glyph-flowing',
 		'kids'        => 'glyph-jumping',
@@ -622,7 +624,7 @@ function lp_nav_tutorials_panel(): array {
 	$category = function_exists( 'lp_tutorials_category_url' ) ? lp_tutorials_category_url() : home_url( '/tutorials/category/' );
 
 	$series_count   = function_exists( 'lp_series_terms_nonempty' ) ? count( lp_series_terms_nonempty() ) : 12;
-	$category_count = function_exists( 'lp_tutorials_category_count' ) ? lp_tutorials_category_count() : 11;
+	$category_count = function_exists( 'lp_tutorials_category_count' ) ? lp_tutorials_category_count() : 42;
 	$tutorial_count = function_exists( 'lp_tutorials_published_count' ) ? lp_tutorials_published_count() : 840;
 
 	$newest = get_posts(
@@ -750,7 +752,7 @@ function lp_nav_tutorials_panel(): array {
 						),
 						array(
 							'name' => 'By category',
-							'meta' => sprintf( '%d CATEGORIES', $category_count ?: 11 ),
+							'meta' => sprintf( '%d CATEGORIES', $category_count ?: 42 ),
 							'href' => $category,
 						),
 						array(
@@ -780,15 +782,22 @@ function lp_nav_tutorials_panel(): array {
 }
 
 /**
- * Docs drop panel — wiki and blog as two columns.
+ * Docs drop panel — wiki, blog, coaches, and search.
  *
  * @return array{columns:array, all_label:string, all_href:string, alt_label:string, alt_href:string}
  */
 function lp_nav_docs_panel(): array {
 	$wiki  = function_exists( 'lp_docs_url' ) ? lp_docs_url() : home_url( '/docs/' );
 	$blog  = function_exists( 'lp_docs_blog_url' ) ? lp_docs_blog_url() : home_url( '/blog/' );
+	$coaches = get_post_type_archive_link( 'lp_coach' ) ?: home_url( '/coaches/' );
+	$search  = function_exists( 'lp_search_url' ) ? lp_search_url() : home_url( '/search/' );
 	$pages = function_exists( 'lp_docs_support_count' ) ? lp_docs_support_count() : 15;
 	$stories = function_exists( 'lp_docs_story_count' ) ? lp_docs_story_count() : 12;
+	$coach_count = 0;
+	if ( function_exists( 'wp_count_posts' ) ) {
+		$counts = wp_count_posts( 'lp_coach' );
+		$coach_count = isset( $counts->publish ) ? (int) $counts->publish : 0;
+	}
 
 	return array(
 		'columns'   => array(
@@ -814,6 +823,32 @@ function lp_nav_docs_panel(): array {
 							'name' => 'Blog',
 							'meta' => sprintf( '%d STORIES', $stories ?: 12 ),
 							'href' => $blog,
+						),
+					)
+				),
+			),
+			array(
+				'title' => 'COACHES',
+				'note'  => sprintf( '%02d PEOPLE', $coach_count ?: 4 ),
+				'rows'  => lp_nav_with_glyphs(
+					array(
+						array(
+							'name' => 'Coaches',
+							'meta' => sprintf( '%02d PEOPLE', $coach_count ?: 4 ),
+							'href' => $coaches,
+						),
+					)
+				),
+			),
+			array(
+				'title' => 'SEARCH',
+				'note'  => 'FIND',
+				'rows'  => lp_nav_with_glyphs(
+					array(
+						array(
+							'name' => 'Search',
+							'meta' => 'FIND',
+							'href' => $search,
 						),
 					)
 				),

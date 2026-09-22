@@ -3733,7 +3733,7 @@
                                 "random": "Random",
                                 "choose": "Choose"
                             },
-                            "default_value": "latest",
+                            "default_value": "random",
                             "key": "field_64852bba59b094e1"
                         },
                         {

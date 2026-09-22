@@ -11,12 +11,12 @@
     ]
   },
   "assets/css/critical.css": {
-    "file": "critical-73nEWEhr.css",
+    "file": "critical-qNdIPdQk.css",
     "src": "assets/css/critical.css",
     "isEntry": true
   },
   "assets/css/main.css": {
-    "file": "main-FGL1F6ZX.css",
+    "file": "main-D1FhZr-t.css",
     "src": "assets/css/main.css",
     "isEntry": true
   },
@@ -25,7 +25,7 @@
     "src": "assets/fonts/ScopeTrial-Variable.ttf"
   },
   "assets/js/app.js": {
-    "file": "app-Bmvjw8wF.js",
+    "file": "app-DtSzqb8y.js",
     "name": "app",
     "src": "assets/js/app.js",
     "isEntry": true,

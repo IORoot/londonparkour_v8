@@ -1,11 +1,11 @@
 <?php
 /**
- * Section Directory — DocsFaq three-column index (`N2osq` / `dIS8Z`).
+ * Section Directory — DocsFaq equal-width index (`N2osq` / `dIS8Z`).
  *
  * Ported from src/stories/Pages/DocsFaq/DocsFaq.js
  * (`data-component="docs-faq-section-directory"`). Equal-width cells with a
  * kicker, title and meta — not stacked ListRows. One row at every breakpoint;
- * SECTION A/B/C kickers hide below `lg` so Wiki / Blog / Gift Cards fit.
+ * SECTION A–D kickers hide below `lg` so Wiki / Blog / Coaches / Search fit.
  * Hover fills primary with
  * neutral ink, same invert as View Rail — Docs.
  *
@@ -33,10 +33,17 @@ $lp_default_rows = array(
 	),
 	array(
 		'index' => 'SECTION C',
-		'title' => 'Gift Cards',
-		'meta'  => 'buying, redeeming, expiry',
-		'icon'  => 'icon-tag',
-		'href'  => '/docs/gift-cards',
+		'title' => 'Coaches',
+		'meta'  => '4 people',
+		'icon'  => 'icon-user-group',
+		'href'  => '/coaches',
+	),
+	array(
+		'index' => 'SECTION D',
+		'title' => 'Search',
+		'meta'  => 'find',
+		'icon'  => 'icon-magnifying-glass',
+		'href'  => '/search',
 	),
 );
 

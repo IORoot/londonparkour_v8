@@ -182,6 +182,13 @@ abstract class Email_Body_Editor {
 		];
 	}
 
+	public static function stash_html( string $field_key, string $html ): void {
+		if ( '' === $field_key ) {
+			return;
+		}
+		self::$raw_html_stash[ $field_key ] = $html;
+	}
+
 	public static function template_option_prefix( string $template_key ): string {
 		$map = [
 			'admin'            => 'admin_email',

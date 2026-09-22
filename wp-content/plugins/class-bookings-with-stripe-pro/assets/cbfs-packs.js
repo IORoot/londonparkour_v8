@@ -74,7 +74,6 @@
 				credentials: 'same-origin',
 				headers: {
 					'Content-Type': 'application/json',
-					'X-WP-Nonce': cfg.nonce,
 				},
 				body: JSON.stringify( {
 					pack_id: packId,

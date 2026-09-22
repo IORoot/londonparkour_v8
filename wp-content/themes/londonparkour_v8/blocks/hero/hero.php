@@ -366,20 +366,39 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 					)
 				);
 				$lp_board_cls = 'group block w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10 hover:bg-primary hover:border-neutral p-0 text-left no-underline cursor-pointer transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+				$lp_board_tag = 'div';
 				if ( $lp_next_id ) {
 					$lp_book       = lp_class_book_button_args( $lp_next_id, $lp_next_date, $lp_next_lab );
 					$lp_book_attrs = '';
 					foreach ( (array) ( $lp_book['data_attrs'] ?? array() ) as $lp_bk => $lp_bv ) {
 						$lp_book_attrs .= sprintf( ' %s="%s"', esc_attr( (string) $lp_bk ), esc_attr( (string) $lp_bv ) );
 					}
-					printf(
-						'<button type="button" class="%s" data-slot="next-class-board" aria-label="%s" command="%s" commandfor="%s"%s>',
-						esc_attr( $lp_board_cls ),
-						esc_attr( $lp_next_aria ),
-						esc_attr( (string) ( $lp_book['command'] ?? 'show-modal' ) ),
-						esc_attr( (string) ( $lp_book['command_for'] ?? 'lp-booking-drawer' ) ),
-						$lp_book_attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above.
-					);
+					$lp_book_href = (string) ( $lp_book['href'] ?? '' );
+					if ( '' !== $lp_book_href ) {
+						$lp_board_tag = 'a';
+						printf(
+							'<a href="%s"%s class="%s" data-slot="next-class-board" aria-label="%s"%s>',
+							esc_url( $lp_book_href ),
+							! empty( $lp_book['target'] )
+								? ' target="' . esc_attr( (string) $lp_book['target'] ) . '" rel="noopener"'
+								: '',
+							esc_attr( $lp_board_cls ),
+							esc_attr( $lp_next_aria ),
+							$lp_book_attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above.
+						);
+					} elseif ( ! empty( $lp_book['command'] ) ) {
+						$lp_board_tag = 'button';
+						printf(
+							'<button type="button" class="%s" data-slot="next-class-board" aria-label="%s" command="%s" commandfor="%s"%s>',
+							esc_attr( $lp_board_cls ),
+							esc_attr( $lp_next_aria ),
+							esc_attr( (string) ( $lp_book['command'] ?? 'show-modal' ) ),
+							esc_attr( (string) ( $lp_book['command_for'] ?? 'lp-booking-drawer' ) ),
+							$lp_book_attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above.
+						);
+					} else {
+						echo '<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
+					}
 				} else {
 					echo '<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
 				}
@@ -412,7 +431,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 						<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary group-hover:text-neutral group-hover:font-semibold transition-colors duration-150"><?php echo esc_html( $lp_next_lab ); ?></span>
 						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
 					</div>
-				<?php echo $lp_next_id ? '</button>' : '</div>'; ?>
+				<?php echo '</' . esc_attr( $lp_board_tag ) . '>'; ?>
 			<?php elseif ( 'sessions' === $lp_board_style ) : ?>
 				<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95" data-slot="board">
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10">
@@ -452,7 +471,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 			<?php endif; ?>
 		</div>
 
-		<div class="flex items-center justify-between gap-4 flex-wrap mt-auto pt-scale-s border-t border-neutral-content/20">
+		<div class="flex items-center justify-between gap-4 flex-wrap mt-auto pt-scale-s">
 			<span class="font-label text-step--2 font-normal tracking-[1px] uppercase text-neutral-content/80"><?php echo esc_html( $lp_scroll ); ?></span>
 			<div class="flex items-center gap-[22px] flex-wrap">
 				<?php foreach ( $lp_trust as $lp_ti => $lp_mark ) : ?>

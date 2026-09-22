@@ -8,10 +8,10 @@
  * Unique layout — not the homepage private-coaching block. Chrome in this
  * template; copy defaults transcribed from the Storybook page (which itself
  * follows the pen after the £65 / £40 and appointment-booking corrections).
- * Coach cards read `lp_coach` records (the pen used placeholder names).
+ * Coach grid is the homepage Coaches block (`blocks/coaches`, layout `grid`).
  * Which coaches appear is the `coaches` relationship on this page
  * (group_lp_private_coaching); an empty field falls back to every published
- * coach in menu order.
+ * coach in menu order. Portraits link to each coach's permalink.
  *
  * BOOK 1:1 opens the shared clasbpro appointment overlay when
  * `appointment_class` is set on this page (group_lp_private_coaching).
@@ -115,18 +115,6 @@ if ( ! $lp_coach_ids ) {
 	$lp_coach_ids = array_map( 'intval', $lp_coach_query->posts );
 }
 
-$lp_coaches = array();
-foreach ( $lp_coach_ids as $lp_cid ) {
-	if ( $lp_cid < 1 || 'publish' !== get_post_status( $lp_cid ) ) {
-		continue;
-	}
-	$lp_coaches[] = array(
-		'name'  => get_the_title( $lp_cid ),
-		'role'  => function_exists( 'get_field' ) ? (string) get_field( 'role', $lp_cid ) : '',
-		'photo' => has_post_thumbnail( $lp_cid ) ? (int) get_post_thumbnail_id( $lp_cid ) : 0,
-	);
-}
-
 $lp_agenda    = function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : home_url( '/classes/' );
 $lp_workshops = function_exists( 'lp_workshops_url' ) ? lp_workshops_url() : home_url( '/workshops/' );
 
@@ -211,7 +199,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 							'layout'        => 'fill',
 							'size'          => 'lp_portrait_lg',
 							'sizes'         => '(min-width: 1024px) 50vw, 100vw',
-							'class'         => 'absolute inset-0 h-full w-full object-cover',
+							'class'         => 'object-top',
 							'loading'       => 'eager',
 							'fetchpriority' => 'high',
 						)
@@ -296,38 +284,25 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 		</div>
 	</section>
 
-	<section class="w-full bg-accent" data-component="private-coaches">
-		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
-			<header class="flex items-end">
-				<h2 class="font-heading text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-accent-content m-0">Coaches</h2>
-			</header>
-			<div class="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-				<?php foreach ( $lp_coaches as $lp_coach ) : ?>
-					<article class="flex flex-col gap-3" data-component="private-coach-card">
-						<div class="relative w-full aspect-[3/4] overflow-hidden bg-neutral">
-							<?php
-							if ( ! empty( $lp_coach['photo'] ) ) {
-								lp_part(
-									'components/media-photo',
-									array(
-										'image_id' => (int) $lp_coach['photo'],
-										'alt'      => (string) $lp_coach['name'],
-										'layout'   => 'fill',
-										'size'     => 'lp_portrait_lg',
-										'sizes'    => '(min-width: 1024px) 33vw, 50vw',
-										'class'    => 'absolute inset-0 h-full w-full object-cover',
-									)
-								);
-							}
-							?>
-						</div>
-						<h3 class="font-heading text-[20px] font-bold tracking-[-0.4px] leading-[1.1] text-accent-content m-0"><?php echo esc_html( (string) $lp_coach['name'] ); ?></h3>
-						<p class="font-label text-[11px] font-semibold tracking-[1.3px] uppercase text-accent-content/70 m-0"><?php echo esc_html( (string) $lp_coach['role'] ); ?></p>
-					</article>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
+	<?php
+	// Same Coaches grid as the homepage, on the private page's olive accent band.
+	$lp_coach_count = count( $lp_coach_ids );
+	lp_render_block(
+		'coaches',
+		array(
+			'layout'       => 'grid',
+			'surface'      => 'accent',
+			'source'       => $lp_coach_ids ? 'choose' : 'latest',
+			'source_items' => $lp_coach_ids,
+			'source_limit' => max( 4, $lp_coach_count ?: 4 ),
+			'meta'         => $lp_coach_count ? sprintf( '(%02d)', $lp_coach_count ) : '',
+			'link_action'  => array(
+				'label' => 'MEET THE TEAM →',
+				'href'  => get_post_type_archive_link( 'lp_coach' ) ?: home_url( '/coaches/' ),
+			),
+		)
+	);
+	?>
 
 	<section class="w-full" data-component="private-faq-book">
 		<div class="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[840px]">
@@ -335,7 +310,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 				<h2 class="font-heading text-[32px] font-bold leading-[0.92] tracking-[-0.8px] text-neutral-content m-0">Common questions</h2>
 				<div>
 					<?php foreach ( $lp_faqs as $lp_faq ) : ?>
-						<div class="flex flex-col gap-2 py-6 border-b border-neutral-content/10">
+						<div class="flex flex-col gap-4 py-6 border-b border-neutral-content/10">
 							<h3 class="font-heading text-[18px] font-bold tracking-[-0.3px] leading-[1.1] text-neutral-content m-0"><?php echo esc_html( $lp_faq['q'] ); ?></h3>
 							<p class="font-body text-[15px] font-normal leading-[1.55] text-neutral-content/50 m-0"><?php echo esc_html( $lp_faq['a'] ); ?></p>
 						</div>

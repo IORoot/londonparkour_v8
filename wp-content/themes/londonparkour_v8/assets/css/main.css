@@ -89,3 +89,7 @@
 @layer utilities {
   @import "./utilities/_index.css";
 }
+
+/* Unlayered — must sit after utilities so pixel type utilities remapped. */
+@import "./type-step-bump.css";
+@import "./type-step-bump-exceptions.css";

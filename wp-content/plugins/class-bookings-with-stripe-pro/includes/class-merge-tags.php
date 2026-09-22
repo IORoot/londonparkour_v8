@@ -321,6 +321,37 @@ abstract class Merge_Tags {
 		}
 	}
 
+	/**
+	 * Uses left on the coupon after this booking is counted.
+	 *
+	 * Pack remaining is WordPress paid/refunded bookings. The confirmation
+	 * snapshot is taken while checkout is still pending, so this booking is
+	 * not in that count yet and must be subtracted. Stripe times_redeemed
+	 * (no pack purchase) already includes the Checkout redemption.
+	 *
+	 * @param \Stripe\PromotionCode|object $promo Stripe promotion code.
+	 */
+	public static function coupon_uses_remaining_after_booking( int $booking_id, $promo ): int {
+		$purchase_id = (int) ( $promo->metadata->clasbpro_purchase_id ?? 0 );
+		if ( $purchase_id <= 0 ) {
+			$purchase_id = Packs::find_purchase_by_promo_id( (string) ( $promo->id ?? '' ) );
+		}
+		if ( $purchase_id > 0 ) {
+			Packs::forget_consumed_uses( $purchase_id );
+		}
+
+		$state     = Packs::promotion_state( $promo );
+		$remaining = (int) $state['uses_remaining'];
+		$status    = (string) get_post_meta( $booking_id, '_clasbpro_status', true );
+		$counted   = in_array( $status, [ Bookings::STATUS_PAID, Bookings::STATUS_REFUNDED ], true );
+
+		if ( $purchase_id > 0 && ! $counted ) {
+			$remaining = max( 0, $remaining - 1 );
+		}
+
+		return $remaining;
+	}
+
 	public static function persist_booking_coupon_snapshot( int $booking_id ): void {
 		if ( $booking_id <= 0 ) {
 			return;
@@ -342,8 +373,11 @@ abstract class Merge_Tags {
 		try {
 			$promo = Stripe_Service::retrieve_promotion_code( $promo_id );
 			if ( $promo ) {
-				$state = Packs::promotion_state( $promo );
-				update_post_meta( $booking_id, '_clasbpro_coupon_uses_remaining', (string) (int) $state['uses_remaining'] );
+				update_post_meta(
+					$booking_id,
+					'_clasbpro_coupon_uses_remaining',
+					(string) self::coupon_uses_remaining_after_booking( $booking_id, $promo )
+				);
 			}
 		} catch ( \Throwable $e ) {
 			Helpers::debug_log( '[class-bookings-with-stripe-pro] Coupon snapshot failed: ' . $e->getMessage() );

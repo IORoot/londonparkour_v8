@@ -1931,6 +1931,25 @@
 	text-underline-offset: 2px;
 }
 
+.clasbpro-booking-edit .cbfs-admin-summary__uses {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+}
+
+.clasbpro-booking-edit .cbfs-admin-summary__add-use.button {
+	margin: 0;
+	color: #1d2327;
+	font-weight: 400;
+	text-decoration: none;
+}
+
+.clasbpro-booking-edit .cbfs-admin-summary__add-use.button:hover {
+	color: #1d2327;
+	text-decoration: none;
+}
+
 .clasbpro-booking-edit .cbfs-admin-summary__amount {
 	font-weight: 700;
 	font-variant-numeric: tabular-nums;

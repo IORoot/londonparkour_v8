@@ -105,14 +105,12 @@ abstract class Appointment_Admin {
 	 * @param int|string $index
 	 */
 	private static function render_rule_row( array $rule, array $days, $index ): void {
-		$type      = (string) ( $rule['type'] ?? 'recurring' );
-		$is_oneoff = 'one_off' === $type;
-		$prefix    = 'clasbpro_slot_rules[' . $index . ']';
+		$type   = (string) ( $rule['type'] ?? 'recurring' );
+		$prefix = 'clasbpro_slot_rules[' . $index . ']';
 		$skip_text = '';
 		if ( ! empty( $rule['skip_dates'] ) && is_array( $rule['skip_dates'] ) ) {
 			$skip_text = implode( "\n", $rule['skip_dates'] );
 		}
-		$price_val = isset( $rule['price_gbp'] ) && null !== $rule['price_gbp'] ? (string) $rule['price_gbp'] : '';
 		?>
 		<div class="clasbpro-slot-rule" data-type="<?php echo esc_attr( $type ); ?>">
 			<div class="clasbpro-slot-rule__header">
@@ -120,7 +118,11 @@ abstract class Appointment_Admin {
 				<button type="button" class="button-link-delete clasbpro-slot-rule__remove" aria-label="<?php esc_attr_e( 'Remove slot', 'class-bookings-with-stripe-pro' ); ?>">&times;</button>
 			</div>
 			<input type="hidden" name="<?php echo esc_attr( $prefix ); ?>[id]" value="<?php echo esc_attr( (string) ( $rule['id'] ?? '' ) ); ?>">
-			<div class="clasbpro-slot-rule__grid">
+			<div class="clasbpro-slot-rule__row clasbpro-slot-rule__row--primary">
+				<label>
+					<span><?php esc_html_e( 'Label', 'class-bookings-with-stripe-pro' ); ?></span>
+					<input type="text" name="<?php echo esc_attr( $prefix ); ?>[label]" value="<?php echo esc_attr( (string) ( $rule['label'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'e.g. Coach Sarah', 'class-bookings-with-stripe-pro' ); ?>">
+				</label>
 				<label>
 					<span><?php esc_html_e( 'Type', 'class-bookings-with-stripe-pro' ); ?></span>
 					<select name="<?php echo esc_attr( $prefix ); ?>[type]" class="clasbpro-slot-rule__type">
@@ -141,11 +143,11 @@ abstract class Appointment_Admin {
 					<input type="date" name="<?php echo esc_attr( $prefix ); ?>[specific_date]" value="<?php echo esc_attr( (string) ( $rule['specific_date'] ?? '' ) ); ?>">
 				</label>
 				<label class="clasbpro-slot-rule__field--recurring">
-					<span><?php esc_html_e( 'From (optional)', 'class-bookings-with-stripe-pro' ); ?></span>
+					<span><?php esc_html_e( 'From', 'class-bookings-with-stripe-pro' ); ?></span>
 					<input type="date" name="<?php echo esc_attr( $prefix ); ?>[recurring_start]" value="<?php echo esc_attr( (string) ( $rule['recurring_start'] ?? '' ) ); ?>">
 				</label>
 				<label class="clasbpro-slot-rule__field--recurring">
-					<span><?php esc_html_e( 'Until (optional)', 'class-bookings-with-stripe-pro' ); ?></span>
+					<span><?php esc_html_e( 'Until', 'class-bookings-with-stripe-pro' ); ?></span>
 					<input type="date" name="<?php echo esc_attr( $prefix ); ?>[recurring_end]" value="<?php echo esc_attr( (string) ( $rule['recurring_end'] ?? '' ) ); ?>">
 				</label>
 				<label>
@@ -153,24 +155,22 @@ abstract class Appointment_Admin {
 					<input type="time" name="<?php echo esc_attr( $prefix ); ?>[start_time]" value="<?php echo esc_attr( (string) ( $rule['start_time'] ?? '' ) ); ?>" required>
 				</label>
 				<label>
-					<span><?php esc_html_e( 'Duration (min)', 'class-bookings-with-stripe-pro' ); ?></span>
+					<span><?php esc_html_e( 'Duration', 'class-bookings-with-stripe-pro' ); ?></span>
 					<input type="number" min="1" name="<?php echo esc_attr( $prefix ); ?>[duration_minutes]" value="<?php echo esc_attr( (string) ( $rule['duration_minutes'] ?? 60 ) ); ?>" required>
 				</label>
+			</div>
+			<div class="clasbpro-slot-rule__row clasbpro-slot-rule__row--secondary">
 				<label>
 					<span><?php esc_html_e( 'Location', 'class-bookings-with-stripe-pro' ); ?></span>
 					<input type="text" name="<?php echo esc_attr( $prefix ); ?>[location]" value="<?php echo esc_attr( (string) ( $rule['location'] ?? '' ) ); ?>">
 				</label>
 				<label>
-					<span><?php esc_html_e( 'Label (optional)', 'class-bookings-with-stripe-pro' ); ?></span>
-					<input type="text" name="<?php echo esc_attr( $prefix ); ?>[label]" value="<?php echo esc_attr( (string) ( $rule['label'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'e.g. Coach Sarah', 'class-bookings-with-stripe-pro' ); ?>">
+					<span><?php esc_html_e( 'Admin email override', 'class-bookings-with-stripe-pro' ); ?></span>
+					<input type="email" name="<?php echo esc_attr( $prefix ); ?>[admin_email]" value="<?php echo esc_attr( (string) ( $rule['admin_email'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'Class / global default', 'class-bookings-with-stripe-pro' ); ?>">
 				</label>
-				<label>
-					<span><?php echo esc_html( sprintf( __( 'Price override (%s)', 'class-bookings-with-stripe-pro' ), trim( Helpers::currency_config()['symbol'] ) ) ); ?></span>
-					<input type="number" min="0" step="<?php echo esc_attr( Helpers::price_input_step() ); ?>" name="<?php echo esc_attr( $prefix ); ?>[price_gbp]" value="<?php echo esc_attr( $price_val ); ?>" placeholder="<?php esc_attr_e( 'Class default', 'class-bookings-with-stripe-pro' ); ?>">
-				</label>
-				<label class="clasbpro-slot-rule__full">
-					<span><?php esc_html_e( 'Skip dates (one per line)', 'class-bookings-with-stripe-pro' ); ?></span>
-					<textarea name="<?php echo esc_attr( $prefix ); ?>[skip_dates]" rows="2" placeholder="YYYY-MM-DD"><?php echo esc_textarea( $skip_text ); ?></textarea>
+				<label class="clasbpro-slot-rule__skip">
+					<span><?php esc_html_e( 'Skip dates', 'class-bookings-with-stripe-pro' ); ?></span>
+					<textarea name="<?php echo esc_attr( $prefix ); ?>[skip_dates]" rows="1" placeholder="<?php esc_attr_e( 'YYYY-MM-DD, one per line', 'class-bookings-with-stripe-pro' ); ?>"><?php echo esc_textarea( $skip_text ); ?></textarea>
 				</label>
 			</div>
 		</div>

@@ -37,8 +37,11 @@ fail=0
 # agenda-card.php is exempt for the yellow book rail: the whole fare column is
 # the drawer invoker (command/commandfor + data-lp-book). button.php's variants
 # cannot fill that rail without changing the Concourse AgendaCard composition.
+# blocks/hero/hero.php is exempt for the next-class board on the same terms —
+# the whole board is the booking control (drawer, or an outbound <a> for
+# external-link classes). button.php cannot wrap that layout.
 rules=(
-  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|404\.php|parts/components/agenda-card\.php'
+  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|404\.php|parts/components/agenda-card\.php|blocks/hero/hero\.php'
   'daisyUI btn class|class="[^"]*\bbtn\b|parts/elements/button.php|'
   'hand-rolled separator|role="separator"|parts/elements/rule.php|'
   'inline <svg>|<svg[[:space:]>]|lp_icon() in app/includes/html.php|'

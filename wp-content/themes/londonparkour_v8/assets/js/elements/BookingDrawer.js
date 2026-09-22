@@ -177,10 +177,12 @@ async function loadPanel(type, id, extra = {}) {
   }
 
   try {
+    // Do not send X-WP-Nonce. panel-form is public; a cached/stale wp_rest
+    // nonce 403s the request (rest_cookie_invalid_nonce) and the drawer
+    // shows "Could not load form".
     const res = await fetch(url.toString(), {
       headers: {
         Accept: 'application/json',
-        'X-WP-Nonce': cfg().nonce || '',
       },
       credentials: 'same-origin',
     });
@@ -256,7 +258,16 @@ function onPanelClick(event) {
     listName,
   });
 
-  openDrawer();
+  // Book buttons already use command="show-modal" commandfor. Opening here
+  // in the capture phase races the Invoker Command and logs
+  // "attempted to open an already open Dialog as a modal".
+  const usesInvoker =
+    trigger.getAttribute('commandfor') === DRAWER_ID &&
+    typeof HTMLButtonElement !== 'undefined' &&
+    'commandForElement' in HTMLButtonElement.prototype;
+  if (!usesInvoker) {
+    openDrawer();
+  }
   loadPanel(panel.type, panel.id, { presetDate, presetSlot, name, category, price, listName });
 }
 

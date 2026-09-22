@@ -27,7 +27,7 @@ abstract class Mailchimp {
 			return;
 		}
 
-		$api_key     = trim( (string) Helpers::get_option( 'mailchimp_api_key', '' ) );
+		$api_key     = trim( Secrets::get( 'mailchimp_api_key' ) );
 		$audience_id = trim( (string) Helpers::get_option( 'mailchimp_audience_id', '' ) );
 		if ( '' === $api_key || '' === $audience_id ) {
 			return;

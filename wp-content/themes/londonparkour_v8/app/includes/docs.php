@@ -198,14 +198,27 @@ function lp_docs_story_count(): int {
 }
 
 /**
- * Wiki / Blog / Gift Cards switcher rows.
+ * Wiki / Blog / Coaches / Search switcher rows.
  *
- * @param string $lp_active wiki|blog|gift-cards.
+ * Same four destinations as the Docs nav panel. Gift Cards remains a wiki
+ * article in the index, not a switcher cell.
+ *
+ * @param string $lp_active wiki|blog|coaches|search.
  * @return array
  */
 function lp_docs_switcher_rows( string $lp_active = 'wiki' ): array {
 	$lp_pages   = lp_docs_support_count();
 	$lp_stories = lp_docs_story_count();
+	$lp_coaches = 0;
+	$lp_counts  = wp_count_posts( 'lp_coach' );
+	if ( is_object( $lp_counts ) && isset( $lp_counts->publish ) ) {
+		$lp_coaches = (int) $lp_counts->publish;
+	}
+	$lp_coaches_url = get_post_type_archive_link( 'lp_coach' );
+	if ( ! is_string( $lp_coaches_url ) || '' === $lp_coaches_url ) {
+		$lp_coaches_url = home_url( '/coaches/' );
+	}
+	$lp_search_url = function_exists( 'lp_search_url' ) ? lp_search_url() : home_url( '/search/' );
 
 	return array(
 		array(
@@ -226,11 +239,19 @@ function lp_docs_switcher_rows( string $lp_active = 'wiki' ): array {
 		),
 		array(
 			'index'   => 'SECTION C',
-			'title'   => 'Gift Cards',
-			'meta'    => 'buying, redeeming, expiry',
-			'icon'    => 'icon-tag',
-			'href'    => lp_docs_gift_cards_url(),
-			'current' => 'gift-cards' === $lp_active,
+			'title'   => 'Coaches',
+			'meta'    => sprintf( '%d people', $lp_coaches ?: 4 ),
+			'icon'    => 'icon-user-group',
+			'href'    => $lp_coaches_url,
+			'current' => 'coaches' === $lp_active,
+		),
+		array(
+			'index'   => 'SECTION D',
+			'title'   => 'Search',
+			'meta'    => 'find',
+			'icon'    => 'icon-magnifying-glass',
+			'href'    => $lp_search_url,
+			'current' => 'search' === $lp_active,
 		),
 	);
 }
@@ -415,7 +436,7 @@ function lp_docs_render_index( string $lp_current_title = '' ): void {
 /**
  * Switcher + Docs Index — the wiki block shared by every docs URL, including Legal.
  *
- * @param string $lp_switcher wiki|blog|gift-cards.
+ * @param string $lp_switcher wiki|blog|coaches|search.
  * @param string $lp_current  Index CURRENT title.
  */
 function lp_docs_render_wiki_nav( string $lp_switcher, string $lp_current = '' ): void {
@@ -433,7 +454,7 @@ function lp_docs_render_wiki_nav( string $lp_switcher, string $lp_current = '' )
  * Shared docs chrome crumbs + masthead + wiki nav.
  *
  * @param string $lp_third_crumb Third breadcrumb label.
- * @param string $lp_switcher    wiki|blog|gift-cards.
+ * @param string $lp_switcher    wiki|blog|coaches|search.
  * @param string $lp_current     Index CURRENT title.
  */
 function lp_docs_render_wiki_chrome_start( string $lp_third_crumb, string $lp_switcher, string $lp_current = '' ): void {

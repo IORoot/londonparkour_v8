@@ -34,6 +34,7 @@
  * @param string $args['intro_text']   Lead roster intro.
  * @param array  $args['lead_coach']   image / image_alt / name / meta / quote.
  * @param array  $args['link_action']
+ * @param string $args['surface']      page|accent. Grid only; default page.
  *
  * @package londonparkour_v8
  */
@@ -144,31 +145,63 @@ if ( 'grid' === $lp_layout ) {
 			'role'  => (string) ( $lp_item['role'] ?? '' ),
 			'bio'   => (string) ( $lp_item['bio'] ?? '' ),
 			'photo' => ! empty( $lp_item['photo'] ) ? (int) $lp_item['photo'] : ( ! empty( $lp_item['thumb'] ) ? (int) $lp_item['thumb'] : 0 ),
+			'href'  => (string) ( $lp_item['url'] ?? $lp_item['href'] ?? '' ),
 		);
 	}
 
 	if ( ! $lp_coaches ) {
 		$lp_coaches = $lp_default_grid_coaches;
 	}
+
+	// Whole literal strings — Tailwind v4 scans source text.
+	$lp_surfaces = array(
+		'page'   => array(
+			'section'  => 'w-full bg-base-100 px-6 py-16 lg:py-[120px] lg:px-[72px]',
+			'muted'    => 'text-base-content/65',
+			'ink'      => 'text-base-content',
+			'bio'      => 'text-base-content/70',
+			'rule'     => 'h-px w-full bg-base-300',
+			'photo'    => 'relative aspect-[3/4] overflow-hidden bg-base-300',
+			'link'     => 'font-label text-[11px] font-semibold tracking-[0.5px] uppercase text-accent hover:text-accent/70 transition-colors',
+		),
+		'accent' => array(
+			'section'  => 'w-full bg-accent px-6 py-16 lg:py-[120px] lg:px-[72px]',
+			'muted'    => 'text-accent-content/70',
+			'ink'      => 'text-accent-content',
+			'bio'      => 'text-accent-content/70',
+			'rule'     => 'h-px w-full bg-accent-content/15',
+			'photo'    => 'relative aspect-[3/4] overflow-hidden bg-neutral',
+			'link'     => 'font-label text-[11px] font-semibold tracking-[0.5px] uppercase text-primary hover:text-primary/70 transition-colors',
+		),
+	);
+	$lp_surf = $lp_surfaces[ (string) ( $args['surface'] ?? 'page' ) ] ?? $lp_surfaces['page'];
 	?>
-<section class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-16 lg:py-[120px] lg:px-[72px]', $lp_spacing ); ?>" data-component="coaches" data-layout="grid"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( $lp_surf['section'], $lp_spacing ); ?>" data-component="coaches" data-layout="grid" data-surface="<?php echo esc_attr( array_key_exists( (string) ( $args['surface'] ?? '' ), $lp_surfaces ) ? (string) $args['surface'] : 'page' ); ?>"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col gap-8 lg:gap-12">
 		<header class="flex flex-col gap-[18px]">
 			<div class="flex items-baseline justify-between gap-4">
-				<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<span class="<?php echo lp_classes( 'font-label text-[12px] font-normal tracking-[0.5px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<?php if ( '' !== $lp_meta ) : ?>
-					<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_meta ); ?></span>
+					<span class="<?php echo lp_classes( 'font-label text-[12px] font-normal tracking-[0.5px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
 				<?php endif; ?>
 			</div>
-			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
-			<h2 class="font-heading text-step-3 font-semibold leading-[1.02] tracking-[-1.6px] text-base-content m-0 max-w-[700px]"><?php echo esc_html( $lp_headline ); ?></h2>
-			<p class="font-body text-[15px] leading-[1.6] text-base-content/65 m-0 max-w-[560px]"><?php echo esc_html( $lp_lead ); ?></p>
+			<div class="<?php echo esc_attr( $lp_surf['rule'] ); ?>" aria-hidden="true"></div>
+			<h2 class="<?php echo lp_classes( 'font-heading text-step-3 font-semibold leading-[1.02] tracking-[-1.6px] m-0 max-w-[700px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( $lp_headline ); ?></h2>
+			<p class="<?php echo lp_classes( 'font-body text-[15px] leading-[1.6] m-0 max-w-[560px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_lead ); ?></p>
 		</header>
 
 		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
 			<?php foreach ( $lp_coaches as $lp_coach ) : ?>
+				<?php
+				$lp_coach_href = (string) ( $lp_coach['href'] ?? '' );
+				$lp_photo_wrap = $lp_surf['photo'];
+				?>
 				<article class="flex flex-col" data-component="coach-grid-card">
-					<div class="relative aspect-[3/4] overflow-hidden bg-base-300">
+					<?php if ( '' !== $lp_coach_href ) : ?>
+						<a href="<?php echo esc_url( $lp_coach_href ); ?>" class="<?php echo esc_attr( $lp_photo_wrap ); ?>">
+					<?php else : ?>
+						<div class="<?php echo esc_attr( $lp_photo_wrap ); ?>">
+					<?php endif; ?>
 						<?php
 						lp_part(
 							'components/media-photo',
@@ -180,26 +213,30 @@ if ( 'grid' === $lp_layout ) {
 							)
 						);
 						?>
-					</div>
+					<?php if ( '' !== $lp_coach_href ) : ?>
+						</a>
+					<?php else : ?>
+						</div>
+					<?php endif; ?>
 					<div class="flex flex-col gap-1.5 lg:gap-2.5 pt-3 lg:pt-5">
 						<div class="flex items-baseline justify-between gap-3">
-							<span class="font-label text-[11px] font-semibold tracking-[0.6px] text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
-							<span class="hidden sm:inline font-label text-[10px] font-normal tracking-[0.6px] uppercase text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['tag'] ?? '' ) ); ?></span>
+							<span class="<?php echo lp_classes( 'font-label text-[11px] font-semibold tracking-[0.6px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
+							<span class="<?php echo lp_classes( 'hidden sm:inline font-label text-[10px] font-normal tracking-[0.6px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['tag'] ?? '' ) ); ?></span>
 						</div>
-						<h3 class="font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight text-base-content m-0"><?php echo esc_html( (string) ( $lp_coach['name'] ?? '' ) ); ?></h3>
-						<p class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-base-content/65 m-0"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
-						<p class="font-body text-[12px] lg:text-[13px] leading-[1.45] lg:leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) ( $lp_coach['bio'] ?? '' ) ); ?></p>
+						<h3 class="<?php echo lp_classes( 'font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight m-0', $lp_surf['ink'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['name'] ?? '' ) ); ?></h3>
+						<p class="<?php echo lp_classes( 'font-label text-[10px] font-semibold tracking-[0.8px] uppercase m-0', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
+						<p class="<?php echo lp_classes( 'font-body text-[12px] lg:text-[13px] leading-[1.45] lg:leading-[1.55] m-0', $lp_surf['bio'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['bio'] ?? '' ) ); ?></p>
 					</div>
 				</article>
 			<?php endforeach; ?>
 		</div>
 
 		<footer class="flex flex-col gap-4">
-			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
+			<div class="<?php echo esc_attr( $lp_surf['rule'] ); ?>" aria-hidden="true"></div>
 			<div class="flex items-baseline justify-between gap-4 flex-wrap">
-				<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-base-content/65"><?php echo esc_html( $lp_footnote ); ?></span>
+				<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.8px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_footnote ); ?></span>
 				<?php if ( ! empty( $lp_link['label'] ) ) : ?>
-					<a href="<?php echo esc_url( (string) ( $lp_link['href'] ?? '#' ) ); ?>" class="font-label text-[11px] font-semibold tracking-[0.5px] uppercase text-accent hover:text-accent/70 transition-colors"><?php echo esc_html( (string) $lp_link['label'] ); ?></a>
+					<a href="<?php echo esc_url( (string) ( $lp_link['href'] ?? '#' ) ); ?>" class="<?php echo esc_attr( $lp_surf['link'] ); ?>"><?php echo esc_html( (string) $lp_link['label'] ); ?></a>
 				<?php endif; ?>
 			</div>
 		</footer>
@@ -221,6 +258,30 @@ $lp_lead_name  = (string) ( $lp_lead_in['name'] ?? 'Andy Pearson' );
 $lp_lead_meta  = (string) ( $lp_lead_in['meta'] ?? 'HEAD COACH / 11 YRS' );
 $lp_lead_quote = (string) ( $lp_lead_in['quote'] ?? "“The job isn't to make you brave. It's to break the thing you're scared of into six pieces small enough that you're not.”" );
 $lp_lead_image = ! empty( $lp_lead_in['image'] ) ? (int) $lp_lead_in['image'] : 0;
+$lp_lead_href  = (string) ( $lp_lead_in['href'] ?? $lp_lead_in['url'] ?? '' );
+
+if ( '' === $lp_lead_href ) {
+	$lp_lead_ids = get_posts(
+		array(
+			'post_type'              => 'lp_coach',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'   => 'is_lead',
+					'value' => '1',
+				),
+			),
+		)
+	);
+	if ( $lp_lead_ids ) {
+		$lp_lead_href = (string) get_permalink( (int) $lp_lead_ids[0] );
+	}
+}
 
 if ( ! $lp_link ) {
 	$lp_link = array(
@@ -239,6 +300,7 @@ $lp_roster = array_map(
 			'name'      => (string) ( $item['name'] ?? $item['title'] ?? '' ),
 			'specialty' => (string) ( $item['specialty'] ?? '' ),
 			'location'  => (string) ( $item['location'] ?? '' ),
+			'href'      => (string) ( $item['url'] ?? $item['href'] ?? '' ),
 		);
 	},
 	lp_resolve_source(
@@ -272,19 +334,26 @@ if ( ! $lp_roster ) {
 
 		<div class="mt-[64px] flex flex-col lg:flex-row gap-[72px] items-start">
 			<div class="w-full lg:w-[556px] lg:shrink-0 flex flex-col">
-				<div class="relative w-full aspect-[556/600] lg:h-[600px] lg:aspect-auto overflow-hidden bg-base-300">
-					<?php
-					$lp_lead_photo = array(
-						'image_id' => $lp_lead_image,
-						'size'     => 'lp_portrait_lg',
-						'sizes'    => '(min-width: 1024px) 556px, 100vw',
-					);
-					if ( array_key_exists( 'image_alt', $lp_lead_in ) ) {
-						$lp_lead_photo['alt'] = (string) $lp_lead_in['image_alt'];
-					}
-					lp_part( 'components/media-photo', $lp_lead_photo );
-					?>
-				</div>
+				<?php
+				$lp_lead_photo_wrap = 'relative w-full aspect-[556/600] lg:h-[600px] lg:aspect-auto overflow-hidden bg-base-300';
+				$lp_lead_photo      = array(
+					'image_id' => $lp_lead_image,
+					'size'     => 'lp_portrait_lg',
+					'sizes'    => '(min-width: 1024px) 556px, 100vw',
+				);
+				if ( array_key_exists( 'image_alt', $lp_lead_in ) ) {
+					$lp_lead_photo['alt'] = (string) $lp_lead_in['image_alt'];
+				}
+				?>
+				<?php if ( '' !== $lp_lead_href ) : ?>
+					<a href="<?php echo esc_url( $lp_lead_href ); ?>" class="<?php echo esc_attr( $lp_lead_photo_wrap ); ?>">
+						<?php lp_part( 'components/media-photo', $lp_lead_photo ); ?>
+					</a>
+				<?php else : ?>
+					<div class="<?php echo esc_attr( $lp_lead_photo_wrap ); ?>">
+						<?php lp_part( 'components/media-photo', $lp_lead_photo ); ?>
+					</div>
+				<?php endif; ?>
 				<div class="mt-[26px] flex flex-col gap-[14px]">
 					<div class="flex items-center justify-between gap-4">
 						<p class="font-heading text-[28px] font-semibold tracking-[-0.8px] text-base-content"><?php echo esc_html( $lp_lead_name ); ?></p>
@@ -299,8 +368,13 @@ if ( ! $lp_roster ) {
 
 				<div class="mt-[40px] border-t border-base-300 divide-y divide-base-300">
 					<?php foreach ( $lp_roster as $lp_coach ) : ?>
+						<?php $lp_roster_href = (string) ( $lp_coach['href'] ?? '' ); ?>
 						<div class="flex items-center gap-[20px] py-[18px]" data-component="coach-roster-row">
-							<div class="w-[62px] h-[76px] shrink-0 overflow-hidden bg-base-300">
+							<?php if ( '' !== $lp_roster_href ) : ?>
+								<a href="<?php echo esc_url( $lp_roster_href ); ?>" class="w-[62px] h-[76px] shrink-0 overflow-hidden bg-base-300">
+							<?php else : ?>
+								<div class="w-[62px] h-[76px] shrink-0 overflow-hidden bg-base-300">
+							<?php endif; ?>
 								<?php
 								lp_part(
 									'components/media-photo',
@@ -315,7 +389,11 @@ if ( ! $lp_roster ) {
 									)
 								);
 								?>
-							</div>
+							<?php if ( '' !== $lp_roster_href ) : ?>
+								</a>
+							<?php else : ?>
+								</div>
+							<?php endif; ?>
 							<div class="flex-1 min-w-0 flex flex-col gap-[7px]">
 								<p class="font-heading text-[19px] font-medium tracking-[-0.4px] text-base-content truncate"><?php echo esc_html( $lp_coach['name'] ); ?></p>
 								<p class="font-body text-[11px] font-normal tracking-[0.3px] text-base-content/60 truncate"><?php echo esc_html( $lp_coach['specialty'] ); ?></p>

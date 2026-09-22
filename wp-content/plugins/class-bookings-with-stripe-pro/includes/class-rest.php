@@ -13,6 +13,37 @@ abstract class REST {
 
 	public static function init(): void {
 		add_action( 'rest_api_init', [ self::class, 'register' ] );
+		// After WP's rest_cookie_check_errors (priority 100). Cached HTML can
+		// send an expired X-WP-Nonce; these routes are public, so demote to
+		// anonymous instead of 403ing the booking drawer.
+		add_filter( 'rest_authentication_errors', [ self::class, 'allow_anonymous_on_stale_nonce' ], 101 );
+	}
+
+	/**
+	 * Public clasbpro routes do not need cookie auth. A stale X-WP-Nonce still
+	 * 403s via rest_cookie_check_errors — treat that as logged-out.
+	 *
+	 * @param \WP_Error|null|true $result
+	 * @return \WP_Error|null|true
+	 */
+	public static function allow_anonymous_on_stale_nonce( $result ) {
+		if ( ! is_wp_error( $result ) || 'rest_cookie_invalid_nonce' !== $result->get_error_code() ) {
+			return $result;
+		}
+
+		$route = '';
+		if ( isset( $GLOBALS['wp']->query_vars['rest_route'] ) && is_string( $GLOBALS['wp']->query_vars['rest_route'] ) ) {
+			$route = $GLOBALS['wp']->query_vars['rest_route'];
+		} elseif ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+			$route = (string) wp_unslash( $_SERVER['REQUEST_URI'] );
+		}
+
+		if ( '' === $route || false === strpos( $route, 'clasbpro' ) ) {
+			return $result;
+		}
+
+		wp_set_current_user( 0 );
+		return true;
 	}
 
 	public static function register(): void {
@@ -313,8 +344,19 @@ abstract class REST {
 				'start_time' => (string) ( $slot_snapshot['start_time'] ?? '' ),
 				'location'   => (string) ( $slot_snapshot['location'] ?? '' ),
 				'duration'   => (int) ( $slot_snapshot['duration_minutes'] ?? 0 ),
-				'price'      => (float) ( $slot_snapshot['price_gbp'] ?? 0 ),
 			] );
+
+			$party_unit = Party_Prices::unit_price_for_seats( (array) ( $class_data['party_prices'] ?? [] ), $seats );
+			if ( null === $party_unit ) {
+				return self::error(
+					422,
+					'party_price_missing',
+					__( 'That group size isn’t priced for this appointment. Please choose another number of people.', 'class-bookings-with-stripe-pro' ),
+					[ 'field' => 'seats' ]
+				);
+			}
+			$checkout_class_data['price'] = $party_unit;
+			$slot_snapshot['price_gbp']   = $party_unit;
 		}
 
 		$unit_pence   = Helpers::to_pence( $checkout_class_data['price'] );
@@ -493,7 +535,7 @@ abstract class REST {
 		$code     = (string) $request['code'];
 		$email    = (string) ( $request['customer_email'] ?? '' );
 		$class_id = (int) ( $request['class_id'] ?? 0 );
-		$result   = Packs::attach_by_code( $code, $email );
+		$result   = Packs::attach_by_code( $code, $email, $class_id );
 		if ( empty( $result['ok'] ) ) {
 			return self::error( 422, 'pack_attach_failed', (string) ( $result['message'] ?? __( 'Could not attach that coupon.', 'class-bookings-with-stripe-pro' ) ) );
 		}
@@ -644,8 +686,6 @@ abstract class REST {
 			Merge_Tags::persist_receipt_url( $booking_id, $payment_intent );
 		}
 
-		Merge_Tags::persist_booking_coupon_snapshot( $booking_id );
-
 		// Update post title to reflect customer.
 		wp_update_post( [
 			'ID'         => $booking_id,
@@ -658,6 +698,7 @@ abstract class REST {
 		] );
 
 		Bookings::set_status( $booking_id, Bookings::STATUS_PAID );
+		Merge_Tags::persist_booking_coupon_snapshot( $booking_id );
 		Mailchimp::subscribe_booking( $booking_id );
 
 		Emails::send_for_booking( $booking_id );
@@ -1016,26 +1057,59 @@ abstract class REST {
 	}
 
 	/**
+	 * Clamp checkout rate-limit settings. 0 on IP or email disables that bucket.
+	 *
+	 * @return array{ip: int, email: int, ttl: int}
+	 */
+	public static function sanitize_checkout_rate_limit_config( int $ip, int $email, int $minutes ): array {
+		$ttl = $minutes * MINUTE_IN_SECONDS;
+		if ( $ttl < MINUTE_IN_SECONDS ) {
+			$ttl = MINUTE_IN_SECONDS;
+		}
+
+		return [
+			'ip'    => max( 0, $ip ),
+			'email' => max( 0, $email ),
+			'ttl'   => $ttl,
+		];
+	}
+
+	/**
+	 * @return array{ip: int, email: int, ttl: int}
+	 */
+	public static function checkout_rate_limit_config(): array {
+		$ip      = (int) apply_filters( 'clasbpro_checkout_rate_limit_ip', (int) Helpers::get_option( 'checkout_rate_limit_ip', 8 ) );
+		$email   = (int) apply_filters( 'clasbpro_checkout_rate_limit_email', (int) Helpers::get_option( 'checkout_rate_limit_email', 5 ) );
+		$minutes = (int) Helpers::get_option( 'checkout_rate_limit_window_minutes', 15 );
+		$minutes = (int) apply_filters( 'clasbpro_checkout_rate_limit_window_minutes', $minutes );
+		$config  = self::sanitize_checkout_rate_limit_config( $ip, $email, $minutes );
+		$ttl     = (int) apply_filters( 'clasbpro_checkout_rate_limit_window', $config['ttl'] );
+		if ( $ttl < MINUTE_IN_SECONDS ) {
+			$ttl = MINUTE_IN_SECONDS;
+		}
+		$config['ttl'] = $ttl;
+
+		return $config;
+	}
+
+	/**
 	 * Limit public checkout attempts that create soft-holds / Stripe sessions.
 	 *
 	 * @return \WP_REST_Response|null
 	 */
 	private static function checkout_rate_limit_error( string $email ): ?\WP_REST_Response {
-		$email = strtolower( sanitize_email( $email ) );
-		$ip    = self::client_ip();
-		$ttl   = (int) apply_filters( 'clasbpro_checkout_rate_limit_window', 15 * MINUTE_IN_SECONDS );
-		if ( $ttl < MINUTE_IN_SECONDS ) {
-			$ttl = MINUTE_IN_SECONDS;
-		}
+		$email  = strtolower( sanitize_email( $email ) );
+		$ip     = self::client_ip();
+		$config = self::checkout_rate_limit_config();
 
 		$buckets = [
 			[
 				'key' => 'clasbpro_chk_ip_' . md5( $ip ),
-				'max' => (int) apply_filters( 'clasbpro_checkout_rate_limit_ip', 8 ),
+				'max' => $config['ip'],
 			],
 			[
 				'key' => 'clasbpro_chk_em_' . md5( $email ),
-				'max' => (int) apply_filters( 'clasbpro_checkout_rate_limit_email', 5 ),
+				'max' => $config['email'],
 			],
 		];
 
@@ -1057,7 +1131,7 @@ abstract class REST {
 				continue;
 			}
 			$count = (int) get_transient( $bucket['key'] );
-			set_transient( $bucket['key'], $count + 1, $ttl );
+			set_transient( $bucket['key'], $count + 1, $config['ttl'] );
 		}
 
 		return null;

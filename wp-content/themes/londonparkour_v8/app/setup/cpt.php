@@ -68,6 +68,7 @@ function lp_taxonomies(): array {
 		'lp_level'  => array(
 			'singular'     => __( 'Level', 'londonparkour_v8' ),
 			'plural'       => __( 'Levels', 'londonparkour_v8' ),
+			'menu_name'    => __( 'Class Levels', 'londonparkour_v8' ),
 			'slug'         => 'level',
 			'hierarchical' => true,
 			'post_types'   => array( 'clasbpro_class' ),
@@ -114,6 +115,32 @@ function lp_testimonial_post_type_args( array $args, string $post_type ): array 
 	return $args;
 }
 add_filter( 'register_post_type_args', 'lp_testimonial_post_type_args', 20, 2 );
+
+/**
+ * Sidebar label under Stripe Class Pro. ACF stores the taxonomy; this keeps
+ * the submenu label even before a JSON sync.
+ *
+ * @param array  $args     register_taxonomy args.
+ * @param string $taxonomy Taxonomy name.
+ * @return array
+ */
+function lp_level_taxonomy_args( array $args, string $taxonomy ): array {
+	if ( 'lp_level' !== $taxonomy ) {
+		return $args;
+	}
+
+	$menu_name = __( 'Class Levels', 'londonparkour_v8' );
+	if ( isset( $args['labels'] ) && is_object( $args['labels'] ) ) {
+		$args['labels']->menu_name = $menu_name;
+	} elseif ( isset( $args['labels'] ) && is_array( $args['labels'] ) ) {
+		$args['labels']['menu_name'] = $menu_name;
+	} else {
+		$args['labels'] = array( 'menu_name' => $menu_name );
+	}
+
+	return $args;
+}
+add_filter( 'register_taxonomy_args', 'lp_level_taxonomy_args', 20, 2 );
 
 /**
  * Build a WordPress labels array from a singular and plural name.

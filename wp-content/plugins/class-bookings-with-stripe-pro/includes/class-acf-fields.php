@@ -24,6 +24,8 @@ abstract class ACF_Fields {
 		add_filter( 'acf/load_field/key=field_clasbpro_b_summary', [ self::class, 'populate_booking_summary_field' ], 10 );
 		add_filter( 'acf/load_field/key=field_clasbpro_pp_summary', [ self::class, 'filter_booking_summary_field_format' ], 5 );
 		add_filter( 'acf/load_field/key=field_clasbpro_pp_summary', [ self::class, 'populate_pack_purchase_summary_field' ], 10 );
+		add_filter( 'acf/load_field/key=field_clasbpro_mc_summary', [ self::class, 'filter_booking_summary_field_format' ], 5 );
+		add_filter( 'acf/load_field/key=field_clasbpro_mc_summary', [ self::class, 'populate_manual_coupon_summary_field' ], 10 );
 		add_action( 'acf/render_field/key=field_clasbpro_cancelled_dates_fallback', [ self::class, 'render_cancelled_dates_quick_add' ] );
 		add_filter( 'acf/load_value/name=schedule_classes', [ self::class, 'load_schedule_classes_value' ], 10, 3 );
 		add_filter( 'acf/update_value/name=schedule_classes', [ self::class, 'update_schedule_classes_value' ], 10, 3 );
@@ -307,7 +309,7 @@ abstract class ACF_Fields {
 	 */
 	public static function maybe_enqueue_booking_edit_admin(): void {
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( ! $screen || ! in_array( $screen->post_type, [ CPT::BOOKING_PT, CPT::PACK_PURCHASE_PT ], true ) ) {
+		if ( ! $screen || ! in_array( $screen->post_type, [ CPT::BOOKING_PT, CPT::PACK_PURCHASE_PT, CPT::MANUAL_COUPON_PT ], true ) ) {
 			return;
 		}
 		if ( ! in_array( $screen->base, [ 'post', 'post-new' ], true ) ) {
@@ -316,12 +318,13 @@ abstract class ACF_Fields {
 
 		add_filter( 'admin_body_class', [ self::class, 'filter_booking_edit_body_class' ] );
 
+		$settings_css = CLASBOWPRO_DIR . 'assets/cbfs-booking-admin-settings.css';
 		wp_enqueue_style( 'dashicons' );
 		wp_enqueue_style(
 			'clasbowi-admin-settings',
 			CLASBOWPRO_URL . 'assets/cbfs-booking-admin-settings.css',
 			[],
-			CLASBOWPRO_VERSION
+			is_readable( $settings_css ) ? (string) filemtime( $settings_css ) : CLASBOWPRO_VERSION
 		);
 	}
 
@@ -562,6 +565,16 @@ abstract class ACF_Fields {
 			],
 		];
 
+		$not_appointments_condition = [
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '!=',
+					'value'    => 'appointments',
+				],
+			],
+		];
+
 		$standard_schedule_condition = [
 			[
 				[
@@ -575,6 +588,32 @@ abstract class ACF_Fields {
 					'field'    => 'field_clasbpro_schedule_type',
 					'operator' => '==',
 					'value'    => 'one_off',
+				],
+			],
+		];
+
+		// Listing fields for the public class page — weekly, one-off, and
+		// external-link (external still books off-site; the page needs the same facts).
+		$listed_schedule_condition = [
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '==',
+					'value'    => 'recurring',
+				],
+			],
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '==',
+					'value'    => 'one_off',
+				],
+			],
+			[
+				[
+					'field'    => 'field_clasbpro_schedule_type',
+					'operator' => '==',
+					'value'    => 'external_link',
 				],
 			],
 		];
@@ -662,7 +701,7 @@ abstract class ACF_Fields {
 						'default_value' => 'recurring',
 						'allow_null'    => 0,
 						'required'      => 1,
-						'instructions'  => __( 'Weekly class, one-off event, appointments, or a single button linking to an external booking page.', 'class-bookings-with-stripe-pro' ),
+						'instructions'  => __( 'Weekly class, one-off event, appointments, or an external booking page. External-link classes still need schedule, price, and location so they can appear on the site; the booking button goes to the URL instead of Stripe.', 'class-bookings-with-stripe-pro' ),
 					],
 					[
 						'key'           => 'field_clasbpro_class_active',
@@ -698,7 +737,7 @@ abstract class ACF_Fields {
 						'wrapper'           => [
 							'width' => '25',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'               => 'field_clasbpro_end_date',
@@ -713,7 +752,7 @@ abstract class ACF_Fields {
 						'wrapper'           => [
 							'width' => '25',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_day',
@@ -750,7 +789,7 @@ abstract class ACF_Fields {
 						'wrapper'        => [
 							'width' => '20',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_duration',
@@ -764,7 +803,7 @@ abstract class ACF_Fields {
 						'wrapper'       => [
 							'width' => '20',
 						],
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_price',
@@ -779,7 +818,7 @@ abstract class ACF_Fields {
 						'wrapper'       => [
 							'width' => '20',
 						],
-						'conditional_logic' => $internal_booking_condition,
+						'conditional_logic' => $not_appointments_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_capacity',
@@ -789,11 +828,51 @@ abstract class ACF_Fields {
 						'default_value' => 20,
 						'min'           => 1,
 						'required'      => 1,
-						'instructions'  => __( 'Maximum people per booking (per slot for appointments).', 'class-bookings-with-stripe-pro' ),
+						'instructions'  => __( 'Maximum people per booking (per slot for appointments). Shown on the class page; Stripe occupancy is not tracked for external-link classes.', 'class-bookings-with-stripe-pro' ),
 						'wrapper'       => [
 							'width' => '20',
 						],
-						'conditional_logic' => $internal_booking_condition,
+						'conditional_logic' => 0,
+					],
+					[
+						'key'           => 'field_clasbpro_calendar_months_ahead',
+						'label'         => __( 'Calendar months ahead', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'calendar_months_ahead',
+						'type'          => 'number',
+						'default_value' => 3,
+						'min'           => 1,
+						'max'           => 12,
+						'step'          => 1,
+						'instructions'  => __( 'How many months customers can browse ahead.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [
+							'width' => '20',
+						],
+						'conditional_logic' => $calendar_months_condition,
+					],
+					[
+						'key'           => 'field_clasbpro_minimum_lead_time_hours',
+						'label'         => __( 'Minimum lead time (hours)', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'minimum_lead_time_hours',
+						'type'          => 'number',
+						'default_value' => 0,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'Slots inside this window are hidden. 0 = book until start time.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [
+							'width' => '20',
+						],
+						'conditional_logic' => $appointments_booking_condition,
+					],
+					[
+						'key'               => 'field_clasbpro_party_prices',
+						'label'             => __( 'Party size prices', 'class-bookings-with-stripe-pro' ),
+						'name'              => '_clasbpro_party_prices_ui',
+						'type'              => 'message',
+						'message'           => '',
+						'new_lines'         => '',
+						'esc_html'          => 0,
+						'instructions'      => __( 'One row per number of people, from 1 up to Capacity.', 'class-bookings-with-stripe-pro' ),
+						'conditional_logic' => $appointments_booking_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_show_seats_remaining',
@@ -826,21 +905,6 @@ abstract class ACF_Fields {
 						'conditional_logic' => $recurring_booking_condition,
 					],
 					[
-						'key'           => 'field_clasbpro_calendar_months_ahead',
-						'label'         => __( 'Calendar months ahead', 'class-bookings-with-stripe-pro' ),
-						'name'          => 'calendar_months_ahead',
-						'type'          => 'number',
-						'default_value' => 3,
-						'min'           => 1,
-						'max'           => 12,
-						'step'          => 1,
-						'instructions'  => __( 'How many months customers can browse ahead.', 'class-bookings-with-stripe-pro' ),
-						'wrapper'       => [
-							'width' => '20',
-						],
-						'conditional_logic' => $calendar_months_condition,
-					],
-					[
 						'key'           => 'field_clasbpro_class_upcoming_dates_count',
 						'label'         => __( 'Dates in dropdown', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'upcoming_dates_count',
@@ -853,20 +917,6 @@ abstract class ACF_Fields {
 							'width' => '20',
 						],
 						'conditional_logic' => $dropdown_dates_count_condition,
-					],
-					[
-						'key'           => 'field_clasbpro_minimum_lead_time_hours',
-						'label'         => __( 'Minimum lead time (hours)', 'class-bookings-with-stripe-pro' ),
-						'name'          => 'minimum_lead_time_hours',
-						'type'          => 'number',
-						'default_value' => 0,
-						'min'           => 0,
-						'step'          => 1,
-						'instructions'  => __( 'Slots inside this window are hidden. 0 = book until start time.', 'class-bookings-with-stripe-pro' ),
-						'wrapper'       => [
-							'width' => '25',
-						],
-						'conditional_logic' => $appointments_booking_condition,
 					],
 					[
 						'key'               => 'field_clasbpro_appointment_slot_rules',
@@ -886,7 +936,7 @@ abstract class ACF_Fields {
 						'type'          => 'text',
 						'instructions'  => __( 'Optional, e.g. "Orpington Studio".', 'class-bookings-with-stripe-pro' ),
 						'required'      => 0,
-						'conditional_logic' => $standard_schedule_condition,
+						'conditional_logic' => $listed_schedule_condition,
 					],
 					[
 						'key'           => 'field_clasbpro_description',
@@ -1779,7 +1829,7 @@ abstract class ACF_Fields {
 						'label'             => __( 'Mailchimp opt-in label', 'class-bookings-with-stripe-pro' ),
 						'name'              => 'mailchimp_optin_label',
 						'type'              => 'textarea',
-						'default_value'     => __( 'Yes, I would like to join the mailing list for class updates and news.', 'class-bookings-with-stripe-pro' ),
+						'default_value'     => __( 'Yes, sign up to newsletter', 'class-bookings-with-stripe-pro' ),
 						'rows'              => 3,
 						'new_lines'         => '',
 						'conditional_logic' => [
@@ -1797,7 +1847,7 @@ abstract class ACF_Fields {
 						'label'             => __( 'Mailchimp API key', 'class-bookings-with-stripe-pro' ),
 						'name'              => 'mailchimp_api_key',
 						'type'              => 'password',
-						'instructions'      => __( 'From Mailchimp account settings. Format typically ends with datacenter suffix, e.g. us6.', 'class-bookings-with-stripe-pro' ),
+						'instructions'      => __( 'Prefer CLASBPRO_MAILCHIMP_API_KEY in wp-config.php or the environment so the key survives a database import. A value pasted here is encrypted before it is saved. Leave this empty when the key is in wp-config. Format typically ends with a datacenter suffix, e.g. us6.', 'class-bookings-with-stripe-pro' ),
 						'conditional_logic' => [
 							[
 								[
@@ -1841,6 +1891,44 @@ abstract class ACF_Fields {
 								],
 							],
 						],
+					],
+					[
+						'key'   => 'field_clasbpro_tab_checkout',
+						'label' => __( 'Security', 'class-bookings-with-stripe-pro' ),
+						'type'  => 'tab',
+					],
+					[
+						'key'           => 'field_clasbpro_checkout_rate_limit_ip',
+						'label'         => __( 'Max attempts from the same IP', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'checkout_rate_limit_ip',
+						'type'          => 'number',
+						'default_value' => 8,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'How many times one IP can start Stripe Checkout in the window. Applies to class bookings and coupon packs. 0 = no IP limit.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '33' ],
+					],
+					[
+						'key'           => 'field_clasbpro_checkout_rate_limit_email',
+						'label'         => __( 'Max attempts from the same email', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'checkout_rate_limit_email',
+						'type'          => 'number',
+						'default_value' => 5,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'How many times one email can start Stripe Checkout in the window. 0 = no email limit.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '33' ],
+					],
+					[
+						'key'           => 'field_clasbpro_checkout_rate_limit_window_minutes',
+						'label'         => __( 'Window length (minutes)', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'checkout_rate_limit_window_minutes',
+						'type'          => 'number',
+						'default_value' => 15,
+						'min'           => 1,
+						'step'          => 1,
+						'instructions'  => __( 'How long the counters last. Minimum 1 minute. After this, the “Too many checkout attempts” block clears.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '33' ],
 					],
 					[
 						'key'   => 'field_clasbpro_tab_pages_2',
@@ -2082,6 +2170,133 @@ abstract class ACF_Fields {
 							'param'    => 'post_type',
 							'operator' => '==',
 							'value'    => Constants::CPT_PACK,
+						],
+					],
+				],
+			]
+		);
+
+		acf_add_local_field_group(
+			[
+				'key'      => 'group_clasbpro_manual_coupon',
+				'title'    => __( 'Manual coupon', 'class-bookings-with-stripe-pro' ),
+				'fields'   => [
+					[
+						'key'           => 'field_clasbpro_mc_active',
+						'label'         => __( 'Active', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_active',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+						'instructions'  => __( 'Pause to stop redemptions without deleting the Stripe coupon.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'          => 'field_clasbpro_mc_code',
+						'label'        => __( 'Coupon code', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'manual_code',
+						'type'         => 'text',
+						'required'     => 1,
+						'instructions' => __( 'Customer-facing code. Locked after Stripe registration.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'           => 'field_clasbpro_mc_discount_type',
+						'label'         => __( 'Discount type', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_discount_type',
+						'type'          => 'select',
+						'choices'       => [
+							'percent' => __( 'Percent off', 'class-bookings-with-stripe-pro' ),
+							'amount'  => __( 'Amount off', 'class-bookings-with-stripe-pro' ),
+						],
+						'default_value' => 'percent',
+						'required'      => 1,
+					],
+					[
+						'key'           => 'field_clasbpro_mc_discount_value',
+						'label'         => __( 'Discount', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_discount_value',
+						'type'          => 'number',
+						'step'          => '0.01',
+						'min'           => 0,
+						'required'      => 1,
+						'instructions'  => __( 'Percent (e.g. 20 or 100) or pounds off the class price. Frozen after Stripe registration.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'           => 'field_clasbpro_mc_uses',
+						'label'         => __( 'Uses', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_uses',
+						'type'          => 'number',
+						'default_value' => 0,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'Total redemptions across everyone. 0 = unlimited. One use = one seat.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'          => 'field_clasbpro_mc_email',
+						'label'        => __( 'Email lock', 'class-bookings-with-stripe-pro' ),
+						'name'         => 'manual_email',
+						'type'         => 'email',
+						'instructions' => __( 'Leave blank for a shared code. Set an email to restrict the code to that person.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'            => 'field_clasbpro_mc_expires_on',
+						'label'          => __( 'Expires on', 'class-bookings-with-stripe-pro' ),
+						'name'           => 'manual_expires_on',
+						'type'           => 'date_picker',
+						'display_format' => 'd/m/Y',
+						'return_format'  => 'Y-m-d',
+						'first_day'      => 1,
+						'instructions'   => __( 'Leave blank for no expiry. End of that day, site timezone. Sent to Stripe on first save; Stripe cannot change it afterwards. WordPress still enforces the date.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'           => 'field_clasbpro_mc_expiry_amount',
+						'label'         => __( 'Or expire after', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_expiry_amount',
+						'type'          => 'number',
+						'default_value' => 0,
+						'min'           => 0,
+						'step'          => 1,
+						'instructions'  => __( 'Shortcut used only when Expires on is empty. Writes a date on first save, then clears.', 'class-bookings-with-stripe-pro' ),
+						'wrapper'       => [ 'width' => '50' ],
+					],
+					[
+						'key'           => 'field_clasbpro_mc_expiry_unit',
+						'label'         => __( 'Duration unit', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_expiry_unit',
+						'type'          => 'select',
+						'choices'       => [
+							'days'   => __( 'Days', 'class-bookings-with-stripe-pro' ),
+							'months' => __( 'Months', 'class-bookings-with-stripe-pro' ),
+						],
+						'default_value' => 'months',
+						'wrapper'       => [ 'width' => '50' ],
+					],
+					[
+						'key'           => 'field_clasbpro_mc_classes',
+						'label'         => __( 'Eligible classes', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'manual_classes',
+						'type'          => 'relationship',
+						'post_type'     => [ Constants::CPT_CLASS ],
+						'filters'       => [ 'search' ],
+						'return_format' => 'id',
+						'min'           => 0,
+						'max'           => 0,
+						'instructions'  => __( 'Leave empty to allow every active class.', 'class-bookings-with-stripe-pro' ),
+					],
+					[
+						'key'       => 'field_clasbpro_mc_summary',
+						'label'     => __( 'Stripe & usage', 'class-bookings-with-stripe-pro' ),
+						'name'      => '_clasbpro_manual_summary',
+						'type'      => 'message',
+						'esc_html'  => 0,
+						'new_lines' => '',
+					],
+				],
+				'location' => [
+					[
+						[
+							'param'    => 'post_type',
+							'operator' => '==',
+							'value'    => Constants::CPT_MANUAL_COUPON,
 						],
 					],
 				],
@@ -3438,10 +3653,10 @@ abstract class ACF_Fields {
 				<?php endif; ?>
 				<div class="cbfs-admin-summary__kv-row">
 					<span class="cbfs-admin-summary__kv-label"><?php esc_html_e( 'Uses', 'class-bookings-with-stripe-pro' ); ?></span>
-					<div class="cbfs-admin-summary__kv-value">
+					<div class="cbfs-admin-summary__kv-value cbfs-admin-summary__uses">
 						<?php
 						$usages      = Packs::get_purchase_usages( $purchase_id );
-						$used_count  = count( $usages );
+						$used_count  = Packs::count_consumed_uses( $purchase_id );
 						$uses_total  = max( 0, $uses );
 						if ( $uses_total > 0 ) {
 							echo esc_html(
@@ -3455,7 +3670,10 @@ abstract class ACF_Fields {
 						} else {
 							echo esc_html( (string) $used_count );
 						}
-						?>
+						if ( Packs::can_add_purchase_use( $purchase_id ) ) :
+							?>
+							<a class="button button-small cbfs-admin-summary__add-use" href="<?php echo esc_url( Packs::add_purchase_use_url( $purchase_id ) ); ?>"><?php esc_html_e( 'Add 1 use', 'class-bookings-with-stripe-pro' ); ?></a>
+						<?php endif; ?>
 					</div>
 				</div>
 				<?php if ( '' !== $unit_price ) : ?>
@@ -3610,6 +3828,95 @@ abstract class ACF_Fields {
 			</div>
 
 			<?php echo Booking_Email_Status::render_purchase_panel( $purchase_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+		<?php
+		$field['message'] = (string) ob_get_clean();
+		return $field;
+	}
+
+	/**
+	 * Stripe IDs, copyable code, and usage on the manual coupon edit screen.
+	 *
+	 * @param array<string,mixed> $field
+	 * @return array<string,mixed>
+	 */
+	public static function populate_manual_coupon_summary_field( array $field ): array {
+		$post_id = get_the_ID();
+		if ( ! $post_id || CPT::MANUAL_COUPON_PT !== get_post_type( $post_id ) ) {
+			return $field;
+		}
+
+		$coupon   = Manual_Coupons::get_coupon_data( (int) $post_id );
+		$promo_id = $coupon['promo_id'] ?? '';
+		$coupon_id = $coupon['coupon_id'] ?? '';
+		$code     = (string) ( $coupon['code'] ?? '' );
+		$usages   = Manual_Coupons::get_usages( (int) $post_id );
+
+		ob_start();
+		?>
+		<div class="cbfs-admin-summary cbfs-admin-summary--modern">
+			<div class="cbfs-admin-summary__stripe">
+				<h4 class="cbfs-admin-summary__stripe-title"><?php esc_html_e( 'Stripe', 'class-bookings-with-stripe-pro' ); ?></h4>
+				<div class="cbfs-admin-summary__mono-block">
+					<span class="cbfs-admin-summary__mono-label"><?php esc_html_e( 'Code', 'class-bookings-with-stripe-pro' ); ?></span>
+					<code class="cbfs-admin-summary__code"><?php echo esc_html( $code ) ?: '—'; ?></code>
+				</div>
+				<div class="cbfs-admin-summary__mono-block">
+					<span class="cbfs-admin-summary__mono-label"><?php esc_html_e( 'Coupon ID', 'class-bookings-with-stripe-pro' ); ?></span>
+					<code class="cbfs-admin-summary__code"><?php echo esc_html( (string) $coupon_id ) ?: '—'; ?></code>
+				</div>
+				<div class="cbfs-admin-summary__mono-block">
+					<span class="cbfs-admin-summary__mono-label"><?php esc_html_e( 'Promotion code ID', 'class-bookings-with-stripe-pro' ); ?></span>
+					<code class="cbfs-admin-summary__code"><?php echo esc_html( (string) $promo_id ) ?: '—'; ?></code>
+				</div>
+			</div>
+			<div class="cbfs-admin-summary__extras cbfs-admin-summary__usages">
+				<h4 class="cbfs-admin-summary__extras-title"><?php esc_html_e( 'Usage', 'class-bookings-with-stripe-pro' ); ?></h4>
+				<?php if ( empty( $usages ) ) : ?>
+					<p class="cbfs-admin-summary__empty"><?php esc_html_e( 'This coupon has not been used on any bookings yet.', 'class-bookings-with-stripe-pro' ); ?></p>
+				<?php else : ?>
+					<table class="cbfs-admin-summary__table cbfs-admin-summary__table--usages">
+						<thead>
+							<tr>
+								<th scope="col"><?php esc_html_e( 'Class', 'class-bookings-with-stripe-pro' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'When', 'class-bookings-with-stripe-pro' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Status', 'class-bookings-with-stripe-pro' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Booking', 'class-bookings-with-stripe-pro' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php foreach ( $usages as $usage ) : ?>
+							<?php
+							$when = trim(
+								(string) ( $usage['class_date'] ?? '' )
+								. ( ! empty( $usage['class_time'] ) ? ' · ' . $usage['class_time'] : '' )
+							);
+							$status_label = '' !== (string) ( $usage['status'] ?? '' )
+								? ucfirst( (string) $usage['status'] )
+								: '—';
+							?>
+							<tr>
+								<td>
+									<?php echo esc_html( (string) ( $usage['class_name'] ?? '—' ) ); ?>
+									<?php if ( ! empty( $usage['location'] ) ) : ?>
+										<br /><span class="cbfs-admin-summary__muted"><?php echo esc_html( (string) $usage['location'] ); ?></span>
+									<?php endif; ?>
+								</td>
+								<td><?php echo esc_html( $when !== '' ? $when : '—' ); ?></td>
+								<td><?php echo esc_html( $status_label ); ?></td>
+								<td>
+									<?php if ( ! empty( $usage['edit_url'] ) ) : ?>
+										<a href="<?php echo esc_url( (string) $usage['edit_url'] ); ?>">#<?php echo esc_html( (string) ( $usage['booking_id'] ?? '' ) ); ?></a>
+									<?php else : ?>
+										#<?php echo esc_html( (string) ( $usage['booking_id'] ?? '' ) ); ?>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php endif; ?>
+			</div>
 		</div>
 		<?php
 		$field['message'] = (string) ob_get_clean();
@@ -4139,7 +4446,7 @@ PHP;
 		</li>
 	</ol>
 	<p class="clasbowi-doc__note"><?php esc_html_e( 'If Checkout fails with an authentication error, double-check that the mode matches the keys (test keys only with Mode = Test).', 'class-bookings-with-stripe-pro' ); ?></p>
-	<p class="clasbowi-doc__note"><?php esc_html_e( 'On hosts such as Cloudways, prefer environment variables or wp-config.php defines so keys survive a database import. getenv() is read first, then a matching define(). A value pasted into the settings fields overrides both. Names: CLASBPRO_STRIPE_SECRET_TEST, CLASBPRO_STRIPE_SECRET_LIVE, CLASBPRO_STRIPE_WEBHOOK_SECRET, CLASBPRO_STRIPE_PUB_TEST, CLASBPRO_STRIPE_PUB_LIVE.', 'class-bookings-with-stripe-pro' ); ?></p>
+	<p class="clasbowi-doc__note"><?php esc_html_e( 'On hosts such as Cloudways, prefer environment variables or wp-config.php defines so keys survive a database import. getenv() is read first, then a matching define(). A value pasted into the settings fields overrides both. Names: CLASBPRO_STRIPE_SECRET_TEST, CLASBPRO_STRIPE_SECRET_LIVE, CLASBPRO_STRIPE_WEBHOOK_SECRET, CLASBPRO_STRIPE_PUB_TEST, CLASBPRO_STRIPE_PUB_LIVE, CLASBPRO_MAILCHIMP_API_KEY.', 'class-bookings-with-stripe-pro' ); ?></p>
 </div>
 		<?php
 		return self::help_doc_row(
@@ -4472,7 +4779,7 @@ curl -I http://127.0.0.1:8101/wp-json/</code></pre>
 		?>
 <div class="clasbpro-doc">
 	<h3 class="clasbpro-doc__h"><?php echo esc_html( '[' . $packs_tag . ']' ); ?></h3>
-	<p class="clasbpro-doc__lead"><?php esc_html_e( 'Lists purchasable coupons. Create coupons under Classes → Coupons, then place this shortcode on a page.', 'class-bookings-with-stripe-pro' ); ?></p>
+	<p class="clasbpro-doc__lead"><?php esc_html_e( 'Lists purchasable coupons. Create packs under Classes → Coupon Packs, then place this shortcode on a page.', 'class-bookings-with-stripe-pro' ); ?></p>
 	<pre class="clasbpro-doc__pre"><code>[<?php echo esc_html( $packs_tag ); ?> id="1"]</code></pre>
 	<pre class="clasbpro-doc__pre"><code>[<?php echo esc_html( $packs_tag ); ?> id="1,2,3"]</code></pre>
 	<p class="clasbpro-doc__muted"><?php esc_html_e( 'Omit id to list every active coupon. After purchase, Stripe creates a unique coupon code. Customers can redeem it on eligible class booking forms (1 seat per use).', 'class-bookings-with-stripe-pro' ); ?></p>

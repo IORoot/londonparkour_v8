@@ -20,7 +20,8 @@
  * Theme fields: acf_subtitle, acf_age_range, acf_location, acf_coaches,
  * acf_what_to_expect.
  * Duration / price / image / sessions come from clasbpro helpers. The aside
- * CTA opens the shared booking drawer — no primary_action /book/… href.
+ * CTA opens the shared booking drawer, or the external booking URL when the
+ * class is an external-link type.
  *
  * @package londonparkour_v8
  */
@@ -119,6 +120,9 @@ while ( have_posts() ) :
 		'band'
 	);
 	$lp_book['data_attrs']['data-lp-list'] = 'class-detail';
+	$lp_is_external = function_exists( 'lp_class_is_external_link' ) && lp_class_is_external_link( (int) $lp_post_id );
+	$lp_raw_cap     = function_exists( 'lp_clasbpro_raw' ) ? lp_clasbpro_raw( (int) $lp_post_id ) : null;
+	$lp_capacity    = is_array( $lp_raw_cap ) ? (int) ( $lp_raw_cap['capacity'] ?? 0 ) : 0;
 
 	// A dated session's board label, derived — never the fabricated "Saturday".
 	$lp_row_date_label = static function ( string $lp_date ): string {
@@ -192,17 +196,25 @@ while ( have_posts() ) :
 			'value' => $lp_price_value,
 		);
 	}
+	if ( $lp_is_external && $lp_capacity > 0 ) {
+		$lp_aside_rows[] = array(
+			'label' => 'CAPACITY',
+			'value' => (string) $lp_capacity,
+		);
+	}
 
 	// Coach.
 	$lp_coach_name  = '';
 	$lp_coach_role  = '';
 	$lp_coach_bio   = '';
 	$lp_coach_photo = 0;
+	$lp_coach_href  = '';
 	if ( $lp_coach_id ) {
 		$lp_coach_name  = get_the_title( $lp_coach_id );
 		$lp_coach_role  = (string) get_field( 'role', $lp_coach_id );
 		$lp_coach_bio   = lp_first_sentences( (string) get_field( 'bio', $lp_coach_id ), 2 );
 		$lp_coach_photo = has_post_thumbnail( $lp_coach_id ) ? (int) get_post_thumbnail_id( $lp_coach_id ) : 0;
+		$lp_coach_href  = (string) get_permalink( $lp_coach_id );
 	}
 
 	// Upcoming Sessions board.
@@ -377,9 +389,11 @@ while ( have_posts() ) :
 						'components/aside-panel',
 						array(
 							'title'       => 'BOOK THIS CLASS',
-							'spots_left'  => $lp_next ? (string) ( $lp_next['spaces'] ?? '' ) : '',
+							'spots_left'  => ( $lp_is_external || ! $lp_next ) ? '' : (string) ( $lp_next['spaces'] ?? '' ),
 							'rows'        => $lp_aside_rows,
 							'cta_label'   => $lp_book['label'],
+							'href'        => $lp_book['href'] ?? '',
+							'target'      => $lp_book['target'] ?? '',
 							'command'     => $lp_book['command'] ?? '',
 							'command_for' => $lp_book['command_for'] ?? '',
 							'data_attrs'  => $lp_book['data_attrs'] ?? array(),
@@ -570,6 +584,7 @@ while ( have_posts() ) :
 								'size'      => 'lg',
 								'surface'   => 'accent',
 								'photo_id'  => $lp_coach_photo,
+								'href'      => $lp_coach_href,
 							)
 						);
 						?>

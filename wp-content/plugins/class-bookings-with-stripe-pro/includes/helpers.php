@@ -659,7 +659,7 @@ abstract class Helpers {
 
 		$start_date = function_exists( 'get_field' ) ? self::normalise_date_string( (string) get_field( 'start_date', $class_id ) ) : '';
 		$end_date   = function_exists( 'get_field' ) ? self::normalise_date_string( (string) get_field( 'end_date', $class_id ) ) : '';
-		if ( 'one_off' === $schedule_type && '' === $end_date ) {
+		if ( in_array( $schedule_type, [ 'one_off', 'external_link' ], true ) && '' === $end_date ) {
 			$end_date = $start_date;
 		}
 
@@ -684,6 +684,12 @@ abstract class Helpers {
 		$upcoming_n   = max( 1, min( 12, $upcoming_n ) );
 
 		$is_appointments = 'appointments' === $schedule_type;
+		$capacity        = function_exists( 'get_field' ) ? (int) get_field( 'capacity', $class_id ) : 0;
+		$party_prices    = $is_appointments ? Party_Prices::get_map( $class_id, $capacity ) : [];
+		$price           = function_exists( 'get_field' ) ? (float) get_field( 'price_gbp', $class_id ) : 0.0;
+		if ( $is_appointments ) {
+			$price = Party_Prices::one_person_rate( $party_prices );
+		}
 		$calendar_months = function_exists( 'get_field' ) ? (int) get_field( 'calendar_months_ahead', $class_id ) : 3;
 		$calendar_months = max( 1, min( 12, $calendar_months ?: 3 ) );
 		$lead_hours      = function_exists( 'get_field' ) ? (int) get_field( 'minimum_lead_time_hours', $class_id ) : 0;
@@ -706,15 +712,16 @@ abstract class Helpers {
 			'external_link_url' => function_exists( 'get_field' ) ? esc_url_raw( (string) get_field( 'external_link_url', $class_id ) ) : '',
 			'location'        => function_exists( 'get_field' ) ? (string) get_field( 'location', $class_id ) : '',
 			'schedule_type'   => $schedule_type,
-			'is_one_off_event' => 'one_off' === $schedule_type,
+			'is_one_off_event' => in_array( $schedule_type, [ 'one_off', 'external_link' ], true ),
 			'is_appointments' => $is_appointments,
 			'day_of_week'     => function_exists( 'get_field' ) ? (string) get_field( 'day_of_week', $class_id ) : '',
 			'start_date'      => $start_date,
 			'end_date'        => $end_date,
 			'start_time'      => $start_time,
 			'duration'        => function_exists( 'get_field' ) ? (int) get_field( 'duration_minutes', $class_id ) : 0,
-			'price'           => function_exists( 'get_field' ) ? (float) get_field( 'price_gbp', $class_id ) : 0.0,
-			'capacity'        => function_exists( 'get_field' ) ? (int) get_field( 'capacity', $class_id ) : 0,
+			'price'           => $price,
+			'party_prices'    => $party_prices,
+			'capacity'        => $capacity,
 			'show_seats_remaining' => function_exists( 'get_field' ) ? (bool) get_field( 'show_seats_remaining', $class_id ) : true,
 			'upcoming_dates_count' => $upcoming_n,
 			'calendar_months_ahead' => $calendar_months,

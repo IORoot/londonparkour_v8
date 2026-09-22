@@ -8,12 +8,12 @@
     "title": "REACH US NOW",
     "spots_left": "OPEN",
     "rows": [
-      { "label": "EMAIL", "value": "hello@londonparkour.com" },
+      { "label": "EMAIL", "value": "contact@londonparkour.com" },
       { "label": "LOCATIONS", "value": "Vauxhall · Old Street · Kilburn Park" },
       { "label": "HOURS", "value": "Wed, Sat, Sun · 09:00–20:00" }
     ],
     "cta_label": "EMAIL US",
-    "cta_href": "mailto:hello@londonparkour.com",
+    "cta_href": "mailto:contact@londonparkour.com",
     "note": "Email is the fastest way to reach us."
   }
 }

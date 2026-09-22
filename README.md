@@ -39,7 +39,7 @@ Staging is a **separate Cloudways application**. Git Pull runs on staging only, 
 4. The database updates every minute via cron (`database/cloudways_load.sh`). No SSH import needed.
 5. Application Settings → General → Purge site cache
 
-Stripe keys live in `public_html/wp-config.php` (that file is not overwritten by Git Pull). Leave the plugin’s key fields empty unless you want to override:
+Stripe and Mailchimp keys live in `public_html/wp-config.php` (that file is not overwritten by Git Pull). Leave the plugin’s key fields empty unless you want to override. The database import replaces `wp_options` every minute, so a key saved only in the database will not survive.
 
 ```php
 define( 'CLASBPRO_STRIPE_SECRET_TEST', 'sk_test_…' );
@@ -47,9 +47,9 @@ define( 'CLASBPRO_STRIPE_SECRET_LIVE', 'sk_live_…' );
 define( 'CLASBPRO_STRIPE_WEBHOOK_SECRET', 'whsec_…' );
 define( 'CLASBPRO_STRIPE_PUB_TEST', 'pk_test_…' );
 define( 'CLASBPRO_STRIPE_PUB_LIVE', 'pk_live_…' );
+define( 'CLASBPRO_MAILCHIMP_API_KEY', '…' );
 ```
 
 If the page still looks stale after Pull: **Servers → Manage Services → Varnish → Purge**. `uploads/` is gitignored — media 404s on staging until copied.
 
 Caching rules: [`wp-content/themes/londonparkour_v8/docs/cloudways-caching.md`](wp-content/themes/londonparkour_v8/docs/cloudways-caching.md). Staging import design: [`wp-content/themes/londonparkour_v8/docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md`](wp-content/themes/londonparkour_v8/docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md). Staging SEO audit: [`wp-content/themes/londonparkour_v8/docs/staging.londonparkour.com-audit/FULL-AUDIT-REPORT.md`](wp-content/themes/londonparkour_v8/docs/staging.londonparkour.com-audit/FULL-AUDIT-REPORT.md).
-

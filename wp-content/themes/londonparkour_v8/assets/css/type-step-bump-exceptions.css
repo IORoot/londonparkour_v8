@@ -1,0 +1,69 @@
+/*
+ * Type step bump exceptions — sit after type-step-bump.css.
+ *
+ * Global bump stays; these scopes restore or further bump specific surfaces
+ * without rewriting designed class strings.
+ *
+ * Revert = authored px (undo the +1 step).
+ * +2 steps from design: 11/12/13 → 18.
+ */
+
+/* ── Revert: series sidebar list (and mobile picker list) ─────────────── */
+[data-component="series-sidebar"] [class~="text-[9px]"],
+[data-component="series-sidebar-item"] [class~="text-[9px]"],
+[data-component="series-picker"] [class~="text-[9px]"] {
+  font-size: 9px;
+}
+
+[data-component="series-sidebar"] [class~="text-[10px]"],
+[data-component="series-sidebar-item"] [class~="text-[10px]"],
+[data-component="series-picker"] [class~="text-[10px]"] {
+  font-size: 10px;
+}
+
+[data-component="series-sidebar"] [class~="text-[11px]"],
+[data-component="series-sidebar-item"] [class~="text-[11px]"],
+[data-component="series-picker"] [class~="text-[11px]"] {
+  font-size: 11px;
+}
+
+[data-component="series-sidebar"] [class~="text-[16px]"],
+[data-component="series-sidebar-item"] [class~="text-[16px]"],
+[data-component="series-picker"] [class~="text-[16px]"] {
+  font-size: 16px;
+}
+
+[data-component="series-sidebar"] [class~="text-[22px]"] {
+  font-size: 22px;
+}
+
+/* ── Revert: video card titles (lesson rail + related) ────────────────── */
+[data-component="video-card"] h3[class~="text-[18px]"] {
+  font-size: 18px;
+}
+
+/* ── +2 steps: VIDEO DETAILS body / summary ───────────────────────────── */
+[data-section="video-details"] [class~="text-[13px]"] {
+  font-size: 18px;
+}
+
+/* ── +2 steps: tutorial board lesson descriptions ─────────────────────── */
+[data-section="lessons"] [data-component="board-row"] p[class~="text-[11px]"],
+[data-section="series"] [data-component="board-row"] p[class~="text-[11px]"] {
+  font-size: 18px;
+}
+
+/* ── +2 steps: FAQ answers (FaqItem on every page) ────────────────────── */
+[data-component="faq-item"] [class~="text-[13px]"] {
+  font-size: 18px;
+}
+
+/* ── +2 steps: page masthead note ─────────────────────────────────────── */
+[data-component="page-masthead"] [class~="text-[13px]"] {
+  font-size: 18px;
+}
+
+/* ── +2 steps: tutorial / video card descriptions ─────────────────────── */
+[data-component="video-card"] p[class~="text-[12px]"] {
+  font-size: 18px;
+}

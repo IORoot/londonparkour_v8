@@ -19,6 +19,11 @@ abstract class Packs {
 	public const STATUS_EXPIRED       = 'expired';
 	public const COUPON_OPTION        = 'clasbpro_stripe_pack_coupon_id';
 
+	public const ADD_USE_ACTION = 'clasbpro_add_pack_use';
+
+	/** @var array<int, int> */
+	private static array $consumed_uses_cache = [];
+
 	public static function init(): void {
 		add_action( 'init', [ self::class, 'maybe_claim_restore_token' ], 1 );
 		add_action( 'init', [ self::class, 'maybe_claim_from_purchase_query' ], 2 );
@@ -28,6 +33,8 @@ abstract class Packs {
 		add_action( 'manage_' . CPT::PACK_PURCHASE_PT . '_posts_custom_column', [ self::class, 'purchase_column_value' ], 10, 2 );
 		add_action( 'acf/save_post', [ self::class, 'validate_pack_on_save' ], 20 );
 		add_action( 'post_submitbox_misc_actions', [ self::class, 'render_pack_shortcode_hint' ] );
+		add_action( 'admin_post_' . self::ADD_USE_ACTION, [ self::class, 'handle_add_purchase_use' ] );
+		add_action( 'admin_notices', [ self::class, 'render_add_purchase_use_notices' ] );
 	}
 
 	/**
@@ -166,21 +173,27 @@ abstract class Packs {
 			return null;
 		}
 		$promo_id = sanitize_text_field( (string) ( $payload['promo_id'] ?? '' ) );
-		$email    = sanitize_email( (string) ( $payload['email'] ?? '' ) );
+		$email    = strtolower( sanitize_email( (string) ( $payload['email'] ?? '' ) ) );
 		$exp      = (int) ( $payload['exp'] ?? 0 );
-		if ( '' === $promo_id || ! is_email( $email ) || ( $exp > 0 && $exp < time() ) ) {
+		if ( '' === $promo_id || ( $exp > 0 && $exp < time() ) ) {
+			return null;
+		}
+		if ( '' !== $email && ! is_email( $email ) ) {
 			return null;
 		}
 		return [
 			'promo_id' => $promo_id,
-			'email'    => strtolower( $email ),
+			'email'    => $email,
 			'exp'      => $exp,
 		];
 	}
 
 	public static function set_active_cookie( string $promo_id, string $email, int $expires_at = 0 ): void {
 		$email = strtolower( sanitize_email( $email ) );
-		if ( '' === $promo_id || ! is_email( $email ) ) {
+		if ( '' === $promo_id ) {
+			return;
+		}
+		if ( '' !== $email && ! is_email( $email ) ) {
 			return;
 		}
 		$exp = $expires_at > time() ? $expires_at : ( time() + YEAR_IN_SECONDS );
@@ -248,7 +261,7 @@ abstract class Packs {
 		$promo_id = sanitize_text_field( (string) ( $payload['promo_id'] ?? '' ) );
 		$email    = sanitize_email( (string) ( $payload['email'] ?? '' ) );
 		$exp      = (int) ( $payload['exp'] ?? 0 );
-		if ( '' === $promo_id || ! is_email( $email ) ) {
+		if ( '' === $promo_id || ( '' !== $email && ! is_email( $email ) ) ) {
 			return;
 		}
 		self::set_active_cookie( $promo_id, $email, $exp );
@@ -264,10 +277,15 @@ abstract class Packs {
 	/**
 	 * @return array{ok: bool, message?: string, promo_id?: string, email?: string, uses_remaining?: int, uses_total?: int, pack_id?: int, pack_name?: string, expires_at?: int}
 	 */
-	public static function attach_by_code( string $code, string $email = '' ): array {
+	public static function attach_by_code( string $code, string $email = '', int $class_id = 0 ): array {
 		$code = strtoupper( trim( $code ) );
 		if ( '' === $code ) {
 			return [ 'ok' => false, 'message' => __( 'Please enter a coupon code.', 'class-bookings-with-stripe-pro' ) ];
+		}
+
+		$manual = Manual_Coupons::find_by_code( $code );
+		if ( $manual ) {
+			return Manual_Coupons::attach( $manual, $email, $class_id );
 		}
 
 		try {
@@ -317,10 +335,21 @@ abstract class Packs {
 	 * @return array{active: bool, message: string, reason_code: string, uses_remaining: int, uses_total: int, pack_id: int}
 	 */
 	public static function promotion_state( $promo ): array {
-		$uses_total = (int) ( $promo->max_redemptions ?? 0 );
-		$redeemed   = (int) ( $promo->times_redeemed ?? 0 );
-		$remaining  = $uses_total > 0 ? max( 0, $uses_total - $redeemed ) : 0;
-		$pack_id    = (int) ( $promo->metadata->clasbpro_pack_id ?? 0 );
+		$stripe_total    = (int) ( $promo->max_redemptions ?? 0 );
+		$stripe_redeemed = (int) ( $promo->times_redeemed ?? 0 );
+		$pack_id         = (int) ( $promo->metadata->clasbpro_pack_id ?? 0 );
+		$purchase_id     = (int) ( $promo->metadata->clasbpro_purchase_id ?? 0 );
+		if ( $purchase_id <= 0 ) {
+			$purchase_id = self::find_purchase_by_promo_id( (string) ( $promo->id ?? '' ) );
+		}
+
+		if ( $purchase_id > 0 ) {
+			$uses_total = self::get_purchase_uses_total( $purchase_id );
+			$remaining  = max( 0, $uses_total - self::count_consumed_uses( $purchase_id ) );
+		} else {
+			$uses_total = $stripe_total;
+			$remaining  = $uses_total > 0 ? max( 0, $uses_total - $stripe_redeemed ) : 0;
+		}
 
 		$base = [
 			'uses_remaining' => $remaining,
@@ -351,7 +380,8 @@ abstract class Packs {
 				]
 			);
 		}
-		if ( empty( $promo->active ) ) {
+		$stripe_maxed = $stripe_total > 0 && $stripe_redeemed >= $stripe_total;
+		if ( empty( $promo->active ) && ! ( $remaining > 0 && $stripe_maxed ) ) {
 			return array_merge(
 				$base,
 				[
@@ -423,7 +453,29 @@ abstract class Packs {
 		$pack_name = $pack ? (string) $pack['name'] : (string) ( $promo->metadata->clasbpro_pack_name ?? '' );
 
 		$form_email = strtolower( sanitize_email( $form_email ) );
-		$email_ok   = '' === $form_email || $form_email === $cookie['email'];
+		$email_ok   = '' === $form_email || $form_email === $cookie['email'] || '' === $cookie['email'];
+
+		$manual = Manual_Coupons::is_manual_promo( $promo )
+			? Manual_Coupons::find_by_promo_id( (string) $promo->id )
+			: null;
+		if ( Manual_Coupons::is_manual_promo( $promo ) ) {
+			if ( $manual ) {
+				return Manual_Coupons::status_for_class( $manual, $class_id, $form_email, (string) $cookie['email'] );
+			}
+			return [
+				'recognised'     => true,
+				'eligible'       => false,
+				'is_manual'      => true,
+				'uses_remaining' => 0,
+				'uses_total'     => 0,
+				'pack_name'      => (string) ( $promo->metadata->clasbpro_pack_name ?? '' ),
+				'promo_id'       => (string) $promo->id,
+				'code'           => strtoupper( (string) ( $promo->code ?? '' ) ),
+				'email'          => $cookie['email'],
+				'message'        => __( 'This coupon is no longer available.', 'class-bookings-with-stripe-pro' ),
+				'reason_code'    => 'manual_missing',
+			];
+		}
 
 		$eligible    = false;
 		$reason      = '';
@@ -482,7 +534,7 @@ abstract class Packs {
 		$promo_id = sanitize_text_field( (string) ( $payload['promo_id'] ?? '' ) );
 		$email    = sanitize_email( (string) ( $payload['email'] ?? '' ) );
 		$exp      = (int) ( $payload['exp'] ?? 0 );
-		if ( '' === $promo_id || ! is_email( $email ) || ( $exp > 0 && $exp < time() ) ) {
+		if ( '' === $promo_id || ( '' !== $email && ! is_email( $email ) ) || ( $exp > 0 && $exp < time() ) ) {
 			return [
 				'recognised' => false,
 				'eligible'   => false,
@@ -518,10 +570,16 @@ abstract class Packs {
 			);
 		}
 		$email = strtolower( sanitize_email( $customer_email ) );
-		if ( $email !== (string) $status['email'] ) {
+		if ( empty( $status['is_manual'] ) && $email !== (string) $status['email'] ) {
 			return new \WP_Error(
 				'pack_email_mismatch',
 				__( 'Use the same email you bought the coupon with to redeem it.', 'class-bookings-with-stripe-pro' )
+			);
+		}
+		if ( ! empty( $status['is_manual'] ) && ! empty( $status['email_locked'] ) && $email !== (string) $status['email'] ) {
+			return new \WP_Error(
+				'pack_email_mismatch',
+				__( 'That coupon belongs to a different email address.', 'class-bookings-with-stripe-pro' )
 			);
 		}
 		return [
@@ -639,6 +697,190 @@ abstract class Packs {
 			'code'           => $code,
 			'restore_token'  => $restore_token,
 		];
+	}
+
+	/**
+	 * Live allowance for this purchase (WordPress is source of truth).
+	 */
+	public static function get_purchase_uses_total( int $purchase_id ): int {
+		$uses = (int) get_post_meta( $purchase_id, '_clasbpro_pack_uses', true );
+		if ( $uses <= 0 ) {
+			$pack_id = (int) get_post_meta( $purchase_id, '_clasbpro_pack_id', true );
+			$pack    = $pack_id ? self::get_pack_data( $pack_id ) : null;
+			if ( $pack ) {
+				$uses = (int) $pack['uses'];
+			}
+		}
+		return max( 0, $uses );
+	}
+
+	/**
+	 * Paid or refunded bookings that consumed a use. Pending/expired checkouts do not.
+	 */
+	public static function count_consumed_uses( int $purchase_id ): int {
+		if ( $purchase_id <= 0 ) {
+			return 0;
+		}
+		if ( isset( self::$consumed_uses_cache[ $purchase_id ] ) ) {
+			return self::$consumed_uses_cache[ $purchase_id ];
+		}
+
+		$promo_id = (string) get_post_meta( $purchase_id, '_clasbpro_stripe_promo_id', true );
+		if ( '' === $promo_id ) {
+			self::$consumed_uses_cache[ $purchase_id ] = 0;
+			return 0;
+		}
+
+		$q = new \WP_Query( [
+			'post_type'      => CPT::BOOKING_PT,
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'no_found_rows'  => false,
+			'meta_query'     => [
+				'relation' => 'AND',
+				[
+					'key'   => '_clasbpro_pack_promo_id',
+					'value' => $promo_id,
+				],
+				[
+					'key'     => '_clasbpro_status',
+					'value'   => [ Bookings::STATUS_PAID, Bookings::STATUS_REFUNDED ],
+					'compare' => 'IN',
+				],
+			],
+		] );
+
+		$count = (int) $q->found_posts;
+		self::$consumed_uses_cache[ $purchase_id ] = $count;
+		return $count;
+	}
+
+	public static function forget_consumed_uses( int $purchase_id ): void {
+		if ( $purchase_id > 0 ) {
+			unset( self::$consumed_uses_cache[ $purchase_id ] );
+		}
+	}
+
+	public static function can_add_purchase_use( int $purchase_id ): bool {
+		if ( $purchase_id <= 0 || ! current_user_can( 'edit_post', $purchase_id ) ) {
+			return false;
+		}
+		$post = get_post( $purchase_id );
+		if ( ! $post || CPT::PACK_PURCHASE_PT !== $post->post_type ) {
+			return false;
+		}
+		return self::STATUS_PAID === self::get_purchase_status( $purchase_id );
+	}
+
+	public static function add_purchase_use_url( int $purchase_id ): string {
+		return wp_nonce_url(
+			admin_url( 'admin-post.php?action=' . self::ADD_USE_ACTION . '&purchase_id=' . absint( $purchase_id ) ),
+			self::ADD_USE_ACTION . '_' . absint( $purchase_id )
+		);
+	}
+
+	/**
+	 * Raise allowance by 1 (unpaid). Updates Stripe metadata first, then WordPress.
+	 *
+	 * @return int|\WP_Error New total uses.
+	 */
+	public static function increment_purchase_uses( int $purchase_id ) {
+		if ( $purchase_id <= 0 ) {
+			return new \WP_Error( 'invalid', __( 'Invalid coupon purchase.', 'class-bookings-with-stripe-pro' ) );
+		}
+		$post = get_post( $purchase_id );
+		if ( ! $post || CPT::PACK_PURCHASE_PT !== $post->post_type ) {
+			return new \WP_Error( 'invalid', __( 'Invalid coupon purchase.', 'class-bookings-with-stripe-pro' ) );
+		}
+		if ( self::STATUS_PAID !== self::get_purchase_status( $purchase_id ) ) {
+			return new \WP_Error( 'not_paid', __( 'Uses can only be added on a paid coupon purchase.', 'class-bookings-with-stripe-pro' ) );
+		}
+
+		$new_uses = self::get_purchase_uses_total( $purchase_id ) + 1;
+		$promo_id = (string) get_post_meta( $purchase_id, '_clasbpro_stripe_promo_id', true );
+		if ( '' !== $promo_id ) {
+			try {
+				Stripe_Service::update_promotion_code_pack_uses( $promo_id, $new_uses );
+			} catch ( \Throwable $e ) {
+				Helpers::debug_log( '[class-bookings-with-stripe-pro] Failed to update promo uses metadata: ' . $e->getMessage() );
+				return new \WP_Error(
+					'stripe',
+					__( 'Could not update the Stripe promotion code. Uses were not changed.', 'class-bookings-with-stripe-pro' )
+				);
+			}
+		}
+
+		update_post_meta( $purchase_id, '_clasbpro_pack_uses', $new_uses );
+		self::forget_consumed_uses( $purchase_id );
+		return $new_uses;
+	}
+
+	public static function handle_add_purchase_use(): void {
+		$purchase_id = isset( $_REQUEST['purchase_id'] ) ? absint( $_REQUEST['purchase_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( $purchase_id <= 0 || ! current_user_can( 'edit_post', $purchase_id ) ) {
+			wp_die( esc_html__( 'Unauthorized.', 'class-bookings-with-stripe-pro' ) );
+		}
+		check_admin_referer( self::ADD_USE_ACTION . '_' . $purchase_id );
+
+		$result   = self::increment_purchase_uses( $purchase_id );
+		$edit_url = get_edit_post_link( $purchase_id, 'raw' );
+		if ( ! is_string( $edit_url ) || '' === $edit_url ) {
+			$edit_url = admin_url( 'edit.php?post_type=' . CPT::PACK_PURCHASE_PT );
+		}
+
+		if ( is_wp_error( $result ) ) {
+			wp_safe_redirect(
+				add_query_arg(
+					'clasbpro_pack_use_error',
+					$result->get_error_code(),
+					$edit_url
+				)
+			);
+			exit;
+		}
+
+		wp_safe_redirect(
+			add_query_arg(
+				'clasbpro_pack_use_added',
+				(int) $result,
+				$edit_url
+			)
+		);
+		exit;
+	}
+
+	public static function render_add_purchase_use_notices(): void {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || CPT::PACK_PURCHASE_PT !== $screen->post_type || 'post' !== $screen->base ) {
+			return;
+		}
+
+		if ( ! empty( $_GET['clasbpro_pack_use_added'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$uses = (int) $_GET['clasbpro_pack_use_added']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			echo '<div class="notice notice-success is-dismissible"><p>';
+			echo esc_html(
+				sprintf(
+					/* translators: %d: new total uses */
+					__( 'Added 1 use. This coupon now allows %d uses.', 'class-bookings-with-stripe-pro' ),
+					$uses
+				)
+			);
+			echo '</p></div>';
+		}
+
+		if ( ! empty( $_GET['clasbpro_pack_use_error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$code    = sanitize_key( (string) $_GET['clasbpro_pack_use_error'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$messages = [
+				'not_paid' => __( 'Uses can only be added on a paid coupon purchase.', 'class-bookings-with-stripe-pro' ),
+				'stripe'   => __( 'Could not update the Stripe promotion code. Uses were not changed.', 'class-bookings-with-stripe-pro' ),
+				'invalid'  => __( 'Invalid coupon purchase.', 'class-bookings-with-stripe-pro' ),
+			];
+			$message = $messages[ $code ] ?? __( 'Could not add a use.', 'class-bookings-with-stripe-pro' );
+			echo '<div class="notice notice-error is-dismissible"><p>';
+			echo esc_html( $message );
+			echo '</p></div>';
+		}
 	}
 
 	/**

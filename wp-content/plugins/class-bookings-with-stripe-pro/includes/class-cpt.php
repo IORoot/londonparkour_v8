@@ -16,6 +16,8 @@ abstract class CPT {
 	public const PACK_PT          = 'clasbpro_pack';
 	/** Must stay ≤ 20 chars (wp_posts.post_type). */
 	public const PACK_PURCHASE_PT = 'clasbpro_pack_ord';
+	/** Must stay ≤ 20 chars (wp_posts.post_type). */
+	public const MANUAL_COUPON_PT = 'clasbpro_mcoupon';
 
 	public static function init(): void {
 		add_action( 'init', [ self::class, 'register' ] );
@@ -55,6 +57,7 @@ abstract class CPT {
 					'view_item'          => __( 'View Class', 'class-bookings-with-stripe-pro' ),
 					'search_items'       => __( 'Search Classes', 'class-bookings-with-stripe-pro' ),
 					'menu_name'          => __( 'Stripe Class Pro', 'class-bookings-with-stripe-pro' ),
+					'all_items'          => __( 'Classes', 'class-bookings-with-stripe-pro' ),
 				],
 				'public'       => false,
 				'show_ui'      => true,
@@ -77,7 +80,8 @@ abstract class CPT {
 					'edit_item'          => __( 'Edit Booking', 'class-bookings-with-stripe-pro' ),
 					'view_item'          => __( 'View Booking', 'class-bookings-with-stripe-pro' ),
 					'search_items'       => __( 'Search Bookings', 'class-bookings-with-stripe-pro' ),
-					'menu_name'          => __( 'Bookings', 'class-bookings-with-stripe-pro' ),
+					'menu_name'          => __( 'Class Bookings', 'class-bookings-with-stripe-pro' ),
+					'all_items'          => __( 'Class Bookings', 'class-bookings-with-stripe-pro' ),
 				],
 				'public'       => false,
 				'show_ui'      => true,
@@ -98,13 +102,35 @@ abstract class CPT {
 			self::PACK_PT,
 			[
 				'labels'       => [
-					'name'          => __( 'Coupons', 'class-bookings-with-stripe-pro' ),
-					'singular_name' => __( 'Coupon', 'class-bookings-with-stripe-pro' ),
-					'add_new_item'  => __( 'Add Coupon', 'class-bookings-with-stripe-pro' ),
-					'edit_item'     => __( 'Edit Coupon', 'class-bookings-with-stripe-pro' ),
-					'new_item'      => __( 'New Coupon', 'class-bookings-with-stripe-pro' ),
-					'search_items'  => __( 'Search Coupons', 'class-bookings-with-stripe-pro' ),
-					'menu_name'     => __( 'Coupons', 'class-bookings-with-stripe-pro' ),
+					'name'          => __( 'Coupon Packs', 'class-bookings-with-stripe-pro' ),
+					'singular_name' => __( 'Coupon pack', 'class-bookings-with-stripe-pro' ),
+					'add_new_item'  => __( 'Add Coupon pack', 'class-bookings-with-stripe-pro' ),
+					'edit_item'     => __( 'Edit Coupon pack', 'class-bookings-with-stripe-pro' ),
+					'new_item'      => __( 'New Coupon pack', 'class-bookings-with-stripe-pro' ),
+					'search_items'  => __( 'Search Coupon Packs', 'class-bookings-with-stripe-pro' ),
+					'menu_name'     => __( 'Coupon Packs', 'class-bookings-with-stripe-pro' ),
+				],
+				'public'       => false,
+				'show_ui'      => true,
+				'show_in_menu' => 'edit.php?post_type=' . self::CLASS_PT,
+				'supports'     => [ 'title' ],
+				'has_archive'  => false,
+				'rewrite'      => false,
+				'show_in_rest' => false,
+			]
+		);
+
+		register_post_type(
+			self::MANUAL_COUPON_PT,
+			[
+				'labels'       => [
+					'name'          => __( 'Coupon Codes', 'class-bookings-with-stripe-pro' ),
+					'singular_name' => __( 'Coupon code', 'class-bookings-with-stripe-pro' ),
+					'add_new_item'  => __( 'Add Coupon code', 'class-bookings-with-stripe-pro' ),
+					'edit_item'     => __( 'Edit Coupon code', 'class-bookings-with-stripe-pro' ),
+					'new_item'      => __( 'New Coupon code', 'class-bookings-with-stripe-pro' ),
+					'search_items'  => __( 'Search Coupon Codes', 'class-bookings-with-stripe-pro' ),
+					'menu_name'     => __( 'Coupon Codes', 'class-bookings-with-stripe-pro' ),
 				],
 				'public'       => false,
 				'show_ui'      => true,
@@ -120,11 +146,11 @@ abstract class CPT {
 			self::PACK_PURCHASE_PT,
 			[
 				'labels'       => [
-					'name'          => __( 'Coupon purchases', 'class-bookings-with-stripe-pro' ),
+					'name'          => __( 'Coupon Purchases', 'class-bookings-with-stripe-pro' ),
 					'singular_name' => __( 'Coupon purchase', 'class-bookings-with-stripe-pro' ),
 					'edit_item'     => __( 'Edit Coupon purchase', 'class-bookings-with-stripe-pro' ),
-					'search_items'  => __( 'Search Coupon purchases', 'class-bookings-with-stripe-pro' ),
-					'menu_name'     => __( 'Coupon purchases', 'class-bookings-with-stripe-pro' ),
+					'search_items'  => __( 'Search Coupon Purchases', 'class-bookings-with-stripe-pro' ),
+					'menu_name'     => __( 'Coupon Purchases', 'class-bookings-with-stripe-pro' ),
 				],
 				'public'       => false,
 				'show_ui'      => true,

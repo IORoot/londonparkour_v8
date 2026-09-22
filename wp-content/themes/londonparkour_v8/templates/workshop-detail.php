@@ -349,6 +349,8 @@ $lp_grid = $lp_show_book
 							'spots_left'  => $lp_next ? (string) ( $lp_next['spaces'] ?? '' ) : '',
 							'rows'        => $lp_aside_rows,
 							'cta_label'   => $lp_book['label'],
+							'href'        => $lp_book['href'] ?? '',
+							'target'      => $lp_book['target'] ?? '',
 							'command'     => $lp_book['command'] ?? '',
 							'command_for' => $lp_book['command_for'] ?? '',
 							'data_attrs'  => $lp_book['data_attrs'] ?? array(),
@@ -551,6 +553,7 @@ $lp_grid = $lp_show_book
 									'size'      => 'lg',
 									'surface'   => 'accent',
 									'photo_id'  => has_post_thumbnail( $lp_coach_id ) ? (int) get_post_thumbnail_id( $lp_coach_id ) : 0,
+									'href'      => (string) get_permalink( $lp_coach_id ),
 								)
 							);
 							?>

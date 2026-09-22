@@ -115,7 +115,7 @@ get_header();
 				?>
 			</span>
 			<div class="flex flex-col items-center gap-[10px] min-w-0 flex-1">
-				<h2 class="font-heading text-[26px] font-semibold tracking-[-0.3px] text-base-content text-center"><?php echo esc_html( lp_agenda_week_label( $lp_week ) ); ?></h2>
+				<h2 class="font-heading text-[18px] font-semibold tracking-[-0.3px] lg:text-[26px] text-base-content text-center"><?php echo esc_html( lp_agenda_week_label( $lp_week ) ); ?></h2>
 				<div class="flex items-center gap-[16px]">
 					<span>
 						<?php
@@ -225,7 +225,7 @@ get_header();
 							<span class="font-label text-[11px] font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[6px]"><?php echo esc_html( $lp_day_group['date'] ); ?></span>
 						</div>
 						<div class="flex items-center gap-3 shrink-0">
-							<span class="font-label text-[11px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( _n( '%d SESSION', '%d SESSIONS', $lp_total, 'londonparkour_v8' ), $lp_total ) ); ?></span>
+							<span class="hidden lg:inline font-label text-[11px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( _n( '%d SESSION', '%d SESSIONS', $lp_total, 'londonparkour_v8' ), $lp_total ) ); ?></span>
 							<?php if ( $lp_upcoming_day === $lp_day_group['day'] ) : ?>
 								<span class="inline-flex items-center gap-1.5 bg-primary px-2.5 py-1">
 									<span class="w-[5px] h-[5px] rounded-full bg-primary-content" aria-hidden="true"></span>

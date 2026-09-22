@@ -188,21 +188,38 @@ abstract class Class_Email_Overrides {
 		return Emails::resolve_body_template( $type );
 	}
 
-	public static function resolve_admin_recipient( int $class_id ): string {
-		if ( self::uses_custom( $class_id, 'admin' ) ) {
-			$custom = trim( (string) get_field( 'class_email_admin_recipient', $class_id ) );
-			if ( '' !== $custom && is_email( $custom ) ) {
-				return $custom;
+	/**
+	 * First valid address wins. Empty and invalid values are skipped.
+	 */
+	public static function first_valid_email( string ...$candidates ): string {
+		foreach ( $candidates as $candidate ) {
+			$email = trim( $candidate );
+			if ( '' !== $email && is_email( $email ) ) {
+				return $email;
 			}
 		}
 
-		$admin_email = (string) Helpers::get_option( 'admin_email', '' );
-		if ( '' !== $admin_email && is_email( $admin_email ) ) {
-			return $admin_email;
+		return '';
+	}
+
+	public static function resolve_admin_recipient( int $class_id, string $slot_rule_id = '' ): string {
+		$slot_email = '';
+		if ( '' !== $slot_rule_id ) {
+			$rule       = Slot_Rules::get_rule( $class_id, $slot_rule_id );
+			$slot_email = (string) ( $rule['admin_email'] ?? '' );
 		}
 
-		$site_admin = (string) get_option( 'admin_email' );
-		return is_email( $site_admin ) ? $site_admin : '';
+		$class_email = '';
+		if ( self::uses_custom( $class_id, 'admin' ) ) {
+			$class_email = (string) get_field( 'class_email_admin_recipient', $class_id );
+		}
+
+		return self::first_valid_email(
+			$slot_email,
+			$class_email,
+			(string) Helpers::get_option( 'admin_email', '' ),
+			(string) get_option( 'admin_email' )
+		);
 	}
 
 	/**
@@ -292,7 +309,7 @@ abstract class Class_Email_Overrides {
 		);
 	}
 
-	public static function prefill_from_global( int $class_id, string $type ): void {
+	public static function prefill_from_global( int $class_id, string $type, bool $overwrite = true ): void {
 		if ( ! function_exists( 'update_field' ) || ! in_array( $type, self::ALL_TYPES, true ) ) {
 			return;
 		}
@@ -302,7 +319,9 @@ abstract class Class_Email_Overrides {
 		if ( '' === $subject ) {
 			$subject = self::default_subject( $type );
 		}
-		update_field( 'class_email_' . $type . '_subject', $subject, $class_id );
+		if ( $overwrite || '' === trim( (string) get_field( 'class_email_' . $type . '_subject', $class_id ) ) ) {
+			update_field( 'class_email_' . $type . '_subject', $subject, $class_id );
+		}
 
 		$prefix      = Email_Body_Editor::template_option_prefix( $type );
 		$editor_mode = Email_Body_Editor::sanitize_mode( (string) Helpers::get_option( $prefix . '_body_editor_mode', Email_Body_Editor::MODE_VISUAL ) );
@@ -318,13 +337,24 @@ abstract class Class_Email_Overrides {
 			}
 		}
 
+		$current_visual = trim( (string) get_field( 'class_email_' . $type . '_body', $class_id ) );
+		$current_html   = trim( (string) get_field( 'class_email_' . $type . '_body_html', $class_id ) );
+
 		update_field( 'class_email_' . $type . '_body_editor_mode', $editor_mode, $class_id );
-		update_field( 'class_email_' . $type . '_body', $visual_body, $class_id );
-		update_field( 'class_email_' . $type . '_body_html', $html_body, $class_id );
+
+		if ( $overwrite || self::visual_body_is_plugin_default( $current_visual, $type ) ) {
+			update_field( 'class_email_' . $type . '_body', $visual_body, $class_id );
+		}
+
+		if ( $overwrite || '' === $current_html ) {
+			self::write_class_html_body( $class_id, $type, $html_body );
+		}
 
 		if ( 'admin' === $type ) {
 			update_field( 'class_email_admin_enabled', 1, $class_id );
-			update_field( 'class_email_admin_recipient', '', $class_id );
+			if ( $overwrite ) {
+				update_field( 'class_email_admin_recipient', '', $class_id );
+			}
 		} elseif ( 'customer' === $type ) {
 			update_field( 'class_email_customer_enabled', 1, $class_id );
 		} elseif ( in_array( $type, self::SCHEDULED_TYPES, true ) ) {
@@ -378,32 +408,59 @@ abstract class Class_Email_Overrides {
 			if ( get_post_meta( $post_id, self::init_meta_key( $type ), true ) ) {
 				continue;
 			}
-			if ( self::custom_fields_have_saved_content( $post_id, $type ) ) {
+			if ( self::has_custom_body_content( $post_id, $type ) ) {
 				self::mark_custom_initialized( $post_id, $type );
 				continue;
 			}
-			self::prefill_from_global( $post_id, $type );
+			self::prefill_from_global( $post_id, $type, false );
 		}
 	}
 
-	private static function custom_fields_have_saved_content( int $class_id, string $type ): bool {
+	private static function has_custom_body_content( int $class_id, string $type ): bool {
 		if ( ! function_exists( 'get_field' ) ) {
 			return false;
-		}
-
-		if ( '' !== trim( (string) get_field( 'class_email_' . $type . '_subject', $class_id ) ) ) {
-			return true;
-		}
-
-		if ( '' !== trim( (string) get_field( 'class_email_' . $type . '_body', $class_id ) ) ) {
-			return true;
 		}
 
 		if ( '' !== trim( (string) get_field( 'class_email_' . $type . '_body_html', $class_id ) ) ) {
 			return true;
 		}
 
-		return false;
+		$visual = (string) get_field( 'class_email_' . $type . '_body', $class_id );
+		if ( self::visual_body_is_plugin_default( $visual, $type ) ) {
+			return false;
+		}
+
+		return '' !== trim( $visual );
+	}
+
+	private static function visual_body_is_plugin_default( string $visual, string $type ): bool {
+		$visual = trim( $visual );
+		if ( '' === $visual ) {
+			return true;
+		}
+
+		$default = trim( Emails::default_body_template( $type ) );
+		if ( $visual === $default ) {
+			return true;
+		}
+
+		if ( function_exists( 'wpautop' ) && trim( (string) wpautop( $default ) ) === $visual ) {
+			return true;
+		}
+
+		$norm = static function ( string $value ): string {
+			$value = wp_strip_all_tags( $value );
+			$value = preg_replace( '/\s+/', ' ', $value ) ?? $value;
+			return trim( $value );
+		};
+
+		return $norm( $visual ) === $norm( $default );
+	}
+
+	private static function write_class_html_body( int $class_id, string $type, string $html ): void {
+		$key = 'field_clasbpro_class_email_' . $type . '_body_html';
+		self::$raw_html_stash[ $key ] = $html;
+		update_field( 'class_email_' . $type . '_body_html', $html, $class_id );
 	}
 
 	private static function mark_custom_initialized( int $class_id, string $type ): void {

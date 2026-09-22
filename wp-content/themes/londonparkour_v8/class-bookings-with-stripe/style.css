@@ -1,3 +1,5 @@
+/* TYPE STEP BUMP: font-size / px line-height values below are already
+ * remapped (+1 Concourse step). Do not re-apply. */
 /**
  * Concourse — clasbpro form chrome for londonparkour_v8.
  *
@@ -110,10 +112,10 @@
 .cbfs-form__when {
 	margin: 0;
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: 400;
 	letter-spacing: 0.9px;
-	line-height: 12px;
+	line-height: 1.5;
 	text-transform: uppercase;
 	color: var(--cbfs-accent);
 }
@@ -123,10 +125,10 @@
 .cbfs-form__title {
 	margin: 0;
 	font-family: var(--cbfs-font-heading);
-	font-size: 27px;
+	font-size: 32px;
 	font-weight: 600;
 	letter-spacing: -0.6px;
-	line-height: 29px;
+	line-height: 1.25;
 	text-transform: none;
 	text-box: normal;
 	text-box-trim: none;
@@ -138,9 +140,9 @@
 .cbfs-form__description {
 	margin: 0;
 	color: var(--cbfs-muted);
-	font-size: 12px;
+	font-size: 14px;
 	letter-spacing: 0.2px;
-	line-height: 15px;
+	line-height: 1.55;
 }
 
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__steps,
@@ -163,7 +165,7 @@
 
 .cbfs-form__step-index {
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: 400;
 	letter-spacing: 0.8px;
 	color: var(--cbfs-muted);
@@ -171,7 +173,7 @@
 
 .cbfs-form__step-label {
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -199,7 +201,7 @@
 
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__price-badge-label {
 	font-family: var(--cbfs-font-label);
-	font-size: 9px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -208,7 +210,7 @@
 
 .cbfs-form.cbfs-form--layout-modern .cbfs-form__price-badge-value {
 	font-family: var(--cbfs-font-heading);
-	font-size: 1.125rem;
+	font-size: 1.5rem;
 	font-weight: 600;
 	color: var(--cbfs-fg);
 }
@@ -238,7 +240,7 @@
 .cbfs-form .cbfs-form__label,
 .cbfs-packs__label span {
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -263,7 +265,7 @@
 	background: var(--cbfs-panel) !important;
 	color: var(--cbfs-fg) !important;
 	padding: 0 16px;
-	font-size: 13px;
+	font-size: 14px;
 	letter-spacing: 0.2px;
 	box-shadow: none !important;
 }
@@ -328,7 +330,7 @@
 	background: var(--cbfs-accent) !important;
 	color: var(--cbfs-accent-ink) !important;
 	font-family: var(--cbfs-font-label);
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -372,7 +374,7 @@
 	background: var(--cbfs-accent) !important;
 	color: var(--cbfs-accent-ink) !important;
 	font-family: var(--cbfs-font-label);
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -433,7 +435,7 @@
 	margin: 0;
 	padding: 16px 28px 22px;
 	font-family: var(--font-body, Inter, system-ui, sans-serif);
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: 400;
 	letter-spacing: 0.3px;
 	line-height: 1.65;
@@ -457,7 +459,7 @@
 	background: var(--cbfs-panel) !important;
 	color: var(--cbfs-accent) !important;
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -530,21 +532,21 @@
 
 .cbfs-packs__gift-brand {
 	font-family: var(--cbfs-font-heading);
-	font-size: 18px;
+	font-size: 24px;
 	font-weight: 600;
 	letter-spacing: 0.4px;
 }
 
 .cbfs-packs__gift-amount {
 	font-family: var(--cbfs-font-heading);
-	font-size: 32px;
+	font-size: 43px;
 	font-weight: 600;
 	letter-spacing: -0.5px;
 }
 
 .cbfs-packs__gift-label {
 	font-family: var(--cbfs-font-label);
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 }
@@ -565,10 +567,10 @@
 .cbfs-packs__title {
 	margin: 0 0 8px;
 	font-family: var(--cbfs-font-heading);
-	font-size: 27px;
+	font-size: 32px;
 	font-weight: 600;
 	letter-spacing: -0.6px;
-	line-height: 29px;
+	line-height: 1.25;
 	text-transform: none;
 	text-box: normal;
 	text-box-trim: none;
@@ -579,7 +581,7 @@
 .cbfs-packs__meta {
 	margin: 0 0 8px;
 	color: var(--cbfs-muted);
-	font-size: 12px;
+	font-size: 14px;
 	letter-spacing: 0.2px;
 	line-height: 1.45;
 }
@@ -612,14 +614,14 @@
 	margin: 0;
 	padding: 0;
 	color: var(--cbfs-error-fg);
-	font-size: 12px;
+	font-size: 14px;
 }
 
 .cbfs-packs__empty {
 	margin: 0;
 	padding: 28px;
 	color: var(--cbfs-muted);
-	font-size: 12px;
+	font-size: 14px;
 }
 
 .cbfs-packs__button.is-loading .cbfs-packs__button-label,
@@ -709,7 +711,7 @@
 .cbfs-class-date-calendar__weekday {
 	color: var(--cbfs-muted);
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	letter-spacing: 0.8px;
 	text-transform: uppercase;
 }
@@ -828,7 +830,7 @@
 .cbfs-appointment-calendar__hint,
 .cbfs-form .cbfs-form__hint {
 	color: var(--cbfs-muted);
-	font-size: 0.75rem;
+	font-size: 0.875rem;
 }
 
 /* ── Radio / coupon toggle rows ──────────────────────────────────────────── */
@@ -851,7 +853,7 @@
 	background: transparent;
 	color: var(--cbfs-fg);
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	line-height: 1.4;
 	box-sizing: border-box;
 }
@@ -865,7 +867,7 @@
 .cbfs-form .cbfs-form__pack-attach-intro {
 	margin: 0 0 9px;
 	font-family: var(--cbfs-font-label);
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;
@@ -885,7 +887,7 @@
 	min-height: 48px !important;
 	height: 48px !important;
 	padding: 0 16px !important;
-	font-size: 13px !important;
+	font-size: 14px !important;
 	line-height: 1.3 !important;
 	border-radius: 0 !important;
 	border: 1px solid var(--cbfs-border) !important;
@@ -906,7 +908,7 @@
 	background: var(--cbfs-panel) !important;
 	color: var(--cbfs-accent) !important;
 	font-family: var(--cbfs-font-label);
-	font-size: 10px !important;
+	font-size: 14px !important;
 	font-weight: 600;
 	letter-spacing: 1px;
 	text-transform: uppercase;

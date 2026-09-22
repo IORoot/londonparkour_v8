@@ -15,7 +15,7 @@
  * portrait. Live coach uploads are 1:1; a 3:4 contain box letterboxed them.
  * The homepage Coaches block is unchanged.
  *
- * Cards link through to single-lp_coach.php — the homepage grid is not linked.
+ * Cards link through to single-lp_coach.php — same as the homepage Coaches grid.
  *
  * @package londonparkour_v8
  */
