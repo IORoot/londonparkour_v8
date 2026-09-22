@@ -1894,7 +1894,7 @@ abstract class ACF_Fields {
 					],
 					[
 						'key'   => 'field_clasbpro_tab_checkout',
-						'label' => __( 'Checkout', 'class-bookings-with-stripe-pro' ),
+						'label' => __( 'Security', 'class-bookings-with-stripe-pro' ),
 						'type'  => 'tab',
 					],
 					[

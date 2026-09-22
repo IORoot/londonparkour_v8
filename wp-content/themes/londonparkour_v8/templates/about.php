@@ -553,7 +553,7 @@ get_header();
 			'kicker'          => '10 — START',
 			'coordinates'     => 'N 51.5074° / W 0.1278°',
 			'headline'        => 'Take your first step.',
-			'subhead'         => 'Beginners sessions run Tuesday and Thursday at 18:30 in Vauxhall. Fifteen pounds and no prior experience of any kind.',
+			'subhead'         => 'Beginners sessions run Saturdays and Sundays in Old Street, Kilburn and Vauxhall. Fifteen pounds and no prior experience of any kind.',
 			'primary_action'  => array(
 				'link' => array(
 					'title'  => 'BOOK YOUR FIRST CLASS',

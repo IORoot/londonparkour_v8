@@ -23,7 +23,7 @@ $lp_locations_inline = function_exists( 'lp_contact_locations_inline' ) ? lp_con
 $lp_default_reach_rows = array(
 	array(
 		'label' => 'EMAIL',
-		'value' => 'hello@londonparkour.com',
+		'value' => 'contact@londonparkour.com',
 	),
 	array(
 		'label' => 'LOCATIONS',
@@ -45,16 +45,16 @@ $lp_reach       = is_array( $args['reach'] ?? null ) ? $args['reach'] : array();
 $lp_reach_title = (string) ( $lp_reach['title'] ?? 'REACH US NOW' );
 $lp_reach_spots = (string) ( $lp_reach['spots_left'] ?? 'OPEN' );
 $lp_reach_cta   = (string) ( $lp_reach['cta_label'] ?? 'EMAIL US' );
-$lp_reach_href  = (string) ( $lp_reach['cta_href'] ?? 'mailto:hello@londonparkour.com' );
+$lp_reach_href  = (string) ( $lp_reach['cta_href'] ?? 'mailto:contact@londonparkour.com' );
 $lp_reach_note  = (string) ( $lp_reach['note'] ?? 'Email is the fastest way to reach us.' );
 $lp_reach_rows  = $lp_default_reach_rows;
 
 if ( false !== stripos( $lp_reach_cta, 'studio' ) || false !== stripos( $lp_reach_cta, 'call' ) || 0 === strpos( $lp_reach_href, 'tel:' ) ) {
 	$lp_reach_cta  = 'EMAIL US';
-	$lp_reach_href = 'mailto:hello@londonparkour.com';
+	$lp_reach_href = 'mailto:contact@londonparkour.com';
 }
 if ( '' === $lp_reach_href ) {
-	$lp_reach_href = 'mailto:hello@londonparkour.com';
+	$lp_reach_href = 'mailto:contact@londonparkour.com';
 }
 if ( false !== stripos( $lp_reach_note, 'phone' ) || false !== stripos( $lp_reach_note, 'working day' ) || false !== stripos( $lp_reach_note, '24h' ) || false !== stripos( $lp_reach_note, '36h' ) ) {
 	$lp_reach_note = 'Email is the fastest way to reach us.';

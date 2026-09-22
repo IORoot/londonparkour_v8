@@ -13,7 +13,7 @@
     "labels": {
         "name": "Levels",
         "singular_name": "Level",
-        "menu_name": "Levels",
+        "menu_name": "Class Levels",
         "all_items": "All Levels",
         "add_new_item": "Add New Level",
         "edit_item": "Edit Level",
@@ -67,5 +67,5 @@
     "meta_box_sanitize_cb": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789642698
+    "modified": 1790121600
 }
