@@ -43,7 +43,7 @@ $lp_title      = (string) ( $args['title'] ?? '' );
 				command="close"
 				commandfor="<?php echo esc_attr( $lp_dialog_id ); ?>"
 				class="absolute right-2 top-2 z-20 btn btn-sm btn-circle btn-ghost text-neutral-content"
-				aria-label="<?php esc_attr_e( 'Close video', 'londonparkour_v8' ); ?>"
+				aria-label="<?php esc_attr_e( '✕ Close video', 'londonparkour_v8' ); ?>"
 			>✕</button>
 			<div class="relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full">
 				<div class="video-player absolute inset-0 size-full"></div>

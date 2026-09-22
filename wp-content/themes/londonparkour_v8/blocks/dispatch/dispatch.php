@@ -86,7 +86,8 @@ $lp_spacing = lp_section_spacing( $args );
 					action="<?php echo esc_url( $lp_form_action ); ?>"
 					aria-labelledby="<?php echo esc_attr( $lp_heading_id ); ?>"
 				>
-					<div class="sr-only" aria-hidden="true">
+					<div class="sr-only">
+						<label for="<?php echo esc_attr( $lp_honeypot_id ); ?>"><?php esc_html_e( 'Company', 'londonparkour_v8' ); ?></label>
 						<input id="<?php echo esc_attr( $lp_honeypot_id ); ?>" type="text" name="<?php echo esc_attr( $lp_honeypot_name ); ?>" tabindex="-1" autocomplete="off" value="">
 					</div>
 					<input type="hidden" name="subscribe" value="Subscribe">

@@ -96,6 +96,11 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 	$lp_photo['alt'] = (string) $args['image_alt'];
 }
 
+$lp_loading = (string) ( $args['loading'] ?? '' );
+if ( 'eager' === $lp_loading || 'lazy' === $lp_loading ) {
+	$lp_photo['loading'] = $lp_loading;
+}
+
 /** Avatar + name + date. The avatar is byline's; the text is this card's own. */
 $lp_author_row = static function () use ( $lp_v, $lp_author, $lp_date ) {
 	?>

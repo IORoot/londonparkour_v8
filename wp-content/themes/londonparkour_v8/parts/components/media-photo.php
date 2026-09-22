@@ -138,8 +138,11 @@ if ( $lp_has_alt ) {
 	$lp_attr['alt'] = $lp_alt;
 }
 
-// loading="eager" is expressed by omitting the attribute; core adds lazy itself.
-if ( 'eager' !== $lp_loading ) {
+// false (not an omitted key) stops core adding loading="lazy" once the loop
+// has ended. An omitted key is treated as "unknown" and lazy-loaded.
+if ( 'eager' === $lp_loading ) {
+	$lp_attr['loading'] = false;
+} else {
 	$lp_attr['loading'] = $lp_loading;
 }
 
@@ -152,7 +155,7 @@ $lp_img = static function () use ( $lp_image_id, $lp_size, $lp_attr, $lp_image_u
 
 	$lp_extra = '';
 	foreach ( $lp_attr as $lp_k => $lp_v ) {
-		if ( in_array( $lp_k, array( 'class', 'alt', 'sizes' ), true ) || '' === $lp_v ) {
+		if ( in_array( $lp_k, array( 'class', 'alt', 'sizes' ), true ) || '' === $lp_v || false === $lp_v ) {
 			continue;
 		}
 		$lp_extra .= sprintf( ' %s="%s"', esc_attr( $lp_k ), esc_attr( (string) $lp_v ) );

@@ -68,7 +68,7 @@ while ( have_posts() ) {
 		<div class="w-full bg-base-100" data-component="archive-list">
 			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-[36px]">
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-[24px]">
-					<?php foreach ( $lp_cards as $lp_card ) : ?>
+					<?php foreach ( $lp_cards as $lp_ci => $lp_card ) : ?>
 						<?php
 						lp_part(
 							'components/blog-card',
@@ -82,6 +82,7 @@ while ( have_posts() ) {
 								'author'    => $lp_card['author'],
 								'date'      => $lp_card['date'],
 								'href'      => $lp_card['href'],
+								'loading'   => 0 === $lp_ci ? 'eager' : 'lazy',
 							)
 						);
 						?>

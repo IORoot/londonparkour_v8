@@ -119,8 +119,9 @@ $lp_spacing = lp_section_spacing( $args );
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" aria-label="<?php echo esc_attr__( 'Contact enquiry form', 'londonparkour_v8' ); ?>">
 					<?php wp_nonce_field( 'lp_contact', 'lp_contact_nonce' ); ?>
 					<input type="hidden" name="action" value="lp_contact" />
-					<div class="sr-only" aria-hidden="true">
-						<input type="text" name="lp_company" id="lp-company" value="" tabindex="-1" autocomplete="off" aria-hidden="true" />
+					<div class="sr-only">
+						<label for="lp-company"><?php esc_html_e( 'Company', 'londonparkour_v8' ); ?></label>
+						<input type="text" name="lp_company" id="lp-company" value="" tabindex="-1" autocomplete="off" />
 					</div>
 
 					<div class="flex flex-col gap-10">
