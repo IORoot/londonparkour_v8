@@ -13,6 +13,7 @@
  *   CLASBPRO_STRIPE_WEBHOOK_SECRET
  *   CLASBPRO_STRIPE_PUB_TEST
  *   CLASBPRO_STRIPE_PUB_LIVE
+ *   CLASBPRO_MAILCHIMP_API_KEY
  *   CLASBPRO_STRIPE_ENCRYPTION_KEY  — dedicated passphrase; survives AUTH_KEY rotation
  *
  * @package IOROOT_STRIPE_BOOKINGS_PRO
@@ -41,6 +42,7 @@ abstract class Secrets {
 		'stripe_webhook_secret'  => 'CLASBPRO_STRIPE_WEBHOOK_SECRET',
 		'stripe_pub_key_test'    => 'CLASBPRO_STRIPE_PUB_TEST',
 		'stripe_pub_key_live'    => 'CLASBPRO_STRIPE_PUB_LIVE',
+		'mailchimp_api_key'      => 'CLASBPRO_MAILCHIMP_API_KEY',
 	];
 
 	/** @var array<string, string> encrypted secret fields only */
@@ -48,6 +50,7 @@ abstract class Secrets {
 		'stripe_secret_key_test' => 'CLASBPRO_STRIPE_SECRET_TEST',
 		'stripe_secret_key_live' => 'CLASBPRO_STRIPE_SECRET_LIVE',
 		'stripe_webhook_secret'  => 'CLASBPRO_STRIPE_WEBHOOK_SECRET',
+		'mailchimp_api_key'      => 'CLASBPRO_MAILCHIMP_API_KEY',
 	];
 
 	public static function init(): void {
@@ -298,7 +301,7 @@ abstract class Secrets {
 
 		if ( ! self::crypto_available() ) {
 			echo '<div class="notice notice-error"><p>';
-			echo esc_html__( 'Class Bookings cannot encrypt Stripe secrets. Enable the PHP sodium extension or OpenSSL AES-256-GCM.', 'class-bookings-with-stripe-pro' );
+			echo esc_html__( 'Class Bookings cannot encrypt secrets. Enable the PHP sodium extension or OpenSSL AES-256-GCM.', 'class-bookings-with-stripe-pro' );
 			echo '</p></div>';
 			return;
 		}
@@ -316,7 +319,7 @@ abstract class Secrets {
 		}
 
 		echo '<div class="notice notice-error"><p>';
-		echo esc_html__( 'Saved Stripe keys could not be decrypted. Re-enter them on this screen. If you recently rotated WordPress salts in wp-config.php, set CLASBPRO_STRIPE_ENCRYPTION_KEY to a dedicated passphrase before saving new keys, or paste the keys again.', 'class-bookings-with-stripe-pro' );
+		echo esc_html__( 'Saved secret keys could not be decrypted. Re-enter them on this screen, or set them in wp-config.php. If you recently rotated WordPress salts, set CLASBPRO_STRIPE_ENCRYPTION_KEY to a dedicated passphrase before saving new keys.', 'class-bookings-with-stripe-pro' );
 		echo '</p></div>';
 	}
 

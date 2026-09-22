@@ -1847,7 +1847,7 @@ abstract class ACF_Fields {
 						'label'             => __( 'Mailchimp API key', 'class-bookings-with-stripe-pro' ),
 						'name'              => 'mailchimp_api_key',
 						'type'              => 'password',
-						'instructions'      => __( 'From Mailchimp account settings. Format typically ends with datacenter suffix, e.g. us6.', 'class-bookings-with-stripe-pro' ),
+						'instructions'      => __( 'Prefer CLASBPRO_MAILCHIMP_API_KEY in wp-config.php or the environment so the key survives a database import. A value pasted here is encrypted before it is saved. Leave this empty when the key is in wp-config. Format typically ends with a datacenter suffix, e.g. us6.', 'class-bookings-with-stripe-pro' ),
 						'conditional_logic' => [
 							[
 								[
@@ -4446,7 +4446,7 @@ PHP;
 		</li>
 	</ol>
 	<p class="clasbowi-doc__note"><?php esc_html_e( 'If Checkout fails with an authentication error, double-check that the mode matches the keys (test keys only with Mode = Test).', 'class-bookings-with-stripe-pro' ); ?></p>
-	<p class="clasbowi-doc__note"><?php esc_html_e( 'On hosts such as Cloudways, prefer environment variables or wp-config.php defines so keys survive a database import. getenv() is read first, then a matching define(). A value pasted into the settings fields overrides both. Names: CLASBPRO_STRIPE_SECRET_TEST, CLASBPRO_STRIPE_SECRET_LIVE, CLASBPRO_STRIPE_WEBHOOK_SECRET, CLASBPRO_STRIPE_PUB_TEST, CLASBPRO_STRIPE_PUB_LIVE.', 'class-bookings-with-stripe-pro' ); ?></p>
+	<p class="clasbowi-doc__note"><?php esc_html_e( 'On hosts such as Cloudways, prefer environment variables or wp-config.php defines so keys survive a database import. getenv() is read first, then a matching define(). A value pasted into the settings fields overrides both. Names: CLASBPRO_STRIPE_SECRET_TEST, CLASBPRO_STRIPE_SECRET_LIVE, CLASBPRO_STRIPE_WEBHOOK_SECRET, CLASBPRO_STRIPE_PUB_TEST, CLASBPRO_STRIPE_PUB_LIVE, CLASBPRO_MAILCHIMP_API_KEY.', 'class-bookings-with-stripe-pro' ); ?></p>
 </div>
 		<?php
 		return self::help_doc_row(
