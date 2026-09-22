@@ -141,7 +141,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 		</div>
 	</div>
 
-	<progress class="progress progress-primary h-[3px] w-full block rounded-none" value="<?php echo esc_attr( (string) $lp_progress ); ?>" max="100" aria-hidden="true"></progress>
+	<progress class="progress progress-primary h-[3px] w-full block rounded-none" value="<?php echo esc_attr( (string) $lp_progress ); ?>" max="100" aria-label="<?php echo esc_attr( $lp_time_label ); ?>"></progress>
 
 	<div class="flex flex-wrap items-center justify-between gap-2 py-[15px] px-[22px]">
 		<span class="font-label text-[11px] font-semibold tracking-[0.8px] text-base-content"><?php echo esc_html( $lp_time_label ); ?></span>

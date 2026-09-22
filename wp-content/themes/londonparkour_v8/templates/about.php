@@ -533,7 +533,7 @@ get_header();
 			<h2 class="font-heading text-step-3 font-semibold leading-[0.95] tracking-[-1.6px] text-neutral-content m-0">Regulars. All abilities. All ages.</h2>
 			<p class="font-body text-[16px] font-normal leading-[1.55] text-neutral-content/50 m-0 max-w-[720px]">A solid group of people who show up, work hard, and love what they do. Beginners next to people who have been on this floor for years. Classes stay intense — and stay scaled to whoever is in them.</p>
 			<div class="relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full m-0" data-component="about-floor-video">
-				<iframe src="https://www.youtube-nocookie.com/embed/raakvpb_q9E" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+				<iframe src="https://www.youtube-nocookie.com/embed/raakvpb_q9E" title="YouTube video" width="1280" height="720" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 			</div>
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				<?php foreach ( $lp_floor_facts as $lp_fact ) : ?>

@@ -167,6 +167,7 @@ get_header();
 										'layout'   => 'fill',
 										'size'     => 'lp_wide',
 										'sizes'    => $lp_featured ? '(min-width: 1024px) 640px, 100vw' : '(min-width: 1024px) 460px, 100vw',
+										'loading'  => $lp_featured ? 'eager' : 'lazy',
 									)
 								);
 							}

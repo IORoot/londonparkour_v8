@@ -1495,10 +1495,11 @@ function lp_seo_class_nodes( int $class_id ): array {
 		}
 
 		$remaining = isset( $session['remaining'] ) ? (int) $session['remaining'] : -1;
-		$event     = array(
+		$event_name = $title . ' — ' . wp_date( 'j F Y', $start->getTimestamp(), wp_timezone() );
+		$event      = array(
 			'@type'            => $is_one_off ? 'Event' : 'SportsEvent',
 			'@id'              => $permalink . '#session-' . $date,
-			'name'             => $title,
+			'name'             => $event_name,
 			'url'              => $permalink,
 			'startDate'        => $start->format( DATE_ATOM ),
 			'endDate'          => $end->format( DATE_ATOM ),

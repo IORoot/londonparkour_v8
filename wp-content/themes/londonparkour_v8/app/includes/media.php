@@ -304,8 +304,12 @@ function lp_lcp_image(): ?array {
 			$lcp = lp_lcp_attachment( (int) get_post_thumbnail_id(), 'lp_wide_lg', '100vw' );
 		}
 
-		if ( ! $lcp && is_singular( 'post' ) ) {
+		if ( ! $lcp && is_singular( array( 'post', 'blog' ) ) ) {
 			$lcp = lp_lcp_attachment( (int) get_post_thumbnail_id(), 'lp_wide_lg', '100vw' );
+		}
+
+		if ( ! $lcp && is_singular( 'lp_coach' ) ) {
+			$lcp = lp_lcp_attachment( (int) get_post_thumbnail_id(), 'large', '(min-width: 1024px) 556px, 100vw' );
 		}
 
 		if ( ! $lcp && ( is_page_template( array( 'templates/classes-agenda.php', 'templates/classes-map.php' ) ) || is_singular( 'lp_location' ) ) ) {

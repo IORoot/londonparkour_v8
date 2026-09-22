@@ -379,7 +379,13 @@ get_header();
 						<?php if ( $lp_is_grid ) : ?>
 							<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" data-component="series-card-grid">
 								<?php foreach ( $lp_current_lessons as $lp_gi => $lp_lesson ) : ?>
-									<?php lp_part( 'components/video-card', $lp_lesson_card( $lp_lesson, $lp_gi + 1 ) ); ?>
+									<?php
+									$lp_card = $lp_lesson_card( $lp_lesson, $lp_gi + 1 );
+									if ( 0 === $lp_gi ) {
+										$lp_card['loading'] = 'eager';
+									}
+									lp_part( 'components/video-card', $lp_card );
+									?>
 								<?php endforeach; ?>
 							</div>
 						<?php else : ?>
@@ -399,7 +405,13 @@ get_header();
 										<div class="flex gap-4 overflow-x-auto min-w-0 w-full max-w-full snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" data-shelf-scroller>
 											<?php foreach ( $lp_shelf['posts'] as $lp_si => $lp_lesson ) : ?>
 												<div class="w-[248px] shrink-0 snap-start">
-													<?php lp_part( 'components/video-card', $lp_lesson_card( $lp_lesson, $lp_si + 1 ) ); ?>
+													<?php
+													$lp_card = $lp_lesson_card( $lp_lesson, $lp_si + 1 );
+													if ( 0 === $lp_si ) {
+														$lp_card['loading'] = 'eager';
+													}
+													lp_part( 'components/video-card', $lp_card );
+													?>
 												</div>
 											<?php endforeach; ?>
 										</div>
@@ -414,7 +426,7 @@ get_header();
 													array(
 														'variant'    => 'shelf_nav',
 														'label'      => '‹',
-														'aria_label' => __( 'Previous lessons', 'londonparkour_v8' ),
+														'aria_label' => __( '‹ Previous lessons', 'londonparkour_v8' ),
 														'data_attrs' => array( 'data-shelf-prev' => '' ),
 													)
 												);
@@ -423,7 +435,7 @@ get_header();
 													array(
 														'variant'    => 'shelf_nav',
 														'label'      => '›',
-														'aria_label' => __( 'Next lessons', 'londonparkour_v8' ),
+														'aria_label' => __( '› Next lessons', 'londonparkour_v8' ),
 														'data_attrs' => array( 'data-shelf-next' => '' ),
 													)
 												);

@@ -221,7 +221,7 @@ $lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args
 <div class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?><?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?>>
 <?php endif; ?>
 	<?php if ( '' !== $lp_detail_href ) : ?>
-		<a class="absolute inset-0 z-0" href="<?php echo esc_url( $lp_detail_href ); ?>" aria-hidden="true" tabindex="-1" data-slot="row-details"></a>
+		<a class="absolute inset-0 z-0" href="<?php echo esc_url( $lp_detail_href ); ?>" tabindex="-1" aria-label="<?php echo esc_attr( $lp_title ); ?>" data-slot="row-details"></a>
 	<?php endif; ?>
 	<div class="flex flex-col gap-2 lg:contents">
 		<div class="flex items-start gap-3 lg:contents">

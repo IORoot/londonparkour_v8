@@ -73,6 +73,11 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 	$lp_photo['alt'] = (string) $args['image_alt'];
 }
 
+$lp_loading = (string) ( $args['loading'] ?? '' );
+if ( 'eager' === $lp_loading || 'lazy' === $lp_loading ) {
+	$lp_photo['loading'] = $lp_loading;
+}
+
 /** The kicker/meta pair, identical in both variants. */
 $lp_head_row = static function ( $lp_kicker, $lp_meta, $lp_glyph_id ) {
 	?>

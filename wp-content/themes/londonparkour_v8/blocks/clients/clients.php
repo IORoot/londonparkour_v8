@@ -155,6 +155,7 @@ foreach ( is_array( $args['logos'] ?? null ) ? $args['logos'] : array() as $lp_r
 	$lp_logos[] = array(
 		'label'     => $lp_label,
 		'href'      => $lp_logo_href( $lp_href ),
+		'image_id'  => $lp_image_id,
 		'image_url' => $lp_image_url,
 	);
 }
@@ -163,10 +164,29 @@ if ( ! $lp_logos ) {
 		$lp_logos[] = array(
 			'label'     => $lp_default['label'],
 			'href'      => $lp_logo_href( $lp_default['href'] ),
+			'image_id'  => 0,
 			'image_url' => $lp_logo_file_url( $lp_default['file'] ),
 		);
 	}
 }
+
+$lp_logo_file_size = static function ( string $lp_url ): array {
+	$lp_upload = wp_upload_dir();
+	$lp_base   = (string) ( $lp_upload['baseurl'] ?? '' );
+	$lp_dir    = (string) ( $lp_upload['basedir'] ?? '' );
+	if ( '' === $lp_base || '' === $lp_dir || ! str_starts_with( $lp_url, $lp_base ) ) {
+		return array();
+	}
+	$lp_path = $lp_dir . substr( $lp_url, strlen( $lp_base ) );
+	$lp_size = is_readable( $lp_path ) ? getimagesize( $lp_path ) : false;
+	if ( ! is_array( $lp_size ) || empty( $lp_size[0] ) || empty( $lp_size[1] ) ) {
+		return array();
+	}
+	return array(
+		'width'  => (string) $lp_size[0],
+		'height' => (string) $lp_size[1],
+	);
+};
 
 $lp_layouts = array(
 	'band'  => 'band',
@@ -181,7 +201,7 @@ $lp_item_classes = array(
 	'grid'    => 'min-w-0',
 );
 
-$lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos, $lp_cell, $lp_cell_link, $lp_logo_img ): void {
+$lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos, $lp_cell, $lp_cell_link, $lp_logo_img, $lp_logo_file_size ): void {
 	foreach ( $lp_logos as $lp_logo ) :
 		?>
 		<div role="listitem" class="<?php echo esc_attr( $lp_item_class ); ?>">
@@ -199,17 +219,23 @@ $lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos,
 					data-component="clients-logo"
 				>
 			<?php endif; ?>
-				<?php if ( '' !== $lp_logo['image_url'] ) : ?>
+				<?php if ( '' !== $lp_logo['image_url'] || ! empty( $lp_logo['image_id'] ) ) : ?>
 					<?php
-					lp_part(
-						'components/media-photo',
-						array(
-							'image_url' => $lp_logo['image_url'],
-							'alt'       => $lp_logo['label'],
-							'layout'    => 'none',
-							'class'     => $lp_logo_img,
-						)
+					$lp_logo_part = array(
+						'image_url' => $lp_logo['image_url'],
+						'alt'       => $lp_logo['label'],
+						'layout'    => 'none',
+						'class'     => $lp_logo_img,
 					);
+					if ( ! empty( $lp_logo['image_id'] ) ) {
+						$lp_logo_part['image_id'] = (int) $lp_logo['image_id'];
+					} else {
+						$lp_logo_dims = $lp_logo_file_size( $lp_logo['image_url'] );
+						if ( $lp_logo_dims ) {
+							$lp_logo_part['attrs'] = $lp_logo_dims;
+						}
+					}
+					lp_part( 'components/media-photo', $lp_logo_part );
 					?>
 				<?php else : ?>
 					<span class="font-label text-[14px] sm:text-[16px] font-semibold tracking-[1.2px] uppercase text-accent-content text-center leading-none"><?php echo esc_html( $lp_logo['label'] ); ?></span>
