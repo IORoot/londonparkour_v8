@@ -30,6 +30,8 @@
  * @param string $args['play_aria_label'] Defaults to "Play: {title}".
  * @param string $args['command']         Play control dialog trigger.
  * @param string $args['command_for']
+ * @param string $args['href']            External film URL. Renders the play control as a link.
+ * @param string $args['target']          Link target when href is set.
  * @param array  $args['data_attrs']      Extra data-* on the play control.
  *
  * Mobile: the stage is `aspect-video` (16:9) with `object-contain`, matching
@@ -127,6 +129,8 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 						'variant'     => '78',
 						'icon_id'     => 'icon-play',
 						'aria_label'  => $lp_play_aria,
+						'href'        => (string) ( $args['href'] ?? '' ),
+						'target'      => (string) ( $args['target'] ?? '' ),
 						'command'     => $args['command'] ?? '',
 						'command_for' => $args['command_for'] ?? '',
 						'data_attrs'  => is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array(),

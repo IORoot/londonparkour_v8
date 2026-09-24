@@ -448,6 +448,12 @@ $lp_facts = $lp_compact
 									<?php lp_icon( 'icon-play', 'w-4 h-4 text-base-content' ); ?>
 								</span>
 							</button>
+						<?php elseif ( ! empty( $lp['show_film'] ) && ! empty( $lp['video_href'] ) ) : ?>
+							<a href="<?php echo esc_url( (string) $lp['video_href'] ); ?>" target="_blank" rel="noopener noreferrer" class="absolute inset-0 grid place-items-center" aria-label="Watch the class">
+								<span class="w-14 h-14 rounded-full bg-base-100 grid place-items-center">
+									<?php lp_icon( 'icon-play', 'w-4 h-4 text-base-content' ); ?>
+								</span>
+							</a>
 						<?php endif; ?>
 					</div>
 					<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['film_caption'] ? $lp['film_caption'] : strtoupper( $lp_name ) ); ?></span>

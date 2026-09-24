@@ -2180,6 +2180,7 @@ function lp_clasbpro_status_context( $view ): array {
 	}
 	$video_url       = ( $class_id && function_exists( 'get_field' ) ) ? (string) get_field( 'video_url', $class_id ) : '';
 	$video_id        = ( $video_url && function_exists( 'lp_youtube_id_from_url' ) ) ? lp_youtube_id_from_url( $video_url ) : '';
+	$video_href      = ( '' === $video_id ) ? (string) esc_url_raw( $video_url ) : '';
 	$ref             = $booking_id ? ( '#' . $booking_id ) : '';
 	$whatsapp_raw    = (string) apply_filters(
 		'lp_clasbpro_whatsapp_url',
@@ -2249,7 +2250,7 @@ function lp_clasbpro_status_context( $view ): array {
 	$faq_title      = 'Before you come.';
 	$faq_lede       = 'Anything else, email hello@londonparkour.com or ask the coach on the meeting point.';
 	$film_caption   = $site_kicker ? ( 'CLASS FILM  ·  ' . str_replace( ' · ', ' — ', $site_kicker ) ) : strtoupper( $class_name );
-	$show_film      = (bool) $video_id;
+	$show_film      = '' !== $video_id || '' !== $video_href;
 	$show_private   = true;
 	$show_coach     = false;
 	$show_coaches   = false;
@@ -2643,6 +2644,7 @@ function lp_clasbpro_status_context( $view ): array {
 			'site_kicker'       => $site_kicker,
 			'foot'              => $foot,
 			'video_id'          => $video_id,
+			'video_href'        => $video_href,
 			'qr_src'            => $qr_src,
 			'whatsapp_href'     => $whatsapp,
 			'show_whatsapp'     => $show_whatsapp,
