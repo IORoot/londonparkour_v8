@@ -53,7 +53,12 @@ $lp_trigger_eps     = lp_series_published_count( $lp_term_id );
 $lp_trigger_poster  = lp_series_poster_id( $lp_term_id, $lp_fields );
 
 $lp_current_lessons = lp_tutorials_in_series( $lp_term_id );
-$lp_poster_id       = lp_series_poster_id( $lp_term_id, $lp_fields, $lp_current_lessons[0] ?? null );
+$lp_newest          = lp_series_newest_tutorial( $lp_term_id );
+$lp_poster_id       = $lp_newest ? (int) get_post_thumbnail_id( $lp_newest ) : 0;
+$lp_poster_href     = ( $lp_newest instanceof WP_Post ) ? (string) get_permalink( $lp_newest ) : '';
+if ( ! $lp_poster_id ) {
+	$lp_poster_id = lp_series_poster_id( $lp_term_id, $lp_fields, $lp_current_lessons[0] ?? null );
+}
 $lp_lesson_count    = count( $lp_current_lessons );
 $lp_total_secs      = lp_tutorials_total_seconds( $lp_current_lessons );
 $lp_mins_label      = lp_format_runtime_minutes( $lp_total_secs );
@@ -351,7 +356,22 @@ get_header();
 									</div>
 								<?php endif; ?>
 							</div>
-							<?php if ( $lp_poster_id ) : ?>
+							<?php if ( $lp_poster_id && '' !== $lp_poster_href ) : ?>
+								<a href="<?php echo esc_url( $lp_poster_href ); ?>" class="w-full lg:w-1/2 aspect-[16/9] bg-secondary border border-neutral-content/10 relative overflow-hidden" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: tutorial title */ __( 'Watch %s', 'londonparkour_v8' ), get_the_title( $lp_newest ) ) ); ?>"<?php echo lp_html_attrs( lp_select_content_attrs( 'tutorial', (string) $lp_newest->ID, get_the_title( $lp_newest ), $lp_term->name ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?>>
+									<?php
+									lp_part(
+										'components/media-photo',
+										array(
+											'image_id' => $lp_poster_id,
+											'alt'      => '',
+											'layout'   => 'fill',
+											'size'     => 'lp_wide',
+											'sizes'    => '(min-width: 1024px) 40vw, 100vw',
+										)
+									);
+									?>
+								</a>
+							<?php elseif ( $lp_poster_id ) : ?>
 								<div class="w-full lg:w-1/2 aspect-[16/9] bg-secondary border border-neutral-content/10 relative overflow-hidden">
 									<?php
 									lp_part(

@@ -304,6 +304,47 @@ function lp_series_poster_id( int $term_id, $fields = null, $fallback_post = nul
 }
 
 /**
+ * Newest published tutorial in a series, by post date.
+ *
+ * Curriculum order (`lp_tutorials_in_series`) starts at the first lesson.
+ * The series header poster links here; Play series still starts at the first lesson.
+ *
+ * @param int $term_id Series term ID.
+ * @return WP_Post|null
+ */
+function lp_series_newest_tutorial( int $term_id ): ?WP_Post {
+	if ( $term_id <= 0 ) {
+		return null;
+	}
+
+	$q = new WP_Query(
+		array(
+			'post_type'              => 'lp_tutorial',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'orderby'                => array(
+				'date' => 'DESC',
+				'ID'   => 'DESC',
+			),
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => 'lp_series',
+					'field'    => 'term_id',
+					'terms'    => $term_id,
+				),
+			),
+		)
+	);
+
+	$post = $q->posts[0] ?? null;
+
+	return $post instanceof WP_Post ? $post : null;
+}
+
+/**
  * Published tutorials in a series, category then curriculum order.
  *
  * Bound high enough for Demonstrations (~228) without going unbounded.
