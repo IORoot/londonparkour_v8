@@ -102,8 +102,9 @@ $lp_gallery = function_exists( 'get_field' ) ? get_field( 'acf_gallery', $lp_pos
 $lp_gallery = is_array( $lp_gallery ) ? array_values( array_filter( array_map( 'intval', $lp_gallery ) ) ) : array();
 
 $lp_image_id  = lp_class_image_id( $lp_post_id );
-$lp_video_url = function_exists( 'get_field' ) ? (string) get_field( 'video_url', $lp_post_id ) : '';
-$lp_video_id  = lp_youtube_id_from_url( $lp_video_url );
+$lp_video_url  = function_exists( 'get_field' ) ? (string) get_field( 'video_url', $lp_post_id ) : '';
+$lp_video_id   = lp_youtube_id_from_url( $lp_video_url );
+$lp_video_href = ( '' === $lp_video_id ) ? (string) esc_url_raw( $lp_video_url ) : '';
 $lp_video_dlg = 'class-video-' . $lp_post_id;
 
 $lp_this_date = '';
@@ -278,24 +279,27 @@ $lp_grid = $lp_show_book
 					);
 					?>
 				<?php endif; ?>
-				<?php if ( '' !== $lp_video_id ) : ?>
+				<?php if ( '' !== $lp_video_id || '' !== $lp_video_href ) : ?>
 					<span class="absolute top-[16px] left-[16px]">
 						<?php
-						lp_part(
-							'elements/button',
-							array(
-								'variant'          => 'primary',
-								'label'            => 'WATCH THE FILM',
-								'trailing_icon_id' => 'icon-play',
-								'command'          => 'show-modal',
-								'command_for'      => $lp_video_dlg,
-								'data_attrs'       => array(
-									'data-video-type' => 'youtube',
-									'data-video-id'   => $lp_video_id,
-									'data-autoplay'   => 'true',
-								),
-							)
+						$lp_watch = array(
+							'variant'          => 'primary',
+							'label'            => 'WATCH THE FILM',
+							'trailing_icon_id' => 'icon-play',
 						);
+						if ( '' !== $lp_video_id ) {
+							$lp_watch['command']     = 'show-modal';
+							$lp_watch['command_for'] = $lp_video_dlg;
+							$lp_watch['data_attrs']  = array(
+								'data-video-type' => 'youtube',
+								'data-video-id'   => $lp_video_id,
+								'data-autoplay'   => 'true',
+							);
+						} else {
+							$lp_watch['href']   = $lp_video_href;
+							$lp_watch['target'] = '_blank';
+						}
+						lp_part( 'elements/button', $lp_watch );
 						?>
 					</span>
 				<?php endif; ?>
@@ -489,39 +493,42 @@ $lp_grid = $lp_show_book
 		</section>
 	<?php endif; ?>
 
-	<?php if ( '' !== $lp_video_id ) : ?>
+	<?php if ( '' !== $lp_video_id || '' !== $lp_video_href ) : ?>
 		<section class="w-full bg-base-100" data-component="workshop-detail-film">
 			<div class="px-6 lg:px-16 py-scale-2xl">
 				<?php
-					lp_part(
-						'components/video-stage',
-						array(
-							'image_id'        => $lp_image_id,
-							'status_label'    => 'NOW PLAYING · THE DAY',
-							'quality_label'   => 'EN · HD',
-							'badge_label'     => strtoupper( get_the_title( $lp_post_id ) ) . ' · THE DAY',
-							'duration_label'  => lp_class_workshop_duration_label( $lp_post_id ),
-							'title'           => get_the_title( $lp_post_id ),
-							'stage_meta'      => implode(
-								' · ',
-								array_filter(
-									array(
-										'WORKSHOP',
-										$lp_location_title ? strtoupper( $lp_location_title ) : '',
-										$lp_level_name ? strtoupper( $lp_level_name ) : '',
-									)
+					$lp_stage = array(
+						'image_id'        => $lp_image_id,
+						'status_label'    => 'NOW PLAYING · THE DAY',
+						'quality_label'   => 'EN · HD',
+						'badge_label'     => strtoupper( get_the_title( $lp_post_id ) ) . ' · THE DAY',
+						'duration_label'  => lp_class_workshop_duration_label( $lp_post_id ),
+						'title'           => get_the_title( $lp_post_id ),
+						'stage_meta'      => implode(
+							' · ',
+							array_filter(
+								array(
+									'WORKSHOP',
+									$lp_location_title ? strtoupper( $lp_location_title ) : '',
+									$lp_level_name ? strtoupper( $lp_level_name ) : '',
 								)
-							),
-							'play_aria_label' => 'Play: ' . get_the_title( $lp_post_id ),
-							'command'         => 'show-modal',
-							'command_for'     => $lp_video_dlg,
-							'data_attrs'      => array(
-								'data-video-type' => 'youtube',
-								'data-video-id'   => $lp_video_id,
-								'data-autoplay'   => 'true',
-							),
-						)
+							)
+						),
+						'play_aria_label' => 'Play: ' . get_the_title( $lp_post_id ),
 					);
+					if ( '' !== $lp_video_id ) {
+						$lp_stage['command']     = 'show-modal';
+						$lp_stage['command_for'] = $lp_video_dlg;
+						$lp_stage['data_attrs']  = array(
+							'data-video-type' => 'youtube',
+							'data-video-id'   => $lp_video_id,
+							'data-autoplay'   => 'true',
+						);
+					} else {
+						$lp_stage['href']   = $lp_video_href;
+						$lp_stage['target'] = '_blank';
+					}
+					lp_part( 'components/video-stage', $lp_stage );
 				?>
 			</div>
 		</section>

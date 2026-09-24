@@ -19,9 +19,11 @@
  * @param string $args['icon_id']     Glyph id. Default 'icon-play' (both source instances).
  * @param string $args['variant']     '34'|'78'. Default '34'.
  * @param string $args['aria_label']  Required for variant '78' (interactive) — the button's accessible name.
+ * @param string $args['href']        When set, the interactive variant is an anchor.
+ * @param string $args['target']      Link target when href is set.
  * @param string $args['command']     @tailwindplus/elements dialog trigger.
  * @param string $args['command_for']
- * @param array  $args['data_attrs']  Extra data-* attributes on the interactive button.
+ * @param array  $args['data_attrs']  Extra data-* attributes on the interactive control.
  *
  * @package londonparkour_v8
  */
@@ -45,16 +47,24 @@ $lp_variants = array(
 	),
 );
 
-$lp_variant   = $lp_variants[ $args['variant'] ?? '34' ] ?? $lp_variants['34'];
-$lp_icon_id   = (string) ( $args['icon_id'] ?? 'icon-play' );
-$lp_aria      = (string) ( $args['aria_label'] ?? '' );
+$lp_variant     = $lp_variants[ $args['variant'] ?? '34' ] ?? $lp_variants['34'];
+$lp_icon_id     = (string) ( $args['icon_id'] ?? 'icon-play' );
+$lp_aria        = (string) ( $args['aria_label'] ?? '' );
+$lp_href        = (string) ( $args['href'] ?? '' );
 $lp_interactive = $lp_variant['interactive'];
+$lp_is_link     = $lp_interactive && '' !== $lp_href;
 
 $lp_btn_attrs = array(
-	'type'            => 'button',
-	'class'           => $lp_variant['class'],
-	'data-component'  => 'icon-circle',
+	'class'          => $lp_variant['class'],
+	'data-component' => 'icon-circle',
 );
+if ( ! $lp_is_link ) {
+	$lp_btn_attrs['type'] = 'button';
+}
+if ( $lp_is_link && ! empty( $args['target'] ) ) {
+	$lp_btn_attrs['target'] = (string) $args['target'];
+	$lp_btn_attrs['rel']    = 'noopener noreferrer';
+}
 if ( '' !== $lp_aria ) {
 	$lp_btn_attrs['aria-label'] = $lp_aria;
 }
@@ -76,7 +86,15 @@ if ( ! empty( $args['data_attrs'] ) && is_array( $args['data_attrs'] ) ) {
 	}
 }
 ?>
-<?php if ( $lp_interactive ) : ?>
+<?php if ( $lp_is_link ) : ?>
+	<a href="<?php echo esc_url( $lp_href ); ?>"
+		<?php foreach ( $lp_btn_attrs as $lp_k => $lp_v ) : ?>
+		<?php echo esc_attr( $lp_k ); ?>="<?php echo esc_attr( $lp_v ); ?>"
+		<?php endforeach; ?>
+	>
+		<?php lp_icon( $lp_icon_id, $lp_variant['icon_class'] ); ?>
+	</a>
+<?php elseif ( $lp_interactive ) : ?>
 	<button
 		<?php foreach ( $lp_btn_attrs as $lp_k => $lp_v ) : ?>
 		<?php echo esc_attr( $lp_k ); ?>="<?php echo esc_attr( $lp_v ); ?>"

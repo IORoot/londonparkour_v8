@@ -414,7 +414,7 @@ function lp_inline_svg( string $markup, string $classes = 'w-7 h-7' ): void {
  *
  * Used by Class Detail's WATCH THE CLASS dialog (`DialogVideo.js` needs
  * data-video-id, not a full URL). Returns '' when the input is empty or not a
- * recognisable YouTube target — callers hide the control in that case.
+ * recognisable YouTube target — callers then treat the URL as an external link.
  *
  * @param string $url Full YouTube URL or bare video id.
  * @return string

@@ -258,9 +258,10 @@ while ( have_posts() ) :
 
 	$lp_image_id = lp_class_image_id( $lp_post_id );
 
-	$lp_video_url = function_exists( 'get_field' ) ? (string) get_field( 'video_url', $lp_post_id ) : '';
-	$lp_video_id  = lp_youtube_id_from_url( $lp_video_url );
-	$lp_video_dlg = 'class-video-' . $lp_post_id;
+	$lp_video_url  = function_exists( 'get_field' ) ? (string) get_field( 'video_url', $lp_post_id ) : '';
+	$lp_video_id   = lp_youtube_id_from_url( $lp_video_url );
+	$lp_video_href = ( '' === $lp_video_id ) ? (string) esc_url_raw( $lp_video_url ) : '';
+	$lp_video_dlg  = 'class-video-' . $lp_post_id;
 	?>
 
 	<main id="main">
@@ -321,24 +322,27 @@ while ( have_posts() ) :
 						);
 						?>
 					<?php endif; ?>
-					<?php if ( '' !== $lp_video_id ) : ?>
+					<?php if ( '' !== $lp_video_id || '' !== $lp_video_href ) : ?>
 						<span class="absolute top-[16px] left-[16px]">
 							<?php
-							lp_part(
-								'elements/button',
-								array(
-									'variant'          => 'primary',
-									'label'            => 'WATCH THE CLASS',
-									'trailing_icon_id' => 'icon-play',
-									'command'          => 'show-modal',
-									'command_for'      => $lp_video_dlg,
-									'data_attrs'       => array(
-										'data-video-type' => 'youtube',
-										'data-video-id'   => $lp_video_id,
-										'data-autoplay'   => 'true',
-									),
-								)
+							$lp_watch = array(
+								'variant'          => 'primary',
+								'label'            => 'WATCH THE CLASS',
+								'trailing_icon_id' => 'icon-play',
 							);
+							if ( '' !== $lp_video_id ) {
+								$lp_watch['command']     = 'show-modal';
+								$lp_watch['command_for'] = $lp_video_dlg;
+								$lp_watch['data_attrs']  = array(
+									'data-video-type' => 'youtube',
+									'data-video-id'   => $lp_video_id,
+									'data-autoplay'   => 'true',
+								);
+							} else {
+								$lp_watch['href']   = $lp_video_href;
+								$lp_watch['target'] = '_blank';
+							}
+							lp_part( 'elements/button', $lp_watch );
 							?>
 						</span>
 					<?php endif; ?>
