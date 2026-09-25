@@ -53,5 +53,3 @@ define( 'CLASBPRO_MAILCHIMP_API_KEY', '…' );
 If the page still looks stale after Pull: **Servers → Manage Services → Varnish → Purge**. `uploads/` is gitignored — media 404s on staging until copied.
 
 Caching rules: [`wp-content/themes/londonparkour_v8/docs/cloudways-caching.md`](wp-content/themes/londonparkour_v8/docs/cloudways-caching.md). Staging import design: [`wp-content/themes/londonparkour_v8/docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md`](wp-content/themes/londonparkour_v8/docs/superpowers/specs/2026-08-24-cloudways-staging-db-import-design.md). Staging SEO audit: [`wp-content/themes/londonparkour_v8/docs/staging.londonparkour.com-audit/FULL-AUDIT-REPORT.md`](wp-content/themes/londonparkour_v8/docs/staging.londonparkour.com-audit/FULL-AUDIT-REPORT.md).
-
-#
