@@ -135,6 +135,25 @@ function lp_landing_errors( array $data ): array {
 		$errors[] = __( 'Photograph must be an image already in the media library.', 'londonparkour_v8' );
 	}
 
+	foreach (
+		array(
+			'hero_focus_x' => __( 'Subject, left to right', 'londonparkour_v8' ),
+			'hero_focus_y' => __( 'Subject, top to bottom', 'londonparkour_v8' ),
+		) as $lp_focus_key => $lp_focus_label
+	) {
+		if ( ! array_key_exists( $lp_focus_key, $data ) || '' === $data[ $lp_focus_key ] || null === $data[ $lp_focus_key ] ) {
+			continue;
+		}
+		$lp_focus = $data[ $lp_focus_key ];
+		if ( ! is_numeric( $lp_focus ) || (float) $lp_focus < 0 || (float) $lp_focus > 100 ) {
+			$errors[] = sprintf(
+				/* translators: %s: field label. */
+				__( '%s must be a number from 0 to 100.', 'londonparkour_v8' ),
+				$lp_focus_label
+			);
+		}
+	}
+
 	$glyphs     = lp_landing_glyph_ids();
 	$principles = lp_landing_rows( $data['principles'] ?? array() );
 	if ( 3 !== count( $principles ) ) {
@@ -205,6 +224,8 @@ function lp_landing_fields_from_post( int $post_id ): array {
 		'hero_headline'      => (string) $get( 'hero_headline' ),
 		'hero_lead'          => (string) $get( 'hero_lead' ),
 		'hero_image'         => (int) $image,
+		'hero_focus_x'       => $get( 'hero_focus_x' ),
+		'hero_focus_y'       => $get( 'hero_focus_y' ),
 		'statement_eyebrow'  => (string) $get( 'statement_eyebrow' ),
 		'statement_headline' => (string) $get( 'statement_headline' ),
 		'statement_quote'    => (string) $get( 'statement_quote' ),
@@ -389,8 +410,9 @@ function lp_landing_render( int $post_id ): void {
 			'eyebrow'     => (string) $fields['hero_eyebrow'],
 			'headline'    => (string) $fields['hero_headline'],
 			'lead'        => (string) $fields['hero_lead'],
-			'media'       => (int) $fields['hero_image'],
-			'under_nav'   => false,
+			'media'        => (int) $fields['hero_image'],
+			'media_origin' => lp_hero_focal_point( $fields['hero_focus_x'] ?? 50, $fields['hero_focus_y'] ?? 50 ),
+			'under_nav'    => false,
 			'board_style' => 'next',
 		)
 	);
@@ -480,6 +502,8 @@ function lp_landing_write_fields( int $post_id, array $data ): void {
 		'hero_headline',
 		'hero_lead',
 		'hero_image',
+		'hero_focus_x',
+		'hero_focus_y',
 		'statement_eyebrow',
 		'statement_headline',
 		'statement_quote',

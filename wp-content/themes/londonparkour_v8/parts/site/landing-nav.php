@@ -32,8 +32,8 @@ $lp_menu_id   = 'landing-menu';
 ?>
 <header data-component="landing-nav" class="sticky top-0 z-50 bg-neutral">
 	<nav aria-label="<?php esc_attr_e( 'Landing', 'londonparkour_v8' ); ?>">
-		<div class="hidden lg:flex items-stretch justify-between border-b border-neutral-content/10 pl-[64px] h-[76px]">
-			<a href="<?php echo esc_url( $lp_home ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="<?php echo lp_classes( 'flex items-center text-neutral-content hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
+		<div class="hidden lg:grid lg:grid-cols-3 items-stretch border-b border-neutral-content/10 h-[76px]">
+			<a href="<?php echo esc_url( $lp_home ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="<?php echo lp_classes( 'flex items-center pl-[64px] text-neutral-content hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
 				<?php
 				lp_part(
 					'brand/logo',
@@ -45,25 +45,27 @@ $lp_menu_id   = 'landing-menu';
 				);
 				?>
 			</a>
-			<div class="flex items-stretch">
-				<div class="flex items-center gap-[28px] px-[20px]">
-					<?php
-					lp_part(
-						'elements/nav-link',
-						array(
-							'label' => 'CLASSES',
-							'href'  => $lp_classes,
-						)
-					);
-					lp_part(
-						'elements/nav-link',
-						array(
-							'label' => 'PRIVATE 1:1',
-							'href'  => $lp_private,
-						)
-					);
-					?>
-				</div>
+			<div class="flex items-center justify-center gap-[28px]">
+				<?php
+				lp_part(
+					'elements/nav-link',
+					array(
+						'label'   => 'CLASSES',
+						'href'    => $lp_classes,
+						'icon_id' => 'glyph-vaulting',
+					)
+				);
+				lp_part(
+					'elements/nav-link',
+					array(
+						'label'   => 'PRIVATE 1:1',
+						'href'    => $lp_private,
+						'icon_id' => 'glyph-holistic',
+					)
+				);
+				?>
+			</div>
+			<div class="flex items-stretch justify-end">
 				<a href="<?php echo esc_url( $lp_cta_href ); ?>" class="<?php echo lp_classes( $lp_book_desktop, $lp_focus_inset ); ?>">
 					<?php echo esc_html( $lp_cta_label ); ?>
 					<?php lp_icon( 'icon-arrow-right', 'w-[14px] h-[14px]' ); ?>
@@ -124,15 +126,17 @@ $lp_menu_id   = 'landing-menu';
 					lp_part(
 						'elements/nav-link',
 						array(
-							'label' => 'CLASSES',
-							'href'  => $lp_classes,
+							'label'   => 'CLASSES',
+							'href'    => $lp_classes,
+							'icon_id' => 'glyph-vaulting',
 						)
 					);
 					lp_part(
 						'elements/nav-link',
 						array(
-							'label' => 'PRIVATE 1:1',
-							'href'  => $lp_private,
+							'label'   => 'PRIVATE 1:1',
+							'href'    => $lp_private,
+							'icon_id' => 'glyph-holistic',
 						)
 					);
 					?>

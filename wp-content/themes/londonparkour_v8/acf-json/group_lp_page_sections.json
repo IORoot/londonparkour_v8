@@ -1745,6 +1745,30 @@
                             "key": "field_88d916898c66d3e2"
                         },
                         {
+                            "name": "focus_x",
+                            "label": "Subject, left to right",
+                            "type": "number",
+                            "default_value": 50,
+                            "min": 0,
+                            "max": 100,
+                            "step": 1,
+                            "append": "%",
+                            "instructions": "Where the subject sits across the photograph. 0 is the left edge, 50 the middle, 100 the right. Used when Media slides is empty. The crop and the zoom share this point.",
+                            "key": "field_c73902eaa490ae7d"
+                        },
+                        {
+                            "name": "focus_y",
+                            "label": "Subject, top to bottom",
+                            "type": "number",
+                            "default_value": 50,
+                            "min": 0,
+                            "max": 100,
+                            "step": 1,
+                            "append": "%",
+                            "instructions": "Where the subject sits down the photograph. 0 is the top, 50 the middle, 100 the bottom.",
+                            "key": "field_effb542c88b4affb"
+                        },
+                        {
                             "name": "media_slides",
                             "label": "Media slides (Ken Burns)",
                             "type": "repeater",
@@ -1804,7 +1828,7 @@
                                     "label": "Origin",
                                     "type": "text",
                                     "default_value": "50% 50%",
-                                    "instructions": "CSS transform-origin, e.g. \"30% 40%\".",
+                                    "instructions": "Where this slide’s subject sits, as \"left% top%\". 50% 50% is the middle. The crop and the zoom both use it.",
                                     "key": "field_fcc225e9e55c929a"
                                 },
                                 {

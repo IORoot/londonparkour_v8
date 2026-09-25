@@ -10,7 +10,7 @@
  *   data-kb-fade      crossfade seconds (default 1.2)
  *   data-kb-zoom      in | out (default in)
  *   data-kb-scale     end/start scale for zoom (default 1.12)
- *   data-kb-origin    transform-origin (default 50% 50%)
+ *   data-kb-origin    focal point "x% y%" (default 50% 50%). Crop and zoom share it.
  *
  * Per-slide location stamp (synced to `[data-kb-live-coords]` in the hero):
  *   data-kb-coordinates  GPS string — re-runs decode on each slide change
@@ -19,6 +19,7 @@
 import { animate } from 'motion';
 import { num } from '../utils.js';
 import { decodeEffect } from './decode.js';
+import { focalPoint } from './focalPoint.js';
 
 function readCfg(el, fallbacks = {}) {
   const d = el.dataset;
@@ -27,7 +28,7 @@ function readCfg(el, fallbacks = {}) {
     fade: num(d.kbFade, fallbacks.fade ?? 1.2),
     zoom: d.kbZoom === 'out' ? 'out' : 'in',
     scale: num(d.kbScale, fallbacks.scale ?? 1.12),
-    origin: d.kbOrigin || fallbacks.origin || '50% 50%',
+    origin: focalPoint(d.kbOrigin || fallbacks.origin || '50% 50%'),
   };
 }
 
@@ -89,6 +90,7 @@ export const kenBurnsEffect = {
       img.removeAttribute('loading');
       layoutSlide(img, false);
       const cfg = readCfg(img, defaults);
+      img.style.objectPosition = cfg.origin;
       img.style.transformOrigin = cfg.origin;
       img.style.transform = `scale(${zoomRange(cfg).from})`;
       stack.appendChild(img);
@@ -141,6 +143,7 @@ export const kenBurnsEffect = {
     live.forEach((img, i) => {
       layoutSlide(img, i === startIndex);
       const cfg = readCfg(img, defaults);
+      img.style.objectPosition = cfg.origin;
       img.style.transformOrigin = cfg.origin;
       img.style.transform = i === startIndex && reduced ? 'scale(1)' : `scale(${zoomRange(cfg).from})`;
     });
@@ -178,6 +181,7 @@ export const kenBurnsEffect = {
     const startZoom = (img) => {
       const cfg = readCfg(img, defaults);
       const { from, to } = zoomRange(cfg);
+      img.style.objectPosition = cfg.origin;
       img.style.transformOrigin = cfg.origin;
       return track(
         animate(img, { scale: [from, to] }, { duration: cfg.duration, ease: 'linear' })
@@ -193,6 +197,7 @@ export const kenBurnsEffect = {
       await preload(toImg);
       if (stopped) return 0;
 
+      toImg.style.objectPosition = toCfg.origin;
       toImg.style.transformOrigin = toCfg.origin;
       toImg.style.zIndex = '2';
       toImg.style.transform = `scale(${from})`;

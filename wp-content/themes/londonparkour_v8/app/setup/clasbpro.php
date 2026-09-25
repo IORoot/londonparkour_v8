@@ -130,7 +130,7 @@ function lp_clasbpro_needs_booking_assets(): bool {
 		return $need;
 	}
 
-	if ( is_front_page() ) {
+	if ( is_front_page() || is_singular( 'lp_landing' ) ) {
 		$need = true;
 		return $need;
 	}

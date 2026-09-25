@@ -153,8 +153,13 @@ foreach ( is_array( $args['media_slides'] ?? null ) ? $args['media_slides'] : ar
 	$lp_slides[] = $lp_row;
 }
 if ( ! $lp_slides && $lp_has_media ) {
+	$lp_media_origin = (string) ( $args['media_origin'] ?? '' );
+	if ( '' === $lp_media_origin && ( array_key_exists( 'focus_x', $args ) || array_key_exists( 'focus_y', $args ) ) ) {
+		$lp_media_origin = lp_hero_focal_point( $args['focus_x'] ?? 50, $args['focus_y'] ?? 50 );
+	}
 	$lp_slides[] = array(
 		'image'       => $lp_media_id,
+		'origin'      => $lp_media_origin,
 		'coordinates' => $lp_coordinates,
 		'link'        => $lp_coordinates_link,
 	);
@@ -239,9 +244,10 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 				if ( isset( $lp_slide['scale'] ) && '' !== $lp_slide['scale'] ) {
 					$lp_kb_attrs['data-kb-scale'] = (string) $lp_slide['scale'];
 				}
-				if ( ! empty( $lp_slide['origin'] ) ) {
-					$lp_kb_attrs['data-kb-origin'] = (string) $lp_slide['origin'];
-				}
+				// Same point for the cover crop and the zoom. 50% 50% is the middle.
+				$lp_origin = lp_hero_focal_origin( (string) ( $lp_slide['origin'] ?? '' ) );
+				$lp_kb_attrs['data-kb-origin'] = $lp_origin;
+				$lp_kb_attrs['style']          = 'object-position: ' . $lp_origin . ';';
 				$lp_slide_coords = (string) ( $lp_slide['coordinates'] ?? '' );
 				if ( '' === $lp_slide_coords ) {
 					$lp_slide_coords = $lp_coordinates;

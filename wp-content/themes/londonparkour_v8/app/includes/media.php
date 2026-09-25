@@ -355,3 +355,38 @@ function lp_preload_lcp_image( array $resources ): array {
 	return $resources;
 }
 add_filter( 'wp_preload_resources', 'lp_preload_lcp_image' );
+
+/**
+ * "x% y%" focal point. 50% 50% is the middle. Out of range values clamp.
+ *
+ * The hero uses this for both the cover crop and the Ken Burns zoom, so the
+ * subject stays in frame as the screen changes shape.
+ *
+ * @param mixed $x Horizontal, 0 left to 100 right.
+ * @param mixed $y Vertical, 0 top to 100 bottom.
+ */
+function lp_hero_focal_point( $x, $y ): string {
+	$format = static function ( $value ): string {
+		if ( ! is_numeric( $value ) ) {
+			$value = 50;
+		}
+		$n = min( 100, max( 0, (float) $value ) );
+		$s = number_format( $n, 1, '.', '' );
+		return rtrim( rtrim( $s, '0' ), '.' );
+	};
+
+	return $format( $x ) . '% ' . $format( $y ) . '%';
+}
+
+/**
+ * Accept a focal-point string, or the middle when it is not one.
+ *
+ * @param string $origin Raw "x% y%".
+ */
+function lp_hero_focal_origin( string $origin ): string {
+	if ( preg_match( '/^\s*(\d{1,3}(?:\.\d+)?)%\s+(\d{1,3}(?:\.\d+)?)%\s*$/', $origin, $match ) ) {
+		return lp_hero_focal_point( $match[1], $match[2] );
+	}
+
+	return '50% 50%';
+}

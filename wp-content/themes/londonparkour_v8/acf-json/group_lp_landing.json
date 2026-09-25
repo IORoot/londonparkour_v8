@@ -66,6 +66,30 @@
             "key": "field_2cb75e08d28aa505"
         },
         {
+            "name": "hero_focus_x",
+            "label": "Subject, left to right",
+            "type": "number",
+            "default_value": 50,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "append": "%",
+            "instructions": "Where the subject sits across the photograph. 0 is the left edge, 50 the middle, 100 the right. The crop keeps this point in frame on a phone and on a desktop, and the zoom travels through it.",
+            "key": "field_2fa03afd48acf445"
+        },
+        {
+            "name": "hero_focus_y",
+            "label": "Subject, top to bottom",
+            "type": "number",
+            "default_value": 50,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "append": "%",
+            "instructions": "Where the subject sits down the photograph. 0 is the top, 50 the middle, 100 the bottom.",
+            "key": "field_57dce79d115e9f9a"
+        },
+        {
             "name": "tab_statement",
             "label": "Statement",
             "type": "tab",
