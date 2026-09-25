@@ -35,8 +35,6 @@ lp_part(
 		'home_href'    => home_url( '/' ),
 		'classes_href' => lp_classes_page_url( 'classes' ),
 		'private_href' => home_url( '/private-coaching/' ),
-		'cta_label'    => 'BOOK A CLASS',
-		'cta_href'     => lp_classes_page_url( 'classes' ),
 	)
 );
 ?>

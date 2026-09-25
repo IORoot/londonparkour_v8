@@ -41,8 +41,10 @@ fail=0
 # blocks/hero/hero.php is exempt for the next-class board on the same terms —
 # the whole board is the booking control (drawer, or an outbound <a> for
 # external-link classes). button.php cannot wrap that layout.
+# blocks/cta/cta.php is exempt for the next-session panel when session_book
+# makes that whole panel the drawer invoker. button.php cannot wrap it.
 rules=(
-  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|parts/site/landing-nav.php|404\.php|parts/components/agenda-card\.php|blocks/hero/hero\.php'
+  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|parts/site/landing-nav.php|404\.php|parts/components/agenda-card\.php|blocks/hero/hero\.php|blocks/cta/cta\.php'
   'daisyUI btn class|class="[^"]*\bbtn\b|parts/elements/button.php|'
   'hand-rolled separator|role="separator"|parts/elements/rule.php|'
   'inline <svg>|<svg[[:space:]>]|lp_icon() in app/includes/html.php|'

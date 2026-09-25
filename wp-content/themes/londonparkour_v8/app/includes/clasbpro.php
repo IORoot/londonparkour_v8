@@ -1637,6 +1637,8 @@ function lp_cta_session_panel( ?array $session = null ): array {
 		'foot_label' => 'CLASS',
 		'foot_value' => '' !== $title ? $title : $defaults['foot_value'],
 		'href'       => $defaults['href'],
+		'class_id'   => (string) (int) ( $session['id'] ?? 0 ),
+		'date'       => $date,
 	);
 }
 

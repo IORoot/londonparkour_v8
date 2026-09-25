@@ -459,6 +459,7 @@ function lp_landing_render( int $post_id ): void {
 			'headline'       => (string) $fields['cta_headline'],
 			'subhead'        => (string) $fields['cta_subhead'],
 			'book'           => true,
+			'session_book'   => true,
 			'primary_action' => array(
 				'title' => 'BOOK YOUR FIRST CLASS',
 				'url'   => '',
