@@ -432,13 +432,20 @@ function lp_landing_render( int $post_id ): void {
 	lp_render_block(
 		'testimonials',
 		array(
-			'eyebrow'             => '03 — IN THEIR WORDS',
-			'quote_source'        => 'latest',
-			'quote_limit'         => 3,
-			'allow_placeholders'  => false,
-			'rotate'              => false,
-			'show_see_all'        => false,
-			'surface'             => 'band',
+			'eyebrow'            => '03 — IN THEIR WORDS',
+			'quote_source'       => 'latest',
+			'quote_limit'        => 3,
+			'allow_placeholders' => false,
+			'rotate'             => false,
+			'show_see_all'       => false,
+			'surface'            => 'band',
+			'review_action'      => array(
+				'link' => array(
+					'title'  => 'SEE MORE',
+					'url'    => 'https://g.page/r/CaEUXmf0e4IHEBM',
+					'target' => '_blank',
+				),
+			),
 		)
 	);
 
