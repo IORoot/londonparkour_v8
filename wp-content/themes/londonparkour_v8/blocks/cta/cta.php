@@ -59,14 +59,18 @@ $lp_spacing = lp_section_spacing( $args );
 				<div class="flex flex-wrap items-center gap-[28px]">
 					<?php
 					if ( $lp_primary ) {
-						lp_part(
-							'elements/button',
-							array(
-								'variant' => 'inverse',
-								'label'   => $lp_primary['label'],
-								'href'    => $lp_primary['href'],
-							)
+						$lp_primary_btn = array(
+							'variant' => 'inverse',
+							'label'   => $lp_primary['label'],
+							'href'    => $lp_primary['href'],
 						);
+						if ( ! empty( $args['book'] ) && function_exists( 'lp_hero_first_class_book_args' ) ) {
+							$lp_book = lp_hero_first_class_book_args( (string) $lp_primary['label'], 'inverse' );
+							if ( is_array( $lp_book ) ) {
+								$lp_primary_btn = $lp_book;
+							}
+						}
+						lp_part( 'elements/button', $lp_primary_btn );
 					}
 					?>
 					<?php if ( $lp_alt ) : ?>

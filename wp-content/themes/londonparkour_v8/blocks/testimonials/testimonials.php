@@ -41,20 +41,33 @@ $lp_quotes = array();
 if ( function_exists( 'lp_resolve_testimonial_quotes' ) ) {
 	$lp_quotes = lp_resolve_testimonial_quotes( $args );
 }
+$lp_allow_placeholders = ! array_key_exists( 'allow_placeholders', $args ) || ! empty( $args['allow_placeholders'] );
 if ( ! $lp_quotes ) {
+	if ( ! $lp_allow_placeholders ) {
+		return;
+	}
 	$lp_quotes = $lp_default_quotes;
 }
 
-$lp_visible     = array_slice( $lp_quotes, 0, 3 );
-$lp_can_rotate  = count( $lp_quotes ) > 3;
+$lp_limit       = isset( $args['quote_limit'] ) ? max( 1, (int) $args['quote_limit'] ) : 3;
+$lp_visible     = array_slice( $lp_quotes, 0, $lp_limit );
+$lp_rotate      = ! array_key_exists( 'rotate', $args ) || ! empty( $args['rotate'] );
+$lp_can_rotate  = $lp_rotate && count( $lp_quotes ) > 3;
 $lp_quotes_json = wp_json_encode( $lp_quotes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 if ( false === $lp_quotes_json ) {
 	$lp_quotes_json = '[]';
 	$lp_can_rotate  = false;
 }
 
-$lp_see_all = lp_action( $args['see_all_action'] ?? null );
-if ( ! $lp_see_all ) {
+$lp_show_see_all = ! array_key_exists( 'show_see_all', $args ) || ! empty( $args['show_see_all'] );
+$lp_see_all      = lp_action( $args['see_all_action'] ?? null );
+if ( ! $lp_show_see_all ) {
+	$lp_see_all = array(
+		'label'  => '',
+		'href'   => '',
+		'target' => '',
+	);
+} elseif ( ! $lp_see_all ) {
 	$lp_see_all = array(
 		'label'  => 'SEE ALL',
 		'href'   => 'https://g.page/r/CaEUXmf0e4IHEBM',
@@ -62,6 +75,30 @@ if ( ! $lp_see_all ) {
 	);
 } elseif ( '' === $lp_see_all['target'] ) {
 	$lp_see_all['target'] = '_blank';
+}
+$lp_meta = $lp_show_see_all ? '' : sprintf( '(%02d)', count( $lp_visible ) );
+
+$lp_band = isset( $args['surface'] ) && 'band' === $args['surface'];
+if ( $lp_band ) {
+	$lp_section_class = 'w-full bg-neutral px-6 py-[120px] lg:px-[72px]';
+	$lp_meta_class    = 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-neutral-content/65';
+	$lp_rule_class    = 'h-px w-full bg-neutral-content/20';
+	$lp_index_class   = 'font-label text-[14px] font-semibold tracking-[0.4px] text-primary shrink-0 pt-1';
+	$lp_quote_class   = 'font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-neutral-content m-0';
+	$lp_footer_class  = 'flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-neutral-content/65';
+	$lp_bar_class     = 'w-px h-2.5 bg-neutral-content/20 shrink-0';
+	$lp_star_class    = 'w-3 h-3 text-primary';
+	$lp_surface       = 'band';
+} else {
+	$lp_section_class = 'w-full bg-base-100 px-6 py-[120px] lg:px-[72px]';
+	$lp_meta_class    = 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65';
+	$lp_rule_class    = 'h-px w-full bg-base-300';
+	$lp_index_class   = 'font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1';
+	$lp_quote_class   = 'font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0';
+	$lp_footer_class  = 'flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65';
+	$lp_bar_class     = 'w-px h-2.5 bg-base-300 shrink-0';
+	$lp_star_class    = 'w-3 h-3 text-accent';
+	$lp_surface       = 'page';
 }
 
 $lp_review = lp_action( $args['review_action'] ?? null );
@@ -79,23 +116,27 @@ $lp_spacing = lp_section_spacing( $args );
 $lp_last    = count( $lp_visible ) - 1;
 ?>
 <section
-	class="<?php echo lp_classes( 'w-full bg-base-100 px-6 py-[120px] lg:px-[72px]', $lp_spacing ); ?>"
-	data-component="testimonials"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
+	class="<?php echo lp_classes( $lp_section_class, $lp_spacing ); ?>"
+	data-component="testimonials"
+	data-surface="<?php echo esc_attr( $lp_surface ); ?>"
+	<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>
 >
 	<div class="flex flex-col gap-14">
 		<header class="flex flex-col gap-[18px]">
 			<div class="flex items-baseline justify-between gap-4">
-				<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<span class="<?php echo esc_attr( $lp_meta_class ); ?>"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<?php if ( '' !== $lp_see_all['href'] && '' !== $lp_see_all['label'] ) : ?>
 					<a
-						class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"
+						class="<?php echo esc_attr( $lp_meta_class ); ?>"
 						href="<?php echo esc_url( $lp_see_all['href'] ); ?>"
 						target="<?php echo esc_attr( $lp_see_all['target'] ); ?>"
 						rel="noopener noreferrer"
 					><?php echo esc_html( $lp_see_all['label'] ); ?></a>
+				<?php elseif ( '' !== $lp_meta ) : ?>
+					<span class="<?php echo esc_attr( $lp_meta_class ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
 				<?php endif; ?>
 			</div>
-			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
+			<div class="<?php echo esc_attr( $lp_rule_class ); ?>" aria-hidden="true"></div>
 		</header>
 
 		<div class="flex flex-col gap-12">
@@ -115,21 +156,21 @@ $lp_last    = count( $lp_visible ) - 1;
 				$lp_attribution = (string) ( $lp_q['attribution'] ?? '' );
 				?>
 				<blockquote class="flex flex-col sm:flex-row gap-6 sm:gap-[48px] items-start" data-component="testimonial-quote" data-quote-row>
-					<span class="font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1" data-quote-index><?php echo esc_html( $lp_index ); ?></span>
+					<span class="<?php echo esc_attr( $lp_index_class ); ?>" data-quote-index><?php echo esc_html( $lp_index ); ?></span>
 					<div class="flex flex-col gap-6 min-w-0">
-						<p class="font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0" data-quote-text><?php echo esc_html( $lp_quote ); ?></p>
+						<p class="<?php echo esc_attr( $lp_quote_class ); ?>" data-quote-text><?php echo esc_html( $lp_quote ); ?></p>
 						<?php
 						$lp_attr_parts = explode( ' / ', $lp_attribution, 2 );
 						$lp_name       = trim( (string) ( $lp_attr_parts[0] ?? '' ) );
 						$lp_note       = trim( (string) ( $lp_attr_parts[1] ?? '' ) );
 						?>
-						<footer class="flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65">
+						<footer class="<?php echo esc_attr( $lp_footer_class ); ?>">
 							<span data-quote-name><?php echo esc_html( $lp_name ); ?></span>
-							<span class="w-px h-2.5 bg-base-300 shrink-0" aria-hidden="true"></span>
+							<span class="<?php echo esc_attr( $lp_bar_class ); ?>" aria-hidden="true"></span>
 							<span class="flex items-center gap-0.5" role="img" aria-label="5 out of 5 stars">
 								<?php
 								for ( $lp_star = 1; $lp_star <= 5; $lp_star++ ) {
-									lp_icon( 'icon-star', 'w-3 h-3 text-accent' );
+									lp_icon( 'icon-star', $lp_star_class );
 								}
 								?>
 							</span>
@@ -138,7 +179,7 @@ $lp_last    = count( $lp_visible ) - 1;
 					</div>
 				</blockquote>
 				<?php if ( (int) $lp_i !== $lp_last ) : ?>
-					<div class="h-px w-full bg-base-300" aria-hidden="true" data-quote-rule></div>
+					<div class="<?php echo esc_attr( $lp_rule_class ); ?>" aria-hidden="true" data-quote-rule></div>
 				<?php endif; ?>
 			<?php endforeach; ?>
 			</div>
@@ -154,21 +195,21 @@ $lp_last    = count( $lp_visible ) - 1;
 		</div>
 		<template data-quote-row-template>
 			<blockquote class="flex flex-col sm:flex-row gap-6 sm:gap-[48px] items-start" data-component="testimonial-quote" data-quote-row>
-				<span class="font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1" data-quote-index></span>
+				<span class="<?php echo esc_attr( $lp_index_class ); ?>" data-quote-index></span>
 				<div class="flex flex-col gap-6 min-w-0">
 					<p
-						class="font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0"
+						class="<?php echo esc_attr( $lp_quote_class ); ?>"
 						data-quote-text
 						data-motion-decode-charset="board"
 						data-motion-decode-wrap="true"
 					></p>
-					<footer class="flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65">
+					<footer class="<?php echo esc_attr( $lp_footer_class ); ?>">
 						<span data-quote-name></span>
-						<span class="w-px h-2.5 bg-base-300 shrink-0" aria-hidden="true"></span>
+						<span class="<?php echo esc_attr( $lp_bar_class ); ?>" aria-hidden="true"></span>
 						<span class="flex items-center gap-0.5" role="img" aria-label="5 out of 5 stars">
 							<?php
 							for ( $lp_star = 1; $lp_star <= 5; $lp_star++ ) {
-								lp_icon( 'icon-star', 'w-3 h-3 text-accent' );
+								lp_icon( 'icon-star', $lp_star_class );
 							}
 							?>
 						</span>
@@ -178,7 +219,7 @@ $lp_last    = count( $lp_visible ) - 1;
 			</blockquote>
 		</template>
 		<template data-quote-rule-template>
-			<div class="h-px w-full bg-base-300" aria-hidden="true" data-quote-rule></div>
+			<div class="<?php echo esc_attr( $lp_rule_class ); ?>" aria-hidden="true" data-quote-rule></div>
 		</template>
 		<?php if ( '' !== $lp_review['href'] && '' !== $lp_review['label'] ) : ?>
 			<?php

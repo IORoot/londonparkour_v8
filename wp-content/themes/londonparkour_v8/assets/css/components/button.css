@@ -58,6 +58,14 @@
   border-color: var(--color-base-content) !important;
 }
 
+/* Ghost on the fixed dark band (landing testimonials). base-content and
+   neutral are the same hex in both light themes, so the page-ground outline
+   disappears on bg-neutral. */
+[data-surface="band"] .btn[data-component="button"].btn-outline {
+  color: var(--color-neutral-content) !important;
+  border-color: var(--color-neutral-content) !important;
+}
+
 /* inverse: daisyUI's `.btn-neutral` gives neutral-content text by default;
    the design wants the signal colour as text on the dark fill instead. */
 .btn[data-component="button"].btn-neutral {

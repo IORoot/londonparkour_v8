@@ -44,6 +44,7 @@ function lp_acf_generated_post_type_keys(): array {
 		'post_type_lp0103location',
 		'post_type_lp0104tutorial',
 		'post_type_lp0105testimonial',
+		'post_type_lp0106landing',
 	);
 }
 

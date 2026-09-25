@@ -3,7 +3,7 @@
  * Custom post types and taxonomies.
  *
  * Classes are clasbpro_class (plugin CPT) — see app/setup/clasbpro.php. Theme-
- * owned CPTs below are coaches, locations, tutorials, testimonials. Session
+ * owned CPTs below are coaches, locations, tutorials, testimonials, landings. Session
  * expansion for boards lives in app/includes/clasbpro.php.
  *
  * @package londonparkour_v8
@@ -51,6 +51,19 @@ function lp_post_types(): array {
 			'taxes'               => array(),
 			'public'              => false,
 			'publicly_queryable'  => false,
+			'exclude_from_search' => true,
+			'has_archive'         => false,
+			'show_in_nav_menus'   => false,
+		),
+		'lp_landing' => array(
+			'singular'            => __( 'Landing', 'londonparkour_v8' ),
+			'plural'              => __( 'Landings', 'londonparkour_v8' ),
+			'slug'                => 'go',
+			'icon'                => 'dashicons-megaphone',
+			'supports'            => array( 'title' ),
+			'taxes'               => array(),
+			'public'              => true,
+			'publicly_queryable'  => true,
 			'exclude_from_search' => true,
 			'has_archive'         => false,
 			'show_in_nav_menus'   => false,

@@ -13,7 +13,7 @@
  * call site, and `tone` stays 'ink' on all three surfaces.
  *
  * @param string $args['left']    Default '05 — WHY WE DO IT'.
- * @param string $args['right']   Default 'SINCE 2015'.
+ * @param string $args['right']   Default 'SINCE 2018'.
  * @param string $args['icon']    Glyph id; composes elements/glyph-label on the left.
  * @param string $args['surface'] page|board|accent|fill. Default 'page'.
  *
@@ -33,7 +33,7 @@ $lp_surfaces = array(
 $lp_surface = (string) ( $args['surface'] ?? 'page' );
 $lp_label   = $lp_surfaces[ $lp_surface ] ?? $lp_surfaces['page'];
 $lp_left    = (string) ( $args['left'] ?? '05 — WHY WE DO IT' );
-$lp_right   = (string) ( $args['right'] ?? 'SINCE 2015' );
+$lp_right   = (string) ( $args['right'] ?? 'SINCE 2018' );
 $lp_icon_id = (string) ( $args['icon'] ?? '' );
 ?>
 <div class="w-full flex items-center justify-between gap-4 flex-wrap" data-component="meta-row">

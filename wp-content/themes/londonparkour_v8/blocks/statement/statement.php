@@ -43,7 +43,7 @@ $lp_default_principles = array(
 );
 
 $lp_eyebrow   = lp_section_label( (string) ( $args['eyebrow'] ?? '05 — WHY WE DO IT' ), $args['_section_number'] ?? null );
-$lp_since     = (string) ( $args['since'] ?? 'SINCE 2015' );
+$lp_since     = (string) ( $args['since'] ?? 'SINCE 2018' );
 $lp_statement = (string) ( $args['statement'] ?? "We don't teach tricks. We teach people to trust what their body can already do." );
 $lp_quote     = (string) ( $args['quote'] ?? "Most people arrive convinced they're not the athletic type. Six weeks later they're vaulting a rail they used to walk around. That shift — from avoiding obstacles to reading them — is the whole point." );
 $lp_signature = (string) ( $args['signature'] ?? '— Andy Pearson, Head Coach' );

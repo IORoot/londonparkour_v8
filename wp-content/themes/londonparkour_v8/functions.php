@@ -60,6 +60,7 @@ $lp_includes = array(
 	'app/setup/media-dedupe.php',
 	'app/setup/import-spots.php',
 	'app/setup/import-reviews.php',
+	'app/setup/landing.php',
 	// Admin hooks.
 	'hooks/initialise_hooks.php',
 	// Legacy _tw template helpers.

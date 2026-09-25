@@ -141,21 +141,27 @@ foreach ( is_array( $args['items'] ?? null ) ? $args['items'] : array() as $lp_r
 		$lp_items[] = $lp_row;
 	}
 }
+$lp_show_aside = ! array_key_exists( 'show_aside', $args ) || ! empty( $args['show_aside'] );
 if ( ! $lp_items ) {
+	if ( ! $lp_show_aside ) {
+		return;
+	}
 	$lp_items = $lp_default_items;
 }
 
-$lp_canonical_answers = array();
-foreach ( $lp_default_items as $lp_default_item ) {
-	$lp_canonical_answers[ $lp_default_item['question'] ] = $lp_default_item['answer'];
-}
-foreach ( $lp_items as &$lp_item ) {
-	$lp_question = (string) ( $lp_item['question'] ?? '' );
-	if ( isset( $lp_canonical_answers[ $lp_question ] ) ) {
-		$lp_item['answer'] = $lp_canonical_answers[ $lp_question ];
+if ( $lp_show_aside ) {
+	$lp_canonical_answers = array();
+	foreach ( $lp_default_items as $lp_default_item ) {
+		$lp_canonical_answers[ $lp_default_item['question'] ] = $lp_default_item['answer'];
 	}
+	foreach ( $lp_items as &$lp_item ) {
+		$lp_question = (string) ( $lp_item['question'] ?? '' );
+		if ( isset( $lp_canonical_answers[ $lp_question ] ) ) {
+			$lp_item['answer'] = $lp_canonical_answers[ $lp_question ];
+		}
+	}
+	unset( $lp_item );
 }
-unset( $lp_item );
 
 $lp_still         = is_array( $args['still_stuck'] ?? null ) ? $args['still_stuck'] : array();
 $lp_still_title   = (string) ( $lp_still['title'] ?? 'STILL STUCK?' );
@@ -179,8 +185,12 @@ $lp_still_mailto  = 'mailto:' . $lp_still_email;
 			);
 			lp_part( 'elements/rule', array( 'tone' => 'hairline' ) );
 			?>
+			<?php if ( $lp_show_aside ) : ?>
 			<div class="mt-[52px] flex flex-col lg:flex-row gap-10 lg:gap-20 items-start">
 				<div class="flex-1 min-w-0 flex flex-col divide-y divide-base-300">
+			<?php else : ?>
+			<div class="mt-[52px] flex flex-col divide-y divide-base-300">
+			<?php endif; ?>
 					<?php foreach ( $lp_items as $lp_i => $lp_item ) : ?>
 						<?php
 						lp_part(
@@ -195,6 +205,7 @@ $lp_still_mailto  = 'mailto:' . $lp_still_email;
 						);
 						?>
 					<?php endforeach; ?>
+				<?php if ( $lp_show_aside ) : ?>
 				</div>
 				<aside class="w-full lg:w-[380px] lg:shrink-0 flex flex-col gap-4 border-t border-base-content pt-scale-s">
 					<?php
@@ -213,6 +224,7 @@ $lp_still_mailto  = 'mailto:' . $lp_still_email;
 						<?php lp_icon( 'icon-arrow-up-right', 'w-[12px] h-[12px]' ); ?>
 					</a>
 				</aside>
+			<?php endif; ?>
 			</div>
 		</div>
 	</div>

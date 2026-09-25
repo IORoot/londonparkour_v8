@@ -19,7 +19,8 @@ fail=0
 # The exemption exists because media-photo.php is itself under parts/components,
 # the directory this audit scans — it DEFINES <img>, so only that one file may.
 # parts/site/nav.php is exempt from the <button> rule alone, and only that
-# rule: its two remaining buttons cannot be button.php. Both are Tailwind Plus
+# rule: its two remaining buttons cannot be button.php. landing-nav.php has
+# the same pair (menu open / drawer close) copied from LandingNav.js. Both are Tailwind Plus
 # Elements invokers (`command`/`commandfor`) which only work on a real
 # <button> — the hamburger is a 60px icon-only bar cell, and the drawer close
 # is a 40px icon-only control. button.php's `icon` variant is `btn btn-primary
@@ -41,7 +42,7 @@ fail=0
 # the whole board is the booking control (drawer, or an outbound <a> for
 # external-link classes). button.php cannot wrap that layout.
 rules=(
-  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|404\.php|parts/components/agenda-card\.php|blocks/hero/hero\.php'
+  'raw <button>|<button[[:space:]>]|parts/elements/button.php|parts/site/nav.php|parts/site/landing-nav.php|404\.php|parts/components/agenda-card\.php|blocks/hero/hero\.php'
   'daisyUI btn class|class="[^"]*\bbtn\b|parts/elements/button.php|'
   'hand-rolled separator|role="separator"|parts/elements/rule.php|'
   'inline <svg>|<svg[[:space:]>]|lp_icon() in app/includes/html.php|'

@@ -18,6 +18,7 @@ function lp_acf_post_type_keys(): array {
 		'lp_location' => 'post_type_lp0103location',
 		'lp_tutorial' => 'post_type_lp0104tutorial',
 		'lp_testimonial' => 'post_type_lp0105testimonial',
+		'lp_landing'     => 'post_type_lp0106landing',
 	);
 }
 
