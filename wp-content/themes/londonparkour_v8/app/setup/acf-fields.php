@@ -783,6 +783,19 @@ function lp_field_testimonial_source(): array {
 }
 
 /**
+ * Published testimonials. The hero rating count uses this, not a typed number.
+ */
+function lp_testimonial_published_count(): int {
+	if ( ! post_type_exists( 'lp_testimonial' ) ) {
+		return 0;
+	}
+
+	$counts = wp_count_posts( 'lp_testimonial' );
+
+	return (int) ( $counts->publish ?? 0 );
+}
+
+/**
  * Eligible testimonial: 5 stars and a non-empty quote field.
  *
  * @param int $post_id Post ID.

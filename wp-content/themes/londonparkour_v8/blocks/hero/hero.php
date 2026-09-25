@@ -66,6 +66,14 @@ $lp_foot_href    = (string) ( $args['board_foot_href'] ?? '#' );
 $lp_foot_count   = (string) ( $args['board_foot_count'] ?? '32 SESSIONS / WEEK' );
 $lp_scroll       = (string) ( $args['scroll_label'] ?? '↓ SCROLL' );
 $lp_rating       = (string) ( $args['rating'] ?? '4.9 ★ (312)' );
+$lp_review_count = function_exists( 'lp_testimonial_published_count' ) ? lp_testimonial_published_count() : 0;
+if ( $lp_review_count > 0 ) {
+	if ( preg_match( '/^(.*★\s*)\(\d+\)\s*$/u', $lp_rating, $lp_rating_parts ) ) {
+		$lp_rating = $lp_rating_parts[1] . '(' . $lp_review_count . ')';
+	} else {
+		$lp_rating = sprintf( '4.9 ★ (%d)', $lp_review_count );
+	}
+}
 
 // Legacy ACF value from before next-class rename.
 if ( 'featured' === $lp_board_style ) {
