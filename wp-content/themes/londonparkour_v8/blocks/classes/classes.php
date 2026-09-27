@@ -221,10 +221,13 @@ $lp_sessions = array_map(
 			// A class record has no book_label — it is derivable, and a field an
 			// editor has to keep in step with `sold_out` is a field that drifts.
 			// The source's own defaults follow exactly this rule.
-			'book_label'       => (string) ( $item['book_label'] ?? ( empty( $item['sold_out'] ) ? 'BOOK' : 'WAITLIST' ) ),
-			'sold_out'         => ! empty( $item['sold_out'] ),
+			'book_label'       => ! empty( $item['cancelled'] )
+				? 'CANCELLED'
+				: (string) ( $item['book_label'] ?? ( empty( $item['sold_out'] ) ? 'BOOK' : 'WAITLIST' ) ),
+			'sold_out'         => empty( $item['cancelled'] ) && ! empty( $item['sold_out'] ),
+			'cancelled'        => ! empty( $item['cancelled'] ),
 			'href'             => (string) ( $item['url'] ?? $item['href'] ?? '' ),
-			'book_class_id'    => ! empty( $item['id'] ) ? (int) $item['id'] : 0,
+			'book_class_id'    => ( ! empty( $item['cancelled'] ) || empty( $item['id'] ) ) ? 0 : (int) $item['id'],
 			'book_preset_date' => $lp_ymd,
 			'thumb'            => ! empty( $item['thumb'] ) ? (int) $item['thumb'] : 0,
 			'thumb_alt'        => (string) ( $item['thumb_alt'] ?? '' ),

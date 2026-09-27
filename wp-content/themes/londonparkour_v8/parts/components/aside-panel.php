@@ -26,6 +26,7 @@
  * @param array  $args['data_attrs']  Passed through to elements/button.php.
  * @param string $args['note']        Optional foot note.
  * @param string $args['surface']     board|page. Default 'board'.
+ * @param bool   $args['cta_disabled'] Static label instead of a booking control.
  *
  * @package londonparkour_v8
  */
@@ -42,6 +43,7 @@ $lp_surfaces = array(
 		'dot'           => 'bg-primary',
 		'ink'           => 'text-neutral-content',
 		'muted'         => 'text-neutral-content/50',
+		'cta_muted'     => 'flex items-center justify-between gap-[12px] w-full h-[60px] px-[22px] bg-neutral-content/15 text-neutral-content',
 	),
 	'page'  => array(
 		'root'          => 'bg-base-200 border-base-300',
@@ -51,6 +53,7 @@ $lp_surfaces = array(
 		'dot'           => 'bg-accent',
 		'ink'           => 'text-base-content',
 		'muted'         => 'text-base-content/65',
+		'cta_muted'     => 'flex items-center justify-between gap-[12px] w-full h-[60px] px-[22px] bg-base-300 text-base-content',
 	),
 );
 
@@ -97,21 +100,27 @@ $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours befo
 			<span class="<?php echo lp_classes( 'font-heading text-[15px] font-medium tracking-[-0.2px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( (string) ( $lp_row['value'] ?? '' ) ); ?></span>
 		</div>
 	<?php endforeach; ?>
-	<?php
-	lp_part(
-		'elements/button',
-		array(
-			'variant'          => 'band',
-			'label'            => $lp_cta_label,
-			'href'             => $args['href'] ?? '',
-			'target'           => $args['target'] ?? '',
-			'trailing_icon_id' => $args['cta_icon_id'] ?? 'icon-arrow-right',
-			'command'          => $args['command'] ?? '',
-			'command_for'      => $args['command_for'] ?? '',
-			'data_attrs'       => is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array(),
-		)
-	);
-	?>
+	<?php if ( ! empty( $args['cta_disabled'] ) ) : ?>
+		<div class="<?php echo esc_attr( $lp_surf['cta_muted'] ); ?>" data-slot="cta">
+			<span class="font-label text-[12px] font-semibold uppercase tracking-[1px]"><?php echo esc_html( $lp_cta_label ); ?></span>
+		</div>
+	<?php else : ?>
+		<?php
+		lp_part(
+			'elements/button',
+			array(
+				'variant'          => 'band',
+				'label'            => $lp_cta_label,
+				'href'             => $args['href'] ?? '',
+				'target'           => $args['target'] ?? '',
+				'trailing_icon_id' => $args['cta_icon_id'] ?? 'icon-arrow-right',
+				'command'          => $args['command'] ?? '',
+				'command_for'      => $args['command_for'] ?? '',
+				'data_attrs'       => is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array(),
+			)
+		);
+		?>
+	<?php endif; ?>
 	<?php if ( '' !== $lp_note ) : ?>
 		<div class="px-[22px] py-[14px]">
 			<p class="<?php echo lp_classes( 'font-body text-[10px] leading-[1.6] tracking-[0.3px]', $lp_surf['muted'], 'm-0' ); ?>"><?php echo esc_html( $lp_note ); ?></p>

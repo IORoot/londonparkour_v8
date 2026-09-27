@@ -109,9 +109,10 @@ if ( 'sessions' === $lp_board_style ) {
 				'time'     => (string) ( $item['time'] ?? '' ),
 				'title'    => (string) ( $item['title'] ?? '' ),
 				'location' => $day ? ( $day . ' · ' . $loc ) : $loc,
-				'spaces'   => (string) ( $item['spaces'] ?? '' ),
-				'sold_out' => ! empty( $item['sold_out'] ),
-				'href'     => (string) ( $item['url'] ?? '' ),
+				'spaces'    => (string) ( $item['spaces'] ?? '' ),
+				'sold_out'  => empty( $item['cancelled'] ) && ! empty( $item['sold_out'] ),
+				'cancelled' => ! empty( $item['cancelled'] ),
+				'href'      => (string) ( $item['url'] ?? '' ),
 			);
 		},
 		lp_resolve_source( $args, lp_class_post_type(), array( 'expand' => 'sessions' ) )
@@ -451,9 +452,10 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 										'time'     => $lp_session['time'],
 										'title'    => $lp_session['title'],
 										'location' => $lp_session['location'],
-										'spaces'   => $lp_session['spaces'],
-										'sold_out' => ! empty( $lp_session['sold_out'] ),
-										'href'     => $lp_session['href'] ?? '',
+										'spaces'    => $lp_session['spaces'],
+										'sold_out'  => ! empty( $lp_session['sold_out'] ),
+										'cancelled' => ! empty( $lp_session['cancelled'] ),
+										'href'      => $lp_session['href'] ?? '',
 									)
 								);
 								?>

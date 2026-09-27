@@ -46,6 +46,7 @@
  * @param string $args['price_label']      sell only.
  * @param string $args['book_label']       sell only. Default 'BOOK'.
  * @param bool   $args['sold_out']
+ * @param bool   $args['cancelled']        Session is cancelled. Replaces BOOK, strikes the title.
  * @param string $args['tone']             available|sold_out|watched|new|now_playing. Overrides sold_out.
  * @param string $args['href']             default: whole-row link. sell: MORE DETAILS
  *                                         under the subtitle (class page); that
@@ -149,6 +150,7 @@ $lp_is_link     = ! $lp_is_sell && '' !== $lp_href;
 $lp_detail_href = $lp_is_sell ? $lp_href : '';
 $lp_detail_lbl  = (string) ( $args['detail_label'] ?? 'MORE DETAILS' );
 $lp_sold_out    = ! empty( $args['sold_out'] );
+$lp_cancelled   = ! empty( $args['cancelled'] );
 $lp_show_spaces = ! isset( $args['show_spaces'] ) || (bool) $args['show_spaces'];
 $lp_date_lead   = ! empty( $args['date_lead'] );
 
@@ -158,10 +160,10 @@ $lp_title      = (string) ( $args['title'] ?? 'Beginners Parkour' );
 $lp_subtitle   = (string) ( $args['subtitle'] ?? '60 min' );
 $lp_location   = (string) ( $args['location'] ?? 'Vauxhall' );
 $lp_level      = (string) ( $args['level'] ?? 'Level 1 · Beginner' );
-$lp_spaces     = (string) ( $args['spaces'] ?? '4 LEFT' );
+$lp_spaces     = $lp_cancelled ? 'CANCELLED' : (string) ( $args['spaces'] ?? '4 LEFT' );
 $lp_price      = (string) ( $args['price'] ?? '£15' );
 $lp_price_lbl  = (string) ( $args['price_label'] ?? 'DROP-IN' );
-$lp_book_label = (string) ( $args['book_label'] ?? 'BOOK' );
+$lp_book_label = $lp_cancelled ? 'CANCELLED' : (string) ( $args['book_label'] ?? 'BOOK' );
 
 $lp_level_icon    = (string) ( $args['level_icon_id'] ?? 'icon-level-beginner' );
 $lp_location_icon = (string) ( $args['location_icon_id'] ?? 'icon-map-pin' );
@@ -179,9 +181,31 @@ if ( $lp_is_sell && '' === $lp_glyph_svg && '' === $lp_glyph_icon ) {
 // `tone` is additive: with none passed, sold_out resolves exactly as before.
 $lp_tone_key = (string) ( $args['tone'] ?? '' );
 if ( ! isset( $lp_spaces_tones[ $lp_tone_key ] ) ) {
-	$lp_tone_key = $lp_sold_out ? 'sold_out' : 'available';
+	$lp_tone_key = ( $lp_sold_out || $lp_cancelled ) ? 'sold_out' : 'available';
 }
 $lp_spaces_tone = $lp_spaces_tones[ $lp_tone_key ];
+
+/*
+ * Homepage rows (size lg) flip to signal-yellow on hover, with ink that only
+ * reads on that fill. A cancelled session must not do that. These strings are
+ * the lg set with the hover-fill and hover-ink removed.
+ */
+if ( $lp_cancelled && 'lg' === $lp_size ) {
+	$lp_ui['root']           = 'group relative flex flex-col gap-[12px] lg:flex-row lg:items-center lg:gap-[28px] w-full py-[16px] lg:py-[20px] px-[16px] lg:px-[32px] bg-neutral-content/20 lg:bg-secondary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left';
+	$lp_ui['time']           = 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content';
+	$lp_ui['date']           = 'font-label text-[10px] lg:text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50';
+	$lp_ui['date_lead_date'] = 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content whitespace-nowrap';
+	$lp_ui['date_lead_time'] = 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.8px] text-neutral-content/50';
+	$lp_ui['glyph_wrap']     = 'hidden min-[1680px]:inline-flex w-10 h-10 shrink-0 text-neutral-content items-center justify-center';
+	$lp_ui['title']          = 'font-heading text-[18px] lg:text-[22px] font-medium tracking-[-0.4px] text-neutral-content break-words line-through';
+	$lp_ui['subtitle']       = 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.2px] text-neutral-content/50 break-words';
+	$lp_ui['site_pin']       = 'text-neutral-content/50 transition-colors duration-150';
+	$lp_ui['site_label']     = 'font-label text-[12px] xl:text-[14px] font-normal tracking-[0.2px] text-neutral-content/80 break-words xl:truncate';
+	$lp_ui['level_mark']     = 'text-neutral-content/80';
+	$lp_ui['level_label']    = 'font-label text-[11px] 2xl:text-[13px] font-normal tracking-[0.2px] text-neutral-content/80 break-words 2xl:truncate';
+	$lp_ui['fare_price']     = 'font-heading text-[20px] lg:text-[24px] font-semibold tracking-[-0.4px] text-neutral-content';
+	$lp_ui['fare_label']     = 'font-label text-[9px] lg:text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50';
+}
 
 if ( $lp_date_lead ) {
 	$lp_ui['time_wrap'] = $lp_ui['date_lead_wrap'];
@@ -213,12 +237,17 @@ if ( '' !== $lp_detail_href ) {
 	$lp_root .= ' cursor-pointer';
 }
 $lp_size_attr = 'lg' === $lp_size ? ' data-size="lg"' : '';
+$lp_cancelled_attr = $lp_cancelled ? ' data-cancelled="true"' : '';
+$lp_title_class    = $lp_ui['title'];
+if ( $lp_cancelled && 'lg' !== $lp_size ) {
+	$lp_title_class .= ' line-through';
+}
 $lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args['data_attrs'] : array() );
 ?>
 <?php if ( $lp_is_link ) : ?>
-<a class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?><?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?> href="<?php echo esc_url( $lp_href ); ?>">
+<a class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?><?php echo $lp_cancelled_attr; ?><?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?> href="<?php echo esc_url( $lp_href ); ?>">
 <?php else : ?>
-<div class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?><?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?>>
+<div class="<?php echo esc_attr( $lp_root ); ?>" data-component="board-row" data-variant="<?php echo esc_attr( $lp_variant ); ?>"<?php echo $lp_size_attr; ?><?php echo $lp_cancelled_attr; ?><?php echo $lp_extra_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_html_attrs escapes. ?>>
 <?php endif; ?>
 	<?php if ( '' !== $lp_detail_href ) : ?>
 		<a class="absolute inset-0 z-0" href="<?php echo esc_url( $lp_detail_href ); ?>" tabindex="-1" aria-label="<?php echo esc_attr( $lp_title ); ?>" data-slot="row-details"></a>
@@ -226,7 +255,7 @@ $lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args
 	<div class="flex flex-col gap-2 lg:contents">
 		<div class="flex items-start gap-3 lg:contents">
 			<?php if ( $lp_thumb ) : ?>
-				<div class="<?php echo esc_attr( $lp_ui['thumb'] ); ?>" data-slot="thumb">
+				<div class="<?php echo $lp_cancelled ? lp_classes( $lp_ui['thumb'], 'relative' ) : esc_attr( $lp_ui['thumb'] ); ?>" data-slot="thumb">
 					<?php
 					lp_part(
 						'components/media-photo',
@@ -241,6 +270,11 @@ $lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args
 						)
 					);
 					?>
+					<?php if ( $lp_cancelled ) : ?>
+						<span class="absolute inset-x-0 bottom-0 flex justify-center bg-neutral-content py-1">
+							<span class="font-label text-[9px] font-semibold uppercase tracking-[0.8px] text-neutral">CANCELLED</span>
+						</span>
+					<?php endif; ?>
 				</div>
 			<?php endif; ?>
 			<div class="flex flex-1 min-w-0 items-start justify-between gap-3 lg:contents">
@@ -273,7 +307,7 @@ $lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args
 			</div>
 		</div>
 		<div class="<?php echo esc_attr( $lp_ui['session'] ); ?>">
-			<p class="<?php echo esc_attr( $lp_ui['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></p>
+			<p class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></p>
 			<p class="<?php echo esc_attr( $lp_ui['subtitle'] ); ?>"><?php echo esc_html( $lp_subtitle ); ?></p>
 			<?php
 			if ( '' !== $lp_detail_href ) {
@@ -312,7 +346,19 @@ $lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args
 		<?php if ( $lp_show_spaces ) : ?>
 			<span class="<?php echo lp_classes( 'font-label text-[11px] font-semibold tracking-[0.8px] uppercase', $lp_spaces_tone, 'shrink-0 lg:min-w-[70px] lg:text-right' ); ?>"><?php echo esc_html( $lp_spaces ); ?></span>
 		<?php endif; ?>
-		<?php if ( $lp_is_sell ) : ?>
+		<?php if ( $lp_cancelled ) : ?>
+			<span class="<?php echo esc_attr( $lp_ui['book'] ); ?>">
+				<?php
+				lp_part(
+					'elements/badge',
+					array(
+						'variant' => 'paper',
+						'label'   => 'CANCELLED',
+					)
+				);
+				?>
+			</span>
+		<?php elseif ( $lp_is_sell ) : ?>
 			<span class="<?php echo esc_attr( $lp_ui['book'] ); ?>">
 				<?php
 				$lp_book_class_id = ! empty( $args['book_class_id'] ) ? (int) $args['book_class_id'] : 0;

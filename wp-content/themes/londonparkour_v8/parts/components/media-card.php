@@ -25,6 +25,7 @@
  * @param string $args['note']      Optional.
  * @param string $args['foot']
  * @param string $args['href']      Renders the card as one focusable <a>.
+ * @param string $args['banner']    Optional label over the image (e.g. CANCELLED).
  *
  * @package londonparkour_v8
  */
@@ -53,6 +54,10 @@ $lp_meta      = (string) ( $args['meta'] ?? 'Vauxhall' );
 $lp_title     = (string) ( $args['title'] ?? 'Outdoor Class' );
 $lp_note      = (string) ( $args['note'] ?? '' );
 $lp_foot      = (string) ( $args['foot'] ?? '£15 · 90 min' );
+$lp_banner    = (string) ( $args['banner'] ?? '' );
+$lp_title_class = '' !== $lp_banner
+	? 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content line-through'
+	: 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content';
 
 $lp_root = lp_classes( 'card', $lp_root_base, $lp_is_link ? $lp_root_interactive : '' );
 
@@ -75,8 +80,21 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 <?php else : ?>
 <div class="<?php echo $lp_root; ?>" data-component="media-card" data-aspect="<?php echo esc_attr( $lp_aspect_key ); ?>">
 <?php endif; ?>
-	<figure class="<?php echo lp_classes( $lp_aspect, 'w-full bg-base-300 overflow-hidden m-0' ); ?>">
+	<figure class="<?php echo lp_classes( 'relative', $lp_aspect, 'w-full bg-base-300 overflow-hidden m-0' ); ?>">
 		<?php lp_part( 'components/media-photo', $lp_photo ); ?>
+		<?php if ( '' !== $lp_banner ) : ?>
+			<span class="absolute top-3 left-3 z-[1]">
+				<?php
+				lp_part(
+					'elements/badge',
+					array(
+						'variant' => 'paper',
+						'label'   => $lp_banner,
+					)
+				);
+				?>
+			</span>
+		<?php endif; ?>
 	</figure>
 	<div class="card-body p-0 pt-[19px] gap-[13px]">
 		<div class="flex items-center justify-between gap-3">
@@ -106,7 +124,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 				?>
 			</span>
 		</div>
-		<h3 class="card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content"><?php echo esc_html( $lp_title ); ?></h3>
+		<h3 class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></h3>
 		<?php if ( '' !== $lp_note ) : ?>
 			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/70"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>

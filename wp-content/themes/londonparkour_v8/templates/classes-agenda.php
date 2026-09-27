@@ -238,14 +238,15 @@ get_header();
 					<div class="flex flex-col gap-4">
 						<?php
 						foreach ( $lp_day_group['sessions'] as $lp_session ) :
-							$lp_is_past = ! empty( $lp_session['past'] );
-							$lp_key     = sprintf(
+							$lp_is_past      = ! empty( $lp_session['past'] );
+							$lp_is_cancelled = ! empty( $lp_session['cancelled'] );
+							$lp_key          = sprintf(
 								'%s|%s|%d',
 								(string) ( $lp_day_group['iso'] ?? '' ),
 								(string) ( $lp_session['time'] ?? '' ),
 								(int) ( $lp_session['class_id'] ?? 0 )
 							);
-							$lp_is_next = ( '' !== $lp_upcoming_key && $lp_key === $lp_upcoming_key );
+							$lp_is_next = ( '' !== $lp_upcoming_key && $lp_key === $lp_upcoming_key && ! $lp_is_cancelled );
 							$lp_size    = $lp_is_next ? 'featured' : 'default';
 							$lp_kicker  = (string) ( $lp_session['kicker'] ?? '' );
 							if ( $lp_is_next && '' !== $lp_kicker && ! str_starts_with( $lp_kicker, 'NEXT UP' ) ) {
@@ -285,10 +286,11 @@ get_header();
 									'fare'             => (string) ( $lp_session['price'] ?? '' ),
 									'spaces'           => (string) ( $lp_session['spaces'] ?? '' ),
 									'href'             => $lp_is_past ? '' : (string) ( $lp_session['href'] ?? '' ),
-									'book_class_id'    => $lp_is_past ? 0 : (int) ( $lp_session['class_id'] ?? 0 ),
-									'book_preset_date' => $lp_is_past ? '' : (string) ( $lp_day_group['iso'] ?? '' ),
+									'book_class_id'    => ( $lp_is_past || $lp_is_cancelled ) ? 0 : (int) ( $lp_session['class_id'] ?? 0 ),
+									'book_preset_date' => ( $lp_is_past || $lp_is_cancelled ) ? '' : (string) ( $lp_day_group['iso'] ?? '' ),
 									'size'             => $lp_size,
 									'past'             => $lp_is_past,
+									'cancelled'        => $lp_is_cancelled,
 								)
 							);
 						endforeach;

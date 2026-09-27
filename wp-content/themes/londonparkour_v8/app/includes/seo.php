@@ -1503,9 +1503,11 @@ function lp_seo_class_nodes( int $class_id ): array {
 			'url'              => $permalink,
 			'startDate'        => $start->format( DATE_ATOM ),
 			'endDate'          => $end->format( DATE_ATOM ),
-			'eventStatus'      => ! empty( $session['sold_out'] )
-				? 'https://schema.org/EventSoldOut'
-				: 'https://schema.org/EventScheduled',
+			'eventStatus'      => ! empty( $session['cancelled'] )
+				? 'https://schema.org/EventCancelled'
+				: ( ! empty( $session['sold_out'] )
+					? 'https://schema.org/EventSoldOut'
+					: 'https://schema.org/EventScheduled' ),
 			'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
 			'organizer'        => array( '@id' => lp_seo_org_id() ),
 		);
@@ -1518,7 +1520,7 @@ function lp_seo_class_nodes( int $class_id ): array {
 		if ( ! empty( $course['location'] ) ) {
 			$event['location'] = $course['location'];
 		}
-		$session_offer = lp_seo_class_offer( $class_id, $remaining );
+		$session_offer = empty( $session['cancelled'] ) ? lp_seo_class_offer( $class_id, $remaining ) : null;
 		if ( $session_offer ) {
 			if ( ! empty( $session['sold_out'] ) ) {
 				$session_offer['availability'] = 'https://schema.org/SoldOut';

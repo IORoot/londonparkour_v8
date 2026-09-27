@@ -958,10 +958,39 @@ function lp_class_date_label( string $date ): string {
 }
 
 /**
+ * Whether cancelled dates should stay on boards.
+ *
+ * Clasbpro's "Cancelled dates display" is show | hide. Hide omits the date.
+ * Show (the field default) keeps it, marked cancelled, so a cancelled session
+ * is visible instead of silently replaced by the next one.
+ *
+ * @param array<string,mixed> $raw Clasbpro class data.
+ */
+function lp_class_cancelled_dates_visible( array $raw ): bool {
+	if ( ! lp_clasbpro_ready() ) {
+		return true;
+	}
+	return 'show' === \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::cancelled_dates_display( $raw );
+}
+
+/**
+ * True when $date is one of this class's cancelled dates.
+ *
+ * @param array<string,mixed> $raw  Clasbpro class data.
+ * @param string              $date Y-m-d.
+ */
+function lp_class_date_is_cancelled( array $raw, string $date ): bool {
+	return in_array( $date, (array) ( $raw['cancelled_dates'] ?? array() ), true );
+}
+
+/**
  * Upcoming session rows for one class (includes sold-out dates).
  *
  * Shape matches the old sessions repeater projection so boards stay stable:
- * date, date_label, time, spaces, sold_out, remaining, capacity.
+ * date, date_label, time, spaces, sold_out, remaining, capacity, cancelled.
+ *
+ * Cancelled dates are included only when the class is set to show them.
+ * Hide drops the date so the next running session fills the slot.
  *
  * @param int $class_id Post ID.
  * @param int $limit    Max occurrences.
@@ -987,12 +1016,12 @@ function lp_class_upcoming_sessions( int $class_id, int $limit = 3 ): array {
 		$time = substr( $time, 0, 5 );
 	}
 
-	$dates = array();
+	$picked = array();
 	if ( lp_clasbpro_ready() ) {
 		$weekday = strtolower( (string) ( $raw['day_of_week'] ?? '' ) );
 		$from    = (string) ( $raw['start_date'] ?? '' );
 		$to      = (string) ( $raw['end_date'] ?? '' );
-		// Pull extra so cancelled skips still leave enough rows.
+		// Pull extra so hidden cancellations still leave enough rows.
 		$pool = ! empty( $raw['is_one_off_event'] )
 			? \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::date_range_occurrences(
 				(string) ( $raw['start_date'] ?? '' ),
@@ -1009,21 +1038,32 @@ function lp_class_upcoming_sessions( int $class_id, int $limit = 3 ): array {
 				$from,
 				$to
 			);
-		$cancelled = (array) ( $raw['cancelled_dates'] ?? array() );
+		$show_cancelled = lp_class_cancelled_dates_visible( $raw );
 		foreach ( $pool as $date ) {
-			if ( in_array( $date, $cancelled, true ) ) {
+			$is_cancelled = lp_class_date_is_cancelled( $raw, $date );
+			if ( $is_cancelled && ! $show_cancelled ) {
 				continue;
 			}
-			$dates[] = $date;
-			if ( count( $dates ) >= $limit ) {
+			$picked[] = array(
+				'date'      => $date,
+				'cancelled' => $is_cancelled,
+			);
+			if ( count( $picked ) >= $limit ) {
 				break;
 			}
 		}
 	}
 
 	$rows = array();
-	foreach ( $dates as $date ) {
-		if ( $external ) {
+	foreach ( $picked as $slot ) {
+		$date         = (string) $slot['date'];
+		$is_cancelled = ! empty( $slot['cancelled'] );
+		if ( $is_cancelled ) {
+			$remaining = 0;
+			$sold_out  = false;
+			$spaces    = 'CANCELLED';
+			$label     = 'CANCELLED';
+		} elseif ( $external ) {
 			$remaining = $capacity;
 			$sold_out  = false;
 			$spaces    = '';
@@ -1042,6 +1082,7 @@ function lp_class_upcoming_sessions( int $class_id, int $limit = 3 ): array {
 			'time'       => $time,
 			'spaces'     => $spaces,
 			'sold_out'   => $sold_out,
+			'cancelled'  => $is_cancelled,
 			'remaining'  => $remaining,
 			'capacity'   => $capacity,
 			'book_label' => $label,
@@ -1067,11 +1108,11 @@ function lp_class_dates_between( int $class_id, DateTimeImmutable $start, DateTi
 		return array();
 	}
 
-	$tz      = wp_timezone();
-	$walk    = $start->setTimezone( $tz )->setTime( 0, 0 );
-	$last    = $end->setTimezone( $tz )->setTime( 0, 0 );
-	$skip    = (array) ( $raw['cancelled_dates'] ?? array() );
-	$dates   = array();
+	$tz             = wp_timezone();
+	$walk           = $start->setTimezone( $tz )->setTime( 0, 0 );
+	$last           = $end->setTimezone( $tz )->setTime( 0, 0 );
+	$show_cancelled = lp_class_cancelled_dates_visible( $raw );
+	$dates          = array();
 	$one_off = ! empty( $raw['is_one_off_event'] );
 
 	$weekday_map = array(
@@ -1104,8 +1145,9 @@ function lp_class_dates_between( int $class_id, DateTimeImmutable $start, DateTi
 			? ( $ymd >= $run_start && $ymd <= $run_end )
 			: ( $target && (int) $walk->format( 'N' ) === $target );
 
+		$is_cancelled = lp_class_date_is_cancelled( $raw, $ymd );
 		if ( $matches
-			&& ! in_array( $ymd, $skip, true )
+			&& ( ! $is_cancelled || $show_cancelled )
 			&& ( ! lp_clasbpro_ready() || \IOROOT_STRIPE_BOOKINGS_PRO\Helpers::date_in_class_run_window( $raw, $ymd ) )
 		) {
 			$dates[] = $ymd;
@@ -1167,7 +1209,13 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 		$board    = lp_class_board_fields( $class_id );
 
 		foreach ( lp_class_dates_between( $class_id, $start, $end ) as $date ) {
-			if ( $external ) {
+			$is_cancelled = lp_class_date_is_cancelled( $raw, $date );
+			if ( $is_cancelled ) {
+				$remaining = 0;
+				$sold_out  = false;
+				$spaces    = 'CANCELLED';
+				$label     = 'CANCELLED';
+			} elseif ( $external ) {
 				$remaining = $capacity;
 				$sold_out  = false;
 				$spaces    = '';
@@ -1186,6 +1234,7 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 				'time'       => $time,
 				'spaces'     => $spaces,
 				'sold_out'   => $sold_out,
+				'cancelled'  => $is_cancelled,
 				'remaining'  => $remaining,
 				'capacity'   => $capacity,
 				'book_label' => $label,
@@ -1397,7 +1446,10 @@ function lp_hero_first_class_book_args( string $label, string $variant = 'primar
 	}
 
 	$date = '';
-	foreach ( lp_class_upcoming_sessions( $id, 4 ) as $row ) {
+	foreach ( lp_class_upcoming_sessions( $id, 8 ) as $row ) {
+		if ( ! empty( $row['cancelled'] ) ) {
+			continue;
+		}
 		if ( lp_class_session_is_future( $row ) ) {
 			$date = (string) ( $row['date'] ?? '' );
 			break;
@@ -1562,6 +1614,9 @@ function lp_class_next_session( int $horizon_days = 28 ): ?array {
 	$end   = $start->modify( '+' . max( 1, $horizon_days ) . ' days' );
 
 	foreach ( lp_class_sessions_between( $start, $end ) as $row ) {
+		if ( ! empty( $row['cancelled'] ) ) {
+			continue;
+		}
 		if ( lp_class_session_is_future( $row ) ) {
 			return $row;
 		}

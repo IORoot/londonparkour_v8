@@ -35,6 +35,8 @@ $lp_card = static function ( WP_Post $lp_post ): array {
 	$lp_location = lp_class_location_id( $lp_id );
 	$lp_price    = lp_class_price_display( $lp_id );
 	$lp_dur      = lp_class_duration( $lp_id );
+	$lp_next     = function_exists( 'lp_class_upcoming_sessions' ) ? lp_class_upcoming_sessions( $lp_id, 1 ) : array();
+	$lp_banner   = ! empty( $lp_next[0]['cancelled'] ) ? 'CANCELLED' : '';
 
 	return array(
 		'aspect'   => 'wide',
@@ -45,6 +47,7 @@ $lp_card = static function ( WP_Post $lp_post ): array {
 		'note'     => get_the_excerpt( $lp_post ),
 		'foot'     => trim( $lp_price . ( '' !== $lp_dur ? ' · ' . strtoupper( $lp_dur ) : '' ), ' ·' ),
 		'href'     => (string) get_permalink( $lp_post ),
+		'banner'   => $lp_banner,
 	);
 };
 

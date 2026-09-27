@@ -110,8 +110,9 @@ while ( have_posts() ) :
 	$lp_coach_ids = lp_class_coach_ids( $lp_post_id );
 	$lp_coach_id  = $lp_coach_ids ? (int) $lp_coach_ids[0] : 0;
 
-	$lp_upcoming = lp_class_upcoming_sessions( $lp_post_id, 8 );
-	$lp_next     = $lp_upcoming[0] ?? null;
+	$lp_upcoming       = lp_class_upcoming_sessions( $lp_post_id, 8 );
+	$lp_next           = $lp_upcoming[0] ?? null;
+	$lp_next_cancelled = is_array( $lp_next ) && ! empty( $lp_next['cancelled'] );
 
 	$lp_book = lp_class_book_button_args(
 		$lp_post_id,
@@ -120,6 +121,16 @@ while ( have_posts() ) :
 		'band'
 	);
 	$lp_book['data_attrs']['data-lp-list'] = 'class-detail';
+	if ( $lp_next_cancelled ) {
+		$lp_book = array(
+			'label'       => 'CANCELLED',
+			'href'        => '',
+			'target'      => '',
+			'command'     => '',
+			'command_for' => '',
+			'data_attrs'  => array(),
+		);
+	}
 	$lp_is_external = function_exists( 'lp_class_is_external_link' ) && lp_class_is_external_link( (int) $lp_post_id );
 	$lp_raw_cap     = function_exists( 'lp_clasbpro_raw' ) ? lp_clasbpro_raw( (int) $lp_post_id ) : null;
 	$lp_capacity    = is_array( $lp_raw_cap ) ? (int) ( $lp_raw_cap['capacity'] ?? 0 ) : 0;
@@ -166,12 +177,16 @@ while ( have_posts() ) :
 	// Booking aside.
 	$lp_aside_rows = array();
 	if ( $lp_next ) {
-		$lp_next_dt      = DateTimeImmutable::createFromFormat( 'Y-m-d', (string) ( $lp_next['date'] ?? '' ) );
+		$lp_next_dt    = DateTimeImmutable::createFromFormat( 'Y-m-d', (string) ( $lp_next['date'] ?? '' ) );
+		$lp_next_value = $lp_next_dt
+			? sprintf( '%s · %s', $lp_next_dt->format( 'D j M' ), (string) ( $lp_next['time'] ?? '' ) )
+			: (string) ( $lp_next['time'] ?? '' );
+		if ( $lp_next_cancelled ) {
+			$lp_next_value .= ' · CANCELLED';
+		}
 		$lp_aside_rows[] = array(
 			'label' => 'NEXT SESSION',
-			'value' => $lp_next_dt
-				? sprintf( '%s · %s', $lp_next_dt->format( 'D j M' ), (string) ( $lp_next['time'] ?? '' ) )
-				: (string) ( $lp_next['time'] ?? '' ),
+			'value' => $lp_next_value,
 		);
 	}
 	if ( '' !== $lp_location_title ) {
@@ -233,11 +248,14 @@ while ( have_posts() ) :
 				'location'         => $lp_location_title,
 				'level'            => $lp_level_name,
 				'spaces'           => (string) ( $lp_row['spaces'] ?? '' ),
-				'sold_out'         => ! empty( $lp_row['sold_out'] ),
+				'sold_out'         => empty( $lp_row['cancelled'] ) && ! empty( $lp_row['sold_out'] ),
+				'cancelled'        => ! empty( $lp_row['cancelled'] ),
 				'price'            => $lp_price,
 				'price_label'      => $lp_price_label,
-				'book_label'       => (string) ( $lp_row['book_label'] ?? ( empty( $lp_row['sold_out'] ) ? 'BOOK' : 'WAITLIST' ) ),
-				'book_class_id'    => $lp_post_id,
+				'book_label'       => ! empty( $lp_row['cancelled'] )
+					? 'CANCELLED'
+					: (string) ( $lp_row['book_label'] ?? ( empty( $lp_row['sold_out'] ) ? 'BOOK' : 'WAITLIST' ) ),
+				'book_class_id'    => ! empty( $lp_row['cancelled'] ) ? 0 : $lp_post_id,
 				'book_preset_date' => (string) ( $lp_row['date'] ?? '' ),
 			),
 		);
@@ -346,6 +364,19 @@ while ( have_posts() ) :
 							?>
 						</span>
 					<?php endif; ?>
+					<?php if ( $lp_next_cancelled ) : ?>
+						<span class="absolute top-[16px] right-[16px] z-[1]">
+							<?php
+							lp_part(
+								'elements/badge',
+								array(
+									'variant' => 'paper',
+									'label'   => 'CANCELLED',
+								)
+							);
+							?>
+						</span>
+					<?php endif; ?>
 					<?php if ( '' !== $lp_subtitle ) : ?>
 						<span class="absolute bottom-[16px] left-[16px]">
 							<?php
@@ -392,8 +423,9 @@ while ( have_posts() ) :
 					lp_part(
 						'components/aside-panel',
 						array(
-							'title'       => 'BOOK THIS CLASS',
-							'spots_left'  => ( $lp_is_external || ! $lp_next ) ? '' : (string) ( $lp_next['spaces'] ?? '' ),
+							'title'        => $lp_next_cancelled ? 'SESSION CANCELLED' : 'BOOK THIS CLASS',
+							'spots_left'   => ( $lp_next_cancelled || $lp_is_external || ! $lp_next ) ? '' : (string) ( $lp_next['spaces'] ?? '' ),
+							'cta_disabled' => $lp_next_cancelled,
 							'rows'        => $lp_aside_rows,
 							'cta_label'   => $lp_book['label'],
 							'href'        => $lp_book['href'] ?? '',

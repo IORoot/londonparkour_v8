@@ -33,6 +33,7 @@
  * @param string $args['book_preset_date'] Optional Y-m-d for the drawer.
  * @param string $args['size']       featured|default.
  * @param bool   $args['past']
+ * @param bool   $args['cancelled']  Session is cancelled. Banner + static rail, no booking.
  *
  * @package londonparkour_v8
  */
@@ -138,9 +139,10 @@ $lp_glyph_icon = array(
 	'past'     => 'w-[22px] h-[22px] text-neutral-content opacity-50',
 );
 
-$lp_past     = ! empty( $args['past'] );
-$lp_size_in  = ( 'featured' === ( $args['size'] ?? '' ) ) ? 'featured' : 'default';
-$lp_size     = $lp_past ? 'default' : $lp_size_in;
+$lp_past      = ! empty( $args['past'] );
+$lp_cancelled = ! empty( $args['cancelled'] ) && ! $lp_past;
+$lp_size_in   = ( 'featured' === ( $args['size'] ?? '' ) ) ? 'featured' : 'default';
+$lp_size      = ( $lp_past || $lp_cancelled ) ? 'default' : $lp_size_in;
 $lp_root_key = $lp_past ? 'past' : $lp_size;
 $lp_rail_key = $lp_past ? 'past' : $lp_size;
 $lp_tone     = $lp_past ? 'past' : $lp_size;
@@ -154,18 +156,19 @@ $lp_facts    = is_array( $args['facts'] ?? null ) ? $args['facts'] : array();
 $lp_fare_lbl = (string) ( $args['fare_label'] ?? 'FARE' );
 $lp_fare_t   = (string) ( $args['fare'] ?? '£15' );
 $lp_spaces   = (string) ( $args['spaces'] ?? '' );
-$lp_cta      = $lp_past ? 'PASSED' : (string) ( $args['cta_label'] ?? 'BOOK' );
-$lp_spaces_d = $lp_past ? 'PASSED' : $lp_spaces;
+$lp_cta      = $lp_past ? 'PASSED' : ( $lp_cancelled ? 'CANCELLED' : (string) ( $args['cta_label'] ?? 'BOOK' ) );
+$lp_spaces_d = $lp_past ? 'PASSED' : ( $lp_cancelled ? 'CANCELLED' : $lp_spaces );
 $lp_href     = $lp_past ? '' : (string) ( $args['href'] ?? '' );
 $lp_glyph_id = (string) ( $args['glyph_icon_id'] ?? 'glyph-flowing' );
 
-$lp_book_class_id    = ! $lp_past ? absint( $args['book_class_id'] ?? 0 ) : 0;
+$lp_book_class_id    = ( ! $lp_past && ! $lp_cancelled ) ? absint( $args['book_class_id'] ?? 0 ) : 0;
 $lp_book_preset_date = (string) ( $args['book_preset_date'] ?? '' );
 $lp_can_book         = $lp_book_class_id > 0 && function_exists( 'lp_class_book_button_args' );
 
 // Whole-card link only when Storybook-style href and no drawer booking.
-$lp_is_card_link = '' !== $lp_href && ! $lp_can_book;
-$lp_detail_link  = '' !== $lp_href && $lp_can_book;
+// Cancelled keeps a details link on the body and a static rail — not a book control.
+$lp_is_card_link = '' !== $lp_href && ! $lp_can_book && ! $lp_cancelled;
+$lp_detail_link  = '' !== $lp_href && ( $lp_can_book || $lp_cancelled );
 
 $lp_media_id  = ! empty( $args['media_id'] ) ? (int) $args['media_id'] : 0;
 $lp_media_url = (string) ( $args['media_url'] ?? '' );
@@ -174,7 +177,7 @@ $lp_has_media = $lp_media_id || '' !== $lp_media_url;
 $lp_tag = $lp_is_card_link ? 'a' : 'div';
 
 $lp_hover_mode = '';
-if ( ! $lp_past ) {
+if ( ! $lp_past && ! $lp_cancelled ) {
 	if ( $lp_detail_link ) {
 		$lp_hover_mode = 'detail';
 	} elseif ( $lp_is_card_link ) {
@@ -204,8 +207,9 @@ if ( $lp_can_book ) {
 	data-component="agenda-card"
 	data-size="<?php echo esc_attr( $lp_size ); ?>"
 	data-past="<?php echo $lp_past ? 'true' : 'false'; ?>"
+	data-cancelled="<?php echo $lp_cancelled ? 'true' : 'false'; ?>"
 >
-	<?php if ( 'featured' === $lp_size && ! $lp_past ) : ?>
+	<?php if ( 'featured' === $lp_size && ! $lp_past && ! $lp_cancelled ) : ?>
 		<span class="pointer-events-none absolute inset-0 z-20 ring-2 ring-inset ring-primary" aria-hidden="true"></span>
 	<?php endif; ?>
 
@@ -238,7 +242,13 @@ if ( $lp_can_book ) {
 			<span class="<?php echo lp_classes( $lp_media_scrim[ $lp_hover_mode ] ); ?>" aria-hidden="true"></span>
 		<?php endif; ?>
 		<div class="absolute inset-0 p-[14px] flex flex-col justify-between pointer-events-none z-[1]">
-			<?php if ( $lp_past ) : ?>
+			<?php if ( $lp_cancelled ) : ?>
+				<div class="inline-flex self-start items-center gap-[6px] bg-neutral-content px-2.5 py-1.5">
+					<span class="font-label text-[10px] font-bold tracking-[1px] uppercase text-neutral">CANCELLED</span>
+					<span class="font-label text-[10px] font-bold tracking-[1px] uppercase text-neutral"><?php echo esc_html( $lp_day ); ?></span>
+					<span class="font-label text-[10px] font-bold tracking-[0.6px] uppercase text-neutral"><?php echo esc_html( $lp_time ); ?></span>
+				</div>
+			<?php elseif ( $lp_past ) : ?>
 				<div class="inline-flex self-start items-center gap-[6px] bg-neutral-content/25 px-2.5 py-1.5">
 					<span class="font-label text-[10px] font-bold tracking-[1px] uppercase text-neutral-content/70"><?php echo esc_html( $lp_day ); ?></span>
 					<span class="font-label text-[10px] font-bold tracking-[0.6px] uppercase text-neutral-content/70"><?php echo esc_html( $lp_time ); ?></span>
@@ -266,7 +276,7 @@ if ( $lp_can_book ) {
 					<span class="<?php echo lp_classes( 'font-label text-[10px] font-bold tracking-[1.2px] uppercase text-primary', $lp_ink ); ?>"><?php echo esc_html( $lp_kicker ); ?></span>
 				<?php endif; ?>
 			<?php endif; ?>
-			<h3 class="<?php echo lp_classes( $lp_title[ $lp_tone ], $lp_past ? '' : $lp_ink ); ?>"><?php echo esc_html( $lp_title_t ); ?></h3>
+			<h3 class="<?php echo lp_classes( $lp_title[ $lp_tone ], $lp_cancelled ? 'line-through' : '', $lp_past ? '' : $lp_ink ); ?>"><?php echo esc_html( $lp_title_t ); ?></h3>
 			<?php if ( '' !== $lp_sub ) : ?>
 				<p class="<?php echo lp_classes( 'font-label text-[11px] font-normal leading-[1.5] tracking-[0.2px] text-neutral-content/50 m-0', $lp_ink ); ?>"><?php echo esc_html( $lp_sub ); ?></p>
 			<?php endif; ?>
@@ -330,9 +340,12 @@ if ( $lp_can_book ) {
 			</div>
 		</button>
 	<?php else : ?>
-		<div class="<?php echo lp_classes( $lp_is_card_link && ! $lp_past ? $lp_rail_card_hover[ $lp_size ] : $lp_rail[ $lp_rail_key ] ); ?>">
+		<div class="<?php echo lp_classes( $lp_cancelled ? $lp_rail['past'] : ( $lp_is_card_link && ! $lp_past ? $lp_rail_card_hover[ $lp_size ] : $lp_rail[ $lp_rail_key ] ) ); ?>">
 			<div class="flex flex-col gap-0.5 items-start text-left">
-				<?php if ( $lp_past ) : ?>
+				<?php if ( $lp_cancelled ) : ?>
+					<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_fare_lbl ); ?></span>
+					<span class="font-heading text-[32px] font-bold tracking-[-1.4px] leading-[0.9] text-neutral-content line-through"><?php echo esc_html( $lp_fare_t ); ?></span>
+				<?php elseif ( $lp_past ) : ?>
 					<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_fare_lbl ); ?></span>
 					<span class="<?php echo lp_classes( $lp_fare['past'] ); ?>"><?php echo esc_html( $lp_fare_t ); ?></span>
 					<span class="font-label text-[9px] font-bold tracking-[0.9px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_spaces_d ); ?></span>
@@ -350,7 +363,11 @@ if ( $lp_can_book ) {
 					<?php endif; ?>
 				<?php endif; ?>
 			</div>
-			<?php if ( $lp_past ) : ?>
+			<?php if ( $lp_cancelled ) : ?>
+				<div class="w-full pt-2 border-t border-neutral-content/25">
+					<span class="block font-label text-[9px] font-bold tracking-[-0.3px] uppercase text-neutral-content">Cancelled</span>
+				</div>
+			<?php elseif ( $lp_past ) : ?>
 				<div class="flex items-center justify-between w-full pt-2 border-t border-neutral-content/25">
 					<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_cta ); ?></span>
 					<span class="font-label text-[14px] font-extrabold text-neutral-content/50" aria-hidden="true">–</span>

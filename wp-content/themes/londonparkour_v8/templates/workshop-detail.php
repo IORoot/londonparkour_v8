@@ -123,8 +123,22 @@ $lp_book = lp_class_book_button_args(
 );
 $lp_book['data_attrs']['data-lp-list'] = 'workshop-detail';
 
-$lp_upcoming = lp_class_upcoming_sessions( $lp_post_id, 1 );
-$lp_next     = $lp_upcoming[0] ?? null;
+$lp_upcoming       = lp_class_upcoming_sessions( $lp_post_id, 1 );
+$lp_next           = $lp_upcoming[0] ?? null;
+$lp_next_cancelled = is_array( $lp_next ) && ! empty( $lp_next['cancelled'] );
+if ( $lp_next_cancelled ) {
+	$lp_book = array(
+		'label'       => 'CANCELLED',
+		'href'        => '',
+		'target'      => '',
+		'command'     => '',
+		'command_for' => '',
+		'data_attrs'  => array(),
+	);
+	if ( '' !== $lp_this_date ) {
+		$lp_this_date .= ' · CANCELLED';
+	}
+}
 
 $lp_aside_rows = array();
 if ( '' !== $lp_this_date ) {
@@ -303,6 +317,19 @@ $lp_grid = $lp_show_book
 						?>
 					</span>
 				<?php endif; ?>
+				<?php if ( $lp_next_cancelled ) : ?>
+					<span class="absolute top-[16px] right-[16px] z-[1]">
+						<?php
+						lp_part(
+							'elements/badge',
+							array(
+								'variant' => 'paper',
+								'label'   => 'CANCELLED',
+							)
+						);
+						?>
+					</span>
+				<?php endif; ?>
 				<?php if ( '' !== $lp_caption ) : ?>
 					<span class="absolute bottom-[16px] left-[16px]">
 						<?php
@@ -349,8 +376,9 @@ $lp_grid = $lp_show_book
 					lp_part(
 						'components/aside-panel',
 						array(
-							'title'       => 'BOOK THIS WORKSHOP',
-							'spots_left'  => $lp_next ? (string) ( $lp_next['spaces'] ?? '' ) : '',
+							'title'        => $lp_next_cancelled ? 'SESSION CANCELLED' : 'BOOK THIS WORKSHOP',
+							'spots_left'   => ( $lp_next_cancelled || ! $lp_next ) ? '' : (string) ( $lp_next['spaces'] ?? '' ),
+							'cta_disabled' => $lp_next_cancelled,
 							'rows'        => $lp_aside_rows,
 							'cta_label'   => $lp_book['label'],
 							'href'        => $lp_book['href'] ?? '',

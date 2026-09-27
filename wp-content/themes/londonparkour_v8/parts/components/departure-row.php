@@ -18,6 +18,7 @@
  * @param string $args['location']
  * @param string $args['spaces']    Default '4 LEFT'.
  * @param bool   $args['sold_out']  Drops the signal colour off `spaces`.
+ * @param bool   $args['cancelled'] Strikes the title and mutes spaces.
  * @param string $args['href']      Renders the whole row as one focusable <a>.
  *
  * @package londonparkour_v8
@@ -44,7 +45,11 @@ $lp_spaces   = (string) ( $args['spaces'] ?? '4 LEFT' );
 $lp_href     = (string) ( $args['href'] ?? '' );
 $lp_is_link  = '' !== $lp_href;
 
-$lp_spaces_tone = empty( $args['sold_out'] ) ? $lp_spaces_tones['available'] : $lp_spaces_tones['sold_out'];
+$lp_cancelled   = ! empty( $args['cancelled'] );
+$lp_spaces_tone = ( empty( $args['sold_out'] ) && ! $lp_cancelled ) ? $lp_spaces_tones['available'] : $lp_spaces_tones['sold_out'];
+$lp_title_class = $lp_cancelled
+	? 'font-heading text-[14px] font-medium text-neutral-content truncate line-through'
+	: 'font-heading text-[14px] font-medium text-neutral-content truncate';
 $lp_root        = $lp_is_link ? $lp_root_base . ' ' . $lp_root_interactive : $lp_root_base;
 ?>
 <?php if ( $lp_is_link ) : ?>
@@ -54,7 +59,7 @@ $lp_root        = $lp_is_link ? $lp_root_base . ' ' . $lp_root_interactive : $lp
 <?php endif; ?>
 	<span class="font-heading text-[16px] font-semibold tracking-[-0.3px] text-neutral-content shrink-0 w-[52px] sm:w-[60px]"><?php echo esc_html( $lp_time ); ?></span>
 	<div class="flex-1 min-w-0 flex flex-col gap-[3px]">
-		<p class="font-heading text-[14px] font-medium text-neutral-content truncate"><?php echo esc_html( $lp_title ); ?></p>
+		<p class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></p>
 		<p class="font-label text-[10px] font-normal tracking-[0.5px] text-neutral-content/50 truncate"><?php echo esc_html( $lp_location ); ?></p>
 	</div>
 	<span class="<?php echo lp_classes( 'font-label text-[10px] font-semibold tracking-[0.8px] uppercase', $lp_spaces_tone, 'shrink-0' ); ?>"><?php echo esc_html( $lp_spaces ); ?></span>

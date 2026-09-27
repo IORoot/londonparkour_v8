@@ -1391,6 +1391,7 @@ function lp_agenda_week( int $lp_offset = 0 ): array {
 			'level'      => $lp_level,
 			'spaces'     => (string) ( $lp_row['spaces'] ?? '' ),
 			'sold_out'   => ! empty( $lp_row['sold_out'] ),
+			'cancelled'  => ! empty( $lp_row['cancelled'] ),
 			'href'       => (string) ( $lp_row['url'] ?? '' ),
 			'class_id'   => $lp_class_id,
 			// Cards board fields (O6Fhqs) — kept alongside the row shape.
