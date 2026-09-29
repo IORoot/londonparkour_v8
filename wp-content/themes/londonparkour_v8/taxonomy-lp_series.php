@@ -184,7 +184,8 @@ get_header();
 			'title'      => 'font-heading text-[16px] font-semibold tracking-[-0.2px] leading-[1.1] text-neutral-content group-hover:text-neutral min-w-0',
 			'episodes'   => 'font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-neutral-content/50 group-hover:text-neutral/70',
 			'poster'     => 'relative h-[108px] aspect-[16/9] shrink-0 bg-neutral overflow-hidden',
-			'wash'       => 'absolute inset-0 bg-gradient-to-r from-transparent to-neutral group-hover:to-primary',
+			'wash'       => 'absolute inset-0 bg-gradient-to-r from-transparent to-primary opacity-0 group-hover:opacity-100 transition-opacity',
+			'wash_static' => 'absolute inset-0 bg-gradient-to-r from-transparent to-neutral',
 		),
 		'page'  => array(
 			'row_active' => 'group flex min-h-[108px] h-auto overflow-hidden bg-base-100 border border-primary no-underline text-left hover:bg-primary',
@@ -197,6 +198,7 @@ get_header();
 			'episodes'   => 'font-label text-[10px] font-semibold tracking-[0.7px] uppercase text-base-content/65 group-hover:text-neutral/70',
 			'poster'     => 'relative h-[108px] aspect-[16/9] shrink-0 bg-base-300 overflow-hidden',
 			'wash'       => '',
+			'wash_static' => '',
 		),
 	);
 
@@ -226,6 +228,11 @@ get_header();
 							)
 						);
 					}
+					if ( '' !== $lp_tone['wash_static'] ) :
+						?>
+					<span class="<?php echo esc_attr( $lp_tone['wash_static'] ); ?>"></span>
+						<?php
+					endif;
 					if ( '' !== $lp_tone['wash'] ) :
 						?>
 					<span class="<?php echo esc_attr( $lp_tone['wash'] ); ?>"></span>
