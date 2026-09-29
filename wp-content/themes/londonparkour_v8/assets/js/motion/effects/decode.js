@@ -101,10 +101,11 @@ export function buildDecodeNodes(el, finalText, { wrap = false } = {}) {
     el.appendChild(lineEl);
   });
 
-  // Lock slot widths to the final glyphs before scramble starts.
+  // Lock slot widths to the final glyphs before scramble starts. Fixed `width`
+  // (not min-width): a wider scramble glyph overflows instead of pushing siblings.
   spans.forEach((span) => {
     const w = span.getBoundingClientRect().width;
-    if (w > 0) span.style.minWidth = `${w}px`;
+    if (w > 0) span.style.width = `${w}px`;
   });
 
   return spans;
