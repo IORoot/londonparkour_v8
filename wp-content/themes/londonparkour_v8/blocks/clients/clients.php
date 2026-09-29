@@ -229,6 +229,11 @@ $lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos,
 					);
 					if ( ! empty( $lp_logo['image_id'] ) ) {
 						$lp_logo_part['image_id'] = (int) $lp_logo['image_id'];
+					} elseif ( $lp_logo_aid = attachment_url_to_postid( $lp_logo['image_url'] ) ) {
+						// Library logo: 500px GIF shown at <=120px — take the 160/320 crop.
+						$lp_logo_part['image_id'] = $lp_logo_aid;
+						$lp_logo_part['size']     = 'lp_thumb_lg';
+						$lp_logo_part['sizes']    = '160px';
 					} else {
 						$lp_logo_dims = $lp_logo_file_size( $lp_logo['image_url'] );
 						if ( $lp_logo_dims ) {

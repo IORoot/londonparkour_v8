@@ -95,6 +95,7 @@ $lp_scrim_key = (string) ( $args['scrim'] ?? 'none' );
 $lp_scrim     = $lp_scrims[ $lp_scrim_key ] ?? '';
 $lp_layout    = $lp_layouts[ $args['layout'] ?? 'fill' ] ?? $lp_layouts['fill'];
 $lp_size      = (string) ( $args['size'] ?? 'lp_wide' );
+$lp_size      = $lp_image_id ? lp_fit_image_size( $lp_image_id, $lp_size ) : $lp_size;
 $lp_sizes     = (string) ( $args['sizes'] ?? '100vw' );
 $lp_alt       = (string) ( $args['alt'] ?? '' );
 $lp_caption   = (string) ( $args['caption'] ?? '' );
