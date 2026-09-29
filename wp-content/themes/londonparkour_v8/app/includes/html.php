@@ -73,8 +73,23 @@ function lp_preload_fonts(): void {
 			esc_url( get_theme_file_uri( 'assets/fonts/' . $file ) )
 		);
 	}
+
+	// Scope Trial sets every page's display H1. main.css references Vite's
+	// hashed copy, so preload that exact URL (the source path would fetch twice).
+	$scope = lp_vite_asset( 'assets/fonts/ScopeTrial-Variable.ttf' );
+	if ( is_readable( get_theme_file_path( 'assets/dist/' . $scope ) ) ) {
+		printf(
+			'<link rel="preload" href="%s" as="font" type="font/ttf" crossorigin>' . "\n",
+			esc_url( get_theme_file_uri( 'assets/dist/' . $scope ) )
+		);
+	}
 }
 add_action( 'wp_head', 'lp_preload_fonts', 1 );
+
+// Core's emoji polyfill: an extra script + inline CSS on every page; every
+// supported browser renders emoji natively.
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
 /**
  * Make relative url() paths in a CSS file absolute so inlined CSS still loads fonts.
