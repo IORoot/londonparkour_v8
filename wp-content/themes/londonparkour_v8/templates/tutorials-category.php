@@ -48,7 +48,7 @@ $lp_kind_toggles = array(
 	'demonstration' => 'Demos',
 );
 
-get_header();
+get_header( null, array( 'active_key' => 'tutorials' ) );
 ?>
 
 <main id="main">

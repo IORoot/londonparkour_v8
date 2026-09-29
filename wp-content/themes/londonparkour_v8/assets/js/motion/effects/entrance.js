@@ -28,7 +28,7 @@ export function readEnterConfig(el) {
     trigger: d.motionEnterTrigger || 'scroll',
     duration: num(d.motionEnterDuration, 0.6),
     delay: num(d.motionEnterDelay, 0),
-    ease: d.motionEnterEase || 'ease-out',
+    ease: d.motionEnterEase || 'easeOut',
     once: d.motionEnterOnce !== 'false',
     // IntersectionObserver-style rootMargin passed straight to Motion's inView().
     start: d.motionEnterStart || '0px 0px -10% 0px',

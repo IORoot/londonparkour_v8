@@ -237,7 +237,7 @@ while ( have_posts() ) :
 		? ( '' !== $lp_subcategory_url ? $lp_subcategory_url : $lp_category_url )
 		: $lp_series_url;
 
-	get_header();
+	get_header( null, array( 'active_key' => 'tutorials' ) );
 	?>
 
 <main id="main">
@@ -403,8 +403,8 @@ while ( have_posts() ) :
 					<?php if ( $lp_resources ) : ?>
 						<div class="flex flex-col gap-[12px]" data-mount="resources">
 							<div class="flex items-center justify-between gap-3 pb-2.5 border-b border-base-300">
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content">RESOURCES</span>
-								<span class="font-label text-[10px] font-normal text-base-content/65"><?php echo esc_html( sprintf( '%02d', count( $lp_resources ) ) ); ?></span>
+								<span class="font-label text-[11px] font-semibold uppercase tracking-[0.08em] text-base-content">RESOURCES</span>
+								<span class="font-label text-[11px] font-normal text-base-content/65"><?php echo esc_html( sprintf( '%02d', count( $lp_resources ) ) ); ?></span>
 							</div>
 							<ul role="list" class="flex flex-col w-full m-0 p-0 list-none">
 								<?php foreach ( $lp_resources as $lp_resource ) : ?>
@@ -539,25 +539,25 @@ while ( have_posts() ) :
 											)
 										);
 										?>
-										<p class="m-0 font-body text-[13px] leading-[1.6] text-base-content/65"><?php echo esc_html( (string) ( $lp_para['text'] ?? '' ) ); ?></p>
+										<p class="m-0 font-body text-[14px] leading-[1.6] text-base-content/65"><?php echo esc_html( (string) ( $lp_para['text'] ?? '' ) ); ?></p>
 									</div>
 								<?php endforeach; ?>
 							</div>
 						<?php elseif ( $lp_has_copy ) : ?>
-							<p class="m-0 font-body text-[13px] leading-[1.6] text-base-content/65"><?php echo esc_html( $lp_raw_content ); ?></p>
+							<p class="m-0 font-body text-[14px] leading-[1.6] text-base-content/65"><?php echo esc_html( $lp_raw_content ); ?></p>
 						<?php endif; ?>
 
 						<?php if ( $lp_summary_paras ) : ?>
 							<div class="flex flex-col gap-[16px]">
 								<div class="flex items-center justify-between gap-3 pb-2.5 border-b border-base-300">
-									<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content">SUMMARY</span>
+									<span class="font-label text-[11px] font-semibold uppercase tracking-[0.08em] text-base-content">SUMMARY</span>
 								</div>
 								<div class="flex flex-col gap-[14px]">
 									<?php foreach ( $lp_summary_paras as $lp_summary_para ) : ?>
-										<p class="m-0 font-body text-[13px] leading-[1.6] text-base-content/65"><?php echo wp_kses_post( lp_blog_inline_markdown( $lp_summary_para ) ); ?></p>
+										<p class="m-0 font-body text-[14px] leading-[1.6] text-base-content/65"><?php echo wp_kses_post( lp_blog_inline_markdown( $lp_summary_para ) ); ?></p>
 									<?php endforeach; ?>
 									<?php if ( $lp_ai_note ) : ?>
-										<p class="m-0 font-label text-[10px] font-normal text-base-content/65"><?php echo esc_html( $lp_ai_note ); ?></p>
+										<p class="m-0 font-label text-[11px] font-normal text-base-content/65"><?php echo esc_html( $lp_ai_note ); ?></p>
 									<?php endif; ?>
 								</div>
 							</div>
@@ -568,8 +568,8 @@ while ( have_posts() ) :
 				<?php if ( $lp_takeaways ) : ?>
 					<div class="flex flex-col gap-[16px]">
 						<div class="flex items-center justify-between gap-3 pb-2.5 border-b border-base-300">
-							<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content">KEY TAKEAWAYS</span>
-							<span class="font-label text-[10px] font-normal text-base-content/65"><?php echo esc_html( sprintf( '%02d', count( $lp_takeaways ) ) ); ?></span>
+							<span class="font-label text-[11px] font-semibold uppercase tracking-[0.08em] text-base-content">KEY TAKEAWAYS</span>
+							<span class="font-label text-[11px] font-normal text-base-content/65"><?php echo esc_html( sprintf( '%02d', count( $lp_takeaways ) ) ); ?></span>
 						</div>
 						<ul role="list" class="flex flex-col gap-[14px] m-0 p-0 list-none">
 							<?php foreach ( $lp_takeaways as $lp_t ) : ?>
@@ -592,9 +592,9 @@ while ( have_posts() ) :
 			<?php if ( $lp_closing ) : ?>
 				<?php lp_part( 'elements/rule', array( 'tone' => 'ink' ) ); ?>
 				<div class="flex flex-col gap-[10px]">
-					<p class="font-body text-[24px] leading-[1.4] text-base-content"><?php echo esc_html( $lp_closing ); ?></p>
+					<p class="font-body text-step-0 leading-[1.4] text-base-content"><?php echo esc_html( $lp_closing ); ?></p>
 					<?php if ( $lp_ai_note ) : ?>
-						<p class="font-label text-[10px] font-normal text-base-content/65"><?php echo esc_html( $lp_ai_note ); ?></p>
+						<p class="font-label text-[11px] font-normal text-base-content/65"><?php echo esc_html( $lp_ai_note ); ?></p>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>

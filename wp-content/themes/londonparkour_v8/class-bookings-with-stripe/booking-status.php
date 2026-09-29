@@ -524,7 +524,7 @@ $lp_facts = $lp_compact
 
 	<div class="bg-primary px-6 lg:px-16 py-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-20" data-component="gift-card-upsell">
 		<div class="flex flex-col gap-[22px] flex-1 items-start max-w-[912px]">
-			<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-primary-content/70">GIFT CARDS</span>
+			<span class="font-label text-[12px] font-semibold uppercase tracking-[0.9px] text-primary-content/70">GIFT CARDS</span>
 			<h2 class="font-heading text-[32px] font-semibold leading-none text-primary-content m-0">Give the gift of movement.</h2>
 			<p class="font-body text-[13px] leading-[1.6] text-primary-content/75 m-0 max-w-[520px]">A LondonParkour gift card unlocks classes, private tuition and the full tutorial library — for anyone ready to move.</p>
 			<?php
@@ -541,33 +541,33 @@ $lp_facts = $lp_compact
 		</div>
 		<div class="w-[320px] shrink-0 bg-secondary flex flex-col">
 			<div class="flex items-center justify-between px-[18px] py-[14px]">
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-primary">LONDON PARKOUR</span>
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content">VALID</span>
+				<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-primary">LONDON PARKOUR</span>
+				<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-neutral-content">VALID</span>
 			</div>
 			<div class="flex items-center gap-5 px-[18px] py-4">
 				<div class="flex flex-col gap-1 flex-1">
-					<span class="font-label text-[9px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FROM</span>
+					<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FROM</span>
 					<span class="font-heading text-[15px] font-semibold text-neutral-content">ANY SITE</span>
 				</div>
 				<?php lp_icon( 'icon-arrow-right', 'w-4 h-4 text-primary shrink-0' ); ?>
 				<div class="flex flex-col gap-1 flex-1">
-					<span class="font-label text-[9px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">TO</span>
+					<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">TO</span>
 					<span class="font-heading text-[15px] font-semibold text-neutral-content">CLASSES</span>
 				</div>
 			</div>
 			<div class="flex items-end justify-between px-[18px] pt-[22px] pb-[18px]">
 				<div class="flex flex-col gap-1.5">
-					<span class="font-label text-[9px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FARE</span>
+					<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FARE</span>
 					<span class="font-heading text-[42px] font-bold leading-none text-primary">£50</span>
 				</div>
 				<div class="flex flex-col items-end gap-1">
 					<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-neutral-content">GIFT CARD</span>
-					<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">NO EXPIRY</span>
+					<span class="font-label text-[11px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">NO EXPIRY</span>
 				</div>
 			</div>
 			<div class="flex items-center justify-between px-[18px] py-3 bg-neutral">
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-primary">DEP · GIFT</span>
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">REF LP-50-GFT</span>
+				<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-primary">DEP · GIFT</span>
+				<span class="font-label text-[11px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">REF LP-50-GFT</span>
 			</div>
 		</div>
 	</div>

@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-get_header();
+get_header( null, array( 'active_key' => 'contact' ) );
 ?>
 
 <main id="main">

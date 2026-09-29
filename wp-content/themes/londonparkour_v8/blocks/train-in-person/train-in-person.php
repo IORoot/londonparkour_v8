@@ -56,7 +56,7 @@ $lp_spacing = lp_section_spacing( $args );
 
 		<div class="flex items-center justify-between gap-4 flex-wrap">
 			<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent-content"><?php echo esc_html( $lp_eyebrow ); ?></span>
-			<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_stamp ); ?></span>
+			<span class="font-label text-[11px] font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_stamp ); ?></span>
 		</div>
 
 		<?php lp_part( 'elements/rule', array( 'tone' => 'accent' ) ); ?>

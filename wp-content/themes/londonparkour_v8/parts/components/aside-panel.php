@@ -90,13 +90,13 @@ $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours befo
 		<?php if ( '' !== $lp_spots_left ) : ?>
 			<span class="inline-flex items-center gap-[8px]">
 				<span class="<?php echo lp_classes( 'inline-block w-[6px] h-[6px] rounded-full', $lp_surf['dot'] ); ?>" aria-hidden="true"></span>
-				<span class="<?php echo lp_classes( 'font-label text-[10px] font-semibold uppercase tracking-[0.8px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( $lp_spots_left ); ?></span>
+				<span class="<?php echo lp_classes( 'font-label text-[11px] font-semibold uppercase tracking-[0.8px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( $lp_spots_left ); ?></span>
 			</span>
 		<?php endif; ?>
 	</div>
 	<?php foreach ( $lp_rows as $lp_row ) : ?>
 		<div class="<?php echo lp_classes( 'flex items-center justify-between gap-[20px] border-b', $lp_surf['row_border'], 'px-[22px] py-[14px]' ); ?>" data-row>
-			<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_row['label'] ?? '' ) ); ?></span>
+			<span class="<?php echo lp_classes( 'font-label text-[11px] font-normal uppercase tracking-[0.9px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_row['label'] ?? '' ) ); ?></span>
 			<span class="<?php echo lp_classes( 'font-heading text-[15px] font-medium tracking-[-0.2px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( (string) ( $lp_row['value'] ?? '' ) ); ?></span>
 		</div>
 	<?php endforeach; ?>
@@ -123,7 +123,7 @@ $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours befo
 	<?php endif; ?>
 	<?php if ( '' !== $lp_note ) : ?>
 		<div class="px-[22px] py-[14px]">
-			<p class="<?php echo lp_classes( 'font-body text-[10px] leading-[1.6] tracking-[0.3px]', $lp_surf['muted'], 'm-0' ); ?>"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="<?php echo lp_classes( 'font-body text-[12px] leading-[1.6] tracking-[0.3px]', $lp_surf['muted'], 'm-0' ); ?>"><?php echo esc_html( $lp_note ); ?></p>
 		</div>
 	<?php endif; ?>
 </div>

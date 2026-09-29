@@ -32,7 +32,7 @@ $lp_aria_label = (string) ( $args['aria_label'] ?? 'Breadcrumb' );
 $lp_last       = count( $lp_crumbs ) - 1;
 ?>
 <nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center justify-between gap-4 flex-wrap bg-neutral border-b border-neutral-content/20 px-6 lg:px-16 py-4" data-component="breadcrumb-rail">
-	<ol class="flex flex-wrap items-center font-label text-[10px] font-normal uppercase tracking-[1px] text-neutral-content/80 m-0 p-0 list-none min-w-0">
+	<ol role="list" class="flex flex-wrap items-center font-label text-[11px] font-normal uppercase tracking-[1px] text-neutral-content/80 m-0 p-0 list-none min-w-0">
 		<?php foreach ( $lp_crumbs as $lp_i => $lp_crumb ) : ?>
 		<li class="<?php echo $lp_i === $lp_last ? 'inline-flex items-center min-w-0' : 'inline-flex items-center shrink-0'; ?>">
 			<?php if ( $lp_i > 0 ) : ?>
@@ -40,8 +40,10 @@ $lp_last       = count( $lp_crumbs ) - 1;
 			<?php endif; ?>
 			<?php if ( $lp_i === $lp_last ) : ?>
 				<span aria-current="page"><?php echo esc_html( (string) ( $lp_crumb['label'] ?? '' ) ); ?></span>
+			<?php elseif ( ! empty( $lp_crumb['href'] ) ) : ?>
+				<a href="<?php echo esc_url( (string) $lp_crumb['href'] ); ?>" class="py-2 hover:text-primary transition-colors duration-150 shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><?php echo esc_html( (string) ( $lp_crumb['label'] ?? '' ) ); ?></a>
 			<?php else : ?>
-				<a href="<?php echo esc_url( (string) ( $lp_crumb['href'] ?? '#' ) ); ?>" class="hover:text-primary transition-colors duration-150 shrink-0"><?php echo esc_html( (string) ( $lp_crumb['label'] ?? '' ) ); ?></a>
+				<span class="shrink-0"><?php echo esc_html( (string) ( $lp_crumb['label'] ?? '' ) ); ?></span>
 			<?php endif; ?>
 		</li>
 		<?php endforeach; ?>
@@ -54,7 +56,7 @@ $lp_last       = count( $lp_crumbs ) - 1;
 				'label'   => $lp_action['label'],
 				'href'    => $lp_action['href'] ?? '#',
 				'variant' => 'board_compact',
-				'class'   => 'whitespace-nowrap',
+				'class'   => 'py-2 whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
 			)
 		);
 	}

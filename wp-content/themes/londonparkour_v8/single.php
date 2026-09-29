@@ -25,7 +25,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-get_header();
+get_header( null, array( 'active_key' => 'docs' ) );
 
 while ( have_posts() ) :
 	the_post();

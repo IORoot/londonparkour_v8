@@ -7,9 +7,17 @@
  * Final string comes from `data-motion-decode` when set, otherwise the element's
  * current textContent. Newlines become `<br>` and are never scrambled.
  *
- * Per-glyph spans are `aria-hidden`; the host `aria-label` is the final sentence
- * so assistive tech does not spell the scramble or the locked letters.
+ * Per-glyph spans are `aria-hidden` so assistive tech does not spell the
+ * scramble. The final sentence is exposed once: as `aria-label` when the host
+ * may carry one (a link with href, or a heading), otherwise as a visually
+ * hidden text copy (`aria-label` is prohibited on generic hosts such as
+ * `<span>`/`<p>`/`<a>` without href).
  */
+const LABELLABLE = 'a[href], h1, h2, h3, h4, h5, h6';
+
+const SR_ONLY =
+  'position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+
 import { animate } from 'motion';
 import { num } from '../utils.js';
 
@@ -58,13 +66,24 @@ function appendGlyph(parent, ch, spans, { nbspSpaces }) {
  * `wrap: true` groups words into nowrap spans so wrapping happens at spaces —
  * quotes at 32px must wrap; hero titles must not.
  *
- * The host keeps the final sentence as `aria-label`; glyph spans are hidden
- * from the accessibility tree so AT does not spell the headline or the scramble.
+ * Glyph spans are hidden from the accessibility tree; the final sentence is
+ * exposed via `aria-label` (labellable hosts) or a visually hidden copy.
  */
 export function buildDecodeNodes(el, finalText, { wrap = false } = {}) {
   el.textContent = '';
   const label = accessibleName(finalText);
-  if (label) el.setAttribute('aria-label', label);
+  el.removeAttribute('aria-label');
+  if (label) {
+    if (el.matches(LABELLABLE)) {
+      el.setAttribute('aria-label', label);
+    } else {
+      const sr = document.createElement('span');
+      sr.dataset.decodeSr = '';
+      sr.style.cssText = SR_ONLY;
+      sr.textContent = label;
+      el.appendChild(sr);
+    }
+  }
   const spans = [];
   const lines = finalText.split('\n');
 

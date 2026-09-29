@@ -2,8 +2,8 @@
 /**
  * Rule — a 1px hairline with an optional caption.
  *
- * Ported from src/stories/Elements/Rule/Rule.js. Semantically a divider, so the
- * wrapper carries role="separator"; the line itself is decorative because the
+ * Ported from src/stories/Elements/Rule/Rule.js. Semantically a divider, so a
+ * caption-less wrapper carries role="separator"; the line itself is decorative because the
  * caption, when present, already carries the meaning as text.
  *
  * Tones are the combinations the design actually contains, as whole literals:
@@ -48,7 +48,8 @@ $lp_tones = array(
 $lp_tone    = $lp_tones[ $args['tone'] ?? 'ink' ] ?? $lp_tones['ink'];
 $lp_caption = (string) ( $args['caption'] ?? '' );
 ?>
-<div class="flex items-center gap-[10px]" data-component="rule" role="separator" aria-orientation="horizontal">
+<?php // A separator with text content is announced as empty; only the caption-less rule is a separator. ?>
+<div class="flex items-center gap-[10px]" data-component="rule"<?php echo '' === $lp_caption ? ' role="separator" aria-orientation="horizontal"' : ''; ?>>
 	<span class="<?php echo esc_attr( $lp_tone['line'] ); ?>" aria-hidden="true"></span>
 	<?php if ( '' !== $lp_caption ) : ?>
 		<span class="<?php echo esc_attr( $lp_tone['caption'] ); ?>"><?php echo esc_html( $lp_caption ); ?></span>

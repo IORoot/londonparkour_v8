@@ -154,7 +154,7 @@ if ( $lp_is_booking ) :
 		}
 		?>
 		<div class="relative bg-neutral/60 px-5 pt-4 pb-5 flex flex-col gap-1.5">
-			<span class="font-label text-[10px] font-semibold tracking-[1.2px] uppercase text-primary"><?php echo esc_html( $lp_caption_kicker ); ?></span>
+			<span class="font-label text-[11px] font-semibold tracking-[1.2px] uppercase text-primary"><?php echo esc_html( $lp_caption_kicker ); ?></span>
 			<p class="font-heading text-[16px] font-semibold tracking-[-0.6px] leading-[1.15] text-neutral-content m-0 max-w-[420px]"><?php echo esc_html( $lp_caption ); ?></p>
 		</div>
 	</div>
@@ -169,13 +169,13 @@ if ( $lp_is_booking ) :
 			<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-primary-content/70"><?php echo esc_html( $lp_meta ); ?></span>
 		</div>
 		<div class="flex flex-col gap-[22px]">
-			<h2 class="font-heading text-step-5 font-bold leading-[0.92] tracking-[-3px] text-primary-content m-0"><?php echo esc_html( $lp_headline ); ?></h2>
+			<h2 class="font-heading text-step-5 font-bold leading-[0.92] tracking-[-0.04em] text-primary-content m-0"><?php echo esc_html( $lp_headline ); ?></h2>
 			<p class="font-body text-[15px] leading-[1.6] tracking-[0.2px] text-primary-content/70 m-0"><?php echo esc_html( $lp_body ); ?></p>
 		</div>
 		<div class="grid grid-cols-3">
 			<?php foreach ( $lp_facts as $lp_fact ) : ?>
 				<div class="pt-[14px] pr-4 flex flex-col gap-[7px] min-w-0 border-t border-primary-content/25">
-					<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
 					<span class="font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 				</div>
 			<?php endforeach; ?>
@@ -272,7 +272,7 @@ else :
 			<div class="mt-[38px] w-full border-t border-base-300 grid grid-cols-3">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
 					<div class="pt-[14px] pr-[16px] flex flex-col gap-[7px] min-w-0">
-						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/60"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content/60"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
 						<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-base-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 					</div>
 				<?php endforeach; ?>

@@ -60,7 +60,7 @@ $lp_root        = $lp_is_link ? $lp_root_base . ' ' . $lp_root_interactive : $lp
 	<span class="font-heading text-[16px] font-semibold tracking-[-0.3px] text-neutral-content shrink-0 w-[52px] sm:w-[60px]"><?php echo esc_html( $lp_time ); ?></span>
 	<div class="flex-1 min-w-0 flex flex-col gap-[3px]">
 		<p class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></p>
-		<p class="font-label text-[10px] font-normal tracking-[0.5px] text-neutral-content/50 truncate"><?php echo esc_html( $lp_location ); ?></p>
+		<p class="font-label text-[11px] font-normal tracking-[0.5px] text-neutral-content/50 truncate"><?php echo esc_html( $lp_location ); ?></p>
 	</div>
-	<span class="<?php echo lp_classes( 'font-label text-[10px] font-semibold tracking-[0.8px] uppercase', $lp_spaces_tone, 'shrink-0' ); ?>"><?php echo esc_html( $lp_spaces ); ?></span>
+	<span class="<?php echo lp_classes( 'font-label text-[11px] font-semibold tracking-[0.8px] uppercase', $lp_spaces_tone, 'shrink-0' ); ?>"><?php echo esc_html( $lp_spaces ); ?></span>
 <?php echo $lp_is_link ? '</a>' : '</div>'; ?>

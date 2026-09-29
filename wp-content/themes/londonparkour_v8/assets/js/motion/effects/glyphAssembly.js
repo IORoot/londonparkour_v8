@@ -23,7 +23,7 @@ export const glyphAssemblyEffect = {
       {
         duration: reduced ? 0 : 0.5,
         delay: reduced ? 0 : stagger(0.04),
-        ease: 'ease-out',
+        ease: 'easeOut',
       }
     );
 

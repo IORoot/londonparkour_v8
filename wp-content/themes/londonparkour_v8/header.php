@@ -47,6 +47,6 @@ lp_part(
 		// Agenda is `/classes/`. Map is `/classes-map/`. See PORT-FINDINGS §21.
 		'cta_href'       => lp_classes_page_url( 'classes' ),
 		'find_site_href' => lp_classes_page_url( 'classes-map' ),
-	)
+	) + ( isset( $args['active_key'] ) ? array( 'active_key' => $args['active_key'] ) : array() )
 );
 ?>

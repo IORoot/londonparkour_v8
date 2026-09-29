@@ -58,7 +58,7 @@ $lp_variants = array(
 	 * renders as <a> (home). `shrink-0` is a call-site layout modifier — pass
 	 * it via $args['class'], the same treatment text-link gives `whitespace-nowrap`.
 	 */
-	'band_text'   => 'font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content transition-colors duration-150',
+	'band_text'   => 'font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
 	'shelf_nav'   => 'w-7 h-7 shrink-0 border border-neutral-content/20 bg-transparent text-neutral-content/70 font-label text-[14px] leading-none grid place-items-center disabled:opacity-40',
 );
 

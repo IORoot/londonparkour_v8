@@ -64,6 +64,9 @@
  * @param array  $args['docs_panel']
  * @param string $args['mobile_menu_id']
  * @param string $args['open_panel']        classes|tutorials|docs — force a panel open.
+ * @param string $args['active_key']        Which top-level link is the current page: classes|tutorials|docs|contact, or a link's own `key`
+ *                                          (matched against `key`, else the lowercased label). Omit to keep each link's own `active` flag;
+ *                                          '' marks none active.
  *
  * @package londonparkour_v8
  */
@@ -130,9 +133,9 @@ $lp_group_classes = array(
 );
 
 $lp_panel_hover = array(
-	'classes'   => 'hidden group-hover/classes:block group-focus-within/classes:block',
-	'tutorials' => 'hidden group-hover/tutorials:block group-focus-within/tutorials:block',
-	'docs'      => 'hidden group-hover/docs:block group-focus-within/docs:block',
+	'classes'   => 'hidden group-hover/classes:block group-focus-within/classes:block group-data-[dismissed]/classes:hidden!',
+	'tutorials' => 'hidden group-hover/tutorials:block group-focus-within/tutorials:block group-data-[dismissed]/tutorials:hidden!',
+	'docs'      => 'hidden group-hover/docs:block group-focus-within/docs:block group-data-[dismissed]/docs:hidden!',
 );
 
 $lp_panel_open = array(
@@ -394,6 +397,7 @@ $lp_cta_label  = (string) ( $args['cta_label'] ?? 'Find a class' );
 $lp_cta_href   = (string) ( $args['cta_href'] ?? ( function_exists( 'lp_classes_page_url' ) ? lp_classes_page_url( 'classes' ) : '/classes' ) );
 $lp_menu_id    = (string) ( $args['mobile_menu_id'] ?? 'site-nav-mobile-menu' );
 $lp_open_panel = (string) ( $args['open_panel'] ?? '' );
+$lp_active_key = isset( $args['active_key'] ) ? strtolower( (string) $args['active_key'] ) : null;
 
 $lp_links = array();
 
@@ -461,7 +465,7 @@ foreach ( $lp_links as $lp_link ) {
 	$lp_resolved[] = array(
 		'label'   => $lp_label,
 		'href'    => (string) ( $lp_link['href'] ?? '#' ),
-		'active'  => ! empty( $lp_link['active'] ),
+		'active'  => null !== $lp_active_key ? ( (string) ( $lp_link['key'] ?? $lp_key ) === $lp_active_key ) : ! empty( $lp_link['active'] ),
 		'panel'   => $lp_panel,
 		'icon_id' => $lp_icon,
 	);
@@ -500,7 +504,7 @@ $lp_header_ground = $lp_over_hero
 						$lp_panel_key  = (string) $lp_link['panel'];
 						$lp_group_cls  = $lp_group_classes[ $lp_panel_key ] ?? 'group';
 						?>
-						<span class="<?php echo lp_classes( $lp_group_cls, $lp_bar_height, 'inline-flex items-center justify-center gap-[9px] px-[20px] border-b-[3px]', $lp_border_cls ); ?>">
+						<div class="<?php echo lp_classes( $lp_group_cls, $lp_bar_height, 'inline-flex items-center justify-center gap-[9px] px-[20px] border-b-[3px]', $lp_border_cls ); ?>">
 							<?php
 							if ( '' !== $lp_link['icon_id'] ) {
 								lp_icon( $lp_link['icon_id'], lp_classes( $lp_glyph_base, $lp_glyph_cls ) );
@@ -605,7 +609,7 @@ $lp_header_ground = $lp_over_hero
 									</div>
 								</div>
 							<?php endif; ?>
-						</span>
+						</div>
 					<?php endforeach; ?>
 				</div>
 				<?php if ( $lp_is_condensed ) : ?>
@@ -648,7 +652,7 @@ $lp_header_ground = $lp_over_hero
 
 <el-dialog>
 	<dialog id="<?php echo esc_attr( $lp_menu_id ); ?>" aria-label="<?php esc_attr_e( 'Menu', 'londonparkour_v8' ); ?>" class="m-0 p-0 backdrop:bg-neutral/60 lg:hidden">
-		<div tabindex="0" class="fixed inset-0 focus:outline-0">
+		<div class="fixed inset-0">
 			<el-dialog-panel class="fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-sm flex-col overflow-y-auto bg-neutral p-[24px]">
 				<div class="flex items-center justify-between">
 					<span class="flex items-center text-neutral-content">
@@ -663,8 +667,8 @@ $lp_header_ground = $lp_over_hero
 						);
 						?>
 					</span>
-					<button type="button" command="close" commandfor="<?php echo esc_attr( $lp_menu_id ); ?>" aria-label="<?php esc_attr_e( 'Close menu', 'londonparkour_v8' ); ?>"
-						class="<?php echo lp_classes( 'inline-flex items-center justify-center w-[40px] h-[40px] text-neutral-content hover:bg-primary hover:text-neutral transition-colors duration-150', $lp_focus ); ?>">
+					<button type="button" command="close" commandfor="<?php echo esc_attr( $lp_menu_id ); ?>" aria-label="<?php esc_attr_e( 'Close menu', 'londonparkour_v8' ); ?>" autofocus
+						class="<?php echo lp_classes( 'inline-flex items-center justify-center w-[44px] h-[44px] text-neutral-content hover:bg-primary hover:text-neutral transition-colors duration-150', $lp_focus ); ?>">
 						<?php lp_icon( 'icon-x-mark', 'w-[20px] h-[20px]' ); ?>
 					</button>
 				</div>

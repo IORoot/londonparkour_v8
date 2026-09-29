@@ -60,9 +60,9 @@ $lp_speed = is_numeric( $args['speed'] ?? null ) ? (int) $args['speed'] : 60;
 $lp_spacing = lp_section_spacing( $args );
 ?>
 <section class="<?php echo lp_classes( 'w-full', $lp_spacing ); ?>" data-component="marquee"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
-	<div class="w-full overflow-hidden bg-primary py-[19px]">
+	<div class="w-full overflow-hidden bg-primary py-scale-s">
 		<div
-			class="flex items-center w-max"
+			class="flex items-center w-max motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-y-2"
 			data-motion-marquee
 			data-motion-marquee-direction="<?php echo esc_attr( $lp_direction ); ?>"
 			data-motion-marquee-speed="<?php echo esc_attr( (string) $lp_speed ); ?>"

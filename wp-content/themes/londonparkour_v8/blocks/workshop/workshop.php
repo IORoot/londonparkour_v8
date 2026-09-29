@@ -90,7 +90,7 @@ $eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '' ) ?: '06 — WORK
 	<?php endif; ?>
 
 	<div
-		class="absolute inset-0 bg-gradient-to-t from-neutral/80 via-neutral/70 to-transparent"
+		class="absolute inset-0 bg-gradient-to-t from-neutral/90 via-neutral/80 to-transparent"
 		aria-hidden="true"
 	></div>
 
@@ -107,23 +107,23 @@ $eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '' ) ?: '06 — WORK
 		<div class="flex items-center gap-3 flex-wrap">
 
 			<?php if ( $date_label ) : ?>
-				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-primary-content">
+				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-primary-content">
 					<?php echo esc_html( $date_label ); ?><?php echo $time_label ? ' · ' . esc_html( $time_label ) : ''; ?>
 				</span>
 			<?php endif; ?>
 
 			<?php if ( $location_name ) : ?>
-				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-primary-content">
+				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-primary-content">
 					<?php echo esc_html( $location_name ); ?>
 				</span>
 			<?php endif; ?>
 
 			<?php if ( $sold_out ) : ?>
-				<span class="inline-flex items-center font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50">
+				<span class="inline-flex items-center font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content/70">
 					SOLD OUT
 				</span>
 			<?php elseif ( $spaces_label ) : ?>
-				<span class="inline-flex items-center gap-[9px] font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-primary">
+				<span class="inline-flex items-center gap-[9px] font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary">
 					<span class="w-[6px] h-[6px] rounded-full bg-primary shrink-0" aria-hidden="true"></span>
 					<?php echo esc_html( $spaces_label ); ?>
 				</span>

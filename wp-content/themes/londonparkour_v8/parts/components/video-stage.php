@@ -77,7 +77,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 }
 ?>
 <div class="relative w-full" data-component="video-stage">
-	<div class="flex flex-wrap items-center justify-between gap-2 py-[15px] px-[22px]">
+	<div class="flex flex-wrap items-center justify-between gap-2 py-[15px] px-4 lg:px-[22px]">
 		<div class="flex items-center gap-[9px]">
 			<span class="inline-block w-[6px] h-[6px] rounded-full bg-primary" aria-hidden="true"></span>
 			<span class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html( $lp_status_label ); ?></span>
@@ -85,7 +85,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 		<span class="font-label text-[10px] font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_quality_label ); ?></span>
 	</div>
 
-	<div class="relative w-full min-w-0 max-w-full aspect-video overflow-hidden bg-neutral cursor-pointer">
+	<div class="relative w-full min-w-0 max-w-full aspect-video overflow-hidden bg-neutral">
 		<?php
 		if ( $lp_has_image ) {
 			lp_part( 'components/media-photo', $lp_photo );
@@ -147,7 +147,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 
 	<progress class="progress progress-primary h-[3px] w-full block rounded-none" value="<?php echo esc_attr( (string) $lp_progress ); ?>" max="100" aria-label="<?php echo esc_attr( $lp_time_label ); ?>"></progress>
 
-	<div class="flex flex-wrap items-center justify-between gap-2 py-[15px] px-[22px]">
+	<div class="flex flex-wrap items-center justify-between gap-2 py-[15px] px-4 lg:px-[22px]">
 		<span class="font-label text-[11px] font-semibold tracking-[0.8px] text-base-content"><?php echo esc_html( $lp_time_label ); ?></span>
 		<span class="font-label text-[10px] font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_up_next_label ); ?></span>
 	</div>

@@ -117,7 +117,7 @@ $lp_destinations = array(
 	),
 );
 
-get_header();
+get_header( null, array( 'active_key' => '' ) );
 ?>
 
 <main id="main">

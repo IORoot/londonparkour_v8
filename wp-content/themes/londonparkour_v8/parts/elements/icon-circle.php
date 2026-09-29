@@ -81,6 +81,9 @@ if ( ! empty( $args['data_attrs'] ) && is_array( $args['data_attrs'] ) ) {
 		}
 		if ( 'command_for' === $lp_dk ) {
 			$lp_dk = 'commandfor';
+		} elseif ( ! preg_match( '/^data-[a-z0-9-]+$/', $lp_dk ) ) {
+			// Whitelist: data-* only, so a caller can't smuggle in on*/href/style.
+			continue;
 		}
 		$lp_btn_attrs[ $lp_dk ] = (string) $lp_dv;
 	}

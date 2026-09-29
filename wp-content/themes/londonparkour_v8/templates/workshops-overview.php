@@ -80,7 +80,7 @@ $lp_row = static function ( WP_Post $lp_post ): void {
 						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_level ); ?></span>
 					<?php endif; ?>
 				</div>
-				<h2 class="font-heading text-[34px] font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral"><?php echo esc_html( get_the_title( $lp_post ) ); ?></h2>
+				<h3 class="font-heading text-[26px] sm:text-[34px] font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral"><?php echo esc_html( get_the_title( $lp_post ) ); ?></h3>
 				<?php if ( '' !== $lp_logline ) : ?>
 					<p class="font-label text-[13px] font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80"><?php echo esc_html( $lp_logline ); ?></p>
 				<?php endif; ?>
@@ -111,7 +111,7 @@ $lp_row = static function ( WP_Post $lp_post ): void {
 	<?php
 };
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">
@@ -211,7 +211,7 @@ get_header();
 					<div class="flex items-end justify-between gap-4 pb-[14px]">
 						<div class="flex flex-col gap-2">
 							<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-primary">ALSO COMING</span>
-							<h2 class="font-heading text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">More dates on the board.</h2>
+							<h2 class="font-heading text-[26px] sm:text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">More dates on the board.</h2>
 						</div>
 						<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( sprintf( '%02d DATES', count( $lp_rest ) ) ); ?></span>
 					</div>
@@ -233,7 +233,7 @@ get_header();
 					<div class="flex items-end justify-between gap-4 pb-[14px]">
 						<div class="flex flex-col gap-2">
 							<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-base-content/65">ALREADY RUN</span>
-							<h2 class="font-heading text-[32px] font-semibold tracking-[-0.8px] text-base-content m-0 [text-box:normal]">Dates that have been.</h2>
+							<h2 class="font-heading text-[26px] sm:text-[32px] font-semibold tracking-[-0.8px] text-base-content m-0 [text-box:normal]">Dates that have been.</h2>
 						</div>
 						<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( sprintf( '%02d DATES', count( $lp_past ) ) ); ?></span>
 					</div>

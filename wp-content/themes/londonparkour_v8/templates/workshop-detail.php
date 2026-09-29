@@ -269,9 +269,9 @@ $lp_grid = $lp_show_book
 
 	<?php if ( $lp_facts ) : ?>
 		<div class="w-full bg-neutral" data-component="class-detail-fact-rail">
-			<div class="px-6 lg:px-16 py-scale-s grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-[40px] gap-y-6" data-mount="rail">
+			<div class="px-6 lg:px-16 py-scale-s grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 md:gap-x-[40px] gap-y-6" data-mount="rail">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
-					<?php lp_part( 'components/fact-row', array_merge( $lp_fact, array( 'surface' => 'board' ) ) ); ?>
+					<span class="block min-w-0"><?php lp_part( 'components/fact-row', array_merge( $lp_fact, array( 'surface' => 'board' ) ) ); ?></span>
 				<?php endforeach; ?>
 			</div>
 		</div>
@@ -416,18 +416,18 @@ $lp_grid = $lp_show_book
 						<?php if ( '' !== $lp_meeting_kicker ) : ?>
 							<div class="flex items-center gap-[8px]">
 								<span class="text-base-content" aria-hidden="true"><?php lp_icon( 'icon-map-pin', 'w-[12px] h-[12px]' ); ?></span>
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_meeting_kicker ); ?></span>
+								<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_meeting_kicker ); ?></span>
 							</div>
 						<?php endif; ?>
 						<?php if ( '' !== $lp_meeting_point ) : ?>
 							<div class="flex flex-col gap-[10px]">
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
+								<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
 								<p class="font-label text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
 							</div>
 						<?php endif; ?>
 						<?php if ( '' !== $lp_transport_rail || '' !== $lp_transport_bus ) : ?>
 							<div class="flex flex-col gap-[10px]">
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
+								<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
 								<?php if ( '' !== $lp_transport_rail ) : ?>
 									<p class="font-body text-[13px] font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_transport_rail ); ?></p>
 								<?php endif; ?>
@@ -439,10 +439,10 @@ $lp_grid = $lp_show_book
 						<?php if ( '' !== $lp_meeting_foot || '' !== $lp_osm_maps ) : ?>
 							<div class="flex flex-wrap items-center justify-between gap-[16px] border-t border-base-300 pt-[14px]">
 								<?php if ( '' !== $lp_meeting_foot ) : ?>
-									<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_meeting_foot ); ?></span>
+									<span class="font-label text-[11px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_meeting_foot ); ?></span>
 								<?php endif; ?>
 								<?php if ( '' !== $lp_osm_maps ) : ?>
-									<a href="<?php echo esc_url( $lp_osm_maps ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent">OPEN IN MAPS ↗</a>
+									<a href="<?php echo esc_url( $lp_osm_maps ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent">OPEN IN MAPS ↗</a>
 								<?php endif; ?>
 							</div>
 						<?php endif; ?>
@@ -459,15 +459,15 @@ $lp_grid = $lp_show_book
 							>
 								<div class="absolute inset-0 z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:!z-0" data-mount="leaflet" role="region" aria-label="<?php echo esc_attr( sprintf( 'Map of %s', $lp_location_title ? $lp_location_title : 'Meeting point' ) ); ?>"></div>
 								<div class="absolute inset-x-0 top-0 z-[500] flex items-center justify-between h-10 px-4 bg-base-100 border-b border-base-300 pointer-events-none">
-									<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content">OPENSTREETMAP</span>
+									<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content">OPENSTREETMAP</span>
 									<?php if ( '' !== $lp_coords_label ) : ?>
-										<span class="font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_coords_label ); ?></span>
+										<span class="font-label text-[11px] font-normal tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_coords_label ); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="absolute inset-x-0 bottom-0 z-[500] flex items-center justify-between h-11 px-4 bg-base-100 border-t border-base-300">
-									<span class="font-label text-[9px] font-normal tracking-[0.7px] text-base-content/65">© OPENSTREETMAP CONTRIBUTORS</span>
+									<span class="font-label text-[11px] font-normal tracking-[0.7px] text-base-content/65">© OPENSTREETMAP CONTRIBUTORS</span>
 									<?php if ( '' !== $lp_streetview ) : ?>
-										<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent pointer-events-auto">STREETVIEW ↗</a>
+										<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent pointer-events-auto">STREETVIEW ↗</a>
 									<?php endif; ?>
 								</div>
 								<div class="hidden" data-meeting-pin aria-hidden="true">
@@ -499,7 +499,7 @@ $lp_grid = $lp_show_book
 					<div class="flex items-end justify-between gap-4 pb-[14px]">
 						<div class="flex flex-col gap-2">
 							<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-primary">FROM THE FLOOR</span>
-							<h2 class="font-heading text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">What the day looks like.</h2>
+							<h2 class="font-heading text-[26px] sm:text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">What the day looks like.</h2>
 						</div>
 						<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50">(<?php echo esc_html( str_pad( (string) count( $lp_gallery ), 2, '0', STR_PAD_LEFT ) ); ?>)</span>
 					</div>

@@ -21,7 +21,7 @@
  * carries `w-full h-full object-cover` as its class.
  *
  * Lead closing link is elements/text-link.php variant `page_accent`. Grid foot
- * link classes (`text-[11px]` + `uppercase`, no `duration-150`) do not match any
+ * link classes (`text-[12px]` + `uppercase`, no `duration-150`) do not match any
  * text-link variant — ported inline; report as a promotion candidate.
  *
  * @param string $args['layout']       grid|lead. Default grid.
@@ -156,22 +156,22 @@ if ( 'grid' === $lp_layout ) {
 	// Whole literal strings — Tailwind v4 scans source text.
 	$lp_surfaces = array(
 		'page'   => array(
-			'section'  => 'w-full bg-base-100 px-6 py-16 lg:py-[120px] lg:px-[72px]',
+			'section'  => 'w-full bg-base-100 px-6 py-16 lg:py-[120px] lg:px-16',
 			'muted'    => 'text-base-content/65',
 			'ink'      => 'text-base-content',
 			'bio'      => 'text-base-content/70',
 			'rule'     => 'h-px w-full bg-base-300',
 			'photo'    => 'relative aspect-[3/4] overflow-hidden bg-base-300',
-			'link'     => 'font-label text-[11px] font-semibold tracking-[0.5px] uppercase text-accent hover:text-accent/70 transition-colors',
+			'link'     => 'font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-accent hover:text-accent/70 transition-colors',
 		),
 		'accent' => array(
-			'section'  => 'w-full bg-accent px-6 py-16 lg:py-[120px] lg:px-[72px]',
+			'section'  => 'w-full bg-accent px-6 py-16 lg:py-[120px] lg:px-16',
 			'muted'    => 'text-accent-content/70',
 			'ink'      => 'text-accent-content',
 			'bio'      => 'text-accent-content/70',
 			'rule'     => 'h-px w-full bg-accent-content/15',
 			'photo'    => 'relative aspect-[3/4] overflow-hidden bg-neutral',
-			'link'     => 'font-label text-[11px] font-semibold tracking-[0.5px] uppercase text-primary hover:text-primary/70 transition-colors',
+			'link'     => 'font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-accent-content hover:text-accent-content/70 underline transition-colors',
 		),
 	);
 	$lp_surf = $lp_surfaces[ (string) ( $args['surface'] ?? 'page' ) ] ?? $lp_surfaces['page'];
@@ -220,11 +220,11 @@ if ( 'grid' === $lp_layout ) {
 					<?php endif; ?>
 					<div class="flex flex-col gap-1.5 lg:gap-2.5 pt-3 lg:pt-5">
 						<div class="flex items-baseline justify-between gap-3">
-							<span class="<?php echo lp_classes( 'font-label text-[11px] font-semibold tracking-[0.6px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
-							<span class="<?php echo lp_classes( 'hidden sm:inline font-label text-[10px] font-normal tracking-[0.6px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['tag'] ?? '' ) ); ?></span>
+							<span class="<?php echo lp_classes( 'font-label text-[12px] font-semibold tracking-[0.6px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
+							<span class="<?php echo lp_classes( 'hidden sm:inline font-label text-[12px] font-normal tracking-[0.6px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['tag'] ?? '' ) ); ?></span>
 						</div>
 						<h3 class="<?php echo lp_classes( 'font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight m-0', $lp_surf['ink'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['name'] ?? '' ) ); ?></h3>
-						<p class="<?php echo lp_classes( 'font-label text-[10px] font-semibold tracking-[0.8px] uppercase m-0', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
+						<p class="<?php echo lp_classes( 'font-label text-[12px] font-semibold tracking-[0.8px] uppercase m-0', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
 						<p class="<?php echo lp_classes( 'font-body text-[12px] lg:text-[13px] leading-[1.45] lg:leading-[1.55] m-0', $lp_surf['bio'] ); ?>"><?php echo esc_html( (string) ( $lp_coach['bio'] ?? '' ) ); ?></p>
 					</div>
 				</article>
@@ -234,7 +234,7 @@ if ( 'grid' === $lp_layout ) {
 		<footer class="flex flex-col gap-4">
 			<div class="<?php echo esc_attr( $lp_surf['rule'] ); ?>" aria-hidden="true"></div>
 			<div class="flex items-baseline justify-between gap-4 flex-wrap">
-				<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.8px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_footnote ); ?></span>
+				<span class="<?php echo lp_classes( 'font-label text-[12px] font-normal tracking-[0.8px] uppercase', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_footnote ); ?></span>
 				<?php if ( ! empty( $lp_link['label'] ) ) : ?>
 					<a href="<?php echo esc_url( (string) ( $lp_link['href'] ?? '#' ) ); ?>" class="<?php echo esc_attr( $lp_surf['link'] ); ?>"><?php echo esc_html( (string) $lp_link['label'] ); ?></a>
 				<?php endif; ?>
@@ -324,15 +324,15 @@ if ( ! $lp_roster ) {
 	<div>
 		<div class="flex flex-wrap items-end justify-between gap-6">
 			<div class="flex flex-col gap-[20px] max-w-[700px]">
-				<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-base-content/60"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<h2 class="font-heading text-step-3 font-semibold leading-[1.02] tracking-[-1.6px] text-base-content"><?php echo esc_html( $lp_headline ); ?></h2>
 			</div>
 			<?php if ( '' !== $lp_note ) : ?>
-				<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-base-content/60 whitespace-nowrap"><?php echo esc_html( $lp_note ); ?></span>
+				<span class="font-label text-[12px] font-normal tracking-[0.8px] uppercase text-base-content/65 whitespace-nowrap"><?php echo esc_html( $lp_note ); ?></span>
 			<?php endif; ?>
 		</div>
 
-		<div class="mt-[64px] flex flex-col lg:flex-row gap-[72px] items-start">
+		<div class="mt-[64px] flex flex-col lg:flex-row gap-10 lg:gap-[72px] items-stretch lg:items-start">
 			<div class="w-full lg:w-[556px] lg:shrink-0 flex flex-col">
 				<?php
 				$lp_lead_photo_wrap = 'relative w-full aspect-[556/600] lg:h-[600px] lg:aspect-auto overflow-hidden bg-base-300';
@@ -355,9 +355,9 @@ if ( ! $lp_roster ) {
 					</div>
 				<?php endif; ?>
 				<div class="mt-[26px] flex flex-col gap-[14px]">
-					<div class="flex items-center justify-between gap-4">
+					<div class="flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
 						<p class="font-heading text-[28px] font-semibold tracking-[-0.8px] text-base-content"><?php echo esc_html( $lp_lead_name ); ?></p>
-						<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-base-content/60 whitespace-nowrap"><?php echo esc_html( $lp_lead_meta ); ?></span>
+						<span class="font-label text-[12px] font-normal tracking-[0.8px] uppercase text-base-content/65 whitespace-nowrap"><?php echo esc_html( $lp_lead_meta ); ?></span>
 					</div>
 					<p class="font-body text-step--1 font-normal tracking-[0.2px] leading-[1.6] text-base-content/70"><?php echo esc_html( $lp_lead_quote ); ?></p>
 				</div>
@@ -396,9 +396,9 @@ if ( ! $lp_roster ) {
 							<?php endif; ?>
 							<div class="flex-1 min-w-0 flex flex-col gap-[7px]">
 								<p class="font-heading text-[19px] font-medium tracking-[-0.4px] text-base-content truncate"><?php echo esc_html( $lp_coach['name'] ); ?></p>
-								<p class="font-body text-[11px] font-normal tracking-[0.3px] text-base-content/60 truncate"><?php echo esc_html( $lp_coach['specialty'] ); ?></p>
+								<p class="font-body text-[12px] font-normal tracking-[0.3px] text-base-content/65 truncate"><?php echo esc_html( $lp_coach['specialty'] ); ?></p>
 							</div>
-							<span class="font-label text-[10px] font-normal tracking-[0.6px] uppercase text-base-content/60 text-right shrink-0 whitespace-nowrap"><?php echo esc_html( $lp_coach['location'] ); ?></span>
+							<span class="font-label text-[12px] font-normal tracking-[0.6px] uppercase text-base-content/65 text-right shrink-0 whitespace-nowrap"><?php echo esc_html( $lp_coach['location'] ); ?></span>
 						</div>
 					<?php endforeach; ?>
 				</div>

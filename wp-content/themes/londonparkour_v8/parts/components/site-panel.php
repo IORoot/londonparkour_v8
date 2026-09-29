@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 $lp_kinds = array(
 	'indoor'  => array(
 		'icon_id'     => 'icon-home',
-		'glyph_class' => 'text-primary',
+		'glyph_class' => 'text-accent',
 	),
 	'outdoor' => array(
 		'icon_id'     => 'icon-map-pin',
@@ -53,6 +53,8 @@ if ( '' === $lp_glyph_icon ) {
 	$lp_glyph_icon = $lp_kind ? $lp_kind['icon_id'] : 'icon-map-pin';
 }
 
+$lp_h_level           = (string) ( $args['heading_level'] ?? 'h3' );
+$lp_h                 = in_array( $lp_h_level, array( 'h2', 'h3', 'h4' ), true ) ? $lp_h_level : 'h3';
 $lp_kicker            = (string) ( $args['kicker'] ?? 'INDOOR · FLAGSHIP' );
 $lp_name              = (string) ( $args['name'] ?? 'Vauxhall.' );
 $lp_href              = (string) ( $args['href'] ?? '' );
@@ -99,18 +101,18 @@ $lp_root = $lp_has_photo
 				<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
 			</div>
 			<?php if ( '' !== $lp_href ) : ?>
-				<a href="<?php echo esc_url( $lp_href ); ?>" class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0 hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_name ); ?></a>
+				<<?php echo $lp_h; ?> class="m-0 font-heading text-[36px] font-bold leading-none tracking-[-1.4px]"><a href="<?php echo esc_url( $lp_href ); ?>" class="text-base-content hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_name ); ?></a></<?php echo $lp_h; ?>>
 			<?php else : ?>
-				<p class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></p>
+				<<?php echo $lp_h; ?> class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></<?php echo $lp_h; ?>>
 			<?php endif; ?>
 		</div>
 		<?php if ( '' !== $lp_streetview_href ) : ?>
-			<a href="<?php echo esc_url( $lp_streetview_href ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent whitespace-nowrap"><?php echo esc_html( $lp_streetview_label ); ?></a>
+			<a href="<?php echo esc_url( $lp_streetview_href ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent whitespace-nowrap"><?php echo esc_html( $lp_streetview_label ); ?><span class="sr-only"> (opens in a new tab)</span></a>
 		<?php endif; ?>
 	</div>
 	<div class="flex flex-wrap gap-[40px]">
 		<div class="flex-1 min-w-[200px] flex flex-col gap-[10px]">
-			<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
+			<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
 			<p class="font-body text-[12px] font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
 		</div>
 		<div class="flex-1 min-w-[200px] flex flex-col gap-[10px]">
@@ -132,6 +134,7 @@ $lp_root = $lp_has_photo
 					'variant'          => 'primary',
 					'label'            => $lp_action_label,
 					'href'             => $lp_href,
+					'aria_label'       => $lp_action_label . ': ' . $lp_name,
 					'trailing_icon_id' => 'icon-arrow-right',
 				)
 			);

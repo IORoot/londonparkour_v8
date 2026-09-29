@@ -15,7 +15,7 @@ $lp_title  = $lp_post instanceof WP_Post ? get_the_title( $lp_post ) : '';
 $lp_crumb  = strtoupper( $lp_title );
 $lp_active = 'wiki';
 
-get_header();
+get_header( null, array( 'active_key' => 'docs' ) );
 ?>
 
 <main id="main">

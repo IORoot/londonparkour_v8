@@ -92,7 +92,7 @@ $lp_buy_btn = static function ( int $pack_id, string $label, string $variant ) u
 	);
 };
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 
 if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 	$lp_view_packs = array();
@@ -184,7 +184,7 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 			<p class="font-label text-[11px] font-normal leading-[1.6] tracking-[0.2px] text-base-content/65 lg:text-right lg:max-w-[280px] m-0">Coupons work at Vauxhall, Old Street and Kilburn Park. Buy once, book when you want.</p>
 		</div>
 		<div class="h-10" aria-hidden="true"></div>
-		<div class="overflow-x-auto px-6 lg:px-24 pb-[80px]">
+		<div class="overflow-x-auto px-6 lg:px-24 pb-[80px]" role="region" aria-label="Coupon comparison table" tabindex="0">
 			<?php
 			$lp_table_tiers = array(
 				array(

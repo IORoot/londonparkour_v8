@@ -72,7 +72,7 @@ $lp_scrims = array(
 	'hero'               => 'absolute inset-0 bg-neutral/50',
 	'video_full'         => 'absolute inset-0 bg-neutral/65',
 	'video_stage'        => 'absolute inset-0 bg-secondary/45',
-	'locations_flagship' => 'absolute inset-0 bg-neutral/35',
+	'locations_flagship' => 'absolute inset-0 bg-neutral/60',
 );
 
 $lp_layouts = array(

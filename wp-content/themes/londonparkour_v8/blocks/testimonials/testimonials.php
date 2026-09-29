@@ -80,7 +80,7 @@ $lp_meta = $lp_show_see_all ? '' : sprintf( '(%02d)', count( $lp_visible ) );
 
 $lp_band = isset( $args['surface'] ) && 'band' === $args['surface'];
 if ( $lp_band ) {
-	$lp_section_class = 'w-full bg-neutral px-6 py-[120px] lg:px-[72px]';
+	$lp_section_class = 'w-full bg-neutral px-6 py-scale-2xl lg:px-16';
 	$lp_meta_class    = 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-neutral-content/65';
 	$lp_rule_class    = 'h-px w-full bg-neutral-content/20';
 	$lp_index_class   = 'font-label text-[14px] font-semibold tracking-[0.4px] text-primary shrink-0 pt-1';
@@ -90,7 +90,7 @@ if ( $lp_band ) {
 	$lp_star_class    = 'w-3 h-3 text-primary';
 	$lp_surface       = 'band';
 } else {
-	$lp_section_class = 'w-full bg-base-100 px-6 py-[120px] lg:px-[72px]';
+	$lp_section_class = 'w-full bg-base-100 px-6 py-scale-2xl lg:px-16';
 	$lp_meta_class    = 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65';
 	$lp_rule_class    = 'h-px w-full bg-base-300';
 	$lp_index_class   = 'font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1';

@@ -4,8 +4,8 @@
  *
  * Ported from src/stories/Elements/Chip/Chip.js. One component for all 3
  * variants (each with rest/hover). No daisyUI equivalent exists for a chip,
- * so this is built purely from Tailwind utilities. Hover is always an
- * inversion — implemented once per variant below.
+ * so this is built purely from Tailwind utilities. Hover is an
+ * inversion driven by a parent `.group` (the span itself is inert).
  *
  * `live` adds a 5px dot using `bg-current` so it tracks the label colour
  * automatically through the hover inversion, rather than needing its own
@@ -22,13 +22,13 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per variant — Tailwind v4 scans source text.
 $lp_variants = array(
 	'signal' => 'inline-flex items-center py-[5px] px-[9px] bg-primary text-primary-content ' .
-		'hover:bg-neutral hover:text-primary transition-colors duration-150 ' .
+		'group-hover:bg-neutral group-hover:text-primary transition-colors duration-150 ' .
 		'font-label text-[10px] font-semibold uppercase tracking-[0.8px]',
 	'live'   => 'inline-flex items-center gap-[8px] py-[7px] px-[11px] bg-primary text-primary-content ' .
-		'hover:bg-neutral hover:text-primary transition-colors duration-150 ' .
+		'group-hover:bg-neutral group-hover:text-primary transition-colors duration-150 ' .
 		'font-label text-[10px] font-semibold uppercase tracking-[0.8px]',
 	'dark'   => 'inline-flex items-center py-[7px] px-[11px] bg-neutral/88 text-neutral-content ' .
-		'hover:bg-primary hover:text-neutral transition-colors duration-150 ' .
+		'group-hover:bg-primary group-hover:text-neutral transition-colors duration-150 ' .
 		'font-label text-[10px] font-semibold uppercase tracking-[1px]',
 );
 

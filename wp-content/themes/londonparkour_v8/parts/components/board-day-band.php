@@ -11,10 +11,8 @@
  * Static: no hover node exists and none is invented; it groups rows, it does
  * not navigate.
  *
- * A11y: a real heading element carrying one combined aria-label, so assistive
- * tech announces "MON 13 JULY 2026, 3 SESSIONS" as a single group heading when
- * scanning by headings. The visible spans are aria-hidden to avoid a
- * double read.
+ * A11y: a real heading element, named by its visible text (day, date, count) —
+ * no aria-label, nothing aria-hidden.
  *
  * @param string $args['day']   Default 'MON'.
  * @param string $args['date']  Default '13 JULY 2026'.
@@ -36,20 +34,14 @@ $lp_day   = (string) ( $args['day'] ?? 'MON' );
 $lp_date  = (string) ( $args['date'] ?? '13 JULY 2026' );
 $lp_count = (string) ( $args['count'] ?? '3 SESSIONS' );
 $lp_tag   = $lp_tags[ (int) ( $args['level'] ?? 3 ) ] ?? $lp_tags[3];
-
-$lp_label = implode( ' ', array_filter( array( $lp_day, $lp_date ) ) );
-if ( '' !== $lp_count ) {
-	$lp_label .= ', ' . $lp_count;
-}
 ?>
 <<?php echo esc_html( $lp_tag ); ?>
 	class="w-full flex items-center justify-between gap-3 py-[20px] px-[16px] sm:px-[28px] bg-neutral border-t border-b border-neutral-content/10"
 	data-component="board-day-band"
-	aria-label="<?php echo esc_attr( $lp_label ); ?>"
 >
-	<div class="flex items-end gap-[14px]" aria-hidden="true">
+	<div class="flex items-end gap-[14px]">
 		<span class="font-heading text-[22px] font-semibold tracking-[-0.6px] uppercase text-neutral-content leading-none"><?php echo esc_html( $lp_day ); ?></span>
-		<span class="font-label text-[11px] font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[2px]"><?php echo esc_html( $lp_date ); ?></span>
+		<span class="font-label text-[12px] font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[2px]"><?php echo esc_html( $lp_date ); ?></span>
 	</div>
-	<span class="font-label text-[11px] font-semibold tracking-[1px] uppercase text-neutral-content/50" aria-hidden="true"><?php echo esc_html( $lp_count ); ?></span>
+	<span class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_count ); ?></span>
 </<?php echo esc_html( $lp_tag ); ?>>

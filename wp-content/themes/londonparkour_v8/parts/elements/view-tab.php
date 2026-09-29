@@ -5,11 +5,10 @@
  * Ported from src/stories/Elements/ViewTab/ViewTab.js. Two design nodes
  * (active / inactive) collapse into one component keyed by `active`. This is
  * a real interactive control (switches page view modes — Grid/Map/Agenda/
- * Listings), so it renders as a native <button role="tab">: focusable,
+ * Listings), so it renders as a native <button aria-pressed>: focusable,
  * clickable, operable with Enter/Space out of the box, plus an explicit
- * focus-visible ring. Composing several into a roving-tabindex tablist
- * (arrow-key navigation) is the job of a parent Tabs component — out of
- * scope here.
+ * focus-visible ring. Not a tab (no tabpanel/roving tabindex):
+ * group several in role="group".
  *
  * Built on daisyUI's `tab` class for interactive/structural resets only. The
  * `tabs-border`/`tab-active` decorative modifiers are NOT used: daisyUI
@@ -32,7 +31,7 @@
  * navigation — search.php's filter rail switches results by post type, and the
  * Classes view rail switches between three separate pages. Both are URLs, not
  * view-mode toggles. The link form carries aria-current="page" rather than
- * role="tab"/aria-selected: an <a href> is a link, and mislabelling it as a tab
+ * aria-pressed: an <a href> is a link, and mislabelling it as a tab
  * promises keyboard behaviour a link does not have (Port Brief a11y rule).
  * Class strings are identical in both forms.
  *
@@ -53,7 +52,7 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per state — Tailwind v4 scans source text.
 $lp_states = array(
 	'active'   => 'border-b-2 border-base-content text-base-content font-semibold',
-	'inactive' => 'border-b-2 border-transparent text-base-content/65 font-normal hover:text-base-content/70',
+	'inactive' => 'border-b-2 border-transparent text-base-content/65 font-normal hover:text-base-content',
 );
 
 /*
@@ -99,8 +98,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	<?php else : ?>
 	<button
 		type="button"
-		role="tab"
-		aria-selected="<?php echo $lp_active ? 'true' : 'false'; ?>"
+		aria-pressed="<?php echo $lp_active ? 'true' : 'false'; ?>"
 		data-tab-index="<?php echo esc_attr( (string) ( $args['index'] ?? 0 ) ); ?>"
 		class="<?php echo esc_attr( $lp_rich_class ); ?>"
 		data-component="view-tab"
@@ -120,7 +118,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	return;
 }
 
-$lp_tab_class = lp_classes( 'tab h-auto rounded-none pt-[17px] px-0 pb-[15px] text-[11px] uppercase tracking-[1px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content', $lp_state_class );
+$lp_tab_class = lp_classes( 'tab min-w-11 h-auto rounded-none pt-[17px] px-0 pb-[15px] text-[11px] uppercase tracking-[1px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content', $lp_state_class );
 ?>
 <?php if ( '' !== $lp_href ) : ?>
 <a
@@ -132,8 +130,7 @@ $lp_tab_class = lp_classes( 'tab h-auto rounded-none pt-[17px] px-0 pb-[15px] te
 <?php else : ?>
 <button
 	type="button"
-	role="tab"
-	aria-selected="<?php echo $lp_active ? 'true' : 'false'; ?>"
+	aria-pressed="<?php echo $lp_active ? 'true' : 'false'; ?>"
 	class="<?php echo $lp_tab_class; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- lp_classes() escapes. ?>"
 	data-component="view-tab"
 ><?php echo esc_html( $lp_label ); ?></button>

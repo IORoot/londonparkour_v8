@@ -63,7 +63,7 @@ $lp_surfaces = array(
 );
 
 $lp_root_prefix      = 'group relative flex items-center gap-[14px] w-full py-[13px] px-[16px] sm:px-[22px]';
-$lp_root_tail        = 'transition-colors duration-150 no-underline text-left';
+$lp_root_tail        = 'transition-colors duration-150 motion-reduce:transition-none no-underline text-left';
 $lp_root_interactive = 'cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]';
 
 $lp_tone = $lp_surfaces[ $args['surface'] ?? 'board' ] ?? $lp_surfaces['board'];
@@ -95,12 +95,12 @@ $lp_root = lp_classes(
 		<span class="<?php echo lp_classes( $lp_tone['icon'], 'shrink-0' ); ?>" aria-hidden="true"><?php lp_icon( $lp_icon_id, 'w-3.5 h-3.5' ); ?></span>
 	<?php endif; ?>
 	<?php if ( '' !== $lp_index ) : ?>
-		<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.8px]', $lp_tone['index'], 'transition-colors duration-150 min-w-[20px] shrink-0 whitespace-nowrap' ); ?>"><?php echo esc_html( $lp_index ); ?></span>
+		<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.8px]', $lp_tone['index'], 'transition-colors duration-150 min-w-[20px] shrink-0 whitespace-nowrap' ); ?>" aria-hidden="true"><?php echo esc_html( $lp_index ); ?></span>
 	<?php endif; ?>
 	<div class="flex-1 min-w-0 flex flex-col gap-[5px]">
 		<p class="<?php echo lp_classes( 'font-heading text-[15px] font-medium tracking-[-0.2px]', $lp_tone['title'], 'truncate' ); ?>"><?php echo esc_html( $lp_title ); ?></p>
 		<?php if ( '' !== $lp_meta ) : ?>
-			<p class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.6px] uppercase', $lp_tone['meta'], 'truncate' ); ?>"><?php echo esc_html( $lp_meta ); ?></p>
+			<p class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.6px] uppercase', $lp_tone['meta'], 'sm:truncate' ); ?>"><?php echo esc_html( $lp_meta ); ?></p>
 		<?php endif; ?>
 	</div>
 	<?php if ( '' !== $lp_marker ) : ?>

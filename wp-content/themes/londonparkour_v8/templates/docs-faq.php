@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 $lp_faq       = lp_docs_find_support( array( 'frequently-asked-questions', 'faq' ) );
 $lp_faq_title = $lp_faq instanceof WP_Post ? get_the_title( $lp_faq ) : 'Frequently Asked Questions';
 
-get_header();
+get_header( null, array( 'active_key' => 'docs' ) );
 ?>
 
 <main id="main">

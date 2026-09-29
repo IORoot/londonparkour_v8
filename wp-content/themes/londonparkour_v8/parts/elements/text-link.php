@@ -39,9 +39,9 @@ defined( 'ABSPATH' ) || exit;
  * Never assembled from fragments — Tailwind v4 scans source text.
  */
 $lp_variants = array(
-	'board'                => 'font-label text-[12px] font-semibold uppercase tracking-[0.9px] text-primary hover:text-primary/70 transition-colors duration-150',
-	'board_compact'         => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-primary hover:text-primary/70 transition-colors duration-150',
-	'board_compact_accent'  => 'font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent hover:text-accent/70 transition-colors duration-150',
+	'board'                => 'font-label text-[12px] font-semibold uppercase tracking-[0.9px] text-primary hover:text-primary/70 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+	'board_compact'         => 'font-label text-[11px] font-semibold uppercase tracking-[1px] text-primary hover:text-primary/70 transition-colors duration-150',
+	'board_compact_accent'  => 'font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent hover:text-accent/70 transition-colors duration-150',
 	'board_compact_on_fill' => 'font-label text-[11px] font-semibold uppercase tracking-[1px] text-primary group-hover:text-white hover:text-white transition-colors duration-150',
 	'accent_band'          => 'font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent-content hover:text-accent-content/70 transition-colors duration-150',
 	'page_accent'          => 'font-label text-step--2 font-semibold tracking-[0.5px] text-accent hover:text-accent/70 transition-colors duration-150',

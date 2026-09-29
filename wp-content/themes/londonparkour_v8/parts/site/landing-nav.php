@@ -24,21 +24,23 @@ $lp_classes  = (string) ( $args['classes_href'] ?? '/classes/' );
 $lp_private  = (string) ( $args['private_href'] ?? '/private-coaching/' );
 $lp_menu_id  = 'landing-menu';
 ?>
-<header data-component="landing-nav" class="sticky top-0 z-50 bg-neutral">
+<header data-component="landing-nav" class="sticky top-0 z-30 bg-neutral">
 	<nav aria-label="<?php esc_attr_e( 'Landing', 'londonparkour_v8' ); ?>">
 		<div class="hidden lg:grid lg:grid-cols-3 items-stretch border-b border-neutral-content/10 h-[76px]">
-			<a href="<?php echo esc_url( $lp_home ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="<?php echo lp_classes( 'flex items-center pl-[64px] text-neutral-content hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
-				<?php
-				lp_part(
-					'brand/logo',
-					array(
-						'width'       => 177,
-						'color_class' => 'text-current',
-						'label'       => $lp_brand,
-					)
-				);
-				?>
-			</a>
+			<div class="flex items-center pl-[64px]">
+				<a href="<?php echo esc_url( $lp_home ); ?>" aria-label="<?php echo esc_attr( $lp_brand ); ?>" class="<?php echo lp_classes( 'flex items-center text-neutral-content hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
+					<?php
+					lp_part(
+						'brand/logo',
+						array(
+							'width'       => 177,
+							'color_class' => 'text-current',
+							'label'       => $lp_brand,
+						)
+					);
+					?>
+				</a>
+			</div>
 			<div class="flex items-center justify-center gap-[28px]">
 				<?php
 				lp_part(
@@ -87,7 +89,7 @@ $lp_menu_id  = 'landing-menu';
 
 <el-dialog>
 	<dialog id="<?php echo esc_attr( $lp_menu_id ); ?>" aria-label="<?php esc_attr_e( 'Menu', 'londonparkour_v8' ); ?>" class="m-0 p-0 backdrop:bg-neutral/60 lg:hidden">
-		<div tabindex="0" class="fixed inset-0 focus:outline-0">
+		<div class="fixed inset-0">
 			<el-dialog-panel class="fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-sm flex-col overflow-y-auto bg-neutral p-[24px]">
 				<div class="flex items-center justify-between">
 					<span class="flex items-center text-neutral-content">
@@ -102,8 +104,8 @@ $lp_menu_id  = 'landing-menu';
 						);
 						?>
 					</span>
-					<button type="button" command="close" commandfor="<?php echo esc_attr( $lp_menu_id ); ?>" aria-label="<?php esc_attr_e( 'Close menu', 'londonparkour_v8' ); ?>"
-						class="<?php echo lp_classes( 'inline-flex items-center justify-center w-[40px] h-[40px] text-neutral-content hover:bg-primary hover:text-neutral transition-colors duration-150', $lp_focus ); ?>">
+					<button type="button" command="close" commandfor="<?php echo esc_attr( $lp_menu_id ); ?>" aria-label="<?php esc_attr_e( 'Close menu', 'londonparkour_v8' ); ?>" autofocus
+						class="<?php echo lp_classes( 'inline-flex items-center justify-center w-[44px] h-[44px] text-neutral-content hover:bg-primary hover:text-neutral transition-colors duration-150', $lp_focus ); ?>">
 						<?php lp_icon( 'icon-x-mark', 'w-[20px] h-[20px]' ); ?>
 					</button>
 				</div>

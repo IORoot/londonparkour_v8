@@ -37,8 +37,8 @@ defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_col_default = 'flex-1 min-w-0';
-$lp_col_type    = 'font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-neutral-content/50';
-$lp_foot_note   = 'font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50';
+$lp_col_type    = 'font-label text-[11px] font-semibold uppercase tracking-[1.1px] text-neutral-content/50';
+$lp_foot_note   = 'font-label text-[11px] font-normal tracking-[0.9px] uppercase text-neutral-content/50';
 
 $lp_board_title = (string) ( $args['board_title'] ?? '' );
 $lp_title_tag   = strtolower( (string) ( $args['title_tag'] ?? 'h3' ) );

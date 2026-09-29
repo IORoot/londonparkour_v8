@@ -65,7 +65,7 @@ $lp_classes = lp_class_dedupe_by_title( $lp_classes );
 
 $lp_arch = (string) get_post_type_archive_link( lp_class_post_type() );
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">

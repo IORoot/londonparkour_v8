@@ -88,7 +88,7 @@ $lp_spacing = lp_section_spacing( $args );
 				<div class="flex-1 flex flex-col gap-[16px] border-t border-base-content pt-[24px]">
 					<div class="flex items-center gap-[10px] text-base-content">
 						<?php lp_icon( (string) ( $lp_principle['icon_id'] ?? 'glyph-understanding' ), 'w-[24px] h-[24px] text-current' ); ?>
-						<span class="font-label text-[11px] font-semibold uppercase tracking-[1px]"><?php echo esc_html( (string) ( $lp_principle['label'] ?? '' ) ); ?></span>
+						<span class="font-label text-[12px] font-semibold uppercase tracking-[1px]"><?php echo esc_html( (string) ( $lp_principle['label'] ?? '' ) ); ?></span>
 					</div>
 					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65"><?php echo esc_html( (string) ( $lp_principle['body'] ?? '' ) ); ?></p>
 				</div>

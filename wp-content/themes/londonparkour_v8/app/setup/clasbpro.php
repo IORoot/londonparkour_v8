@@ -389,7 +389,7 @@ function lp_clasbpro_booking_drawer(): void {
 			<el-dialog-panel class="fixed inset-y-0 right-0 z-10 flex h-full w-full max-w-md flex-col overflow-y-auto bg-secondary border-l border-neutral-content/10 shadow-xl">
 				<div class="flex items-center justify-between border-b border-neutral-content/18 px-[22px] py-[16px]">
 					<span class="font-label text-[12px] font-semibold uppercase tracking-[1px] text-primary" data-lp-drawer-title><?php esc_html_e( 'Book a session', 'londonparkour_v8' ); ?></span>
-					<button type="button" command="close" commandfor="lp-booking-drawer" class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content">
+					<button type="button" command="close" commandfor="lp-booking-drawer" class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content">
 						<?php esc_html_e( 'Close', 'londonparkour_v8' ); ?>
 					</button>
 				</div>

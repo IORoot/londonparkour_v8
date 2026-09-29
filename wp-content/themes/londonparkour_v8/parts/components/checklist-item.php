@@ -40,6 +40,6 @@ $lp_index = (string) ( $args['index'] ?? '' );
 <?php else : ?>
 	<div class="flex items-start gap-3" data-component="checklist-item">
 		<span class="shrink-0 text-base-content" aria-hidden="true"><?php lp_icon( 'icon-check', 'w-[13px] h-[13px]' ); ?></span>
-		<p class="m-0 font-body text-[12px] font-normal leading-[1.4] tracking-[0.1px] text-base-content/70"><?php echo esc_html( $lp_text ); ?></p>
+		<p class="m-0 font-body text-[13px] font-normal leading-[1.4] tracking-[0.1px] text-base-content/70"><?php echo esc_html( $lp_text ); ?></p>
 	</div>
 <?php endif; ?>

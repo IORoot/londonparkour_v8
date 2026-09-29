@@ -35,7 +35,7 @@ $lp_is_link  = '' !== $lp_href;
 <?php else : ?>
 <div class="<?php echo esc_attr( $lp_root ); ?>" data-component="search-result-row">
 <?php endif; ?>
-	<span class="w-[28px] shrink-0 font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_index ); ?></span>
+	<span aria-hidden="true" class="w-[28px] shrink-0 font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_index ); ?></span>
 	<span class="hidden sm:flex w-[112px] shrink-0">
 		<?php
 		lp_part(
@@ -48,8 +48,9 @@ $lp_is_link  = '' !== $lp_href;
 		?>
 	</span>
 	<span class="flex-1 min-w-0 flex flex-col gap-[6px]">
-		<span class="font-heading text-[19px] font-medium tracking-[-0.3px] text-base-content group-hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_title ); ?></span>
+		<span class="font-heading text-[19px] font-medium tracking-[-0.3px] text-base-content group-hover:text-accent group-focus-visible:text-accent transition-colors duration-150"><?php echo esc_html( $lp_title ); ?></span>
 		<span class="font-body text-[12px] font-normal tracking-[0.15px] leading-[1.55] text-base-content/65"><?php echo esc_html( $lp_snippet ); ?></span>
+		<span class="md:hidden font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65"><span class="sm:hidden"><?php echo esc_html( $lp_category ); ?> · </span><?php echo esc_html( $lp_meta ); ?></span>
 	</span>
 	<span class="hidden md:block w-[190px] shrink-0 text-right font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_meta ); ?></span>
 	<?php lp_part( 'elements/chevron', array( 'variant' => 'search_result_row' ) ); ?>

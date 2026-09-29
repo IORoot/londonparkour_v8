@@ -204,7 +204,7 @@ get_header();
 				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php printf( '%d RESULTS', (int) $lp_found ); ?></span>
 			</div>
 
-			<form role="search" method="get" action="<?php echo esc_url( $lp_search ); ?>" class="mt-6 flex items-center gap-4 h-[68px] px-[22px] bg-secondary border border-neutral-content/[.14]">
+			<form role="search" method="get" action="<?php echo esc_url( $lp_search ); ?>" class="mt-6 flex items-center gap-4 h-[68px] px-[22px] bg-secondary border border-neutral-content/[.14] focus-within:outline focus-within:outline-2 focus-within:outline-primary">
 				<?php if ( '' !== $lp_active_type ) : ?>
 					<input type="hidden" name="post_type" value="<?php echo esc_attr( $lp_active_type ); ?>" />
 				<?php endif; ?>
@@ -220,6 +220,7 @@ get_header();
 						'href'    => $lp_search,
 						'label'   => $lp_bar['clear'],
 						'class'   => 'shrink-0',
+						'aria_label' => 'Clear search',
 					)
 				);
 				?>
@@ -240,7 +241,7 @@ get_header();
 				<div class="flex items-center gap-4">
 					<span id="search-sort-label" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">SORT</span>
 					<select aria-labelledby="search-sort-label"
-						class="h-[42px] w-[200px] px-[14px] rounded-none bg-transparent border border-base-300 font-body text-[11px] tracking-[0.4px] text-base-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
+						class="h-[42px] w-[200px] px-[14px] rounded-none bg-transparent border border-base-300 font-body text-base sm:text-[11px] tracking-[0.4px] text-base-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
 						<option>Most relevant</option>
 					</select>
 				</div>

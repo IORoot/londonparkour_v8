@@ -30,12 +30,14 @@ $lp_surfaces = array(
 		'rule'  => 'border-primary-content/15',
 		'ink'   => 'text-primary-content',
 		'muted' => 'text-primary-content/70',
+		'ring'  => 'focus-visible:outline-primary-content',
 	),
 	'page' => array(
 		'root'  => 'bg-base-100',
 		'rule'  => 'border-base-300',
 		'ink'   => 'text-base-content',
 		'muted' => 'text-base-content/65',
+		'ring'  => 'focus-visible:outline-base-content',
 	),
 );
 
@@ -59,23 +61,39 @@ $lp_outer        = 'bare' === $lp_variant ? $lp_chrome_class : lp_classes( $lp_s
 
 $lp_aria_label = (string) ( $args['aria_label'] ?? 'Page navigation' );
 
-/** One side of the pair; an empty <span> when there is nothing to link to. */
-$lp_side = static function ( $lp_item, $lp_default_keyword, $lp_align, $lp_surf, $lp_aligns ) {
+/** Arrows are decorative — keep them out of the accessible name. */
+$lp_arrow = static function ( $lp_keyword ) {
+	$lp_html = esc_html( $lp_keyword );
+	$lp_html = preg_replace( '/^(←)/u', '<span aria-hidden="true">$1</span>', $lp_html );
+	return preg_replace( '/(→)$/u', '<span aria-hidden="true">$1</span>', $lp_html );
+};
+
+/** One side of the pair. An empty spacer keeps the other side pinned; no href = static block, never a '#' link. */
+$lp_side = static function ( $lp_item, $lp_default_keyword, $lp_align, $lp_surf, $lp_aligns ) use ( $lp_arrow ) {
 	$lp_item  = is_array( $lp_item ) ? $lp_item : array();
 	$lp_label = (string) ( $lp_item['label'] ?? '' );
 
 	if ( '' === $lp_label ) {
-		echo '<span></span>';
+		echo '<span class="flex-1" aria-hidden="true"></span>';
 		return;
 	}
 
 	$lp_keyword = (string) ( $lp_item['keyword'] ?? $lp_default_keyword );
-	?>
-	<a href="<?php echo esc_url( (string) ( $lp_item['href'] ?? '#' ) ); ?>" class="<?php echo lp_classes( 'group flex-1 min-w-0 flex flex-col gap-[10px]', $lp_aligns[ $lp_align ] ); ?>">
-		<span class="<?php echo lp_classes( 'font-label text-[10px] font-semibold uppercase tracking-[1px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( $lp_keyword ); ?></span>
-		<span class="<?php echo lp_classes( 'font-heading text-[19px] font-medium tracking-[-0.3px]', $lp_surf['ink'], 'group-hover:underline' ); ?>"><?php echo esc_html( $lp_label ); ?></span>
-	</a>
+	$lp_href    = (string) ( $lp_item['href'] ?? '' );
+	$lp_cls     = lp_classes( 'group flex-1 min-w-0 flex flex-col gap-[10px]', $lp_aligns[ $lp_align ] );
+	$lp_inner   = static function () use ( $lp_keyword, $lp_label, $lp_surf, $lp_arrow ) {
+		?>
+		<span class="<?php echo lp_classes( 'font-label text-[10px] font-semibold uppercase tracking-[1px]', $lp_surf['muted'] ); ?>"><?php echo $lp_arrow( $lp_keyword ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html'd inside $lp_arrow. ?></span>
+		<span class="<?php echo lp_classes( 'font-heading text-[19px] font-medium tracking-[-0.3px]', $lp_surf['ink'], 'group-hover:underline group-focus-visible:underline' ); ?>"><?php echo esc_html( $lp_label ); ?></span>
+		<?php
+	};
+	if ( '' === $lp_href ) :
+		?>
+		<div class="<?php echo esc_attr( $lp_cls ); ?>"><?php $lp_inner(); ?></div>
+	<?php else : ?>
+		<a href="<?php echo esc_url( $lp_href ); ?>" class="<?php echo lp_classes( $lp_cls, 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4', $lp_surf['ring'] ); ?>"><?php $lp_inner(); ?></a>
 	<?php
+	endif;
 };
 ?>
 <nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="<?php echo esc_attr( $lp_outer ); ?>" data-component="page-onward">

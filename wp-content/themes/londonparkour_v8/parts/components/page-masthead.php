@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_pads = array(
 	'media' => 'pt-[136px]',
-	'plain' => 'pt-[72px]',
+	'plain' => 'pt-scale-xl',
 );
 
 $lp_media_id  = ! empty( $args['media_id'] ) ? (int) $args['media_id'] : 0;
@@ -39,12 +39,12 @@ $lp_note  = (string) ( $args['note'] ?? '' );
 $lp_pad   = $lp_has_media ? $lp_pads['media'] : $lp_pads['plain'];
 
 $lp_title_sizes = array(
-	'default' => 'w-full font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
-	'error'   => 'w-full font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'default' => 'w-full font-display font-bold text-neutral-content text-[40px] leading-[0.95] tracking-[-1.5px] sm:text-[48px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'error'   => 'w-full font-display font-bold text-neutral-content text-[36px] leading-[0.95] tracking-[-1px] sm:text-[44px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
 );
 $lp_title_sizes_glyph = array(
-	'default' => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
-	'error'   => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[28px] leading-[0.95] tracking-[-1px] sm:text-[40px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'default' => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[40px] leading-[0.95] tracking-[-1.5px] sm:text-[48px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'error'   => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[36px] leading-[0.95] tracking-[-1px] sm:text-[44px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
 );
 $lp_title_scale = $args['title_scale'] ?? 'default';
 $lp_glyph_svg   = (string) ( $args['glyph_svg'] ?? '' );
@@ -67,7 +67,7 @@ if ( array_key_exists( 'media_alt', $args ) ) {
 }
 ?>
 <div
-	class="<?php echo lp_classes( 'relative bg-neutral border-b border-neutral-content/20', $lp_pad, 'px-6 lg:px-16 pb-16' ); ?>"
+	class="<?php echo lp_classes( 'relative bg-neutral border-b border-neutral-content/20', $lp_pad, 'px-6 lg:px-16 pb-scale-l' ); ?>"
 	data-component="page-masthead"
 	data-media="<?php echo $lp_has_media ? 'true' : 'false'; ?>"
 >

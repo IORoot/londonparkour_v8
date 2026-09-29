@@ -42,7 +42,7 @@ $lp_variants = array(
 		'root'        => 'card flex flex-col h-full bg-base-200 border border-base-300 rounded-none overflow-hidden',
 		'media'       => 'aspect-[16/9] w-full bg-base-300 overflow-hidden m-0',
 		'body'        => 'card-body flex flex-col flex-1 p-0 pt-[18px] px-[16px] pb-[16px] gap-[14px]',
-		'read_time'   => 'font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65',
+		'read_time'   => 'font-label text-[11px] font-normal uppercase tracking-[0.9px] text-base-content/65',
 		'title'       => 'card-title font-heading text-[22px] font-bold tracking-[-0.5px] leading-tight text-base-content',
 		'excerpt'     => 'font-body text-[12px] font-normal tracking-[0.1px] leading-[1.6] text-base-content/65',
 		'foot_wrap'   => 'mt-auto flex flex-col gap-[14px] border-t border-base-300 pt-[14px]',
@@ -80,7 +80,7 @@ $lp_title     = (string) ( $args['title'] ?? 'Imperial College London' );
 $lp_excerpt   = (string) ( $args['excerpt'] ?? 'LondonParkour is teaming up with Imperial College London to bring parkour classes to students every Wednesday.' );
 $lp_author    = (string) ( $args['author'] ?? 'Andy Pearson' );
 $lp_date      = (string) ( $args['date'] ?? 'Nov 19, 2024' );
-$lp_href      = (string) ( $args['href'] ?? '#' );
+$lp_href      = (string) ( $args['href'] ?? '' );
 
 $lp_photo = array(
 	'image_id'  => ! empty( $args['image_id'] ) ? (int) $args['image_id'] : 0,

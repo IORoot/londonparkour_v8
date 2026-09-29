@@ -29,7 +29,7 @@ $lp_steps = array(
 ?>
 		<ol class="cbfs-form__steps" role="list" aria-label="<?php esc_attr_e( 'Booking steps', 'londonparkour_v8' ); ?>">
 			<?php foreach ( $lp_steps as $lp_step ) : ?>
-				<li class="cbfs-form__step<?php echo $lp_step['active'] ? ' is-active' : ''; ?>">
+				<li class="cbfs-form__step<?php echo $lp_step['active'] ? ' is-active' : ''; ?>"<?php echo $lp_step['active'] ? ' aria-current="step"' : ''; ?>>
 					<span class="cbfs-form__step-index"><?php echo esc_html( $lp_step['index'] ); ?></span>
 					<span class="cbfs-form__step-label"><?php echo esc_html( $lp_step['label'] ); ?></span>
 				</li>

@@ -65,7 +65,7 @@ foreach ( $lp_week['days'] as $lp_day_group ) {
 $lp_sites      = count( lp_locations_by_kind( 'site' ) );
 $lp_mast_media = (int) get_post_thumbnail_id();
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">

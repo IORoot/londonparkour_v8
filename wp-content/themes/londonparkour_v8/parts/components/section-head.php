@@ -64,6 +64,8 @@ $lp_eyebrow = (string) ( $args['eyebrow'] ?? '' );
 $lp_heading = (string) ( $args['heading'] ?? 'Section headline.' );
 $lp_note    = (string) ( $args['note'] ?? '' );
 $lp_tone    = (string) ( $args['eyebrow_tone'] ?? '' );
+$lp_h_level = (string) ( $args['heading_level'] ?? 'h2' );
+$lp_h       = in_array( $lp_h_level, array( 'h1', 'h2', 'h3' ), true ) ? $lp_h_level : 'h2';
 
 if ( '' === $lp_tone ) {
 	$lp_tone = $lp_on_surface['eyebrow_tone'];
@@ -84,7 +86,7 @@ if ( '' === $lp_tone ) {
 			);
 		}
 		?>
-		<h2 class="<?php echo lp_classes( 'font-heading text-step-3 font-semibold leading-none tracking-[-1.6px]', $lp_on_surface['heading'] ); ?>"><?php echo esc_html( $lp_heading ); ?></h2>
+		<<?php echo $lp_h; ?> class="<?php echo lp_classes( 'font-heading text-step-3 font-semibold leading-none tracking-[-1.6px]', $lp_on_surface['heading'] ); ?>"><?php echo esc_html( $lp_heading ); ?></<?php echo $lp_h; ?>>
 	</div>
 	<?php if ( '' !== $lp_note ) : ?>
 		<p class="<?php echo lp_classes( 'w-full lg:w-[330px] text-left lg:text-right font-label text-[11px] leading-[1.6] tracking-[0.2px]', $lp_on_surface['note'] ); ?>"><?php echo esc_html( $lp_note ); ?></p>

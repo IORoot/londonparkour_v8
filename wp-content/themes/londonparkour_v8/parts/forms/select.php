@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per state — Tailwind v4 scans source text.
 $lp_state = array(
 	'default'  => 'border-base-300 text-base-content focus:border-base-content',
-	'error'    => 'border-error text-error',
+	'error'    => 'border-error text-base-content',
 	'disabled' => 'border-base-300 text-base-content/50',
 );
 
@@ -57,6 +57,7 @@ $lp_required        = ! empty( $args['required'] );
 $lp_disabled        = ! empty( $args['disabled'] );
 $lp_error           = ! empty( $args['error'] );
 $lp_error_message   = (string) ( $args['error_message'] ?? '' );
+$lp_autocomplete    = (string) ( $args['autocomplete'] ?? '' );
 
 $lp_field_id  = (string) ( $args['id'] ?? wp_unique_id( 'select-' ) );
 $lp_error_id  = $lp_field_id . '-error';
@@ -66,7 +67,7 @@ $lp_show_hint = '' !== $lp_error_message;
 $lp_select_class = lp_classes(
 	'select select-sm validator w-full rounded-none border',
 	$lp_state[ $lp_state_key ],
-	'h-[42px] px-[14px] font-body text-[11px] tracking-[0.4px] user-invalid:border-error disabled:bg-base-100 disabled:border-base-300 disabled:opacity-[.45]'
+	'h-[42px] px-[14px] font-body text-base sm:text-[11px] tracking-[0.4px] user-invalid:border-error disabled:bg-base-100 disabled:border-base-300 disabled:opacity-[.45]'
 );
 ?>
 <div class="<?php echo lp_classes( 'flex flex-col', $lp_error ? 'gap-[8px]' : 'gap-[13px]' ); ?>" data-component="select" data-state="<?php echo esc_attr( $lp_state_key ); ?>">
@@ -75,13 +76,14 @@ $lp_select_class = lp_classes(
 		class="<?php echo esc_attr( $lp_select_class ); ?>"
 		id="<?php echo esc_attr( $lp_field_id ); ?>"
 		<?php if ( '' !== $lp_name ) : ?>name="<?php echo esc_attr( $lp_name ); ?>"<?php endif; ?>
+		<?php if ( '' !== $lp_autocomplete ) : ?>autocomplete="<?php echo esc_attr( $lp_autocomplete ); ?>"<?php endif; ?>
 		<?php echo $lp_required ? 'required' : ''; ?>
 		<?php echo $lp_disabled ? 'disabled' : ''; ?>
 		<?php echo $lp_error ? 'aria-invalid="true"' : ''; ?>
 		<?php if ( $lp_show_hint ) : ?>aria-describedby="<?php echo esc_attr( $lp_error_id ); ?>"<?php endif; ?>
 	>
 		<?php if ( '' !== $lp_placeholder_val ) : ?>
-			<option value="" disabled <?php echo ( '' === $lp_value ) ? 'selected' : ''; ?>><?php echo esc_html( $lp_placeholder_val ); ?></option>
+			<option value="" disabled hidden <?php echo ( '' === $lp_value ) ? 'selected' : ''; ?>><?php echo esc_html( $lp_placeholder_val ); ?></option>
 		<?php endif; ?>
 		<?php foreach ( $lp_options as $lp_option ) : ?>
 			<?php $lp_option_value = (string) ( $lp_option['value'] ?? '' ); ?>
@@ -89,6 +91,6 @@ $lp_select_class = lp_classes(
 		<?php endforeach; ?>
 	</select>
 	<?php if ( $lp_show_hint ) : ?>
-		<p id="<?php echo esc_attr( $lp_error_id ); ?>" class="validator-hint font-body text-[10px] text-error m-0"><?php echo esc_html( $lp_error_message ); ?></p>
+		<p id="<?php echo esc_attr( $lp_error_id ); ?>"<?php echo $lp_error ? ' role="alert"' : ''; ?> class="validator-hint font-body text-[12px] text-base-content m-0"><?php echo esc_html( $lp_error_message ); ?></p>
 	<?php endif; ?>
 </div>

@@ -23,8 +23,8 @@ export const hoverEffect = {
     const rest = Object.fromEntries(Object.keys(target).map((key) => [key, RESET[key]]));
 
     return hover(el, () => {
-      animate(el, target, { duration, ease: 'ease-out' });
-      return () => animate(el, rest, { duration, ease: 'ease-out' });
+      animate(el, target, { duration, ease: 'easeOut' });
+      return () => animate(el, rest, { duration, ease: 'easeOut' });
     });
   },
 };

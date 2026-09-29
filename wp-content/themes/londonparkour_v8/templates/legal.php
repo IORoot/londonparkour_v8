@@ -257,7 +257,7 @@ if ( $lp_is_waiver ) {
 	}
 }
 
-get_header();
+get_header( null, array( 'active_key' => 'docs' ) );
 ?>
 
 <main id="main">

@@ -112,7 +112,7 @@ if ( '' !== $lp_logline ) {
 	$lp_masthead['note'] = $lp_logline;
 }
 
-get_header();
+get_header( null, array( 'active_key' => 'tutorials' ) );
 ?>
 
 <main id="main">
@@ -330,7 +330,7 @@ get_header();
 									?>
 									<span class="font-label text-[11px] font-bold uppercase tracking-[1.2px] text-primary">ACTIVE SERIES</span>
 								</div>
-								<h2 class="font-heading text-[40px] font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_term->name ); ?></h2>
+								<h2 class="font-heading text-[28px] sm:text-[40px] font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_term->name ); ?></h2>
 								<?php if ( '' !== $lp_logline ) : ?>
 									<p class="font-body text-[16px] leading-[1.5] text-neutral-content/65 m-0"><?php echo esc_html( $lp_logline ); ?></p>
 								<?php endif; ?>

@@ -9,11 +9,8 @@
  * `--radius-field: 0` corners, focus outline width/offset) comes free from
  * daisyUI + the theme and is not repeated here.
  *
- * Scoped to `.btn[data-component="button"]` so nothing here leaks onto the
- * unrelated legacy V3 daisyUI base-kit stories in this repo that also use
- * bare `.btn` (Components/Button, Elements/Buttons/Button, Card, Navbar,
- * Pagination, Alert, Table, Tooltip, ...) — those stay untouched per "delete
- * nothing".
+ * Scoped to `.btn[data-component="button"]` so nothing here leaks onto
+ * other bare `.btn` uses (e.g. the Dialog/Video trigger).
  *
  * Every rule below carries `!important`. That is not a specificity shortcut:
  * daisyUI's own generated `.btn`/`.btn-*` rules compile into Tailwind's
@@ -109,31 +106,18 @@
 
 /* Disabled — dim the button's own rest colours via opacity rather than
    daisyUI's default desaturating recolor, matching the design's flat opacity
-   treatment. One rule per fill family; ghost gets its own (border-base-300 /
-   base-content at 50% / a shallower opacity), since it has no fill to dim. */
-.btn[data-component="button"].btn-primary:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
+   treatment. daisyUI's disabled rule rewrites --btn-fg/--btn-border but not
+   --btn-color, so the fill re-reads it; only the text needs a per-variant pin.
+   Ghost gets its own rule below (no fill to dim). */
+.btn[data-component="button"]:is(.btn-primary, .btn-neutral, .btn-error):is(:disabled, .btn-disabled, [aria-disabled="true"]) {
   opacity: 0.38 !important;
   pointer-events: none !important;
-  background-color: var(--color-primary) !important;
-  color: var(--color-primary-content) !important;
-  border-color: var(--color-primary) !important;
+  background-color: var(--btn-color) !important;
+  border-color: var(--btn-color) !important;
 }
-
-.btn[data-component="button"].btn-neutral:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
-  opacity: 0.38 !important;
-  pointer-events: none !important;
-  background-color: var(--color-neutral) !important;
-  color: var(--color-primary) !important;
-  border-color: var(--color-neutral) !important;
-}
-
-.btn[data-component="button"].btn-error:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
-  opacity: 0.38 !important;
-  pointer-events: none !important;
-  background-color: var(--color-error) !important;
-  color: var(--color-error-content) !important;
-  border-color: var(--color-error) !important;
-}
+.btn[data-component="button"].btn-primary:is(:disabled, .btn-disabled, [aria-disabled="true"]) { color: var(--color-primary-content) !important; }
+.btn[data-component="button"].btn-neutral:is(:disabled, .btn-disabled, [aria-disabled="true"]) { color: var(--color-primary) !important; }
+.btn[data-component="button"].btn-error:is(:disabled, .btn-disabled, [aria-disabled="true"]) { color: var(--color-error-content) !important; }
 
 .btn[data-component="button"].btn-outline:is(:disabled, .btn-disabled, [aria-disabled="true"]) {
   opacity: 0.7 !important;
@@ -143,8 +127,13 @@
   color: color-mix(in oklab, var(--color-base-content) 50%, transparent) !important;
 }
 
-/* Focus ring — daisyUI already gives 2px width + 2px offset on `.btn`; only
-   the colour needs pinning to the signal colour for every variant. */
+/* Focus ring — two bands, so it holds on every ground without knowing which
+   one it's on: a base-100 halo in the offset gap, then a base-content
+   outline. The pair always contrast each other, and at least one clears 3:1
+   against page, board, fill or accent. (The old signal-colour ring measured
+   1.54:1 / 1.27:1 on the light page ground.) */
 .btn[data-component="button"]:focus-visible {
-  outline-color: var(--color-primary) !important;
+  outline: 2px solid var(--color-base-content) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 2px var(--color-base-100) !important;
 }

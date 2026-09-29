@@ -40,7 +40,7 @@ $lp_aspects = array(
 );
 
 $lp_root_base        = 'rounded-none bg-transparent overflow-hidden no-underline text-left';
-$lp_root_interactive = 'group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+$lp_root_interactive = 'group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content';
 
 $lp_aspect_key = (string) ( $args['aspect'] ?? 'wide' );
 $lp_aspect     = $lp_aspects[ $lp_aspect_key ] ?? $lp_aspects['wide'];
@@ -128,11 +128,13 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 		</div>
 		<<?php echo $lp_h; ?> class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_h; ?>>
 		<?php if ( '' !== $lp_note ) : ?>
-			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/70"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/65"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>
 		<div class="flex items-center justify-between gap-3 pt-[15px]">
 			<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_foot ); ?></span>
-			<?php lp_part( 'elements/chevron', array( 'variant' => $lp_is_link ? 'media_card' : 'media_card_static' ) ); ?>
+			<?php if ( $lp_is_link ) : ?>
+				<?php lp_part( 'elements/chevron', array( 'variant' => 'media_card' ) ); ?>
+			<?php endif; ?>
 		</div>
 	</div>
 <?php echo $lp_is_link ? '</a>' : '</div>'; ?>

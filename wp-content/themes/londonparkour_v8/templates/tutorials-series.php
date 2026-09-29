@@ -37,7 +37,7 @@ if ( $lp_series_terms ) {
 	}
 }
 
-get_header();
+get_header( null, array( 'active_key' => 'tutorials' ) );
 ?>
 
 <main id="main">
@@ -92,7 +92,7 @@ get_header();
 				<div class="flex items-end justify-between gap-4 pb-[14px]">
 					<div class="flex flex-col gap-2">
 						<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-primary">NOW STREAMING</span>
-						<h2 class="font-heading text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">Series worth watching.</h2>
+						<h2 class="font-heading text-[26px] sm:text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">Series worth watching.</h2>
 					</div>
 					<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( sprintf( '%02d SERIES', $lp_series_count ) ); ?></span>
 				</div>
@@ -141,8 +141,8 @@ get_header();
 						? 'relative w-full lg:w-[640px] shrink-0 aspect-video bg-neutral overflow-hidden'
 						: 'relative w-full lg:w-[460px] shrink-0 min-h-[180px] lg:h-[272px] bg-neutral overflow-hidden';
 					$lp_title_cls   = $lp_featured
-						? 'font-heading text-[40px] font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral'
-						: 'font-heading text-[34px] font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral';
+						? 'font-heading text-[28px] sm:text-[40px] font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral'
+						: 'font-heading text-[26px] sm:text-[34px] font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral';
 					$lp_logline_cls = $lp_featured
 						? 'font-label text-[14px] font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80'
 						: 'font-label text-[13px] font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80';

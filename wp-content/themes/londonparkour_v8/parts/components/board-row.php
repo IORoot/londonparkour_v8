@@ -73,7 +73,7 @@ $lp_sizes = array(
 		'thumb_sizes' => '56px',
 		'time_wrap'       => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[92px] lg:gap-[3px]',
 		'time'            => 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content',
-		'date'            => 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
+		'date'            => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
 		'date_lead_wrap'  => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[140px] lg:gap-[3px]',
 		'date_lead_date'  => 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-neutral-content whitespace-nowrap',
 		'date_lead_time'  => 'font-label text-[12px] font-normal tracking-[0.8px] text-neutral-content/50',
@@ -93,9 +93,9 @@ $lp_sizes = array(
 		'fare_mobile' => 'flex flex-col items-end gap-[2px] shrink-0 lg:hidden',
 		'fare'        => 'hidden lg:flex flex-col items-end gap-[2px] w-[76px] lg:shrink-0',
 		'fare_price'  => 'font-heading text-[19px] font-semibold tracking-[-0.4px] text-neutral-content',
-		'fare_label'  => 'font-label text-[9px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
+		'fare_label'  => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50',
 		'book'        => 'relative z-10 shrink-0 lg:w-[84px] flex justify-end ml-auto lg:ml-0',
-		'detail'      => 'relative z-10 w-fit',
+		'detail'      => 'relative z-10 py-2 -my-2 w-fit focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
 	),
 	'lg'      => array(
 		'root'        => 'group relative flex flex-col gap-[12px] lg:flex-row lg:items-center lg:gap-[28px] w-full py-[16px] lg:py-[20px] px-[16px] lg:px-[32px] bg-neutral-content/20 lg:bg-secondary hover:bg-primary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left',
@@ -104,7 +104,7 @@ $lp_sizes = array(
 		'thumb_sizes' => '(min-width: 1024px) 112px, 56px',
 		'time_wrap'       => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[112px] lg:gap-[4px]',
 		'time'            => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
-		'date'            => 'font-label text-[10px] lg:text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'date'            => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
 		'date_lead_wrap'  => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[168px] lg:gap-[4px]',
 		'date_lead_date'  => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral whitespace-nowrap',
 		'date_lead_time'  => 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral',
@@ -124,9 +124,9 @@ $lp_sizes = array(
 		'fare_mobile' => 'flex flex-col items-end gap-[2px] shrink-0 lg:hidden',
 		'fare'        => 'hidden lg:flex flex-col items-end gap-[3px] w-[88px] lg:shrink-0',
 		'fare_price'  => 'font-heading text-[20px] lg:text-[24px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
-		'fare_label'  => 'font-label text-[9px] lg:text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'fare_label'  => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
 		'book'        => 'relative z-10 shrink-0 lg:w-[96px] flex justify-end ml-auto lg:ml-0',
-		'detail'      => 'relative z-10 w-fit',
+		'detail'      => 'relative z-10 py-2 -my-2 w-fit focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-content',
 	),
 );
 
@@ -193,7 +193,7 @@ $lp_spaces_tone = $lp_spaces_tones[ $lp_tone_key ];
 if ( $lp_cancelled && 'lg' === $lp_size ) {
 	$lp_ui['root']           = 'group relative flex flex-col gap-[12px] lg:flex-row lg:items-center lg:gap-[28px] w-full py-[16px] lg:py-[20px] px-[16px] lg:px-[32px] bg-neutral-content/20 lg:bg-secondary border-b border-neutral-content/10 transition-colors duration-150 no-underline text-left';
 	$lp_ui['time']           = 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content';
-	$lp_ui['date']           = 'font-label text-[10px] lg:text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50';
+	$lp_ui['date']           = 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50';
 	$lp_ui['date_lead_date'] = 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content whitespace-nowrap';
 	$lp_ui['date_lead_time'] = 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.8px] text-neutral-content/50';
 	$lp_ui['glyph_wrap']     = 'hidden min-[1680px]:inline-flex w-10 h-10 shrink-0 text-neutral-content items-center justify-center';
@@ -204,7 +204,7 @@ if ( $lp_cancelled && 'lg' === $lp_size ) {
 	$lp_ui['level_mark']     = 'text-neutral-content/80';
 	$lp_ui['level_label']    = 'font-label text-[11px] 2xl:text-[13px] font-normal tracking-[0.2px] text-neutral-content/80 break-words 2xl:truncate';
 	$lp_ui['fare_price']     = 'font-heading text-[20px] lg:text-[24px] font-semibold tracking-[-0.4px] text-neutral-content';
-	$lp_ui['fare_label']     = 'font-label text-[9px] lg:text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/50';
+	$lp_ui['fare_label']     = 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50';
 }
 
 if ( $lp_date_lead ) {
@@ -221,7 +221,7 @@ if ( $lp_now_playing ) {
 		: 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content';
 	$lp_ui['date']        = $lp_date_lead
 		? 'font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content whitespace-nowrap'
-		: 'font-label text-[10px] font-normal tracking-[0.8px] uppercase text-primary-content/70';
+		: 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-primary-content/70';
 	$lp_ui['title']       = 'font-heading text-[17px] font-medium tracking-[-0.2px] text-primary-content truncate';
 	$lp_ui['subtitle']    = 'font-label text-[11px] font-normal tracking-[0.2px] text-primary-content/70 truncate';
 	$lp_ui['site_pin']    = 'text-primary-content/70 transition-colors duration-150';
@@ -272,7 +272,7 @@ $lp_extra_attrs = lp_html_attrs( is_array( $args['data_attrs'] ?? null ) ? $args
 					?>
 					<?php if ( $lp_cancelled ) : ?>
 						<span class="absolute inset-x-0 bottom-0 flex justify-center bg-neutral-content py-1">
-							<span class="font-label text-[9px] font-semibold uppercase tracking-[0.8px] text-neutral">CANCELLED</span>
+							<span class="font-label text-[11px] font-semibold uppercase tracking-[0.8px] text-neutral">CANCELLED</span>
 						</span>
 					<?php endif; ?>
 				</div>

@@ -65,11 +65,11 @@ $lp_panel_button = 'text-left border-0';
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-primary px-6 md:px-16 pt-[116px] pb-[120px]', $lp_spacing ); ?>" data-component="cta"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'bg-primary px-6 lg:px-16 pt-[116px] pb-[120px]', $lp_spacing ); ?>" data-component="cta"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col gap-[60px]">
 		<div class="flex items-center justify-between gap-4">
-			<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary-content"><?php echo esc_html( $lp_kicker ); ?></span>
-			<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary-content/70"><?php echo esc_html( $lp_coordinates ); ?></span>
+			<span class="font-label text-[11px] font-semibold tracking-[0.9px] uppercase text-primary-content"><?php echo esc_html( $lp_kicker ); ?></span>
+			<span class="font-label text-[11px] font-semibold tracking-[0.9px] uppercase text-primary-content/70"><?php echo esc_html( $lp_coordinates ); ?></span>
 		</div>
 
 		<div class="grid lg:grid-cols-[1fr_auto] gap-[72px] items-start">
@@ -96,7 +96,7 @@ $lp_spacing = lp_section_spacing( $args );
 					}
 					?>
 					<?php if ( $lp_alt ) : ?>
-						<a href="<?php echo esc_url( $lp_alt['href'] ); ?>" class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary-content hover:underline"><?php echo esc_html( $lp_alt['label'] ); ?></a>
+						<a href="<?php echo esc_url( $lp_alt['href'] ); ?>" class="font-label text-[11px] font-semibold tracking-[0.9px] uppercase text-primary-content hover:underline"><?php echo esc_html( $lp_alt['label'] ); ?></a>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -108,12 +108,12 @@ $lp_spacing = lp_section_spacing( $args );
 			<?php else : ?>
 			<div class="<?php echo esc_attr( $lp_panel_base ); ?>" data-component="cta-session-panel">
 			<?php endif; ?>
-				<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( $lp_session['kicker'] ); ?></span>
+				<span class="font-label text-[11px] font-semibold tracking-[0.9px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( $lp_session['kicker'] ); ?></span>
 				<p class="font-heading text-[36px] font-semibold tracking-[-1px] text-neutral-content group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( $lp_session['when'] ); ?></p>
-				<p class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/60 group-hover:text-neutral/60 transition-colors duration-150"><?php echo esc_html( $lp_session['meta'] ); ?></p>
+				<p class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/70 group-hover:text-neutral/70 transition-colors duration-150"><?php echo esc_html( $lp_session['meta'] ); ?></p>
 				<div class="h-px bg-neutral-content/15 group-hover:bg-neutral/15 transition-colors duration-150" aria-hidden="true"></div>
 				<div class="flex items-center justify-between">
-					<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-neutral-content/60 group-hover:text-neutral/60 transition-colors duration-150"><?php echo esc_html( $lp_session['foot_label'] ); ?></span>
+					<span class="font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-neutral-content/70 group-hover:text-neutral/70 transition-colors duration-150"><?php echo esc_html( $lp_session['foot_label'] ); ?></span>
 					<span class="font-heading text-[20px] font-semibold text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( $lp_session['foot_value'] ); ?></span>
 				</div>
 			<?php

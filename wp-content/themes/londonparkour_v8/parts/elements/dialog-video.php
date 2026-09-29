@@ -27,7 +27,7 @@ $lp_title      = (string) ( $args['title'] ?? '' );
 <el-dialog data-video-dialog="<?php echo esc_attr( $lp_video_type ); ?>" data-element="dialog" data-template="video">
 	<dialog
 		id="<?php echo esc_attr( $lp_dialog_id ); ?>"
-		aria-label="<?php esc_attr_e( 'Class video', 'londonparkour_v8' ); ?>"
+		<?php echo '' !== $lp_title ? 'aria-labelledby="' . esc_attr( $lp_dialog_id . '-title' ) . '"' : 'aria-label="' . esc_attr__( 'Class video', 'londonparkour_v8' ) . '"'; ?>
 		class="fixed inset-0 z-50 m-0 size-auto max-h-none max-w-none overflow-hidden bg-transparent p-4 open:flex open:items-center open:justify-center"
 	>
 		<button
@@ -42,15 +42,15 @@ $lp_title      = (string) ( $args['title'] ?? '' );
 				type="button"
 				command="close"
 				commandfor="<?php echo esc_attr( $lp_dialog_id ); ?>"
-				class="absolute right-2 top-2 z-20 btn btn-sm btn-circle btn-ghost text-neutral-content"
-				aria-label="<?php esc_attr_e( '✕ Close video', 'londonparkour_v8' ); ?>"
-			>✕</button>
+				class="absolute right-2 top-2 z-20 btn btn-sm btn-square btn-ghost text-neutral-content"
+				aria-label="<?php esc_attr_e( 'Close video', 'londonparkour_v8' ); ?>"
+			><span aria-hidden="true">✕</span></button>
 			<div class="relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full">
 				<div class="video-player absolute inset-0 size-full"></div>
 			</div>
 			<?php if ( '' !== $lp_title ) : ?>
 				<div class="px-[22px] py-[16px]">
-					<h3 class="font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content m-0"><?php echo esc_html( $lp_title ); ?></h3>
+					<h3 id="<?php echo esc_attr( $lp_dialog_id . '-title' ); ?>" class="font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content m-0"><?php echo esc_html( $lp_title ); ?></h3>
 				</div>
 			<?php endif; ?>
 		</el-dialog-panel>

@@ -22,7 +22,7 @@ export const counterEffect = {
     const run = () =>
       animate(0, target, {
         duration,
-        ease: 'ease-out',
+        ease: 'easeOut',
         onUpdate: (latest) => {
           el.textContent = `${prefix}${format(latest, decimals)}${suffix}`;
         },

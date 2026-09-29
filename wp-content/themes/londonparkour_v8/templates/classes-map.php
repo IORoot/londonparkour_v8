@@ -63,7 +63,7 @@ $lp_sites_lbl = preg_replace_callback(
 
 $lp_mast_media = (int) get_post_thumbnail_id();
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">

@@ -25,20 +25,20 @@ defined( 'ABSPATH' ) || exit;
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_surfaces = array(
 	'board'  => array(
-		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50',
-		'value' => 'stat-value p-0 mt-[7px] font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-neutral-content',
+		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[11px] font-normal whitespace-normal tracking-[0.9px] uppercase text-neutral-content/50',
+		'value' => 'stat-value p-0 mt-[7px] whitespace-normal break-words font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-neutral-content',
 	),
 	'accent' => array(
-		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[10px] font-normal tracking-[0.9px] uppercase text-accent-content/70',
-		'value' => 'stat-value p-0 mt-[7px] font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-accent-content',
+		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[11px] font-normal whitespace-normal tracking-[0.9px] uppercase text-accent-content/70',
+		'value' => 'stat-value p-0 mt-[7px] whitespace-normal break-words font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-accent-content',
 	),
 	'page'   => array(
-		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[10px] font-normal tracking-[0.9px] uppercase text-base-content/65',
-		'value' => 'stat-value p-0 mt-[7px] font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-base-content',
+		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[11px] font-normal whitespace-normal tracking-[0.9px] uppercase text-base-content/65',
+		'value' => 'stat-value p-0 mt-[7px] whitespace-normal break-words font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-base-content',
 	),
 	'fill'   => array(
-		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[10px] font-normal tracking-[0.9px] uppercase text-primary-content/70',
-		'value' => 'stat-value p-0 mt-[7px] font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-primary-content',
+		'label' => 'stat-title p-0 m-0 flex items-center gap-2 font-label text-[11px] font-normal whitespace-normal tracking-[0.9px] uppercase text-primary-content/70',
+		'value' => 'stat-value p-0 mt-[7px] whitespace-normal break-words font-body text-[15px] font-medium tracking-[-0.2px] normal-case text-primary-content',
 	),
 );
 
@@ -47,8 +47,8 @@ $lp_label   = (string) ( $args['label'] ?? 'PRICE' );
 $lp_value   = (string) ( $args['value'] ?? '£15 drop-in' );
 $lp_icon_id = (string) ( $args['icon'] ?? '' );
 ?>
-<div class="stats bg-transparent shadow-none" data-component="fact-row">
-	<div class="stat p-0 min-h-0 w-auto place-items-start">
+<div class="stats max-w-full bg-transparent shadow-none" data-component="fact-row">
+	<div class="stat p-0 min-h-0 min-w-0 w-auto max-w-full place-items-start">
 		<div class="<?php echo esc_attr( $lp_tone['label'] ); ?>">
 			<?php if ( '' !== $lp_icon_id ) : ?>
 				<?php /* Decorative — the label carries the meaning, currentColor tracks its tone. */ ?>

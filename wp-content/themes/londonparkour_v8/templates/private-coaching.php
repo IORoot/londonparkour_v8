@@ -139,7 +139,7 @@ $lp_book_button = static function ( string $variant ) use ( $lp_appt_id, $lp_boo
 	);
 };
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 
 if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	lp_analytics_view_item_marker(
@@ -209,7 +209,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 			</div>
 			<div class="w-full lg:w-1/2 flex flex-col justify-end gap-6 px-6 py-scale-2xl lg:px-16 bg-neutral">
 				<span class="font-label text-[11px] font-semibold tracking-[1.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></span>
-				<h1 class="font-heading text-step-5 font-bold leading-[0.92] tracking-[-2.4px] text-neutral-content m-0"><?php echo nl2br( esc_html( $lp_headline ), false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html then nl2br. ?></h1>
+				<h1 class="font-heading text-step-5 font-bold leading-[0.92] tracking-[-0.03em] text-neutral-content m-0"><?php echo nl2br( esc_html( $lp_headline ), false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html then nl2br. ?></h1>
 				<p class="font-body text-[16px] font-normal leading-[1.55] tracking-[0.1px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_lead ); ?></p>
 				<div class="flex items-end gap-3 flex-wrap">
 					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_fare_label ); ?></span>
@@ -227,7 +227,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-base-100" data-component="private-who">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
 			<header class="flex items-end justify-between gap-4 flex-wrap">
-				<h2 class="font-heading text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Who it is for</h2>
+				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Who it is for</h2>
 				<span class="font-label text-[11px] font-semibold tracking-[1.4px] uppercase text-base-content/65">02 — PRIVATE 1:1</span>
 			</header>
 			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
@@ -245,7 +245,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-neutral" data-component="private-how">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-14">
 			<header class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-				<h2 class="font-heading text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-neutral-content m-0">How a session works</h2>
+				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-neutral-content m-0">How a session works</h2>
 				<p class="font-body text-[15px] font-normal leading-[1.5] text-neutral-content/50 m-0 lg:max-w-[320px]">No request form. Pick a slot and it confirms instantly.</p>
 			</header>
 			<ol class="flex flex-col lg:flex-row gap-10 lg:gap-0 list-none m-0 p-0" role="list">
@@ -263,7 +263,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-base-100" data-component="private-fare">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
 			<header class="flex items-end justify-between gap-4 flex-wrap">
-				<h2 class="font-heading text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Fare</h2>
+				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Fare</h2>
 				<span class="font-label text-[11px] font-semibold tracking-[1.2px] uppercase text-base-content/65">Blocks of 5 sessions available at a reduced rate.</span>
 			</header>
 			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
@@ -307,7 +307,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full" data-component="private-faq-book">
 		<div class="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[840px]">
 			<div class="w-full lg:w-1/2 bg-neutral px-6 py-scale-2xl lg:pl-16 lg:pr-16 flex flex-col gap-10">
-				<h2 class="font-heading text-[32px] font-bold leading-[0.92] tracking-[-0.8px] text-neutral-content m-0">Common questions</h2>
+				<h2 class="font-heading text-[26px] sm:text-[32px] font-bold leading-[0.92] tracking-[-0.8px] text-neutral-content m-0">Common questions</h2>
 				<div>
 					<?php foreach ( $lp_faqs as $lp_faq ) : ?>
 						<div class="flex flex-col gap-4 py-6 border-b border-neutral-content/10">
@@ -319,7 +319,7 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 			</div>
 			<div class="w-full lg:w-1/2 bg-primary px-6 py-scale-2xl lg:pl-16 lg:pr-16 flex flex-col justify-end gap-8">
 				<span class="font-label text-[11px] font-semibold tracking-[1.5px] uppercase text-primary-content/70">BOOK WHEN YOU'RE READY</span>
-				<h2 class="font-heading text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-primary-content m-0">Book your session</h2>
+				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-primary-content m-0">Book your session</h2>
 				<p class="font-body text-[16px] font-normal leading-[1.55] text-primary-content/70 m-0">Choose a date and location in the booking panel. Each slot shows the venue and the coach running it. Confirms instantly.</p>
 				<div>
 					<?php $lp_book_button( 'inverse' ); ?>

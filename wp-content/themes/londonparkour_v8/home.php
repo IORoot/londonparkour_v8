@@ -154,7 +154,7 @@ if ( ! empty( $lp_cards[0]['href'] ) && ! empty( $lp_cards[0]['title'] ) ) {
 	$lp_onward_next['href']  = $lp_cards[0]['href'];
 }
 
-get_header();
+get_header( null, array( 'active_key' => 'docs' ) );
 ?>
 
 <main id="main">
