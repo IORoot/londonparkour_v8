@@ -500,9 +500,6 @@ $lp_header_ground = $lp_over_hero
 						$lp_panel_key  = (string) $lp_link['panel'];
 						$lp_group_cls  = $lp_group_classes[ $lp_panel_key ] ?? 'group';
 						?>
-						<?php if ( $lp_i > 0 ) : ?>
-							<span class="<?php echo lp_classes( 'w-px', $lp_bar_height, 'bg-neutral-content/10' ); ?>" aria-hidden="true"></span>
-						<?php endif; ?>
 						<span class="<?php echo lp_classes( $lp_group_cls, $lp_bar_height, 'inline-flex items-center justify-center gap-[9px] px-[20px] border-b-[3px]', $lp_border_cls ); ?>">
 							<?php
 							if ( '' !== $lp_link['icon_id'] ) {
