@@ -267,18 +267,18 @@ while ( have_posts() ) :
 						$lp_intro_blocks,
 						array(
 							'lead'          => true,
-							'heading_start' => 'h4',
+							'heading_start' => 'h3',
 						)
 					);
 					?>
 					<?php foreach ( $lp_sections as $lp_section ) : ?>
-						<h3 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h3>
+						<h2 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h2>
 						<?php
 						lp_blog_render_blocks(
 							(array) ( $lp_section['blocks'] ?? array() ),
 							array(
 								'lead'          => false,
-								'heading_start' => 'h4',
+								'heading_start' => 'h3',
 							)
 						);
 						?>
@@ -290,13 +290,13 @@ while ( have_posts() ) :
 						</blockquote>
 					<?php endif; ?>
 					<?php foreach ( $lp_sections_after as $lp_section ) : ?>
-						<h3 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h3>
+						<h2 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h2>
 						<?php
 						lp_blog_render_blocks(
 							(array) ( $lp_section['blocks'] ?? array() ),
 							array(
 								'lead'          => false,
-								'heading_start' => 'h4',
+								'heading_start' => 'h3',
 							)
 						);
 						?>

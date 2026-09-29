@@ -229,9 +229,7 @@ get_header();
 					while ( have_posts() ) :
 						the_post();
 						$lp_card = lp_video_card_args_from_tutorial( get_post(), 'full' );
-						if ( 0 === (int) $wp_query->current_post ) {
-							$lp_card['loading'] = 'eager';
-						}
+						$lp_card['heading_level'] = 'h2';
 						lp_part( 'components/video-card', $lp_card );
 					endwhile;
 					?>

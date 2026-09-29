@@ -343,7 +343,7 @@ if ( $lp_can_book ) {
 		<div class="<?php echo lp_classes( $lp_cancelled ? $lp_rail['past'] : ( $lp_is_card_link && ! $lp_past ? $lp_rail_card_hover[ $lp_size ] : $lp_rail[ $lp_rail_key ] ) ); ?>">
 			<div class="flex flex-col gap-0.5 items-start text-left">
 				<?php if ( $lp_cancelled ) : ?>
-					<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_fare_lbl ); ?></span>
+					<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-neutral-content/70"><?php echo esc_html( $lp_fare_lbl ); ?></span>
 					<span class="font-heading text-[32px] font-bold tracking-[-1.4px] leading-[0.9] text-neutral-content line-through"><?php echo esc_html( $lp_fare_t ); ?></span>
 				<?php elseif ( $lp_past ) : ?>
 					<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_fare_lbl ); ?></span>

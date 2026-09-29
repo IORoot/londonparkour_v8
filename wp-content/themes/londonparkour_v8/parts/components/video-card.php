@@ -36,6 +36,7 @@
  * @param string $args['badge_label'] full only.
  * @param string $args['flag']        full only — optional signal word.
  * @param string $args['cta_label']   full only.
+ * @param string $args['heading_level'] full only: 'h3' (default) or 'h2' when the card sits directly under the page <h1>.
  * @param string $args['cta_href']    full only.
  * @param string $args['foot_label']  compact only.
  * @param string $args['href']        compact and lesson — makes the card one <a>.
@@ -254,6 +255,7 @@ $lp_duration    = (string) ( $args['duration'] ?? '4:12' );
 $lp_badge_label = (string) ( $args['badge_label'] ?? 'Lesson' );
 $lp_flag        = (string) ( $args['flag'] ?? '' );
 $lp_cta_label   = (string) ( $args['cta_label'] ?? 'Watch lesson' );
+$lp_h           = 'h2' === ( $args['heading_level'] ?? 'h3' ) ? 'h2' : 'h3';
 ?>
 <article class="card rounded-none bg-base-200 border border-base-300 overflow-hidden group hover:bg-primary" data-component="video-card" data-variant="full">
 	<figure class="relative aspect-video w-full bg-base-300 overflow-hidden m-0">
@@ -301,7 +303,7 @@ $lp_cta_label   = (string) ( $args['cta_label'] ?? 'Watch lesson' );
 	</figure>
 	<div class="card-body p-[16px] pt-[18px] gap-[14px]">
 		<?php $lp_head_row( $lp_kicker, $lp_meta, $lp_glyph_id ); ?>
-		<h3 class="card-title font-heading text-[22px] font-bold tracking-[-0.5px] leading-none text-base-content group-hover:text-neutral"><?php echo esc_html( $lp_title ); ?></h3>
+		<<?php echo $lp_h; ?> class="card-title font-heading text-[22px] font-bold tracking-[-0.5px] leading-none text-base-content group-hover:text-neutral"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_h; ?>>
 		<?php if ( '' !== $lp_note ) : ?>
 			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/65 group-hover:text-neutral"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>
@@ -314,7 +316,7 @@ $lp_cta_label   = (string) ( $args['cta_label'] ?? 'Watch lesson' );
 					'label'            => $lp_cta_label,
 					'href'             => $args['cta_href'] ?? '',
 					'trailing_icon_id' => 'icon-arrow-right',
-					'aria_label'       => sprintf( 'Watch: %s, %s', $lp_title, $lp_duration ),
+					'aria_label'       => sprintf( '%s: %s, %s', $lp_cta_label, $lp_title, $lp_duration ),
 				)
 			);
 			?>

@@ -111,9 +111,9 @@ get_header();
 								<div class="flex items-baseline justify-between gap-3">
 									<span class="font-label text-[11px] font-semibold tracking-[0.6px] text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
 								</div>
-								<h3 class="font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight text-base-content m-0">
+								<h2 class="font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight text-base-content m-0">
 									<a href="<?php echo esc_url( (string) ( $lp_coach['href'] ?? '' ) ); ?>" class="hover:text-accent transition-colors duration-150"><?php echo esc_html( (string) ( $lp_coach['name'] ?? '' ) ); ?></a>
-								</h3>
+								</h2>
 								<p class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-base-content/65 m-0"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
 								<?php if ( '' !== (string) ( $lp_coach['bio'] ?? '' ) ) : ?>
 									<p class="font-body text-[12px] lg:text-[13px] leading-[1.45] lg:leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) $lp_coach['bio'] ); ?></p>

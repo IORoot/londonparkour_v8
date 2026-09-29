@@ -633,7 +633,7 @@ function lp_blog_inline_markdown( string $lp_text ): string {
 		'/\[([^\]]+)\]\(([^)]+)\)/',
 		static function ( array $lp_m ): string {
 			$lp_href = html_entity_decode( $lp_m[2], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
-			return '<a class="text-accent hover:text-accent/70" href="' . esc_url( $lp_href ) . '">' . $lp_m[1] . '</a>';
+			return '<a class="text-accent underline hover:text-accent/70" href="' . esc_url( $lp_href ) . '">' . $lp_m[1] . '</a>';
 		},
 		$lp_text
 	);

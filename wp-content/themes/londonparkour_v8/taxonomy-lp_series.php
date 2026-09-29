@@ -252,7 +252,7 @@ get_header();
 	?>
 
 	<details class="group/picker lg:hidden bg-base-100 border-b border-base-300" data-component="series-picker">
-		<summary class="list-none cursor-pointer px-6 py-4 [&::-webkit-details-marker]:hidden" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: series name */ __( 'Series: %s', 'londonparkour_v8' ), $lp_term->name ) ); ?>">
+		<summary class="list-none cursor-pointer px-6 py-4 [&::-webkit-details-marker]:hidden">
 			<span class="flex flex-col gap-2">
 				<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html__( 'Series', 'londonparkour_v8' ); ?></span>
 				<span class="flex min-h-[108px] h-auto overflow-hidden bg-base-100 border border-primary text-left w-full">
@@ -401,9 +401,6 @@ get_header();
 								<?php foreach ( $lp_current_lessons as $lp_gi => $lp_lesson ) : ?>
 									<?php
 									$lp_card = $lp_lesson_card( $lp_lesson, $lp_gi + 1 );
-									if ( 0 === $lp_gi ) {
-										$lp_card['loading'] = 'eager';
-									}
 									lp_part( 'components/video-card', $lp_card );
 									?>
 								<?php endforeach; ?>
@@ -427,9 +424,6 @@ get_header();
 												<div class="w-[248px] shrink-0 snap-start">
 													<?php
 													$lp_card = $lp_lesson_card( $lp_lesson, $lp_si + 1 );
-													if ( 0 === $lp_si ) {
-														$lp_card['loading'] = 'eager';
-													}
 													lp_part( 'components/video-card', $lp_card );
 													?>
 												</div>

@@ -144,7 +144,7 @@ $lp_author_row = static function () use ( $lp_v, $lp_author, $lp_date ) {
 				<span class="<?php echo lp_classes( $lp_v['read_time'], 'shrink-0' ); ?>"><?php echo esc_html( $lp_read_time ); ?></span>
 			<?php endif; ?>
 		</div>
-		<h3 class="<?php echo esc_attr( $lp_v['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></h3>
+		<<?php echo $lp_is_lead ? 'h2' : 'h3'; ?> class="<?php echo esc_attr( $lp_v['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_is_lead ? 'h2' : 'h3'; ?>>
 		<p class="<?php echo esc_attr( $lp_v['excerpt'] ); ?>"><?php echo esc_html( $lp_excerpt ); ?></p>
 		<?php if ( $lp_is_lead ) : ?>
 			<div class="<?php echo esc_attr( $lp_v['spacer'] ); ?>" aria-hidden="true"></div>

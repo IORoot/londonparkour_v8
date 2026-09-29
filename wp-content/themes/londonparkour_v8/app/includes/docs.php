@@ -403,7 +403,7 @@ function lp_docs_render_index( string $lp_current_title = '' ): void {
 	?>
 	<div class="w-full bg-base-200" data-component="docs-index" id="docs-index">
 		<details class="group/docs lg:hidden" data-component="docs-index-picker">
-			<summary class="list-none cursor-pointer px-6 py-4 [&::-webkit-details-marker]:hidden" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: current wiki page title */ __( 'Docs index: %s', 'londonparkour_v8' ), $lp_current_page['title'] ) ); ?>">
+			<summary class="list-none cursor-pointer px-6 py-4 [&::-webkit-details-marker]:hidden">
 				<span class="flex flex-col gap-2">
 					<span class="flex items-end justify-between gap-4">
 						<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-base-content">DOCS INDEX</span>

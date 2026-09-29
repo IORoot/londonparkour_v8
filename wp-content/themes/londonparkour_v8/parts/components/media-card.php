@@ -25,6 +25,7 @@
  * @param string $args['note']      Optional.
  * @param string $args['foot']
  * @param string $args['href']      Renders the card as one focusable <a>.
+ * @param string $args['heading_level'] 'h3' (default) or 'h2' when the card sits directly under the page <h1>.
  * @param string $args['banner']    Optional label over the image (e.g. CANCELLED).
  *
  * @package londonparkour_v8
@@ -55,6 +56,7 @@ $lp_title     = (string) ( $args['title'] ?? 'Outdoor Class' );
 $lp_note      = (string) ( $args['note'] ?? '' );
 $lp_foot      = (string) ( $args['foot'] ?? '£15 · 90 min' );
 $lp_banner    = (string) ( $args['banner'] ?? '' );
+$lp_h           = 'h2' === ( $args['heading_level'] ?? 'h3' ) ? 'h2' : 'h3';
 $lp_title_class = '' !== $lp_banner
 	? 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content line-through'
 	: 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content';
@@ -124,7 +126,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 				?>
 			</span>
 		</div>
-		<h3 class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></h3>
+		<<?php echo $lp_h; ?> class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_h; ?>>
 		<?php if ( '' !== $lp_note ) : ?>
 			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/70"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>

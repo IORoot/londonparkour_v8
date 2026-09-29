@@ -149,9 +149,6 @@ get_header();
 								'aria_label' => $lp_kind_on
 									? sprintf( __( 'Hide %s', 'londonparkour_v8' ), $lp_kind_label )
 									: sprintf( __( 'Show %s', 'londonparkour_v8' ), $lp_kind_label ),
-								'data_attrs' => array(
-									'aria-pressed' => $lp_kind_on ? 'true' : 'false',
-								),
 							)
 						);
 					endforeach;
@@ -171,7 +168,7 @@ get_header();
 								<?php if ( '' !== ( $lp_shelf['glyph_id'] ?? '' ) ) : ?>
 									<span class="w-7 h-7 shrink-0 text-primary" aria-hidden="true"><?php lp_icon( $lp_shelf['glyph_id'], 'w-7 h-7' ); ?></span>
 								<?php endif; ?>
-								<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content min-w-0"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
+								<h2 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content min-w-0"><?php echo esc_html( $lp_shelf['title'] ); ?></h2>
 							</div>
 							<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 whitespace-nowrap"><?php echo esc_html( $lp_shelf['meta'] ); ?></span>
 						</div>
@@ -182,9 +179,6 @@ get_header();
 									<div class="w-[248px] shrink-0 snap-start">
 										<?php
 										$lp_card = lp_video_card_args_from_tutorial( $lp_lesson, 'lesson', $lp_si + 1 );
-										if ( 0 === $lp_si ) {
-											$lp_card['loading'] = 'eager';
-										}
 										lp_part( 'components/video-card', $lp_card );
 										?>
 									</div>
