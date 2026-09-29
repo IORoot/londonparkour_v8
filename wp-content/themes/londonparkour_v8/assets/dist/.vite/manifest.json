@@ -10,11 +10,6 @@
       "leaflet-CIGW-MKW.css"
     ]
   },
-  "assets/css/critical.css": {
-    "file": "critical-CO_v7I_n.css",
-    "src": "assets/css/critical.css",
-    "isEntry": true
-  },
   "assets/css/main.css": {
     "file": "main-DeRYggWd.css",
     "src": "assets/css/main.css",
