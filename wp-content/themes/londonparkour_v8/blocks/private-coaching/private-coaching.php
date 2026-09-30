@@ -163,7 +163,7 @@ if ( $lp_is_booking ) :
 
 	ob_start();
 	?>
-	<div class="flex-1 min-w-0 flex flex-col gap-8 p-8 lg:px-14 lg:py-[104px]">
+	<div class="flex-1 min-w-0 flex flex-col gap-12 p-8 lg:px-14 lg:py-[104px]">
 		<div class="flex items-baseline justify-between gap-4 flex-wrap">
 			<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-primary-content"><?php echo esc_html( $lp_eyebrow ); ?></span>
 			<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-primary-content/70"><?php echo esc_html( $lp_meta ); ?></span>
@@ -172,20 +172,6 @@ if ( $lp_is_booking ) :
 			<h2 class="font-heading text-step-5 font-bold leading-[0.92] tracking-[-0.04em] text-primary-content m-0"><?php echo esc_html( $lp_headline ); ?></h2>
 			<p class="font-body text-[15px] leading-[1.6] tracking-[0.2px] text-primary-content/70 m-0"><?php echo esc_html( $lp_body ); ?></p>
 		</div>
-		<div class="grid grid-cols-3">
-			<?php foreach ( $lp_facts as $lp_fact ) : ?>
-				<div class="pt-[14px] pr-4 flex flex-col gap-[7px] min-w-0 border-t border-primary-content/25">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
-					<span class="font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
-				</div>
-			<?php endforeach; ?>
-		</div>
-		<div class="flex items-end gap-2.5 flex-wrap">
-			<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( $lp_fare_label ); ?></span>
-			<span class="font-heading text-[56px] font-bold tracking-[-2px] leading-[0.9] text-primary-content"><?php echo esc_html( $lp_amount ); ?></span>
-			<span class="font-label text-[11px] font-normal tracking-[0.8px] uppercase text-primary-content/70"><?php echo esc_html( $lp_unit ); ?></span>
-		</div>
-
 		<?php
 		$lp_btn_label = $lp_book['label'] ?: 'Confirmed instantly.';
 		if ( false !== stripos( $lp_btn_label, 'request' ) ) {
@@ -204,21 +190,40 @@ if ( $lp_is_booking ) :
 			}
 		}
 		?>
-		<div class="flex items-center justify-end gap-[14px] flex-wrap">
-			<?php
-			lp_part(
-				'elements/button',
-				array(
-					'variant'          => 'inverse',
-					'label'            => $lp_btn_label,
-					'href'             => $lp_book_href,
-					'trailing_icon_id' => 'icon-arrow-right',
-				)
-			);
-			?>
+		<div class="mt-auto flex flex-col gap-7" data-slot="close">
+			<div class="flex flex-wrap gap-x-12 gap-y-4" data-slot="facts">
+				<?php foreach ( $lp_facts as $lp_fact ) : ?>
+					<div class="flex flex-col gap-[7px] min-w-0">
+						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+						<span class="font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+					</div>
+				<?php endforeach; ?>
+			</div>
+			<div class="flex flex-col gap-3">
+				<?php // ml-auto keeps the CTA on the trailing edge, over the reassure line, even once the row wraps. ?>
+				<div class="flex flex-wrap items-end gap-x-6 gap-y-4" data-slot="fare-cta">
+					<div class="flex items-end gap-2.5 flex-wrap">
+						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( $lp_fare_label ); ?></span>
+						<span class="font-heading text-[56px] font-bold tracking-[-2px] leading-[0.9] text-primary-content"><?php echo esc_html( $lp_amount ); ?></span>
+						<span class="font-label text-[11px] font-normal tracking-[0.8px] uppercase text-primary-content/70"><?php echo esc_html( $lp_unit ); ?></span>
+					</div>
+					<span class="ml-auto">
+						<?php
+						lp_part(
+							'elements/button',
+							array(
+								'variant'          => 'inverse',
+								'label'            => $lp_btn_label,
+								'href'             => $lp_book_href,
+								'trailing_icon_id' => 'icon-arrow-right',
+							)
+						);
+						?>
+					</span>
+				</div>
+				<p class="font-label text-[11px] font-normal tracking-[0.2px] leading-[1.5] text-primary-content/70 m-0 text-right"><?php echo esc_html( $lp_reassure ); ?></p>
+			</div>
 		</div>
-
-		<p class="font-label text-[11px] font-normal tracking-[0.2px] leading-[1.5] text-primary-content/70 m-0"><?php echo esc_html( $lp_reassure ); ?></p>
 	</div>
 	<?php
 	$lp_offer_col = ob_get_clean();

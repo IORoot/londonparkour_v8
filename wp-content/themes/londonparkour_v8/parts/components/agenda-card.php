@@ -69,11 +69,6 @@ $lp_ink_hover = array(
 	'detail' => 'group-hover/detail:text-neutral',
 );
 
-$lp_rule_hover = array(
-	'card'   => 'group-hover:border-neutral',
-	'detail' => 'group-hover/detail:border-neutral',
-);
-
 $lp_media_scrim = array(
 	'card'   => 'pointer-events-none absolute inset-0 bg-neutral/0 transition-colors duration-150 group-hover:bg-neutral/25',
 	'detail' => 'pointer-events-none absolute inset-0 bg-neutral/0 transition-colors duration-150 group-hover/detail:bg-neutral/25',
@@ -187,7 +182,6 @@ if ( ! $lp_past && ! $lp_cancelled ) {
 	}
 }
 $lp_ink  = '' !== $lp_hover_mode ? $lp_ink_hover[ $lp_hover_mode ] : '';
-$lp_rule = '' !== $lp_hover_mode ? $lp_rule_hover[ $lp_hover_mode ] : '';
 
 $lp_book_attrs = '';
 if ( $lp_can_book ) {
@@ -282,7 +276,7 @@ if ( $lp_can_book ) {
 		<?php if ( $lp_facts ) : ?>
 			<div class="grid grid-cols-2 md:grid-cols-4 w-full">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
-					<div class="<?php echo lp_classes( 'min-w-0 flex flex-col gap-[3px] pt-3 pr-3 border-t border-neutral-content/10', $lp_rule ); ?>">
+					<div class="min-w-0 flex flex-col gap-[3px] pt-3 pr-3">
 						<span class="<?php echo lp_classes( 'font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50', $lp_ink ); ?>"><?php echo esc_html( (string) ( $lp_fact['key'] ?? '' ) ); ?></span>
 						<span class="<?php echo lp_classes( $lp_fact_val[ $lp_tone ], $lp_past ? '' : $lp_ink ); ?>"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 					</div>
