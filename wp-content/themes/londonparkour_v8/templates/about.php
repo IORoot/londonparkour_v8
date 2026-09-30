@@ -305,7 +305,7 @@ get_header( null, array( 'active_key' => '' ) );
 			<div class="absolute left-0 right-0 top-[65%] h-px bg-neutral-content"></div>
 			<div class="absolute left-0 right-0 top-[88%] h-px bg-neutral-content"></div>
 		</div>
-		<span class="absolute z-10 top-6 right-6 lg:top-10 lg:right-16 font-label text-fix--2 font-semibold tracking-[1px] uppercase text-primary m-0" data-slot="hero-coords"><?php echo esc_html( $lp_coords ); ?></span>
+		<span class="absolute z-10 top-6 right-6 lg:top-10 lg:right-16 font-label text-fix--2 font-semibold tracking-[1px] uppercase text-primary m-0" data-slot="hero-coords" data-motion-decode="<?php echo esc_attr( $lp_coords ); ?>" data-motion-decode-charset="gps"><?php echo esc_html( $lp_coords ); ?></span>
 		<div class="relative z-10 flex flex-col justify-end gap-7 min-h-[640px] lg:min-h-[780px] px-6 lg:px-16 pb-16">
 			<div class="self-start">
 				<?php
@@ -334,7 +334,7 @@ get_header( null, array( 'active_key' => '' ) );
 						?>
 					</span>
 				</h1>
-				<p class="font-body text-fix--1 font-normal tracking-[0.1px] leading-[1.55] text-neutral-content/50 m-0 max-w-[560px]"><?php echo esc_html( $lp_hero_dek ); ?></p>
+				<p class="font-body text-fix--1 font-normal tracking-[0.1px] leading-[1.55] text-neutral-content m-0 max-w-[560px]"><?php echo esc_html( $lp_hero_dek ); ?></p>
 			</div>
 			<div class="flex items-center gap-4 flex-wrap">
 				<?php

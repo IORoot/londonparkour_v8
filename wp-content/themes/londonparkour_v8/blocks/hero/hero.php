@@ -327,7 +327,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 			<?php endif; ?>
 		<?php endif; ?>
 
-		<div class="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10 xl:gap-x-[72px] flex-1">
+		<div class="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10 xl:gap-x-12 2xl:gap-x-[72px] flex-1">
 			<div class="flex flex-col gap-6 lg:gap-8 xl:max-w-[664px]" data-slot="claim">
 				<p class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></p>
 				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.92] text-neutral-content m-0" data-motion-decode="<?php echo $lp_headline_decode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped via esc_attr above. ?>" data-motion-decode-charset="board"><?php echo $lp_headline_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped then nl2br. ?></h1>
@@ -366,7 +366,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 				$lp_next_id   = (int) ( $lp_next['class_id'] ?? 0 );
 				$lp_next_date = (string) ( $lp_next['date'] ?? '' );
 				$lp_next_lab  = (string) ( $lp_next['foot_label'] ?? 'Reserve a place' );
-				$lp_board_cls = 'group block w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10 hover:bg-primary hover:border-neutral p-0 text-left no-underline cursor-pointer transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+				$lp_board_cls = 'group block w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95 border border-neutral-content/10 hover:bg-primary hover:border-neutral p-0 text-left no-underline cursor-pointer transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 				$lp_board_tag = 'div';
 				if ( $lp_next_id ) {
 					$lp_book       = lp_class_book_button_args( $lp_next_id, $lp_next_date, $lp_next_lab );
@@ -396,10 +396,10 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 							$lp_book_attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above.
 						);
 					} else {
-						echo '<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
+						echo '<div class="w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
 					}
 				} else {
-					echo '<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
+					echo '<div class="w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
 				}
 				?>
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10 group-hover:border-neutral/20">
@@ -432,7 +432,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 					</div>
 				<?php echo '</' . esc_attr( $lp_board_tag ) . '>'; ?>
 			<?php elseif ( 'sessions' === $lp_board_style ) : ?>
-				<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95" data-slot="board">
+				<div class="w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95" data-slot="board">
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10">
 						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary"><?php echo esc_html( $lp_board_ttl ); ?></span>
 						<span class="font-label text-step--2 font-normal tracking-[0.6px] text-neutral-content/70"><?php echo esc_html( $lp_board_stmp ); ?></span>
