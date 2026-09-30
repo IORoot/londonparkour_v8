@@ -94,7 +94,7 @@ if ( array_key_exists( 'media_alt', $args ) ) {
 			<?php endif; ?>
 		</h1>
 		<?php if ( '' !== $lp_note ) : ?>
-			<p class="max-w-[400px] font-body text-[13px] leading-[1.65] tracking-[0.1px] text-neutral-content/80"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="md:max-w-[400px] font-body text-[13px] leading-[1.65] tracking-[0.1px] text-neutral-content/80"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>
 	</div>
 </div>

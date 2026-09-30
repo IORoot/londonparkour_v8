@@ -65,8 +65,8 @@ $lp_body_hover = array(
 
 /* Ink/rules follow the details link only. The BOOK rail is outside that group. */
 $lp_ink_hover = array(
-	'card'   => 'group-hover:text-neutral',
-	'detail' => 'group-hover/detail:text-neutral',
+	'card'   => 'group-hover:text-neutral transition-colors',
+	'detail' => 'group-hover/detail:text-neutral transition-colors',
 );
 
 $lp_media_scrim = array(
@@ -109,13 +109,13 @@ $lp_fare = array(
 );
 
 $lp_fare_book = array(
-	'featured' => 'font-heading text-[42px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover/rail:text-primary',
-	'default'  => 'font-heading text-[32px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover/rail:text-primary',
+	'featured' => 'font-heading text-[42px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover/rail:text-primary transition-colors',
+	'default'  => 'font-heading text-[32px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover/rail:text-primary transition-colors',
 );
 
 $lp_fare_card = array(
-	'featured' => 'font-heading text-[42px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover:text-primary',
-	'default'  => 'font-heading text-[32px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover:text-primary',
+	'featured' => 'font-heading text-[42px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover:text-primary transition-colors',
+	'default'  => 'font-heading text-[32px] font-bold tracking-[-1.4px] leading-[0.9] text-primary-content group-hover:text-primary transition-colors',
 );
 
 $lp_fact_val = array(
@@ -300,15 +300,15 @@ if ( $lp_can_book ) {
 			<?php echo $lp_book_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above. ?>
 		>
 			<div class="flex flex-col gap-0.5 items-start text-left">
-				<span class="font-label text-[11px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_fare_lbl ); ?></span>
+				<span class="font-label text-[11px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover/rail:text-primary/70 transition-colors"><?php echo esc_html( $lp_fare_lbl ); ?></span>
 				<span class="<?php echo lp_classes( $lp_fare_book[ $lp_size ] ); ?>"><?php echo esc_html( $lp_fare_t ); ?></span>
 				<?php if ( '' !== $lp_spaces_d ) : ?>
-					<span class="font-label text-[11px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_spaces_d ); ?></span>
+					<span class="font-label text-[11px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover/rail:text-primary/70 transition-colors"><?php echo esc_html( $lp_spaces_d ); ?></span>
 				<?php endif; ?>
 			</div>
-			<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover/rail:border-primary">
-				<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover/rail:text-primary"><?php echo esc_html( $lp_cta ); ?></span>
-				<span class="font-label text-[14px] font-extrabold text-primary-content group-hover/rail:text-primary" aria-hidden="true">→</span>
+			<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover/rail:border-primary transition-colors">
+				<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover/rail:text-primary transition-colors"><?php echo esc_html( $lp_cta ); ?></span>
+				<span class="font-label text-[14px] font-extrabold text-primary-content group-hover/rail:text-primary transition-colors" aria-hidden="true">→</span>
 			</div>
 		</a>
 	<?php elseif ( $lp_can_book && ! empty( $lp_book['command'] ) ) : ?>
@@ -320,15 +320,15 @@ if ( $lp_can_book ) {
 			<?php echo $lp_book_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above. ?>
 		>
 			<div class="flex flex-col gap-0.5 items-start text-left">
-				<span class="font-label text-[11px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_fare_lbl ); ?></span>
+				<span class="font-label text-[11px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover/rail:text-primary/70 transition-colors"><?php echo esc_html( $lp_fare_lbl ); ?></span>
 				<span class="<?php echo lp_classes( $lp_fare_book[ $lp_size ] ); ?>"><?php echo esc_html( $lp_fare_t ); ?></span>
 				<?php if ( '' !== $lp_spaces_d ) : ?>
-					<span class="font-label text-[11px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover/rail:text-primary/70"><?php echo esc_html( $lp_spaces_d ); ?></span>
+					<span class="font-label text-[11px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover/rail:text-primary/70 transition-colors"><?php echo esc_html( $lp_spaces_d ); ?></span>
 				<?php endif; ?>
 			</div>
-			<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover/rail:border-primary">
-				<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover/rail:text-primary"><?php echo esc_html( $lp_cta ); ?></span>
-				<span class="font-label text-[14px] font-extrabold text-primary-content group-hover/rail:text-primary" aria-hidden="true">→</span>
+			<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover/rail:border-primary transition-colors">
+				<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover/rail:text-primary transition-colors"><?php echo esc_html( $lp_cta ); ?></span>
+				<span class="font-label text-[14px] font-extrabold text-primary-content group-hover/rail:text-primary transition-colors" aria-hidden="true">→</span>
 			</div>
 		</button>
 	<?php else : ?>
@@ -342,10 +342,10 @@ if ( $lp_can_book ) {
 					<span class="<?php echo lp_classes( $lp_fare['past'] ); ?>"><?php echo esc_html( $lp_fare_t ); ?></span>
 					<span class="font-label text-[11px] font-bold tracking-[0.9px] uppercase text-neutral-content/70"><?php echo esc_html( $lp_spaces_d ); ?></span>
 				<?php elseif ( $lp_is_card_link ) : ?>
-					<span class="font-label text-[11px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover:text-primary/70"><?php echo esc_html( $lp_fare_lbl ); ?></span>
+					<span class="font-label text-[11px] font-bold tracking-[1.1px] uppercase text-primary-content/70 group-hover:text-primary/70 transition-colors"><?php echo esc_html( $lp_fare_lbl ); ?></span>
 					<span class="<?php echo lp_classes( $lp_fare_card[ $lp_size ] ); ?>"><?php echo esc_html( $lp_fare_t ); ?></span>
 					<?php if ( '' !== $lp_spaces_d ) : ?>
-						<span class="font-label text-[11px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover:text-primary/70"><?php echo esc_html( $lp_spaces_d ); ?></span>
+						<span class="font-label text-[11px] font-bold tracking-[0.9px] uppercase text-primary-content/70 group-hover:text-primary/70 transition-colors"><?php echo esc_html( $lp_spaces_d ); ?></span>
 					<?php endif; ?>
 				<?php else : ?>
 					<span class="font-label text-[11px] font-bold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( $lp_fare_lbl ); ?></span>
@@ -365,9 +365,9 @@ if ( $lp_can_book ) {
 					<span class="font-label text-[14px] font-extrabold text-neutral-content/70" aria-hidden="true">–</span>
 				</div>
 			<?php elseif ( $lp_is_card_link ) : ?>
-				<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover:border-primary">
-					<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover:text-primary"><?php echo esc_html( $lp_cta ); ?></span>
-					<span class="font-label text-[14px] font-extrabold text-primary-content group-hover:text-primary" aria-hidden="true">→</span>
+				<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content group-hover:border-primary transition-colors">
+					<span class="font-label text-[12px] font-extrabold tracking-[1.4px] uppercase text-primary-content group-hover:text-primary transition-colors"><?php echo esc_html( $lp_cta ); ?></span>
+					<span class="font-label text-[14px] font-extrabold text-primary-content group-hover:text-primary transition-colors" aria-hidden="true">→</span>
 				</div>
 			<?php else : ?>
 				<div class="flex items-center justify-between w-full pt-2 border-t border-primary-content">

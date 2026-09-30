@@ -293,7 +293,7 @@ foreach ( $lp_sessions as $lp_session ) {
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
-<section class="<?php echo lp_classes( 'bg-neutral px-6 pt-16 pb-16 lg:px-16 lg:pt-[120px] lg:pb-[124px]', $lp_spacing ); ?>" data-component="classes"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
+<section class="<?php echo lp_classes( 'bg-secondary lg:bg-neutral px-6 pt-16 pb-16 lg:px-16 lg:pt-[120px] lg:pb-[124px]', $lp_spacing ); ?>" data-component="classes"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
 		<div class="flex flex-col gap-5 lg:w-[640px]">
 			<span class="font-label text-[12px] tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></span>
@@ -340,12 +340,14 @@ $lp_spacing = lp_section_spacing( $args );
 					);
 					?>
 				<?php endif; ?>
-				<div class="flex flex-col gap-2 lg:gap-0" data-slot="day-rows">
-					<?php foreach ( $lp_group['sessions'] as $lp_session ) : ?>
+				<div class="flex flex-col" data-slot="day-rows">
+					<?php foreach ( $lp_group['sessions'] as $lp_i => $lp_session ) : ?>
 						<?php
 						if ( $lp_show_day_bands ) {
 							$lp_session['date_label'] = '';
 						}
+						// pen zebra: every second row within a day group.
+						$lp_session['stripe'] = $lp_i % 2 ? 'zebra' : 'plain';
 						lp_part( 'components/board-row', $lp_session );
 						?>
 					<?php endforeach; ?>

@@ -84,7 +84,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	$lp_rich       = $lp_rich_states[ $lp_active ? 'active' : 'inactive' ];
 	$lp_meta       = (string) ( $args['meta'] ?? '' );
 	$lp_icon_id    = (string) ( $args['icon_id'] ?? 'icon-squares-2x2' );
-	$lp_rich_class = 'group relative min-w-0 min-h-[66px] h-auto lg:h-[66px] flex flex-col text-left transition-colors duration-150 border-r border-b lg:border-b-0 border-neutral-content/10 last:border-r-0 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+	$lp_rich_class = 'group relative min-w-0 min-h-[66px] h-auto lg:h-[66px] flex flex-col text-left transition-colors duration-150 border-r border-b lg:border-b-0 border-neutral-content/10 last:border-r-0 max-lg:even:border-r-0 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 	?>
 	<?php if ( '' !== $lp_href ) : ?>
 	<a

@@ -275,15 +275,15 @@ $lp_spacing = lp_section_spacing( $args );
 			<div class="flex flex-col justify-center gap-4 px-10 py-9">
 				<div class="flex items-center gap-2.5 flex-wrap">
 					<?php if ( '' !== $lp_feat_tag ) : ?>
-						<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[11px] font-bold tracking-[1px] uppercase text-primary-content group-hover:bg-neutral group-hover:text-primary"><?php echo esc_html( $lp_feat_tag ); ?></span>
+						<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[11px] font-bold tracking-[1px] uppercase text-primary-content group-hover:bg-neutral group-hover:text-primary transition-colors"><?php echo esc_html( $lp_feat_tag ); ?></span>
 					<?php endif; ?>
-					<span class="font-label text-[11px] font-semibold tracking-[0.9px] uppercase text-neutral-content/70 group-hover:text-neutral/70"><?php echo esc_html( $lp_feat_series ); ?></span>
+					<span class="font-label text-[11px] font-semibold tracking-[0.9px] uppercase text-neutral-content/70 group-hover:text-neutral/70 transition-colors"><?php echo esc_html( $lp_feat_series ); ?></span>
 				</div>
-				<h3 class="font-heading text-step-3 font-semibold tracking-[-1px] text-neutral-content m-0 group-hover:text-neutral"><?php echo esc_html( $lp_feat_title ); ?></h3>
-				<p class="font-body text-[13px] leading-[1.55] text-neutral-content/70 m-0 group-hover:text-neutral/80"><?php echo esc_html( $lp_feat_logline ); ?></p>
+				<h3 class="font-heading text-step-3 font-semibold tracking-[-1px] text-neutral-content m-0 group-hover:text-neutral transition-colors"><?php echo esc_html( $lp_feat_title ); ?></h3>
+				<p class="font-body text-[13px] leading-[1.55] text-neutral-content/70 m-0 group-hover:text-neutral/80 transition-colors"><?php echo esc_html( $lp_feat_logline ); ?></p>
 				<div class="flex items-center justify-between gap-4 flex-wrap pt-2">
-					<span class="font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-neutral-content/70 group-hover:text-neutral/70"><?php echo esc_html( $lp_feat_meta ); ?></span>
-					<span class="inline-flex items-center gap-2 py-3 px-4 bg-primary font-label text-[11px] font-bold tracking-[1px] uppercase text-primary-content group-hover:bg-neutral group-hover:text-primary">
+					<span class="font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-neutral-content/70 group-hover:text-neutral/70 transition-colors"><?php echo esc_html( $lp_feat_meta ); ?></span>
+					<span class="inline-flex items-center gap-2 py-3 px-4 bg-primary font-label text-[11px] font-bold tracking-[1px] uppercase text-primary-content group-hover:bg-neutral group-hover:text-primary transition-colors">
 						<?php lp_icon( 'icon-play', 'w-3.5 h-3.5 shrink-0' ); ?>
 						<?php echo esc_html( $lp_feat_cta ); ?>
 					</span>
@@ -328,9 +328,9 @@ $lp_spacing = lp_section_spacing( $args );
 						<span class="absolute inset-0 bg-gradient-to-b from-transparent from-40% to-primary/90 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" aria-hidden="true"></span>
 					</div>
 					<div class="flex flex-col gap-2 px-3.5 pt-3.5 pb-4">
-						<span class="font-label text-[11px] font-bold tracking-[1px] uppercase text-primary group-hover:text-neutral"><?php echo esc_html( $lp_card['tag'] ); ?></span>
-						<span class="font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content group-hover:text-neutral"><?php echo esc_html( $lp_card['title'] ); ?></span>
-						<span class="font-label text-[11px] font-semibold tracking-[0.7px] uppercase text-neutral-content/70 group-hover:text-neutral/70"><?php echo esc_html( $lp_card['episodes'] ); ?></span>
+						<span class="font-label text-[11px] font-bold tracking-[1px] uppercase text-primary group-hover:text-neutral transition-colors"><?php echo esc_html( $lp_card['tag'] ); ?></span>
+						<span class="font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content group-hover:text-neutral transition-colors"><?php echo esc_html( $lp_card['title'] ); ?></span>
+						<span class="font-label text-[11px] font-semibold tracking-[0.7px] uppercase text-neutral-content/70 group-hover:text-neutral/70 transition-colors"><?php echo esc_html( $lp_card['episodes'] ); ?></span>
 					</div>
 				</a>
 			<?php endforeach; ?>

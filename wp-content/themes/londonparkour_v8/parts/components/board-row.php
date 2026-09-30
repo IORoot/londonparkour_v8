@@ -57,6 +57,7 @@
  * @param string $args['detail_label']     sell only. Default 'MORE DETAILS'.
  * @param string $args['book_href']        sell only. Ignored when book_class_id is set.
  * @param int    $args['book_class_id']    sell only. Opens the booking drawer (no href).
+ * @param string $args['stripe']           size lg only. 'plain'|'zebra' — Classes board striping.
  * @param string $args['book_preset_date'] sell only. Optional Y-m-d for the drawer.
  *
  * @package londonparkour_v8
@@ -103,28 +104,28 @@ $lp_sizes = array(
 		'thumb_size'  => 'lp_thumb_lg',
 		'thumb_sizes' => '(min-width: 1024px) 112px, 56px',
 		'time_wrap'       => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[112px] lg:gap-[4px]',
-		'time'            => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
-		'date'            => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'time'            => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral transition-colors',
+		'date'            => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral transition-colors',
 		'date_lead_wrap'  => 'flex flex-col items-start gap-[2px] shrink-0 lg:w-[168px] lg:gap-[4px]',
-		'date_lead_date'  => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral whitespace-nowrap',
-		'date_lead_time'  => 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral',
-		'glyph_wrap'  => 'hidden min-[1680px]:inline-flex w-10 h-10 shrink-0 text-neutral-content group-hover:text-neutral items-center justify-center',
+		'date_lead_date'  => 'font-heading text-[22px] lg:text-[28px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral whitespace-nowrap transition-colors',
+		'date_lead_time'  => 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral transition-colors',
+		'glyph_wrap'  => 'hidden min-[1680px]:inline-flex w-10 h-10 shrink-0 text-neutral-content group-hover:text-neutral items-center justify-center transition-colors',
 		'glyph_icon'  => 'w-10 h-10',
 		'pin_icon'    => 'w-4 h-4',
 		'level_icon'  => 'w-4 h-4',
 		'session'     => 'flex-1 min-w-[12rem] flex flex-col gap-1.5 lg:gap-2',
-		'title'       => 'font-heading text-[18px] lg:text-[22px] font-medium tracking-[-0.4px] text-neutral-content group-hover:text-neutral break-words',
-		'subtitle'    => 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.2px] text-neutral-content/50 group-hover:text-neutral break-words',
+		'title'       => 'font-heading text-[18px] lg:text-[22px] font-medium tracking-[-0.4px] text-neutral-content group-hover:text-neutral break-words transition-colors',
+		'subtitle'    => 'font-label text-[12px] lg:text-[13px] font-normal tracking-[0.2px] text-neutral-content/50 group-hover:text-neutral break-words transition-colors',
 		'site'        => 'flex items-center gap-2 lg:gap-2.5 min-w-0 lg:hidden xl:flex xl:w-[168px] xl:shrink-0',
 		'site_pin'    => 'text-neutral-content/50 group-hover:text-neutral transition-colors duration-150',
 		'site_label'  => 'font-label text-[12px] xl:text-[14px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral transition-colors duration-150 break-words xl:truncate',
 		'level'       => 'flex items-center gap-2 lg:gap-2.5 min-w-0 lg:hidden 2xl:flex 2xl:w-[164px] 2xl:shrink-0',
-		'level_mark'  => 'text-neutral-content/80 group-hover:text-neutral',
-		'level_label' => 'font-label text-[11px] 2xl:text-[13px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral break-words 2xl:truncate',
+		'level_mark'  => 'text-neutral-content/80 group-hover:text-neutral transition-colors',
+		'level_label' => 'font-label text-[11px] 2xl:text-[13px] font-normal tracking-[0.2px] text-neutral-content/80 group-hover:text-neutral break-words 2xl:truncate transition-colors',
 		'fare_mobile' => 'flex flex-col items-end gap-[2px] shrink-0 lg:hidden',
 		'fare'        => 'hidden lg:flex flex-col items-end gap-[3px] w-[88px] lg:shrink-0',
-		'fare_price'  => 'font-heading text-[20px] lg:text-[24px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral',
-		'fare_label'  => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral',
+		'fare_price'  => 'font-heading text-[20px] lg:text-[24px] font-semibold tracking-[-0.4px] text-neutral-content group-hover:text-neutral transition-colors',
+		'fare_label'  => 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral transition-colors',
 		'book'        => 'relative z-10 shrink-0 lg:w-[96px] flex justify-end ml-auto lg:ml-0',
 		'detail'      => 'relative z-10 py-2 -my-2 w-fit focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-content',
 	),
@@ -205,6 +206,22 @@ if ( $lp_cancelled && 'lg' === $lp_size ) {
 	$lp_ui['level_label']    = 'font-label text-[11px] 2xl:text-[13px] font-normal tracking-[0.2px] text-neutral-content/80 break-words 2xl:truncate';
 	$lp_ui['fare_price']     = 'font-heading text-[20px] lg:text-[24px] font-semibold tracking-[-0.4px] text-neutral-content';
 	$lp_ui['fare_label']     = 'font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50';
+}
+
+/*
+ * `stripe` (Classes board, pen `Vc2hk` desktop / `T5riN` phone): rows sit on
+ * the neutral band and every second row per day takes `$board-zebra`
+ * (black/30 over #141310 = #0E0D0B = `secondary`). On phone the band is
+ * `secondary`, so plain rows paint `bg-neutral` and carry the `$board-strong`
+ * bottom rule. Unset keeps the lg root for other callers.
+ */
+$lp_stripe_roots = array(
+	'plain' => 'group relative flex flex-col gap-[12px] lg:flex-row lg:items-center lg:gap-[28px] w-full py-[16px] lg:py-[20px] px-[16px] lg:px-[32px] bg-neutral hover:bg-primary border-b border-neutral-content/20 lg:border-neutral-content/10 transition-colors duration-150 no-underline text-left',
+	'zebra' => 'group relative flex flex-col gap-[12px] lg:flex-row lg:items-center lg:gap-[28px] w-full py-[16px] lg:py-[20px] px-[16px] lg:px-[32px] bg-secondary hover:bg-primary border-b border-neutral-content/20 lg:border-neutral-content/10 transition-colors duration-150 no-underline text-left',
+);
+$lp_stripe = (string) ( $args['stripe'] ?? '' );
+if ( 'lg' === $lp_size && isset( $lp_stripe_roots[ $lp_stripe ] ) ) {
+	$lp_ui['root'] = $lp_cancelled ? str_replace( ' hover:bg-primary', '', $lp_stripe_roots[ $lp_stripe ] ) : $lp_stripe_roots[ $lp_stripe ];
 }
 
 if ( $lp_date_lead ) {
