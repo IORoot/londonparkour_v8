@@ -139,7 +139,7 @@ if ( $lp_is_booking ) :
 
 	ob_start();
 	?>
-	<div class="relative w-full aspect-[568/720] min-h-[320px] overflow-hidden bg-neutral flex flex-col justify-end lg:w-1/2 lg:shrink-0">
+	<div class="relative w-full aspect-[568/720] min-h-[320px] overflow-hidden bg-neutral flex flex-col justify-end lg:aspect-auto lg:w-1/2 lg:shrink-0">
 		<?php
 		if ( $lp_media_id ) {
 			$lp_photo = array(
@@ -229,7 +229,7 @@ if ( $lp_is_booking ) :
 	$lp_offer_col = ob_get_clean();
 	?>
 <section class="<?php echo lp_classes( 'w-full bg-primary', $lp_spacing ); ?>" data-component="private-coaching" data-layout="booking"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
-	<div class="flex flex-col lg:flex-row lg:items-stretch">
+	<div class="flex flex-col lg:flex-row lg:items-stretch lg:min-h-dvh">
 		<?php
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built above with escaped content.
 		echo 'end' === $lp_media_position ? $lp_offer_col . $lp_media_col : $lp_media_col . $lp_offer_col;
