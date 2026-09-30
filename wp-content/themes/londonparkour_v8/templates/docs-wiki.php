@@ -24,7 +24,7 @@ get_header( null, array( 'active_key' => 'docs' ) );
 	?>
 
 	<div class="w-full bg-base-100" data-component="docs-wiki-body">
-		<div class="mx-auto w-full max-w-[960px] px-6 lg:px-16 py-scale-2xl flex flex-col gap-[28px]">
+		<div class="mx-auto w-full max-w-[960px] px-6 lg:px-16 py-scale-2xl prose-module">
 			<?php lp_docs_render_markdown_body( $lp_post ); ?>
 		</div>
 	</div>

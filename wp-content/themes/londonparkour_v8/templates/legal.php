@@ -334,15 +334,15 @@ get_header( null, array( 'active_key' => 'docs' ) );
 					<?php endforeach; ?>
 				</ul>
 			</nav>
-			<div class="flex-1 min-w-0 flex flex-col gap-[46px]">
+			<div class="flex-1 min-w-0 prose-module">
 				<?php foreach ( $lp_clauses as $lp_clause ) : ?>
-					<section id="<?php echo esc_attr( $lp_clause_prefix . $lp_clause['n'] ); ?>" class="flex flex-col gap-4">
+					<section id="<?php echo esc_attr( $lp_clause_prefix . $lp_clause['n'] ); ?>">
 						<div class="flex items-center gap-4">
 							<span class="font-label text-fix--2 font-semibold tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_clause['n'] ); ?></span>
 							<h2 class="font-heading text-fix-0 font-medium tracking-[-0.5px] text-base-content m-0"><?php echo esc_html( $lp_clause['title'] ); ?></h2>
 						</div>
 						<?php foreach ( $lp_clause['paras'] as $lp_para ) : ?>
-							<p class="font-body text-fix--2 font-normal tracking-[0.1px] leading-[1.75] text-base-content/75 m-0"><?php echo esc_html( $lp_para ); ?></p>
+							<p class="font-body text-fix--2 font-normal tracking-[0.1px] leading-[1.75] text-base-content/75"><?php echo esc_html( $lp_para ); ?></p>
 						<?php endforeach; ?>
 					</section>
 				<?php endforeach; ?>

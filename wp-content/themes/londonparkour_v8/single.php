@@ -261,7 +261,7 @@ while ( have_posts() ) :
 					<?php endif; ?>
 					<a href="#" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content hover:text-base-content/70 transition-colors duration-150">SHARE THIS ↗</a>
 				</aside>
-				<article class="w-full max-w-[720px] flex flex-col gap-[28px]">
+				<article class="w-full max-w-[720px] prose-module">
 					<?php
 					lp_blog_render_blocks(
 						$lp_intro_blocks,
