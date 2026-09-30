@@ -404,15 +404,15 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 				?>
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10 group-hover:border-neutral/20">
 						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['title'] ); ?></span>
-						<span class="font-label text-[12px] font-normal tracking-[0.6px] text-neutral-content/70 group-hover:text-neutral transition-colors duration-150" data-slot="board-date"><?php echo esc_html( (string) ( $lp_next['when'] ?? '' ) ); ?></span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.6px] text-neutral-content/70 group-hover:text-neutral transition-colors duration-150" data-slot="board-date"><?php echo esc_html( (string) ( $lp_next['when'] ?? '' ) ); ?></span>
 					</div>
 					<div class="flex items-start gap-4 px-5 py-5">
 						<div class="flex-1 min-w-0 flex flex-col gap-1.5">
-							<span class="font-heading text-[22px] font-semibold leading-none tracking-[-0.4px] text-neutral-content group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['name'] ); ?></span>
-							<span class="font-label text-[12px] font-normal tracking-[0.3px] text-neutral-content/70 truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['meta'] ); ?></span>
+							<span class="font-heading text-fix-0 font-semibold leading-none tracking-[-0.4px] text-neutral-content group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['name'] ); ?></span>
+							<span class="font-label text-fix--2 font-normal tracking-[0.3px] text-neutral-content/70 truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['meta'] ); ?></span>
 						</div>
 						<span class="shrink-0 flex items-center gap-2">
-							<span class="font-label text-[12px] font-semibold tracking-[0.6px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['spaces'] ); ?></span>
+							<span class="font-label text-fix--2 font-semibold tracking-[0.6px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['spaces'] ); ?></span>
 							<?php lp_icon( 'icon-arrow-right', 'w-3.5 h-3.5 shrink-0 text-primary group-hover:text-neutral transition-colors duration-150' ); ?>
 						</span>
 					</div>
@@ -420,15 +420,15 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 						<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 pb-5 border-b border-neutral-content/10 group-hover:border-neutral/20">
 							<?php foreach ( $lp_next['facts'] as $lp_fact ) : ?>
 								<div class="flex flex-col gap-1.5 min-w-0 pr-3">
-									<span class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-neutral-content/70 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
-									<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-neutral-content truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+									<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-neutral-content/70 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+									<span class="font-heading text-fix--1 font-medium tracking-[-0.2px] text-neutral-content truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 								</div>
 							<?php endforeach; ?>
 						</div>
 					<?php endif; ?>
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px]">
 						<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary group-hover:text-neutral group-hover:font-semibold transition-colors duration-150"><?php echo esc_html( $lp_next_lab ); ?></span>
-						<span class="font-label text-[12px] font-normal tracking-[0.6px] text-neutral-content/70 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.6px] text-neutral-content/70 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
 					</div>
 				<?php echo '</' . esc_attr( $lp_board_tag ) . '>'; ?>
 			<?php elseif ( 'sessions' === $lp_board_style ) : ?>

@@ -200,8 +200,8 @@ get_header();
 	<div class="w-full bg-neutral" data-component="search-query-bar">
 		<div class="px-6 lg:px-16 pt-16 pb-[54px]">
 			<div class="flex items-center justify-between gap-4 flex-wrap">
-				<h1 class="font-label text-[12px] font-semibold uppercase tracking-[1px] text-primary m-0"><?php echo esc_html( $lp_bar['label'] ); ?></h1>
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php printf( '%d RESULTS', (int) $lp_found ); ?></span>
+				<h1 class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-primary m-0"><?php echo esc_html( $lp_bar['label'] ); ?></h1>
+				<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php printf( '%d RESULTS', (int) $lp_found ); ?></span>
 			</div>
 
 			<form role="search" method="get" action="<?php echo esc_url( $lp_search ); ?>" class="mt-6 flex items-center gap-4 h-[68px] px-[22px] bg-secondary border border-neutral-content/[.14] focus-within:outline focus-within:outline-2 focus-within:outline-primary">
@@ -211,7 +211,7 @@ get_header();
 				<span class="shrink-0 text-neutral-content/50" aria-hidden="true"><?php lp_icon( 'icon-magnifying-glass', 'w-5 h-5' ); ?></span>
 				<label class="sr-only" for="search-results-query"><?php echo esc_html( $lp_bar['label'] ); ?></label>
 				<input id="search-results-query" name="s" type="search" value="<?php echo esc_attr( $lp_q ); ?>"
-					class="flex-1 min-w-0 bg-transparent border-0 p-0 font-heading text-[24px] font-medium tracking-[-0.5px] text-neutral-content placeholder:text-neutral-content/50 focus:outline-none" />
+					class="flex-1 min-w-0 bg-transparent border-0 p-0 font-heading text-fix-1 font-medium tracking-[-0.5px] text-neutral-content placeholder:text-neutral-content/50 focus:outline-none" />
 				<?php
 				lp_part(
 					'elements/button',
@@ -226,7 +226,7 @@ get_header();
 				?>
 			</form>
 
-			<p class="mt-4 font-body text-[11px] font-normal tracking-[0.2px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_bar['hint'] ); ?></p>
+			<p class="mt-4 font-body text-fix--2 font-normal tracking-[0.2px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_bar['hint'] ); ?></p>
 		</div>
 	</div>
 
@@ -239,9 +239,9 @@ get_header();
 					<?php endforeach; ?>
 				</div>
 				<div class="flex items-center gap-4">
-					<span id="search-sort-label" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">SORT</span>
+					<span id="search-sort-label" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">SORT</span>
 					<select aria-labelledby="search-sort-label"
-						class="h-[42px] w-[200px] px-[14px] rounded-none bg-transparent border border-base-300 font-body text-base sm:text-[11px] tracking-[0.4px] text-base-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
+						class="h-[42px] w-[200px] px-[14px] rounded-none bg-transparent border border-base-300 font-body text-base sm:text-fix--2 tracking-[0.4px] text-base-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
 						<option>Most relevant</option>
 					</select>
 				</div>

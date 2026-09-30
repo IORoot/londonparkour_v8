@@ -39,12 +39,12 @@ $lp_note  = (string) ( $args['note'] ?? '' );
 $lp_pad   = $lp_has_media ? $lp_pads['media'] : $lp_pads['plain'];
 
 $lp_title_sizes = array(
-	'default' => 'w-full font-display font-bold text-neutral-content text-[40px] leading-[0.95] tracking-[-1.5px] sm:text-[48px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
-	'error'   => 'w-full font-display font-bold text-neutral-content text-[36px] leading-[0.95] tracking-[-1px] sm:text-[44px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'default' => 'w-full font-display font-bold text-neutral-content text-fix-2 leading-[0.95] tracking-[-1.5px] sm:text-fix-3 lg:text-fix-4 lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'error'   => 'w-full font-display font-bold text-neutral-content text-fix-2 leading-[0.95] tracking-[-1px] sm:text-[44px] lg:text-fix-4 lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
 );
 $lp_title_sizes_glyph = array(
-	'default' => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[40px] leading-[0.95] tracking-[-1.5px] sm:text-[48px] lg:text-[64px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
-	'error'   => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-[36px] leading-[0.95] tracking-[-1px] sm:text-[44px] lg:text-[57px] lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'default' => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-fix-2 leading-[0.95] tracking-[-1.5px] sm:text-fix-3 lg:text-fix-4 lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
+	'error'   => 'w-full flex items-start gap-4 font-display font-bold text-neutral-content text-fix-2 leading-[0.95] tracking-[-1px] sm:text-[44px] lg:text-fix-4 lg:leading-[0.92] lg:tracking-[-3px] break-words [text-box:normal]',
 );
 $lp_title_scale = $args['title_scale'] ?? 'default';
 $lp_glyph_svg   = (string) ( $args['glyph_svg'] ?? '' );
@@ -94,7 +94,7 @@ if ( array_key_exists( 'media_alt', $args ) ) {
 			<?php endif; ?>
 		</h1>
 		<?php if ( '' !== $lp_note ) : ?>
-			<p class="md:max-w-[400px] font-body text-[13px] leading-[1.65] tracking-[0.1px] text-neutral-content/80"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="md:max-w-[400px] font-body text-fix--1 leading-[1.65] tracking-[0.1px] text-neutral-content/80"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>
 	</div>
 </div>

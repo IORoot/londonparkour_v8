@@ -32,7 +32,7 @@ $lp_aria_label = (string) ( $args['aria_label'] ?? 'Breadcrumb' );
 $lp_last       = count( $lp_crumbs ) - 1;
 ?>
 <nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center justify-between gap-4 flex-wrap bg-neutral border-b border-neutral-content/20 px-6 lg:px-16 py-4" data-component="breadcrumb-rail">
-	<ol role="list" class="flex flex-wrap items-center font-label text-[11px] font-normal uppercase tracking-[1px] text-neutral-content/80 m-0 p-0 list-none min-w-0">
+	<ol role="list" class="flex flex-wrap items-center font-label text-fix--2 font-normal uppercase tracking-[1px] text-neutral-content/80 m-0 p-0 list-none min-w-0">
 		<?php foreach ( $lp_crumbs as $lp_i => $lp_crumb ) : ?>
 		<li class="<?php echo $lp_i === $lp_last ? 'inline-flex items-center min-w-0' : 'inline-flex items-center shrink-0'; ?>">
 			<?php if ( $lp_i > 0 ) : ?>

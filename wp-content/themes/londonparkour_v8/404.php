@@ -39,8 +39,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
-$lp_ghost_btn = 'inline-flex items-center gap-3 px-6 py-[15px] border border-neutral-content/20 font-label text-[12px] font-semibold uppercase tracking-[1px] text-neutral-content hover:border-neutral-content/40 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
-$lp_cta_btn   = 'flex items-center justify-between gap-3 px-[22px] h-[60px] bg-primary text-primary-content font-label text-[12px] font-semibold uppercase tracking-[1px] hover:bg-primary/85 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+$lp_ghost_btn = 'inline-flex items-center gap-3 px-6 py-[15px] border border-neutral-content/20 font-label text-fix--2 font-semibold uppercase tracking-[1px] text-neutral-content hover:border-neutral-content/40 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+$lp_cta_btn   = 'flex items-center justify-between gap-3 px-[22px] h-[60px] bg-primary text-primary-content font-label text-fix--2 font-semibold uppercase tracking-[1px] hover:bg-primary/85 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 
 $lp_status_label = 'SERVICE STATUS — 404 NOT FOUND';
 $lp_headline     = 'This service does not run.';
@@ -139,23 +139,23 @@ get_header( null, array( 'active_key' => '' ) );
 						?>
 					</div>
 					<h1 class="font-display text-[clamp(2.75rem,7vw,4.5rem)] font-bold tracking-[-3.2px] leading-[0.94] text-neutral-content m-0 mt-[28px]"><?php echo esc_html( $lp_headline ); ?></h1>
-					<p class="font-body text-[14px] font-normal tracking-[0.1px] leading-[1.7] text-neutral-content/50 m-0 mt-[26px] max-w-[62ch]"><?php echo esc_html( $lp_lead ); ?></p>
+					<p class="font-body text-fix--1 font-normal tracking-[0.1px] leading-[1.7] text-neutral-content/50 m-0 mt-[26px] max-w-[62ch]"><?php echo esc_html( $lp_lead ); ?></p>
 
 					<div class="mt-[40px] flex flex-col gap-[9px]">
 						<div class="flex items-center justify-between gap-4 flex-wrap">
-							<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-neutral-content/50"><?php echo esc_html( $lp_search['label'] ); ?></span>
-							<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php echo esc_html( $lp_search['hint'] ); ?></span>
+							<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-neutral-content/50"><?php echo esc_html( $lp_search['label'] ); ?></span>
+							<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php echo esc_html( $lp_search['hint'] ); ?></span>
 						</div>
 						<form class="flex items-stretch gap-3 flex-wrap" role="search" method="get" action="<?php echo esc_url( lp_search_url() ); ?>">
 							<label class="sr-only" for="not-found-search"><?php echo esc_html( $lp_search['label'] ); ?></label>
 							<div class="flex-1 min-w-[220px] flex items-center gap-3 h-[52px] px-4 bg-neutral border border-neutral-content/[.14]">
 								<span class="text-neutral-content/50 shrink-0" aria-hidden="true"><?php lp_icon( 'icon-magnifying-glass', 'w-3.5 h-3.5' ); ?></span>
 								<input id="not-found-search" name="s" type="search"
-									class="w-full bg-transparent border-0 p-0 font-body text-[13px] tracking-[0.2px] text-neutral-content placeholder:text-neutral-content/50 focus:outline-none"
+									class="w-full bg-transparent border-0 p-0 font-body text-fix--2 tracking-[0.2px] text-neutral-content placeholder:text-neutral-content/50 focus:outline-none"
 									placeholder="<?php echo esc_attr( $lp_search['placeholder'] ); ?>" />
 							</div>
 							<button type="submit"
-								class="inline-flex items-center gap-3 h-[52px] px-6 bg-primary text-primary-content font-label text-[12px] font-semibold uppercase tracking-[1px] hover:bg-primary/85 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary">
+								class="inline-flex items-center gap-3 h-[52px] px-6 bg-primary text-primary-content font-label text-fix--2 font-semibold uppercase tracking-[1px] hover:bg-primary/85 transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary">
 								<span><?php echo esc_html( $lp_search['submit'] ); ?></span>
 								<?php lp_icon( 'icon-arrow-right', 'w-3.5 h-3.5' ); ?>
 							</button>
@@ -174,7 +174,7 @@ get_header( null, array( 'active_key' => '' ) );
 
 				<aside class="w-full lg:w-[380px] lg:shrink-0 bg-secondary border border-neutral-content/10 flex flex-col self-start">
 					<div class="flex items-center justify-between gap-4 px-[22px] py-[16px] border-b border-neutral-content/20">
-						<h2 class="font-label text-[12px] font-semibold uppercase tracking-[1px] text-primary m-0"><?php echo esc_html( $lp_panel['title'] ); ?></h2>
+						<h2 class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-primary m-0"><?php echo esc_html( $lp_panel['title'] ); ?></h2>
 						<?php
 						lp_part(
 							'elements/status',
@@ -188,15 +188,15 @@ get_header( null, array( 'active_key' => '' ) );
 					</div>
 					<?php foreach ( $lp_panel['rows'] as $lp_row ) : ?>
 						<div class="flex items-center justify-between gap-5 px-[22px] py-[14px] border-b border-neutral-content/10">
-							<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php echo esc_html( $lp_row['label'] ); ?></span>
-							<span class="font-body text-[15px] font-medium tracking-[-0.2px] text-neutral-content text-right"><?php echo esc_html( $lp_row['value'] ); ?></span>
+							<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50"><?php echo esc_html( $lp_row['label'] ); ?></span>
+							<span class="font-body text-fix--1 font-medium tracking-[-0.2px] text-neutral-content text-right"><?php echo esc_html( $lp_row['value'] ); ?></span>
 						</div>
 					<?php endforeach; ?>
 					<a href="<?php echo esc_url( $lp_panel['cta']['href'] ); ?>" class="<?php echo esc_attr( $lp_cta_btn ); ?>">
 						<span><?php echo esc_html( $lp_panel['cta']['label'] ); ?></span>
 						<?php lp_icon( 'icon-arrow-right', 'w-3.5 h-3.5' ); ?>
 					</a>
-					<p class="px-[22px] py-[14px] font-body text-[10px] font-normal tracking-[0.3px] leading-[1.6] text-neutral-content/50 m-0"><?php echo esc_html( $lp_panel['foot'] ); ?></p>
+					<p class="px-[22px] py-[14px] font-body text-fix--2 font-normal tracking-[0.3px] leading-[1.6] text-neutral-content/50 m-0"><?php echo esc_html( $lp_panel['foot'] ); ?></p>
 				</aside>
 
 			</div>
@@ -222,8 +222,8 @@ get_header( null, array( 'active_key' => '' ) );
 								);
 								?>
 							</span>
-							<span class="font-heading text-[24px] font-medium tracking-[-0.6px] text-base-content mt-[24px] group-hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_dest['title'] ); ?></span>
-							<span class="font-body text-[11px] font-normal tracking-[0.15px] leading-[1.55] text-base-content/65 mt-[14px]"><?php echo esc_html( $lp_dest['meta'] ); ?></span>
+							<span class="font-heading text-fix-1 font-medium tracking-[-0.6px] text-base-content mt-[24px] group-hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_dest['title'] ); ?></span>
+							<span class="font-body text-fix--2 font-normal tracking-[0.15px] leading-[1.55] text-base-content/65 mt-[14px]"><?php echo esc_html( $lp_dest['meta'] ); ?></span>
 						</a>
 					</li>
 				<?php endforeach; ?>

@@ -86,7 +86,7 @@ $lp_spacing = lp_section_spacing( $args );
 	<div class="flex flex-col gap-[60px]">
 		<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-[24px]">
 			<div class="flex flex-col gap-[16px]">
-				<span class="font-label text-[12px] font-semibold tracking-[0.9px] uppercase text-accent-content/70"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-accent-content/70"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<h2 class="font-heading text-step-3 font-semibold tracking-[-1px] text-accent-content max-w-[700px]"><?php echo esc_html( $lp_heading ); ?></h2>
 			</div>
 			<?php if ( '' !== $lp_note ) : ?>
@@ -118,11 +118,11 @@ $lp_spacing = lp_section_spacing( $args );
 				?>
 				<div class="relative flex flex-col gap-[8px] p-[28px]">
 					<?php if ( '' !== $lp_flag_tag ) : ?>
-						<span class="font-label text-[12px] font-semibold tracking-[0.8px] uppercase text-primary"><?php echo esc_html( $lp_flag_tag ); ?></span>
+						<span class="font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-primary"><?php echo esc_html( $lp_flag_tag ); ?></span>
 					<?php endif; ?>
-					<p class="font-heading text-[30px] font-semibold tracking-[-0.8px] text-neutral-content"><?php echo esc_html( $lp_flag_name ); ?></p>
+					<p class="font-heading text-fix-1 font-semibold tracking-[-0.8px] text-neutral-content"><?php echo esc_html( $lp_flag_name ); ?></p>
 					<?php if ( '' !== $lp_flag_meta ) : ?>
-						<p class="font-label text-[12px] font-normal tracking-[0.6px] uppercase text-neutral-content/85"><?php echo esc_html( $lp_flag_meta ); ?></p>
+						<p class="font-label text-fix--2 font-normal tracking-[0.6px] uppercase text-neutral-content/85"><?php echo esc_html( $lp_flag_meta ); ?></p>
 					<?php endif; ?>
 				</div>
 			<?php echo $lp_flag_is_link ? '</a>' : '</div>'; ?>
@@ -141,11 +141,11 @@ $lp_spacing = lp_section_spacing( $args );
 						<?php endif; ?>
 							<span class="text-accent-content/70 shrink-0" aria-hidden="true"><?php lp_icon( 'icon-map-pin', 'w-3.5 h-3.5' ); ?></span>
 							<div class="flex-1 min-w-0 flex flex-col gap-[6px]">
-								<p class="font-heading text-[21px] font-medium tracking-[-0.4px] text-accent-content break-words"><?php echo esc_html( $lp_site['title'] ); ?></p>
-								<p class="font-label text-[12px] font-normal tracking-[0.3px] uppercase text-accent-content/70 break-words"><?php echo esc_html( $lp_site['meta'] ); ?></p>
+								<p class="font-heading text-fix-0 font-medium tracking-[-0.4px] text-accent-content break-words"><?php echo esc_html( $lp_site['title'] ); ?></p>
+								<p class="font-label text-fix--2 font-normal tracking-[0.3px] uppercase text-accent-content/70 break-words"><?php echo esc_html( $lp_site['meta'] ); ?></p>
 							</div>
 							<?php if ( '' !== $lp_site['type'] ) : ?>
-								<span class="font-label text-[12px] font-normal tracking-[0.8px] uppercase text-accent-content/70 shrink-0 hidden sm:inline"><?php echo esc_html( $lp_site['type'] ); ?></span>
+								<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-accent-content/70 shrink-0 hidden sm:inline"><?php echo esc_html( $lp_site['type'] ); ?></span>
 							<?php endif; ?>
 							<?php lp_part( 'elements/chevron', array( 'variant' => 'accent_band' ) ); ?>
 						<?php echo $lp_site_link ? '</a>' : '</div>'; ?>
@@ -155,7 +155,7 @@ $lp_spacing = lp_section_spacing( $args );
 		</div>
 
 		<?php if ( '' !== $lp_tagline ) : ?>
-			<p class="font-label text-[12px] font-normal tracking-[1px] uppercase text-accent-content/70 pt-[30px] border-t border-accent-content/15"><?php echo esc_html( $lp_tagline ); ?></p>
+			<p class="font-label text-fix--2 font-normal tracking-[1px] uppercase text-accent-content/70 pt-[30px] border-t border-accent-content/15"><?php echo esc_html( $lp_tagline ); ?></p>
 		<?php endif; ?>
 	</div>
 </section>

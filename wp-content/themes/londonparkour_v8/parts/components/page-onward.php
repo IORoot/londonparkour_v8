@@ -83,8 +83,8 @@ $lp_side = static function ( $lp_item, $lp_default_keyword, $lp_align, $lp_surf,
 	$lp_cls     = lp_classes( 'group flex-1 min-w-0 flex flex-col gap-[10px]', $lp_aligns[ $lp_align ] );
 	$lp_inner   = static function () use ( $lp_keyword, $lp_label, $lp_surf, $lp_arrow ) {
 		?>
-		<span class="<?php echo lp_classes( 'font-label text-[10px] font-semibold uppercase tracking-[1px]', $lp_surf['muted'] ); ?>"><?php echo $lp_arrow( $lp_keyword ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html'd inside $lp_arrow. ?></span>
-		<span class="<?php echo lp_classes( 'font-heading text-[19px] font-medium tracking-[-0.3px]', $lp_surf['ink'], 'group-hover:underline group-focus-visible:underline' ); ?>"><?php echo esc_html( $lp_label ); ?></span>
+		<span class="<?php echo lp_classes( 'font-label text-fix--2 font-semibold uppercase tracking-[1px]', $lp_surf['muted'] ); ?>"><?php echo $lp_arrow( $lp_keyword ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html'd inside $lp_arrow. ?></span>
+		<span class="<?php echo lp_classes( 'font-heading text-fix-0 font-medium tracking-[-0.3px]', $lp_surf['ink'], 'group-hover:underline group-focus-visible:underline' ); ?>"><?php echo esc_html( $lp_label ); ?></span>
 		<?php
 	};
 	if ( '' === $lp_href ) :

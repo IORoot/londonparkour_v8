@@ -25,23 +25,23 @@ defined( 'ABSPATH' ) || exit;
 $lp_tones = array(
 	'ink'      => array(
 		'line'    => 'flex-1 h-px bg-base-content',
-		'caption' => 'font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65 whitespace-nowrap',
+		'caption' => 'font-label text-fix--2 font-normal tracking-[0.8px] text-base-content/65 whitespace-nowrap',
 	),
 	'hairline' => array(
 		'line'    => 'flex-1 h-px bg-base-300',
-		'caption' => 'font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65 whitespace-nowrap',
+		'caption' => 'font-label text-fix--2 font-normal tracking-[0.8px] text-base-content/65 whitespace-nowrap',
 	),
 	'board'    => array(
 		'line'    => 'flex-1 h-px bg-neutral-content/20',
-		'caption' => 'font-label text-[10px] font-normal tracking-[0.8px] text-neutral-content/50 whitespace-nowrap',
+		'caption' => 'font-label text-fix--2 font-normal tracking-[0.8px] text-neutral-content/50 whitespace-nowrap',
 	),
 	'accent'   => array(
 		'line'    => 'flex-1 h-px bg-accent-content/15',
-		'caption' => 'font-label text-[10px] font-normal tracking-[0.8px] text-accent-content/70 whitespace-nowrap',
+		'caption' => 'font-label text-fix--2 font-normal tracking-[0.8px] text-accent-content/70 whitespace-nowrap',
 	),
 	'fill'     => array(
 		'line'    => 'flex-1 h-px bg-primary-content/15',
-		'caption' => 'font-label text-[10px] font-normal tracking-[0.8px] text-primary-content/70 whitespace-nowrap',
+		'caption' => 'font-label text-fix--2 font-normal tracking-[0.8px] text-primary-content/70 whitespace-nowrap',
 	),
 );
 

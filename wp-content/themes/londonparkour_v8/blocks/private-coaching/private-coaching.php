@@ -154,8 +154,8 @@ if ( $lp_is_booking ) :
 		}
 		?>
 		<div class="relative bg-neutral/60 px-5 pt-4 pb-5 flex flex-col gap-1.5">
-			<span class="font-label text-[11px] font-semibold tracking-[1.2px] uppercase text-primary"><?php echo esc_html( $lp_caption_kicker ); ?></span>
-			<p class="font-heading text-[16px] font-semibold tracking-[-0.6px] leading-[1.15] text-neutral-content m-0 max-w-[420px]"><?php echo esc_html( $lp_caption ); ?></p>
+			<span class="font-label text-fix--2 font-semibold tracking-[1.2px] uppercase text-primary"><?php echo esc_html( $lp_caption_kicker ); ?></span>
+			<p class="font-heading text-fix--1 font-semibold tracking-[-0.6px] leading-[1.15] text-neutral-content m-0 max-w-[420px]"><?php echo esc_html( $lp_caption ); ?></p>
 		</div>
 	</div>
 	<?php
@@ -165,12 +165,12 @@ if ( $lp_is_booking ) :
 	?>
 	<div class="flex-1 min-w-0 flex flex-col gap-12 p-8 lg:px-14 lg:py-[104px]">
 		<div class="flex items-baseline justify-between gap-4 flex-wrap">
-			<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-primary-content"><?php echo esc_html( $lp_eyebrow ); ?></span>
-			<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-primary-content/70"><?php echo esc_html( $lp_meta ); ?></span>
+			<span class="font-label text-fix--2 font-semibold tracking-[0.5px] uppercase text-primary-content"><?php echo esc_html( $lp_eyebrow ); ?></span>
+			<span class="font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-primary-content/70"><?php echo esc_html( $lp_meta ); ?></span>
 		</div>
 		<div class="flex flex-col gap-[22px]">
 			<h2 class="font-heading text-step-5 font-bold leading-[0.92] tracking-[-0.04em] text-primary-content m-0"><?php echo esc_html( $lp_headline ); ?></h2>
-			<p class="font-body text-[15px] leading-[1.6] tracking-[0.2px] text-primary-content/70 m-0"><?php echo esc_html( $lp_body ); ?></p>
+			<p class="font-body text-fix--1 leading-[1.6] tracking-[0.2px] text-primary-content/70 m-0"><?php echo esc_html( $lp_body ); ?></p>
 		</div>
 		<?php
 		$lp_btn_label = $lp_book['label'] ?: 'Confirmed instantly.';
@@ -194,8 +194,8 @@ if ( $lp_is_booking ) :
 			<div class="flex flex-wrap gap-x-12 gap-y-4" data-slot="facts">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
 					<div class="flex flex-col gap-[7px] min-w-0">
-						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
-						<span class="font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+						<span class="font-heading text-fix-0 font-semibold tracking-[-0.4px] text-primary-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -203,9 +203,9 @@ if ( $lp_is_booking ) :
 				<?php // ml-auto keeps the CTA on the trailing edge, over the reassure line, even once the row wraps. ?>
 				<div class="flex flex-wrap items-end gap-x-6 gap-y-4" data-slot="fare-cta">
 					<div class="flex items-end gap-2.5 flex-wrap">
-						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( $lp_fare_label ); ?></span>
-						<span class="font-heading text-[56px] font-bold tracking-[-2px] leading-[0.9] text-primary-content"><?php echo esc_html( $lp_amount ); ?></span>
-						<span class="font-label text-[11px] font-normal tracking-[0.8px] uppercase text-primary-content/70"><?php echo esc_html( $lp_unit ); ?></span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-primary-content/70"><?php echo esc_html( $lp_fare_label ); ?></span>
+						<span class="font-heading text-fix-3 font-bold tracking-[-2px] leading-[0.9] text-primary-content"><?php echo esc_html( $lp_amount ); ?></span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-primary-content/70"><?php echo esc_html( $lp_unit ); ?></span>
 					</div>
 					<span class="ml-auto">
 						<?php
@@ -221,7 +221,7 @@ if ( $lp_is_booking ) :
 						?>
 					</span>
 				</div>
-				<p class="font-label text-[11px] font-normal tracking-[0.2px] leading-[1.5] text-primary-content/70 m-0 text-right"><?php echo esc_html( $lp_reassure ); ?></p>
+				<p class="font-label text-fix--2 font-normal tracking-[0.2px] leading-[1.5] text-primary-content/70 m-0 text-right"><?php echo esc_html( $lp_reassure ); ?></p>
 			</div>
 		</div>
 	</div>
@@ -272,21 +272,21 @@ else :
 				<h2 class="font-heading text-step-3 font-semibold leading-none tracking-[-1.6px] text-base-content"><?php echo esc_html( $lp_headline ); ?></h2>
 			</div>
 
-			<p class="mt-[26px] font-body text-[15px] font-normal tracking-[0.1px] leading-[1.65] text-base-content/75"><?php echo esc_html( $lp_body ); ?></p>
+			<p class="mt-[26px] font-body text-fix--1 font-normal tracking-[0.1px] leading-[1.65] text-base-content/75"><?php echo esc_html( $lp_body ); ?></p>
 
 			<div class="mt-[38px] w-full border-t border-base-300 grid grid-cols-3">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
 					<div class="pt-[14px] pr-[16px] flex flex-col gap-[7px] min-w-0">
-						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content/60"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
-						<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-base-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/60"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+						<span class="font-heading text-fix--1 font-medium tracking-[-0.2px] text-base-content truncate"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 					</div>
 				<?php endforeach; ?>
 			</div>
 
 			<div class="mt-[40px] flex items-end gap-[12px] flex-wrap">
-				<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content/60"><?php echo esc_html( $lp_fare_label ); ?></span>
-				<span class="font-heading text-[52px] font-semibold tracking-[-2px] leading-[0.9] text-base-content"><?php echo esc_html( $lp_amount ); ?></span>
-				<span class="font-label text-[11px] font-normal tracking-[0.8px] uppercase text-base-content/60"><?php echo esc_html( $lp_unit ); ?></span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/60"><?php echo esc_html( $lp_fare_label ); ?></span>
+				<span class="font-heading text-fix-3 font-semibold tracking-[-2px] leading-[0.9] text-base-content"><?php echo esc_html( $lp_amount ); ?></span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-base-content/60"><?php echo esc_html( $lp_unit ); ?></span>
 			</div>
 
 			<div class="mt-[30px] flex items-center gap-[14px] flex-wrap">
@@ -317,7 +317,7 @@ else :
 				</span>
 			</div>
 
-			<p class="mt-[20px] font-label text-[11px] font-normal tracking-[0.2px] leading-[1.5] text-base-content/60"><?php echo esc_html( $lp_reassure ); ?></p>
+			<p class="mt-[20px] font-label text-fix--2 font-normal tracking-[0.2px] leading-[1.5] text-base-content/60"><?php echo esc_html( $lp_reassure ); ?></p>
 		</div>
 	</div>
 </section>

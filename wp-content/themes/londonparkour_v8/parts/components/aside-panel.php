@@ -86,23 +86,23 @@ $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours befo
 ?>
 <div class="<?php echo lp_classes( 'flex flex-col w-full max-w-none lg:max-w-[380px]', $lp_surf['root'] ); ?>" data-component="aside-panel">
 	<div class="<?php echo lp_classes( 'flex items-center justify-between border-b', $lp_surf['header_border'], 'px-[22px] py-[16px]' ); ?>">
-		<span class="<?php echo lp_classes( 'font-label text-[12px] font-semibold uppercase tracking-[1px]', $lp_surf['signal'] ); ?>"><?php echo esc_html( $lp_title ); ?></span>
+		<span class="<?php echo lp_classes( 'font-label text-fix--2 font-semibold uppercase tracking-[1px]', $lp_surf['signal'] ); ?>"><?php echo esc_html( $lp_title ); ?></span>
 		<?php if ( '' !== $lp_spots_left ) : ?>
 			<span class="inline-flex items-center gap-[8px]">
 				<span class="<?php echo lp_classes( 'inline-block w-[6px] h-[6px] rounded-full', $lp_surf['dot'] ); ?>" aria-hidden="true"></span>
-				<span class="<?php echo lp_classes( 'font-label text-[11px] font-semibold uppercase tracking-[0.8px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( $lp_spots_left ); ?></span>
+				<span class="<?php echo lp_classes( 'font-label text-fix--2 font-semibold uppercase tracking-[0.8px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( $lp_spots_left ); ?></span>
 			</span>
 		<?php endif; ?>
 	</div>
 	<?php foreach ( $lp_rows as $lp_row ) : ?>
 		<div class="<?php echo lp_classes( 'flex items-center justify-between gap-[20px] border-b', $lp_surf['row_border'], 'px-[22px] py-[14px]' ); ?>" data-row>
-			<span class="<?php echo lp_classes( 'font-label text-[11px] font-normal uppercase tracking-[0.9px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_row['label'] ?? '' ) ); ?></span>
-			<span class="<?php echo lp_classes( 'font-heading text-[15px] font-medium tracking-[-0.2px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( (string) ( $lp_row['value'] ?? '' ) ); ?></span>
+			<span class="<?php echo lp_classes( 'font-label text-fix--2 font-normal uppercase tracking-[0.9px]', $lp_surf['muted'] ); ?>"><?php echo esc_html( (string) ( $lp_row['label'] ?? '' ) ); ?></span>
+			<span class="<?php echo lp_classes( 'font-heading text-fix--1 font-medium tracking-[-0.2px]', $lp_surf['ink'] ); ?>"><?php echo esc_html( (string) ( $lp_row['value'] ?? '' ) ); ?></span>
 		</div>
 	<?php endforeach; ?>
 	<?php if ( ! empty( $args['cta_disabled'] ) ) : ?>
 		<div class="<?php echo esc_attr( $lp_surf['cta_muted'] ); ?>" data-slot="cta">
-			<span class="font-label text-[12px] font-semibold uppercase tracking-[1px]"><?php echo esc_html( $lp_cta_label ); ?></span>
+			<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px]"><?php echo esc_html( $lp_cta_label ); ?></span>
 		</div>
 	<?php else : ?>
 		<?php
@@ -123,7 +123,7 @@ $lp_note       = (string) ( $args['note'] ?? 'Free to cancel up to 12 hours befo
 	<?php endif; ?>
 	<?php if ( '' !== $lp_note ) : ?>
 		<div class="px-[22px] py-[14px]">
-			<p class="<?php echo lp_classes( 'font-body text-[12px] leading-[1.6] tracking-[0.3px]', $lp_surf['muted'], 'm-0' ); ?>"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="<?php echo lp_classes( 'font-body text-fix--2 leading-[1.6] tracking-[0.3px]', $lp_surf['muted'], 'm-0' ); ?>"><?php echo esc_html( $lp_note ); ?></p>
 		</div>
 	<?php endif; ?>
 </div>

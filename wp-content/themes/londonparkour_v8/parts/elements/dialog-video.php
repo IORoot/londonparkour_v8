@@ -50,7 +50,7 @@ $lp_title      = (string) ( $args['title'] ?? '' );
 			</div>
 			<?php if ( '' !== $lp_title ) : ?>
 				<div class="px-[22px] py-[16px]">
-					<h3 id="<?php echo esc_attr( $lp_dialog_id . '-title' ); ?>" class="font-heading text-[18px] font-semibold tracking-[-0.3px] text-neutral-content m-0"><?php echo esc_html( $lp_title ); ?></h3>
+					<h3 id="<?php echo esc_attr( $lp_dialog_id . '-title' ); ?>" class="font-heading text-fix-0 font-semibold tracking-[-0.3px] text-neutral-content m-0"><?php echo esc_html( $lp_title ); ?></h3>
 				</div>
 			<?php endif; ?>
 		</el-dialog-panel>

@@ -96,34 +96,34 @@ $eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '' ) ?: '06 — WORK
 
 	<div class="relative z-10 px-6 lg:px-16 pb-14 flex flex-col gap-5">
 
-		<span class="font-label text-[11px] font-semibold tracking-[1.5px] uppercase text-primary">
+		<span class="font-label text-fix--2 font-semibold tracking-[1.5px] uppercase text-primary">
 			<?php echo esc_html( $eyebrow ); ?>
 		</span>
 
-		<h2 class="font-display text-[38px] lg:text-[57px] font-bold leading-none tracking-[-0.04em] text-neutral-content m-0">
+		<h2 class="font-display text-fix-2 lg:text-fix-4 font-bold leading-none tracking-[-0.04em] text-neutral-content m-0">
 			<?php echo esc_html( $title ); ?>
 		</h2>
 
 		<div class="flex items-center gap-3 flex-wrap">
 
 			<?php if ( $date_label ) : ?>
-				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-primary-content">
+				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-primary-content">
 					<?php echo esc_html( $date_label ); ?><?php echo $time_label ? ' · ' . esc_html( $time_label ) : ''; ?>
 				</span>
 			<?php endif; ?>
 
 			<?php if ( $location_name ) : ?>
-				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-primary-content">
+				<span class="inline-flex items-center py-[5px] px-[9px] bg-primary font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-primary-content">
 					<?php echo esc_html( $location_name ); ?>
 				</span>
 			<?php endif; ?>
 
 			<?php if ( $sold_out ) : ?>
-				<span class="inline-flex items-center font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content/70">
+				<span class="inline-flex items-center font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content/70">
 					SOLD OUT
 				</span>
 			<?php elseif ( $spaces_label ) : ?>
-				<span class="inline-flex items-center gap-[9px] font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary">
+				<span class="inline-flex items-center gap-[9px] font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-primary">
 					<span class="w-[6px] h-[6px] rounded-full bg-primary shrink-0" aria-hidden="true"></span>
 					<?php echo esc_html( $spaces_label ); ?>
 				</span>
@@ -132,14 +132,14 @@ $eyebrow = lp_section_label( (string) ( $args['eyebrow'] ?? '' ) ?: '06 — WORK
 		</div>
 
 		<?php if ( $description ) : ?>
-			<p class="font-body text-[16px] leading-[1.55] text-neutral-content/75 max-w-[560px] m-0">
+			<p class="font-body text-fix--1 leading-[1.55] text-neutral-content/75 max-w-[560px] m-0">
 				<?php echo esc_html( $description ); ?>
 			</p>
 		<?php endif; ?>
 
 		<a
 			href="<?php echo esc_url( $cta_href ); ?>"
-			class="inline-flex items-center gap-3 self-start py-[15px] px-6 bg-neutral-content text-neutral font-label text-[12px] font-semibold tracking-[1px] uppercase hover:bg-neutral hover:text-primary transition-colors duration-150 no-underline"
+			class="inline-flex items-center gap-3 self-start py-[15px] px-6 bg-neutral-content text-neutral font-label text-fix--2 font-semibold tracking-[1px] uppercase hover:bg-neutral hover:text-primary transition-colors duration-150 no-underline"
 		>
 			BOOK YOUR PLACE
 			<?php lp_icon( 'icon-arrow-right', 'w-3.5 h-3.5 shrink-0' ); ?>

@@ -210,7 +210,7 @@ $lp_wrapper_class = (string) ( $args['wrapper_class'] ?? '' );
 			<?php $lp_img(); ?>
 		<?php endif; ?>
 		<?php if ( '' !== $lp_caption ) : ?>
-			<figcaption class="font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65"><?php echo wp_kses_post( $lp_caption ); ?></figcaption>
+			<figcaption class="font-label text-fix--2 font-normal tracking-[0.8px] text-base-content/65"><?php echo wp_kses_post( $lp_caption ); ?></figcaption>
 		<?php endif; ?>
 	</figure>
 <?php elseif ( 'picture' === $lp_element ) : ?>

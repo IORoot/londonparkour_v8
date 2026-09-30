@@ -23,13 +23,13 @@ defined( 'ABSPATH' ) || exit;
 $lp_variants = array(
 	'signal' => 'inline-flex items-center py-[5px] px-[9px] bg-primary text-primary-content ' .
 		'group-hover:bg-neutral group-hover:text-primary transition-colors duration-150 ' .
-		'font-label text-[10px] font-semibold uppercase tracking-[0.8px]',
+		'font-label text-fix--2 font-semibold uppercase tracking-[0.8px]',
 	'live'   => 'inline-flex items-center gap-[8px] py-[7px] px-[11px] bg-primary text-primary-content ' .
 		'group-hover:bg-neutral group-hover:text-primary transition-colors duration-150 ' .
-		'font-label text-[10px] font-semibold uppercase tracking-[0.8px]',
+		'font-label text-fix--2 font-semibold uppercase tracking-[0.8px]',
 	'dark'   => 'inline-flex items-center py-[7px] px-[11px] bg-neutral/88 text-neutral-content ' .
 		'group-hover:bg-primary group-hover:text-neutral transition-colors duration-150 ' .
-		'font-label text-[10px] font-semibold uppercase tracking-[1px]',
+		'font-label text-fix--2 font-semibold uppercase tracking-[1px]',
 );
 
 $lp_variant = $args['variant'] ?? 'signal';

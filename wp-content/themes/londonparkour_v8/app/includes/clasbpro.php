@@ -2765,16 +2765,16 @@ function lp_clasbpro_status_ticket_row( string $label, string $value, string $su
 		'cancelled'  => 'flex items-center justify-between gap-4 py-3 border-b border-base-300',
 	);
 		$dts  = array(
-		'page'  => 'font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65 m-0',
-		'board' => 'font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 m-0',
-		'error'      => 'font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 m-0',
-		'cancelled'  => 'font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65 m-0',
+		'page'  => 'font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-base-content/65 m-0',
+		'board' => 'font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50 m-0',
+		'error'      => 'font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50 m-0',
+		'cancelled'  => 'font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-base-content/65 m-0',
 	);
 	$dds  = array(
-		'page'  => 'font-heading text-[16px] font-medium text-base-content m-0 text-right',
-		'board' => 'font-heading text-[16px] font-medium text-neutral-content m-0 text-right',
-		'error'      => 'font-heading text-[16px] font-medium text-neutral-content m-0 text-right',
-		'cancelled'  => 'font-heading text-[16px] font-medium text-base-content m-0 text-right',
+		'page'  => 'font-heading text-fix--1 font-medium text-base-content m-0 text-right',
+		'board' => 'font-heading text-fix--1 font-medium text-neutral-content m-0 text-right',
+		'error'      => 'font-heading text-fix--1 font-medium text-neutral-content m-0 text-right',
+		'cancelled'  => 'font-heading text-fix--1 font-medium text-base-content m-0 text-right',
 	);
 	$row = $rows[ $surface ] ?? $rows['page'];
 	$dt  = $dts[ $surface ] ?? $dts['page'];

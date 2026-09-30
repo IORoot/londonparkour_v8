@@ -102,8 +102,8 @@ $lp_emit_row_glyph = static function ( string $svg, string $id, string $classes 
 	lp_icon( '' !== $id ? $id : 'glyph-vaulting', $classes );
 };
 $lp_signal_row    = 'mt-[12px] flex items-center justify-between gap-[12px] px-[16px] py-[14px] bg-primary text-primary-content hover:bg-primary/85 transition-colors duration-150';
-$lp_signal_name   = 'font-label text-[12px] font-semibold uppercase tracking-[1px]';
-$lp_signal_meta   = 'font-label text-[10px] font-semibold uppercase tracking-[0.8px]';
+$lp_signal_name   = 'font-label text-fix--2 font-semibold uppercase tracking-[1px]';
+$lp_signal_meta   = 'font-label text-fix--2 font-semibold uppercase tracking-[0.8px]';
 $lp_glyph_states = array(
 	'active'   => 'text-primary',
 	'inactive' => 'text-neutral-content group-hover:text-primary',
@@ -528,8 +528,8 @@ $lp_header_ground = $lp_over_hero
 										<?php foreach ( (array) ( $lp_panel['columns'] ?? array() ) as $lp_column ) : ?>
 											<div class="flex-1 min-w-[220px]">
 												<div class="flex items-center justify-between pb-[12px] border-b border-neutral-content/10">
-													<span class="font-label text-[10px] font-semibold uppercase tracking-[1.2px] text-primary"><?php echo esc_html( (string) ( $lp_column['title'] ?? '' ) ); ?></span>
-													<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( (string) ( $lp_column['note'] ?? '' ) ); ?></span>
+													<span class="font-label text-fix--2 font-semibold uppercase tracking-[1.2px] text-primary"><?php echo esc_html( (string) ( $lp_column['title'] ?? '' ) ); ?></span>
+													<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( (string) ( $lp_column['note'] ?? '' ) ); ?></span>
 												</div>
 												<div class="divide-y divide-neutral-content/10">
 													<?php
@@ -560,18 +560,18 @@ $lp_header_ground = $lp_over_hero
 																<span class="flex items-center justify-between py-[13px] gap-[16px]">
 																	<span class="flex items-center gap-[10px] min-w-0">
 																		<?php $lp_emit_row_glyph( $lp_row_svg, $lp_row_glyph, $lp_row_glyph_cls ); ?>
-																		<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content group-hover/row:text-primary transition-colors duration-150"><?php echo esc_html( $lp_row_name ); ?></span>
+																		<span class="font-body text-fix--1 font-medium tracking-[-0.1px] text-neutral-content group-hover/row:text-primary transition-colors duration-150"><?php echo esc_html( $lp_row_name ); ?></span>
 																	</span>
-																	<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 group-hover/row:text-neutral-content transition-colors duration-150"><?php echo esc_html( $lp_row_meta ); ?></span>
+																	<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50 group-hover/row:text-neutral-content transition-colors duration-150"><?php echo esc_html( $lp_row_meta ); ?></span>
 																</span>
 															</a>
 														<?php else : ?>
 															<span class="flex items-center justify-between py-[13px] gap-[16px]">
 																<span class="flex items-center gap-[10px] min-w-0">
 																	<?php $lp_emit_row_glyph( $lp_row_svg, $lp_row_glyph, $lp_row_glyph_cls ); ?>
-																	<span class="font-body text-[15px] font-medium tracking-[-0.1px] text-neutral-content"><?php echo esc_html( $lp_row_name ); ?></span>
+																	<span class="font-body text-fix--1 font-medium tracking-[-0.1px] text-neutral-content"><?php echo esc_html( $lp_row_name ); ?></span>
 																</span>
-																<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( $lp_row_meta ); ?></span>
+																<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( $lp_row_meta ); ?></span>
 															</span>
 														<?php endif; ?>
 													<?php endforeach; ?>
@@ -604,8 +604,8 @@ $lp_header_ground = $lp_over_hero
 										<?php endforeach; ?>
 									</div>
 									<div class="flex flex-col gap-[8px] sm:flex-row items-start sm:items-center justify-between gap-x-4 border-t border-neutral-content/10 px-[20px] py-[15px] lg:px-[64px]">
-										<a href="<?php echo esc_url( (string) ( $lp_panel['all_href'] ?? '' ) ); ?>" class="<?php echo lp_classes( 'font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-primary hover:text-neutral-content transition-colors duration-150', $lp_focus ); ?>"><?php echo esc_html( (string) ( $lp_panel['all_label'] ?? '' ) ); ?></a>
-										<a href="<?php echo esc_url( (string) ( $lp_panel['alt_href'] ?? '' ) ); ?>" class="<?php echo lp_classes( 'font-label text-[11px] font-normal uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content transition-colors duration-150', $lp_focus ); ?>"><?php echo esc_html( (string) ( $lp_panel['alt_label'] ?? '' ) ); ?></a>
+										<a href="<?php echo esc_url( (string) ( $lp_panel['all_href'] ?? '' ) ); ?>" class="<?php echo lp_classes( 'font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-primary hover:text-neutral-content transition-colors duration-150', $lp_focus ); ?>"><?php echo esc_html( (string) ( $lp_panel['all_label'] ?? '' ) ); ?></a>
+										<a href="<?php echo esc_url( (string) ( $lp_panel['alt_href'] ?? '' ) ); ?>" class="<?php echo lp_classes( 'font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50 hover:text-neutral-content transition-colors duration-150', $lp_focus ); ?>"><?php echo esc_html( (string) ( $lp_panel['alt_label'] ?? '' ) ); ?></a>
 									</div>
 								</div>
 							<?php endif; ?>
@@ -614,13 +614,13 @@ $lp_header_ground = $lp_over_hero
 				</div>
 				<?php if ( $lp_is_condensed ) : ?>
 					<span class="w-px h-[22px] bg-neutral-content/15" aria-hidden="true"></span>
-					<a href="<?php echo esc_url( $lp_site_href ); ?>" class="<?php echo lp_classes( 'inline-flex items-center gap-[8px] font-label text-[12px] font-normal uppercase tracking-[1px] text-neutral-content/70 hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
+					<a href="<?php echo esc_url( $lp_site_href ); ?>" class="<?php echo lp_classes( 'inline-flex items-center gap-[8px] font-label text-fix--2 font-normal uppercase tracking-[1px] text-neutral-content/70 hover:text-primary transition-colors duration-150', $lp_focus ); ?>">
 						<?php lp_icon( 'icon-map-pin', 'w-[13px] h-[13px]' ); ?>
 						<?php echo esc_html( $lp_site_label ); ?>
 					</a>
 				<?php endif; ?>
 				<a href="<?php echo esc_url( $lp_cta_href ); ?>"
-					class="<?php echo lp_classes( $lp_bar_height, 'inline-flex items-center gap-[12px] px-[30px] bg-primary text-primary-content font-label text-[12px] font-semibold uppercase tracking-[1px] hover:bg-primary/85 transition-colors duration-150', $lp_focus_inset ); ?>">
+					class="<?php echo lp_classes( $lp_bar_height, 'inline-flex items-center gap-[12px] px-[30px] bg-primary text-primary-content font-label text-fix--2 font-semibold uppercase tracking-[1px] hover:bg-primary/85 transition-colors duration-150', $lp_focus_inset ); ?>">
 					<?php echo esc_html( $lp_cta_label ); ?>
 					<?php lp_icon( 'icon-arrow-right', 'w-[14px] h-[14px]' ); ?>
 				</a>

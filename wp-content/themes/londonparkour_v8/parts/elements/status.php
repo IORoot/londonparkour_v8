@@ -50,24 +50,24 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per surface x variant — Tailwind v4 scans source text.
 $lp_surfaces = array(
 	'page'   => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-base-content/65',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-accent',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-accent',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-base-content/65',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-accent',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-accent',
 	),
 	'board'  => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-neutral-content/50',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-primary',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-primary',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-neutral-content/50',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-primary',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-primary',
 	),
 	'fill'   => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-primary-content/70',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-primary-content',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-primary-content',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-primary-content/70',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-primary-content',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-primary-content',
 	),
 	'accent' => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-accent-content/70',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-accent-content',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-accent-content',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-accent-content/70',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-accent-content',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-accent-content',
 	),
 );
 

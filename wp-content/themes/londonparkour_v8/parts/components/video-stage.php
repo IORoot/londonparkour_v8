@@ -80,9 +80,9 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 	<div class="flex flex-wrap items-center justify-between gap-2 py-[15px] px-4 lg:px-[22px]">
 		<div class="flex items-center gap-[9px]">
 			<span class="inline-block w-[6px] h-[6px] rounded-full bg-primary" aria-hidden="true"></span>
-			<span class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html( $lp_status_label ); ?></span>
+			<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html( $lp_status_label ); ?></span>
 		</div>
-		<span class="font-label text-[10px] font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_quality_label ); ?></span>
+		<span class="font-label text-fix--2 font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_quality_label ); ?></span>
 	</div>
 
 	<div class="relative w-full min-w-0 max-w-full aspect-video overflow-hidden bg-neutral">
@@ -139,8 +139,8 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 				?>
 			</div>
 			<div class="flex flex-col gap-[7px]">
-				<p class="font-heading text-[26px] font-semibold tracking-[-0.6px] text-neutral-content"><?php echo esc_html( $lp_title ); ?></p>
-				<p class="font-label text-[10px] font-normal tracking-[0.9px] text-neutral-content/70"><?php echo esc_html( $lp_stage_meta ); ?></p>
+				<p class="font-heading text-fix-1 font-semibold tracking-[-0.6px] text-neutral-content"><?php echo esc_html( $lp_title ); ?></p>
+				<p class="font-label text-fix--2 font-normal tracking-[0.9px] text-neutral-content/70"><?php echo esc_html( $lp_stage_meta ); ?></p>
 			</div>
 		</div>
 	</div>
@@ -148,7 +148,7 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 	<progress class="progress progress-primary h-[3px] w-full block rounded-none" value="<?php echo esc_attr( (string) $lp_progress ); ?>" max="100" aria-label="<?php echo esc_attr( $lp_time_label ); ?>"></progress>
 
 	<div class="flex flex-wrap items-center justify-between gap-2 py-[15px] px-4 lg:px-[22px]">
-		<span class="font-label text-[11px] font-semibold tracking-[0.8px] text-base-content"><?php echo esc_html( $lp_time_label ); ?></span>
-		<span class="font-label text-[10px] font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_up_next_label ); ?></span>
+		<span class="font-label text-fix--2 font-semibold tracking-[0.8px] text-base-content"><?php echo esc_html( $lp_time_label ); ?></span>
+		<span class="font-label text-fix--2 font-normal tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_up_next_label ); ?></span>
 	</div>
 </div>

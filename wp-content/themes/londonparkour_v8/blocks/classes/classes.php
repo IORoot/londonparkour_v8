@@ -296,15 +296,15 @@ $lp_spacing = lp_section_spacing( $args );
 <section class="<?php echo lp_classes( 'bg-secondary lg:bg-neutral px-6 pt-16 pb-16 lg:px-16 lg:pt-[120px] lg:pb-[124px]', $lp_spacing ); ?>" data-component="classes"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
 		<div class="flex flex-col gap-5 lg:w-[640px]">
-			<span class="font-label text-[12px] tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></span>
+			<span class="font-label text-fix--2 tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></span>
 			<h2 class="font-heading text-step-3 font-semibold leading-none tracking-[-1.6px] text-neutral-content"><?php echo esc_html( $lp_heading ); ?></h2>
 		</div>
-		<p class="w-full lg:w-[330px] text-left lg:text-right font-label text-[11px] leading-[1.6] tracking-[0.2px] text-neutral-content/70"><?php echo esc_html( $lp_note ); ?></p>
+		<p class="w-full lg:w-[330px] text-left lg:text-right font-label text-fix--2 leading-[1.6] tracking-[0.2px] text-neutral-content/70"><?php echo esc_html( $lp_note ); ?></p>
 	</div>
 
 	<div class="mt-[56px] flex flex-col">
 		<div class="flex items-center justify-between gap-3 pb-[18px] border-b border-neutral-content/20">
-			<h3 class="font-label text-[12px] font-semibold uppercase tracking-[1px] text-primary"><?php echo esc_html( $lp_board_ttl ); ?></h3>
+			<h3 class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-primary"><?php echo esc_html( $lp_board_ttl ); ?></h3>
 			<?php
 			lp_part(
 				'elements/status',
@@ -319,7 +319,7 @@ $lp_spacing = lp_section_spacing( $args );
 
 		<div class="hidden lg:flex items-center gap-[28px] py-[13px] border-b border-neutral-content/10" aria-hidden="true">
 			<?php foreach ( $lp_column_head as $lp_cell ) : ?>
-				<span class="<?php echo lp_classes( $lp_cell['class'], 'font-label text-[11px] font-semibold uppercase tracking-[1.1px] text-neutral-content/70' ); ?>"><?php echo esc_html( $lp_cell['label'] ); ?></span>
+				<span class="<?php echo lp_classes( $lp_cell['class'], 'font-label text-fix--2 font-semibold uppercase tracking-[1.1px] text-neutral-content/70' ); ?>"><?php echo esc_html( $lp_cell['label'] ); ?></span>
 			<?php endforeach; ?>
 			<span class="w-[96px] shrink-0"></span>
 		</div>
@@ -356,8 +356,8 @@ $lp_spacing = lp_section_spacing( $args );
 		</div>
 
 		<div class="flex items-center justify-between gap-4 flex-wrap py-[17px] border-t border-neutral-content/10">
-			<a href="<?php echo esc_url( $lp_foot['href'] ); ?>" class="font-label text-[12px] font-semibold uppercase tracking-[0.9px] text-primary hover:text-primary/70 transition-colors duration-150"><?php echo esc_html( $lp_foot['label'] ); ?></a>
-			<span class="font-label text-[11px] tracking-[0.9px] uppercase text-neutral-content/70"><?php echo esc_html( $lp_foot_note ); ?></span>
+			<a href="<?php echo esc_url( $lp_foot['href'] ); ?>" class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-primary hover:text-primary/70 transition-colors duration-150"><?php echo esc_html( $lp_foot['label'] ); ?></a>
+			<span class="font-label text-fix--2 tracking-[0.9px] uppercase text-neutral-content/70"><?php echo esc_html( $lp_foot_note ); ?></span>
 		</div>
 	</div>
 </section>

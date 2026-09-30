@@ -101,8 +101,8 @@ $lp_spacing = lp_section_spacing( $args );
 		<div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
 			<div class="w-full lg:max-w-[852px] flex flex-col gap-10">
 				<div class="flex flex-col gap-4">
-					<h2 class="font-heading text-[32px] font-semibold tracking-[-0.6px] text-neutral-content m-0"><?php echo esc_html( $lp_title ); ?></h2>
-					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_lead ); ?></p>
+					<h2 class="font-heading text-fix-2 font-semibold tracking-[-0.6px] text-neutral-content m-0"><?php echo esc_html( $lp_title ); ?></h2>
+					<p class="font-body text-fix--2 leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_lead ); ?></p>
 				</div>
 
 				<?php if ( 'sent' === $lp_contact_status ) : ?>
@@ -111,9 +111,9 @@ $lp_spacing = lp_section_spacing( $args );
 						lp_analytics_event_marker( 'generate_lead' );
 					}
 					?>
-					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-primary m-0" role="status"><?php echo esc_html( $lp_success_message ); ?></p>
+					<p class="font-body text-fix--2 leading-[1.65] tracking-[0.1px] text-primary m-0" role="status"><?php echo esc_html( $lp_success_message ); ?></p>
 				<?php elseif ( 'error' === $lp_contact_status ) : ?>
-					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-error m-0" role="alert"><?php echo esc_html( $lp_error_message ); ?></p>
+					<p class="font-body text-fix--2 leading-[1.65] tracking-[0.1px] text-error m-0" role="alert"><?php echo esc_html( $lp_error_message ); ?></p>
 				<?php endif; ?>
 
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" aria-label="<?php echo esc_attr__( 'Contact enquiry form', 'londonparkour_v8' ); ?>">
@@ -170,7 +170,7 @@ $lp_spacing = lp_section_spacing( $args );
 						);
 						?>
 						<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[18px]">
-							<p class="inline-flex items-center gap-2.5 font-body text-[11px] tracking-[0.2px] text-neutral-content/50 m-0">
+							<p class="inline-flex items-center gap-2.5 font-body text-fix--2 tracking-[0.2px] text-neutral-content/50 m-0">
 								<?php lp_icon( 'icon-clock', 'w-[13px] h-[13px] shrink-0' ); ?>
 								<?php echo esc_html( $lp_note ); ?>
 							</p>

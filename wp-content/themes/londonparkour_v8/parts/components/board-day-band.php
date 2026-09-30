@@ -40,8 +40,8 @@ $lp_tag   = $lp_tags[ (int) ( $args['level'] ?? 3 ) ] ?? $lp_tags[3];
 	data-component="board-day-band"
 >
 	<div class="flex items-end gap-[14px]">
-		<span class="font-heading text-[22px] font-semibold tracking-[-0.6px] uppercase text-neutral-content leading-none"><?php echo esc_html( $lp_day ); ?></span>
-		<span class="font-label text-[12px] font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[2px]"><?php echo esc_html( $lp_date ); ?></span>
+		<span class="font-heading text-fix-0 font-semibold tracking-[-0.6px] uppercase text-neutral-content leading-none"><?php echo esc_html( $lp_day ); ?></span>
+		<span class="font-label text-fix--2 font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[2px]"><?php echo esc_html( $lp_date ); ?></span>
 	</div>
-	<span class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_count ); ?></span>
+	<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_count ); ?></span>
 </<?php echo esc_html( $lp_tag ); ?>>

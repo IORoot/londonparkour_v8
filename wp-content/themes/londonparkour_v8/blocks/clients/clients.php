@@ -243,7 +243,7 @@ $lp_emit_logo_items = static function ( string $lp_item_class ) use ( $lp_logos,
 					lp_part( 'components/media-photo', $lp_logo_part );
 					?>
 				<?php else : ?>
-					<span class="font-label text-[14px] sm:text-[16px] font-semibold tracking-[1.2px] uppercase text-accent-content text-center leading-none"><?php echo esc_html( $lp_logo['label'] ); ?></span>
+					<span class="font-label text-fix--1 sm:text-fix--1 font-semibold tracking-[1.2px] uppercase text-accent-content text-center leading-none"><?php echo esc_html( $lp_logo['label'] ); ?></span>
 				<?php endif; ?>
 			<?php echo '' !== $lp_logo['href'] ? '</a>' : '</div>'; ?>
 		</div>
@@ -295,9 +295,9 @@ endif;
 	<div class="flex flex-col gap-[36px]">
 		<header class="flex flex-col gap-[18px]">
 			<div class="flex items-baseline justify-between gap-4">
-				<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<?php if ( '' !== $lp_meta ) : ?>
-					<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_meta ); ?></span>
+					<span class="font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-accent-content/70"><?php echo esc_html( $lp_meta ); ?></span>
 				<?php endif; ?>
 			</div>
 			<div class="h-px w-full bg-accent-content/15" aria-hidden="true"></div>

@@ -328,11 +328,11 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 										)
 									);
 									?>
-									<span class="font-label text-[11px] font-bold uppercase tracking-[1.2px] text-primary">ACTIVE SERIES</span>
+									<span class="font-label text-fix--2 font-bold uppercase tracking-[1.2px] text-primary">ACTIVE SERIES</span>
 								</div>
-								<h2 class="font-heading text-[28px] sm:text-[40px] font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_term->name ); ?></h2>
+								<h2 class="font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_term->name ); ?></h2>
 								<?php if ( '' !== $lp_logline ) : ?>
-									<p class="font-body text-[16px] leading-[1.5] text-neutral-content/65 m-0"><?php echo esc_html( $lp_logline ); ?></p>
+									<p class="font-body text-fix--1 leading-[1.5] text-neutral-content/65 m-0"><?php echo esc_html( $lp_logline ); ?></p>
 								<?php endif; ?>
 								<div class="flex flex-wrap items-center gap-4 pt-1">
 									<?php
@@ -353,7 +353,7 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 									?>
 								</div>
 								<?php if ( $lp_facts ) : ?>
-									<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-label text-[10px] uppercase tracking-[0.8px] text-neutral-content/50">
+									<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-label text-fix--2 uppercase tracking-[0.8px] text-neutral-content/50">
 										<?php foreach ( $lp_facts as $lp_fi => $lp_fact ) : ?>
 											<?php if ( $lp_fi ) : ?>
 												<span aria-hidden="true">·</span>
@@ -395,7 +395,7 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 								</div>
 							<?php else : ?>
 								<div class="w-full lg:w-1/2 aspect-[16/9] bg-secondary border border-neutral-content/10 flex items-center justify-center" aria-hidden="true">
-									<span class="font-label text-[24px] text-primary">▶</span>
+									<span class="font-label text-fix-1 text-primary">▶</span>
 								</div>
 							<?php endif; ?>
 						</div>
@@ -420,9 +420,9 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 											<?php if ( '' !== ( $lp_shelf['glyph_id'] ?? '' ) ) : ?>
 												<span class="w-7 h-7 shrink-0 text-primary" aria-hidden="true"><?php lp_icon( $lp_shelf['glyph_id'], 'w-7 h-7' ); ?></span>
 											<?php endif; ?>
-											<h3 class="font-heading text-[26px] font-medium tracking-[-0.4px] text-neutral-content min-w-0"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
+											<h3 class="font-heading text-fix-1 font-medium tracking-[-0.4px] text-neutral-content min-w-0"><?php echo esc_html( $lp_shelf['title'] ); ?></h3>
 										</div>
-										<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50 whitespace-nowrap"><?php echo esc_html( $lp_shelf['meta'] ); ?></span>
+										<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50 whitespace-nowrap"><?php echo esc_html( $lp_shelf['meta'] ); ?></span>
 									</div>
 									<?php lp_part( 'elements/rule', array( 'tone' => 'board' ) ); ?>
 									<div class="flex flex-col gap-4 min-w-0 w-full" data-component="series-card-shelf">

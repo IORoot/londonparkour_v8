@@ -59,7 +59,7 @@ $lp_is_links = (bool) array_filter( $lp_tabs, static fn( $lp_t ) => ! empty( $lp
 			<?php endforeach; ?>
 		</div>
 		<?php if ( '' !== $lp_stamp ) : ?>
-			<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65 whitespace-nowrap"><?php echo esc_html( $lp_stamp ); ?></span>
+			<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-base-content/65 whitespace-nowrap"><?php echo esc_html( $lp_stamp ); ?></span>
 		<?php endif; ?>
 	</div>
 <?php else : ?>

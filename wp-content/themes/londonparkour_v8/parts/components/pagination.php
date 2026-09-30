@@ -38,9 +38,9 @@ defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings per state. Tailwind v4 scans source text. */
 $lp_focus = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-content';
-$lp_edge  = 'font-label text-[10px] font-semibold uppercase tracking-[1px] inline-flex items-center min-h-11 transition-colors duration-150 motion-reduce:transition-none';
+$lp_edge  = 'font-label text-fix--2 font-semibold uppercase tracking-[1px] inline-flex items-center min-h-11 transition-colors duration-150 motion-reduce:transition-none';
 // Visual box stays 34px; the ::after grows the touch target to ~46px.
-$lp_box   = "relative w-[34px] h-[34px] inline-flex items-center justify-center font-label text-[11px] font-semibold tracking-[0.6px] transition-colors duration-150 motion-reduce:transition-none after:absolute after:-inset-[6px] after:content-['']";
+$lp_box   = "relative w-[34px] h-[34px] inline-flex items-center justify-center font-label text-fix--2 font-semibold tracking-[0.6px] transition-colors duration-150 motion-reduce:transition-none after:absolute after:-inset-[6px] after:content-['']";
 $lp_boxes = array(
 	'current' => 'bg-primary-content text-primary',
 	'other'   => 'bg-transparent text-primary-content hover:bg-primary-content/10',
@@ -105,7 +105,7 @@ $lp_edge_render = static function ( $lp_side, $lp_tone ) use ( $lp_arrow, $lp_ed
 			<?php $lp_edge_render( $lp_next, $lp_ends['next'] ); ?>
 		</nav>
 		<?php if ( '' !== $lp_count ) : ?>
-			<p class="mt-5 text-center font-label text-[10px] font-semibold uppercase tracking-[1px] text-primary-content/70 m-0"><?php echo esc_html( $lp_count ); ?></p>
+			<p class="mt-5 text-center font-label text-fix--2 font-semibold uppercase tracking-[1px] text-primary-content/70 m-0"><?php echo esc_html( $lp_count ); ?></p>
 		<?php endif; ?>
 	</div>
 </div>

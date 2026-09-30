@@ -67,11 +67,11 @@ $lp_show_hint = '' !== $lp_error_message;
 $lp_select_class = lp_classes(
 	'select select-sm validator w-full rounded-none border',
 	$lp_state[ $lp_state_key ],
-	'h-[42px] px-[14px] font-body text-base sm:text-[11px] tracking-[0.4px] user-invalid:border-error disabled:bg-base-100 disabled:border-base-300 disabled:opacity-[.45]'
+	'h-[42px] px-[14px] font-body text-base sm:text-fix--2 tracking-[0.4px] user-invalid:border-error disabled:bg-base-100 disabled:border-base-300 disabled:opacity-[.45]'
 );
 ?>
 <div class="<?php echo lp_classes( 'flex flex-col', $lp_error ? 'gap-[8px]' : 'gap-[13px]' ); ?>" data-component="select" data-state="<?php echo esc_attr( $lp_state_key ); ?>">
-	<label for="<?php echo esc_attr( $lp_field_id ); ?>" class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html( $lp_label ); ?></label>
+	<label for="<?php echo esc_attr( $lp_field_id ); ?>" class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-base-content"><?php echo esc_html( $lp_label ); ?></label>
 	<select
 		class="<?php echo esc_attr( $lp_select_class ); ?>"
 		id="<?php echo esc_attr( $lp_field_id ); ?>"
@@ -91,6 +91,6 @@ $lp_select_class = lp_classes(
 		<?php endforeach; ?>
 	</select>
 	<?php if ( $lp_show_hint ) : ?>
-		<p id="<?php echo esc_attr( $lp_error_id ); ?>"<?php echo $lp_error ? ' role="alert"' : ''; ?> class="validator-hint font-body text-[12px] text-base-content m-0"><?php echo esc_html( $lp_error_message ); ?></p>
+		<p id="<?php echo esc_attr( $lp_error_id ); ?>"<?php echo $lp_error ? ' role="alert"' : ''; ?> class="validator-hint font-body text-fix--2 text-base-content m-0"><?php echo esc_html( $lp_error_message ); ?></p>
 	<?php endif; ?>
 </div>

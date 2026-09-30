@@ -89,6 +89,6 @@ if ( '' === $lp_tone ) {
 		<<?php echo $lp_h; ?> class="<?php echo lp_classes( 'font-heading text-step-3 font-semibold leading-none tracking-[-1.6px]', $lp_on_surface['heading'] ); ?>"><?php echo esc_html( $lp_heading ); ?></<?php echo $lp_h; ?>>
 	</div>
 	<?php if ( '' !== $lp_note ) : ?>
-		<p class="<?php echo lp_classes( 'w-full lg:w-[330px] text-left lg:text-right font-label text-[11px] leading-[1.6] tracking-[0.2px]', $lp_on_surface['note'] ); ?>"><?php echo esc_html( $lp_note ); ?></p>
+		<p class="<?php echo lp_classes( 'w-full lg:w-[330px] text-left lg:text-right font-label text-fix--2 leading-[1.6] tracking-[0.2px]', $lp_on_surface['note'] ); ?>"><?php echo esc_html( $lp_note ); ?></p>
 	<?php endif; ?>
 </div>

@@ -3,8 +3,7 @@
  * SITE BUMP (2026-09): every step renders one Concourse step larger than the
  * design file. Class names (`text-step-0`, etc.) are unchanged; the clamps and
  * line-heights below are the *destination* step's values. Step 7 is capped
- * (no step 8). Pixel utilities (`text-[10px]`, …) are remapped in
- * type-step-bump.css the same way.
+ * (no step 8). Fixed sizes use the static `text-fix-*` tokens at the end.
  *
  * Named steps still mean their roles; rendered desktop max is +1:
  *
@@ -85,4 +84,18 @@
 --text-step-7--line-height: 0.92;
 --text-step-7--letter-spacing: -0.04rem;
 --text-step-7--font-weight: 400;
+
+/* Static type scale — the sizes the site renders at every width (formerly
+   reached by type-step-bump.css remapping text-[Npx]). No bundled
+   line-height/tracking/weight, so leading-/tracking-/font- utilities stay in
+   charge. Swap these for clamps to go fluid. */
+--text-fix--2: 14px;
+--text-fix--1: 18px;
+--text-fix-0: 24px;
+--text-fix-1: 32px;
+--text-fix-2: 43px;
+--text-fix-3: 57px;
+--text-fix-4: 76px;
+--text-fix-5: 96px;
+--text-fix-6: 128px;
 }

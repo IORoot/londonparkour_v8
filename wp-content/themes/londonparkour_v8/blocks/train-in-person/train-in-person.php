@@ -55,8 +55,8 @@ $lp_spacing = lp_section_spacing( $args );
 	<div class="<?php echo lp_classes( 'px-6 lg:px-16 pt-scale-xl pb-scale-2xl flex flex-col gap-[32px]', $lp_spacing ); ?>">
 
 		<div class="flex items-center justify-between gap-4 flex-wrap">
-			<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent-content"><?php echo esc_html( $lp_eyebrow ); ?></span>
-			<span class="font-label text-[11px] font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_stamp ); ?></span>
+			<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-accent-content"><?php echo esc_html( $lp_eyebrow ); ?></span>
+			<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_stamp ); ?></span>
 		</div>
 
 		<?php lp_part( 'elements/rule', array( 'tone' => 'accent' ) ); ?>
@@ -75,8 +75,8 @@ $lp_spacing = lp_section_spacing( $args );
 							)
 						);
 						?>
-						<p class="font-heading text-[20px] font-medium tracking-[-0.3px] text-accent-content"><?php echo esc_html( $lp_site['title'] ); ?></p>
-						<p class="font-body text-[11px] leading-[1.5] text-accent-content/70"><?php echo esc_html( $lp_site['detail'] ); ?></p>
+						<p class="font-heading text-fix-0 font-medium tracking-[-0.3px] text-accent-content"><?php echo esc_html( $lp_site['title'] ); ?></p>
+						<p class="font-body text-fix--2 leading-[1.5] text-accent-content/70"><?php echo esc_html( $lp_site['detail'] ); ?></p>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -84,9 +84,9 @@ $lp_spacing = lp_section_spacing( $args );
 
 		<?php if ( '' !== $lp_note || $lp_action ) : ?>
 			<div class="flex items-center justify-between gap-4 flex-wrap pt-2 border-t border-accent-content/15">
-				<p class="font-body text-[11px] leading-[1.5] text-accent-content/70 m-0 max-w-[420px]"><?php echo esc_html( $lp_note ); ?></p>
+				<p class="font-body text-fix--2 leading-[1.5] text-accent-content/70 m-0 max-w-[420px]"><?php echo esc_html( $lp_note ); ?></p>
 				<?php if ( $lp_action ) : ?>
-					<a href="<?php echo esc_url( $lp_action['href'] ); ?>" class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent-content hover:text-accent-content/70 transition-colors duration-150 whitespace-nowrap"><?php echo esc_html( $lp_action['label'] ); ?></a>
+					<a href="<?php echo esc_url( $lp_action['href'] ); ?>" class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-accent-content hover:text-accent-content/70 transition-colors duration-150 whitespace-nowrap"><?php echo esc_html( $lp_action['label'] ); ?></a>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>

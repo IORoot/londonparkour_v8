@@ -91,10 +91,10 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 			<div>
 				<div class="flex items-end justify-between gap-4 pb-[14px]">
 					<div class="flex flex-col gap-2">
-						<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-primary">NOW STREAMING</span>
-						<h2 class="font-heading text-[26px] sm:text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">Series worth watching.</h2>
+						<span class="font-label text-fix--2 font-bold tracking-[1.2px] uppercase text-primary">NOW STREAMING</span>
+						<h2 class="font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">Series worth watching.</h2>
 					</div>
-					<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( sprintf( '%02d SERIES', $lp_series_count ) ); ?></span>
+					<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( sprintf( '%02d SERIES', $lp_series_count ) ); ?></span>
 				</div>
 				<div class="h-px w-full bg-neutral-content/20" aria-hidden="true"></div>
 			</div>
@@ -141,14 +141,14 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 						? 'relative w-full lg:w-[640px] shrink-0 aspect-video bg-neutral overflow-hidden'
 						: 'relative w-full lg:w-[460px] shrink-0 min-h-[180px] lg:h-[272px] bg-neutral overflow-hidden';
 					$lp_title_cls   = $lp_featured
-						? 'font-heading text-[28px] sm:text-[40px] font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral'
-						: 'font-heading text-[26px] sm:text-[34px] font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral';
+						? 'font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-1.1px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral'
+						: 'font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral';
 					$lp_logline_cls = $lp_featured
-						? 'font-label text-[14px] font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80'
-						: 'font-label text-[13px] font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80';
+						? 'font-label text-fix--1 font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80'
+						: 'font-label text-fix--2 font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80';
 					$lp_cta_cls     = $lp_featured
-						? 'inline-flex items-center gap-2 py-[11px] px-4 bg-primary text-primary-content font-label text-[10px] font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary'
-						: 'inline-flex items-center gap-2 py-[11px] px-4 bg-neutral-content text-neutral font-label text-[10px] font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary';
+						? 'inline-flex items-center gap-2 py-[11px] px-4 bg-primary text-primary-content font-label text-fix--2 font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary'
+						: 'inline-flex items-center gap-2 py-[11px] px-4 bg-neutral-content text-neutral font-label text-fix--2 font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary';
 					?>
 					<a
 						href="<?php echo esc_url( $lp_href ); ?>"
@@ -176,12 +176,12 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 						<div class="flex-1 min-w-0 flex flex-col gap-[14px] py-7 px-8 lg:pl-9 justify-between">
 							<div class="flex flex-col gap-[14px]">
 								<div class="flex items-center gap-2.5 flex-wrap">
-									<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_series_no ); ?></span>
+									<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_series_no ); ?></span>
 									<?php if ( '' !== $lp_tag ) : ?>
-										<span class="inline-flex items-center py-[5px] px-[9px] bg-primary text-primary-content font-label text-[9px] font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary"><?php echo esc_html( $lp_tag ); ?></span>
+										<span class="inline-flex items-center py-[5px] px-[9px] bg-primary text-primary-content font-label text-fix--2 font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary"><?php echo esc_html( $lp_tag ); ?></span>
 									<?php endif; ?>
 									<?php if ( '' !== $lp_level ) : ?>
-										<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_level ); ?></span>
+										<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_level ); ?></span>
 									<?php endif; ?>
 								</div>
 								<h2 class="<?php echo esc_attr( $lp_title_cls ); ?>"><?php echo esc_html( $lp_term->name ); ?></h2>
@@ -191,13 +191,13 @@ get_header( null, array( 'active_key' => 'tutorials' ) );
 								<?php if ( $lp_tags ) : ?>
 									<div class="flex flex-wrap gap-2">
 										<?php foreach ( $lp_tags as $lp_genre ) : ?>
-											<span class="inline-flex items-center py-[5px] px-2.5 border border-neutral-content/20 font-label text-[9px] font-bold tracking-[0.8px] uppercase text-neutral-content/80 group-hover:border-neutral/40 group-hover:text-neutral"><?php echo esc_html( $lp_genre ); ?></span>
+											<span class="inline-flex items-center py-[5px] px-2.5 border border-neutral-content/20 font-label text-fix--2 font-bold tracking-[0.8px] uppercase text-neutral-content/80 group-hover:border-neutral/40 group-hover:text-neutral"><?php echo esc_html( $lp_genre ); ?></span>
 										<?php endforeach; ?>
 									</div>
 								<?php endif; ?>
 							</div>
 							<div class="flex items-center justify-between gap-4 flex-wrap pt-[6px]">
-								<span class="flex items-center gap-3 font-label text-[10px] font-semibold uppercase tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral/70">
+								<span class="flex items-center gap-3 font-label text-fix--2 font-semibold uppercase tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral/70">
 									<?php foreach ( $lp_meta as $lp_mi => $lp_bit ) : ?>
 										<?php if ( $lp_mi ) : ?>
 											<span class="w-[3px] h-[3px] bg-neutral-content/25 group-hover:bg-neutral/40" aria-hidden="true"></span>

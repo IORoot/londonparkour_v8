@@ -19,10 +19,10 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per variant — Tailwind v4 scans source text.
 $lp_variants = array(
 	'paper'    => 'badge rounded-none border-none py-[5px] px-[9px] bg-neutral-content text-neutral ' .
-		'font-label text-[10px] font-semibold uppercase tracking-[1px]',
+		'font-label text-fix--2 font-semibold uppercase tracking-[1px]',
 	'category' => 'badge rounded-none border-none py-[5px] px-[8px] bg-neutral/88 text-neutral-content ' .
 		'group-hover:bg-primary group-hover:text-neutral transition-colors duration-150 ' .
-		'font-label text-[10px] font-semibold uppercase tracking-[1px]',
+		'font-label text-fix--2 font-semibold uppercase tracking-[1px]',
 );
 
 $lp_variant = $args['variant'] ?? 'paper';

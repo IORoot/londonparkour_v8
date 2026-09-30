@@ -322,13 +322,13 @@ get_header( null, array( 'active_key' => 'docs' ) );
 	<div class="w-full bg-base-200" data-component="legal-body">
 		<div class="px-6 lg:px-16 py-scale-xl flex flex-col lg:flex-row gap-10 lg:gap-[104px]">
 			<nav aria-label="On this page" class="lg:w-[280px] lg:shrink-0">
-				<p class="font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-base-content/65 m-0 mb-4">ON THIS PAGE</p>
+				<p class="font-label text-fix--2 font-semibold uppercase tracking-[1.1px] text-base-content/65 m-0 mb-4">ON THIS PAGE</p>
 				<ul role="list" class="flex flex-col m-0 p-0 list-none">
 					<?php foreach ( $lp_clauses as $lp_i => $lp_clause ) : ?>
 						<li>
 							<a href="#<?php echo esc_attr( $lp_clause_prefix . $lp_clause['n'] ); ?>" class="flex items-center gap-[14px] py-[13px] group">
-								<span class="font-label text-[10px] font-normal tracking-[0.6px] text-base-content/65 w-[22px] shrink-0"><?php echo esc_html( $lp_clause['n'] ); ?></span>
-								<span class="<?php echo lp_classes( 'font-label text-[11px] font-normal tracking-[0.2px]', 0 === $lp_i ? 'text-base-content' : 'text-base-content/65', 'group-hover:text-base-content transition-colors duration-150' ); ?>"><?php echo esc_html( $lp_clause['title'] ); ?></span>
+								<span class="font-label text-fix--2 font-normal tracking-[0.6px] text-base-content/65 w-[22px] shrink-0"><?php echo esc_html( $lp_clause['n'] ); ?></span>
+								<span class="<?php echo lp_classes( 'font-label text-fix--2 font-normal tracking-[0.2px]', 0 === $lp_i ? 'text-base-content' : 'text-base-content/65', 'group-hover:text-base-content transition-colors duration-150' ); ?>"><?php echo esc_html( $lp_clause['title'] ); ?></span>
 							</a>
 						</li>
 					<?php endforeach; ?>
@@ -338,11 +338,11 @@ get_header( null, array( 'active_key' => 'docs' ) );
 				<?php foreach ( $lp_clauses as $lp_clause ) : ?>
 					<section id="<?php echo esc_attr( $lp_clause_prefix . $lp_clause['n'] ); ?>" class="flex flex-col gap-4">
 						<div class="flex items-center gap-4">
-							<span class="font-label text-[11px] font-semibold tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_clause['n'] ); ?></span>
-							<h2 class="font-heading text-[23px] font-medium tracking-[-0.5px] text-base-content m-0"><?php echo esc_html( $lp_clause['title'] ); ?></h2>
+							<span class="font-label text-fix--2 font-semibold tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_clause['n'] ); ?></span>
+							<h2 class="font-heading text-fix-0 font-medium tracking-[-0.5px] text-base-content m-0"><?php echo esc_html( $lp_clause['title'] ); ?></h2>
 						</div>
 						<?php foreach ( $lp_clause['paras'] as $lp_para ) : ?>
-							<p class="font-body text-[13.5px] font-normal tracking-[0.1px] leading-[1.75] text-base-content/75 m-0"><?php echo esc_html( $lp_para ); ?></p>
+							<p class="font-body text-fix--2 font-normal tracking-[0.1px] leading-[1.75] text-base-content/75 m-0"><?php echo esc_html( $lp_para ); ?></p>
 						<?php endforeach; ?>
 					</section>
 				<?php endforeach; ?>

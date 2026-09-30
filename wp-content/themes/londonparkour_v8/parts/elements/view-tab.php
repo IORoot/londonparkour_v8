@@ -108,9 +108,9 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 		<span class="flex-1 flex flex-col justify-center gap-1 px-4 py-3 min-w-0 lg:flex-row lg:items-center lg:justify-between lg:gap-5 lg:px-[26px] lg:py-0">
 			<span class="<?php echo lp_classes( 'flex items-center gap-[11px] min-w-0', $lp_rich['label'] ); ?>">
 				<?php lp_icon( $lp_icon_id, 'w-[14px] h-[14px] flex-none text-current' ); ?>
-				<span class="font-label text-[12px] font-semibold uppercase tracking-[1.2px] leading-tight"><?php echo esc_html( $lp_label ); ?></span>
+				<span class="font-label text-fix--2 font-semibold uppercase tracking-[1.2px] leading-tight"><?php echo esc_html( $lp_label ); ?></span>
 			</span>
-			<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal uppercase tracking-[0.9px] leading-tight', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
+			<span class="<?php echo lp_classes( 'font-label text-fix--2 font-normal uppercase tracking-[0.9px] leading-tight', $lp_rich['meta'] ); ?>"><?php echo esc_html( $lp_meta ); ?></span>
 		</span>
 		<span class="<?php echo lp_classes( 'absolute inset-x-0 bottom-0', $lp_rich['bar'] ); ?>" aria-hidden="true"></span>
 	<?php echo '' !== $lp_href ? '</a>' : '</button>'; ?>
@@ -118,7 +118,7 @@ if ( 'rich' === ( $args['variant'] ?? '' ) ) {
 	return;
 }
 
-$lp_tab_class = lp_classes( 'tab min-w-11 h-auto rounded-none pt-[17px] px-0 pb-[15px] text-[11px] uppercase tracking-[1px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content', $lp_state_class );
+$lp_tab_class = lp_classes( 'tab min-w-11 h-auto rounded-none pt-[17px] px-0 pb-[15px] text-fix--2 uppercase tracking-[1px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content', $lp_state_class );
 ?>
 <?php if ( '' !== $lp_href ) : ?>
 <a

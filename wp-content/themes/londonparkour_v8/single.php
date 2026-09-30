@@ -186,8 +186,8 @@ while ( have_posts() ) :
 				);
 				lp_part( 'elements/rule', array( 'tone' => 'hairline' ) );
 				?>
-				<h1 class="font-display font-bold text-[36px] leading-[0.95] tracking-[-1.2px] sm:text-[48px] lg:text-[76px] lg:leading-[0.92] lg:tracking-[-3.2px] text-base-content break-words"><?php echo esc_html( get_the_title() ); ?></h1>
-				<p class="max-w-[640px] font-body text-[15px] leading-[1.6] tracking-[0.1px] text-base-content/65"><?php echo esc_html( $lp_standfirst ); ?></p>
+				<h1 class="font-display font-bold text-fix-2 leading-[0.95] tracking-[-1.2px] sm:text-fix-3 lg:text-fix-5 lg:leading-[0.92] lg:tracking-[-3.2px] text-base-content break-words"><?php echo esc_html( get_the_title() ); ?></h1>
+				<p class="max-w-[640px] font-body text-fix--1 leading-[1.6] tracking-[0.1px] text-base-content/65"><?php echo esc_html( $lp_standfirst ); ?></p>
 				<?php
 				lp_part(
 					'components/byline',
@@ -240,7 +240,7 @@ while ( have_posts() ) :
 			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col lg:flex-row gap-[56px]">
 				<aside class="w-full lg:w-[360px] shrink-0 lg:sticky lg:top-[24px] lg:self-start" data-component="blog-detail-toc">
 					<?php if ( $lp_toc ) : ?>
-						<p class="font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-base-content m-0">IN THIS ARTICLE</p>
+						<p class="font-label text-fix--2 font-semibold uppercase tracking-[1.1px] text-base-content m-0">IN THIS ARTICLE</p>
 						<div class="h-3.5" aria-hidden="true"></div>
 						<div class="h-px w-full bg-base-content" aria-hidden="true"></div>
 						<nav aria-label="In this article">
@@ -248,18 +248,18 @@ while ( have_posts() ) :
 								<?php
 								$lp_n           = str_pad( (string) ( $lp_i + 1 ), 2, '0', STR_PAD_LEFT );
 								$lp_index_class = 0 === $lp_i
-									? 'font-label text-[10px] font-normal tracking-[0.8px] shrink-0 w-[20px] text-accent'
-									: 'font-label text-[10px] font-normal tracking-[0.8px] shrink-0 w-[20px] text-base-content/65 group-hover:text-base-content/80 transition-colors duration-150';
+									? 'font-label text-fix--2 font-normal tracking-[0.8px] shrink-0 w-[20px] text-accent'
+									: 'font-label text-fix--2 font-normal tracking-[0.8px] shrink-0 w-[20px] text-base-content/65 group-hover:text-base-content/80 transition-colors duration-150';
 								?>
 								<a href="#<?php echo esc_attr( $lp_entry['id'] ); ?>" class="group flex items-start gap-[14px] w-full py-[13px] border-b border-base-300 no-underline text-left hover:bg-base-100 transition-colors duration-150 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent">
 									<span class="<?php echo esc_attr( $lp_index_class ); ?>"><?php echo esc_html( $lp_n ); ?></span>
-									<span class="font-body text-[12px] font-normal tracking-[0.2px] leading-[1.4] text-base-content min-w-0 flex-1"><?php echo esc_html( $lp_entry['title'] ); ?></span>
+									<span class="font-body text-fix--2 font-normal tracking-[0.2px] leading-[1.4] text-base-content min-w-0 flex-1"><?php echo esc_html( $lp_entry['title'] ); ?></span>
 								</a>
 							<?php endforeach; ?>
 						</nav>
 						<div class="h-[26px]" aria-hidden="true"></div>
 					<?php endif; ?>
-					<a href="#" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content hover:text-base-content/70 transition-colors duration-150">SHARE THIS ↗</a>
+					<a href="#" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content hover:text-base-content/70 transition-colors duration-150">SHARE THIS ↗</a>
 				</aside>
 				<article class="w-full max-w-[720px] flex flex-col gap-[28px]">
 					<?php
@@ -272,7 +272,7 @@ while ( have_posts() ) :
 					);
 					?>
 					<?php foreach ( $lp_sections as $lp_section ) : ?>
-						<h2 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h2>
+						<h2 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-fix-1 font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h2>
 						<?php
 						lp_blog_render_blocks(
 							(array) ( $lp_section['blocks'] ?? array() ),
@@ -285,12 +285,12 @@ while ( have_posts() ) :
 					<?php endforeach; ?>
 					<?php if ( $lp_pull_quote ) : ?>
 						<blockquote class="border-l-2 border-accent pl-[24px] flex flex-col gap-[12px]" data-component="blog-detail-pull-quote">
-							<p class="font-display font-bold text-[31px] leading-[1.2] tracking-[-0.6px] text-base-content m-0"><?php echo esc_html( $lp_pull_quote['quote'] ); ?></p>
-							<cite class="not-italic font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_pull_quote['attribution'] ); ?></cite>
+							<p class="font-display font-bold text-fix-1 leading-[1.2] tracking-[-0.6px] text-base-content m-0"><?php echo esc_html( $lp_pull_quote['quote'] ); ?></p>
+							<cite class="not-italic font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_pull_quote['attribution'] ); ?></cite>
 						</blockquote>
 					<?php endif; ?>
 					<?php foreach ( $lp_sections_after as $lp_section ) : ?>
-						<h2 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h2>
+						<h2 id="<?php echo esc_attr( $lp_section['id'] ); ?>" class="font-heading text-fix-1 font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]"><?php echo esc_html( $lp_section['heading'] ); ?></h2>
 						<?php
 						lp_blog_render_blocks(
 							(array) ( $lp_section['blocks'] ?? array() ),

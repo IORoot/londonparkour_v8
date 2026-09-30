@@ -67,9 +67,9 @@ $lp_root        = $lp_is_link ? $lp_root_shape . ' ' . $lp_root_interactive : $l
 	<?php endif; ?>
 	<?php if ( $lp_label ) : ?>
 		<span class="flex flex-col gap-[3px]">
-			<span class="font-label text-[11px] font-semibold tracking-[0.9px] text-neutral-content"><?php echo esc_html( $lp_name ); ?></span>
+			<span class="font-label text-fix--2 font-semibold tracking-[0.9px] text-neutral-content"><?php echo esc_html( $lp_name ); ?></span>
 			<?php if ( '' !== $lp_sub ) : ?>
-				<span class="font-label text-[9px] font-normal uppercase tracking-[0.7px] text-neutral-content/60"><?php echo esc_html( $lp_sub ); ?></span>
+				<span class="font-label text-fix--2 font-normal uppercase tracking-[0.7px] text-neutral-content/60"><?php echo esc_html( $lp_sub ); ?></span>
 			<?php endif; ?>
 		</span>
 	<?php endif; ?>

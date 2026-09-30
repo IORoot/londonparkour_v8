@@ -95,16 +95,16 @@ $lp_root = lp_classes(
 		<span class="<?php echo lp_classes( $lp_tone['icon'], 'shrink-0' ); ?>" aria-hidden="true"><?php lp_icon( $lp_icon_id, 'w-3.5 h-3.5' ); ?></span>
 	<?php endif; ?>
 	<?php if ( '' !== $lp_index ) : ?>
-		<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.8px]', $lp_tone['index'], 'transition-colors duration-150 min-w-[20px] shrink-0 whitespace-nowrap' ); ?>" aria-hidden="true"><?php echo esc_html( $lp_index ); ?></span>
+		<span class="<?php echo lp_classes( 'font-label text-fix--2 font-normal tracking-[0.8px]', $lp_tone['index'], 'transition-colors duration-150 min-w-[20px] shrink-0 whitespace-nowrap' ); ?>" aria-hidden="true"><?php echo esc_html( $lp_index ); ?></span>
 	<?php endif; ?>
 	<div class="flex-1 min-w-0 flex flex-col gap-[5px]">
-		<p class="<?php echo lp_classes( 'font-heading text-[15px] font-medium tracking-[-0.2px]', $lp_tone['title'], 'truncate' ); ?>"><?php echo esc_html( $lp_title ); ?></p>
+		<p class="<?php echo lp_classes( 'font-heading text-fix--1 font-medium tracking-[-0.2px]', $lp_tone['title'], 'truncate' ); ?>"><?php echo esc_html( $lp_title ); ?></p>
 		<?php if ( '' !== $lp_meta ) : ?>
-			<p class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.6px] uppercase', $lp_tone['meta'], 'sm:truncate' ); ?>"><?php echo esc_html( $lp_meta ); ?></p>
+			<p class="<?php echo lp_classes( 'font-label text-fix--2 font-normal tracking-[0.6px] uppercase', $lp_tone['meta'], 'sm:truncate' ); ?>"><?php echo esc_html( $lp_meta ); ?></p>
 		<?php endif; ?>
 	</div>
 	<?php if ( '' !== $lp_marker ) : ?>
-		<span class="<?php echo lp_classes( 'font-label text-[10px] font-normal tracking-[0.6px] uppercase', $lp_tone['marker'], 'transition-colors duration-150 shrink-0' ); ?>"><?php echo esc_html( $lp_marker ); ?></span>
+		<span class="<?php echo lp_classes( 'font-label text-fix--2 font-normal tracking-[0.6px] uppercase', $lp_tone['marker'], 'transition-colors duration-150 shrink-0' ); ?>"><?php echo esc_html( $lp_marker ); ?></span>
 	<?php else : ?>
 		<?php lp_part( 'elements/chevron', array( 'variant' => $lp_tone['chevron'] ) ); ?>
 	<?php endif; ?>

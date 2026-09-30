@@ -157,7 +157,7 @@ $lp_input_class = $lp_is_filled
 	? lp_classes(
 		'input validator w-full rounded-none border',
 		$lp_on_surface[ $lp_state ],
-		'h-[48px] px-4 font-body text-[16px] tracking-[0.1px] placeholder:text-neutral/50',
+		'h-[48px] px-4 font-body text-fix--1 tracking-[0.1px] placeholder:text-neutral/50',
 		'user-invalid:border-error',
 		$lp_pick( $lp_disabled_border ),
 		'disabled:opacity-[.45]'
@@ -166,7 +166,7 @@ $lp_input_class = $lp_is_filled
 	? lp_classes(
 		'input input-sm validator w-full rounded-none border',
 		$lp_on_surface[ $lp_state ],
-		'h-[42px] px-[14px] font-body text-base sm:text-[11px] tracking-[0.4px]',
+		'h-[42px] px-[14px] font-body text-base sm:text-fix--2 tracking-[0.4px]',
 		$lp_pick( $lp_placeholder ),
 		'user-invalid:border-error',
 		$lp_pick( $lp_disabled_bg_boxed ),
@@ -176,7 +176,7 @@ $lp_input_class = $lp_is_filled
 	: lp_classes(
 		'input input-ghost input-sm validator w-full rounded-none border-0 border-b',
 		$lp_on_surface[ $lp_state ],
-		'focus:border-b-2 user-invalid:border-error px-0 font-body text-base sm:text-[14px] tracking-[0.1px]',
+		'focus:border-b-2 user-invalid:border-error px-0 font-body text-base sm:text-fix--1 tracking-[0.1px]',
 		$lp_pick( $lp_placeholder ),
 		'disabled:bg-transparent',
 		$lp_pick( $lp_disabled_border ),
@@ -185,16 +185,16 @@ $lp_input_class = $lp_is_filled
 ?>
 <div class="<?php echo lp_classes( 'group flex flex-col', $lp_error ? 'gap-[8px]' : 'gap-[13px]' ); ?>" data-component="field" data-state="<?php echo esc_attr( $lp_state ); ?>">
 	<div class="flex items-center justify-between">
-		<label for="<?php echo esc_attr( $lp_field_id ); ?>" class="<?php echo lp_classes( 'font-label text-[10px] font-semibold tracking-[1px] uppercase', $lp_pick( $lp_label_class ) ); ?>"><?php echo esc_html( $lp_label ); ?></label>
+		<label for="<?php echo esc_attr( $lp_field_id ); ?>" class="<?php echo lp_classes( 'font-label text-fix--2 font-semibold tracking-[1px] uppercase', $lp_pick( $lp_label_class ) ); ?>"><?php echo esc_html( $lp_label ); ?></label>
 		<span class="inline-flex items-center">
 			<?php if ( 'disabled' === $lp_state ) : ?>
-				<span class="<?php echo lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted_disabled ) ); ?>">DISABLED</span>
+				<span class="<?php echo lp_classes( 'font-label text-fix--2 tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted_disabled ) ); ?>">DISABLED</span>
 			<?php elseif ( 'error' === $lp_state ) : ?>
-				<span class="<?php echo lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_label_class ) ); ?>">INVALID</span>
+				<span class="<?php echo lp_classes( 'font-label text-fix--2 tracking-[0.9px] uppercase', $lp_pick( $lp_label_class ) ); ?>">INVALID</span>
 			<?php else : ?>
-				<span class="<?php echo lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted ) ); ?>"><?php echo $lp_required ? 'REQUIRED' : ''; ?></span>
+				<span class="<?php echo lp_classes( 'font-label text-fix--2 tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted ) ); ?>"><?php echo $lp_required ? 'REQUIRED' : ''; ?></span>
 				<?php if ( ! $lp_is_filled ) : ?>
-					<span class="<?php echo lp_classes( 'hidden font-label text-[10px] tracking-[0.9px] uppercase ml-2', $lp_pick( $lp_label_class ), 'group-focus-within:inline' ); ?>" aria-hidden="true">FOCUS</span>
+					<span class="<?php echo lp_classes( 'hidden font-label text-fix--2 tracking-[0.9px] uppercase ml-2', $lp_pick( $lp_label_class ), 'group-focus-within:inline' ); ?>" aria-hidden="true">FOCUS</span>
 				<?php endif; ?>
 			<?php endif; ?>
 		</span>
@@ -214,6 +214,6 @@ $lp_input_class = $lp_is_filled
 		<?php if ( $lp_show_hint ) : ?>aria-describedby="<?php echo esc_attr( $lp_error_id ); ?>"<?php endif; ?>
 	/>
 	<?php if ( $lp_show_hint ) : ?>
-		<p id="<?php echo esc_attr( $lp_error_id ); ?>"<?php echo $lp_error ? ' role="alert"' : ''; ?> class="<?php echo lp_classes( 'validator-hint font-body text-[12px]', $lp_pick( $lp_label_class ), 'm-0' ); ?>"><?php echo esc_html( $lp_error_message ); ?></p>
+		<p id="<?php echo esc_attr( $lp_error_id ); ?>"<?php echo $lp_error ? ' role="alert"' : ''; ?> class="<?php echo lp_classes( 'validator-hint font-body text-fix--2', $lp_pick( $lp_label_class ), 'm-0' ); ?>"><?php echo esc_html( $lp_error_message ); ?></p>
 	<?php endif; ?>
 </div>

@@ -98,32 +98,32 @@ $lp_root = $lp_has_photo
 		<div class="flex flex-col gap-[9px]">
 			<div class="flex items-center gap-[8px]">
 				<?php lp_icon( $lp_glyph_icon, lp_classes( 'w-[12px] h-[12px]', $lp_glyph_class ) ); ?>
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
+				<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
 			</div>
 			<?php if ( '' !== $lp_href ) : ?>
-				<<?php echo $lp_h; ?> class="m-0 font-heading text-[36px] font-bold leading-none tracking-[-1.4px]"><a href="<?php echo esc_url( $lp_href ); ?>" class="text-base-content hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_name ); ?></a></<?php echo $lp_h; ?>>
+				<<?php echo $lp_h; ?> class="m-0 font-heading text-fix-2 font-bold leading-none tracking-[-1.4px]"><a href="<?php echo esc_url( $lp_href ); ?>" class="text-base-content hover:text-accent transition-colors duration-150"><?php echo esc_html( $lp_name ); ?></a></<?php echo $lp_h; ?>>
 			<?php else : ?>
-				<<?php echo $lp_h; ?> class="font-heading text-[36px] font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></<?php echo $lp_h; ?>>
+				<<?php echo $lp_h; ?> class="font-heading text-fix-2 font-bold leading-none tracking-[-1.4px] text-base-content m-0"><?php echo esc_html( $lp_name ); ?></<?php echo $lp_h; ?>>
 			<?php endif; ?>
 		</div>
 		<?php if ( '' !== $lp_streetview_href ) : ?>
-			<a href="<?php echo esc_url( $lp_streetview_href ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent whitespace-nowrap"><?php echo esc_html( $lp_streetview_label ); ?><span class="sr-only"> (opens in a new tab)</span></a>
+			<a href="<?php echo esc_url( $lp_streetview_href ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-accent whitespace-nowrap"><?php echo esc_html( $lp_streetview_label ); ?><span class="sr-only"> (opens in a new tab)</span></a>
 		<?php endif; ?>
 	</div>
 	<div class="flex flex-wrap gap-[40px]">
 		<div class="flex-1 min-w-[200px] flex flex-col gap-[10px]">
-			<span class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
-			<p class="font-body text-[12px] font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
+			<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
+			<p class="font-body text-fix--2 font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
 		</div>
 		<div class="flex-1 min-w-[200px] flex flex-col gap-[10px]">
-			<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
-			<p class="font-body text-[12px] font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_transport_rail ); ?></p>
-			<p class="font-body text-[11px] leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_transport_bus ); ?></p>
+			<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
+			<p class="font-body text-fix--2 font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_transport_rail ); ?></p>
+			<p class="font-body text-fix--2 leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_transport_bus ); ?></p>
 		</div>
 	</div>
 	<div class="flex items-center justify-between border-t border-base-300 pt-[13px]">
-		<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_code ); ?></span>
-		<span class="font-label text-[10px] font-bold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_count ); ?></span>
+		<span class="font-label text-fix--2 font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_code ); ?></span>
+		<span class="font-label text-fix--2 font-bold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_count ); ?></span>
 	</div>
 	<?php if ( '' !== $lp_href ) : ?>
 		<span class="self-start">

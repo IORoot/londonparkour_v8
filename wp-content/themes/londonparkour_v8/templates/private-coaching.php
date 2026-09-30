@@ -208,18 +208,18 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 				?>
 			</div>
 			<div class="w-full lg:w-1/2 flex flex-col justify-end gap-6 px-6 py-scale-2xl lg:px-16 bg-neutral">
-				<span class="font-label text-[11px] font-semibold tracking-[1.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<h1 class="font-heading text-step-5 font-bold leading-[0.92] tracking-[-0.03em] text-neutral-content m-0"><?php echo nl2br( esc_html( $lp_headline ), false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html then nl2br. ?></h1>
-				<p class="font-body text-[16px] font-normal leading-[1.55] tracking-[0.1px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_lead ); ?></p>
+				<p class="font-body text-fix--1 font-normal leading-[1.55] tracking-[0.1px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_lead ); ?></p>
 				<div class="flex items-end gap-3 flex-wrap">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_fare_label ); ?></span>
-					<span class="font-heading text-[56px] font-bold tracking-[-2px] leading-[0.9] text-neutral-content"><?php echo esc_html( $lp_amount ); ?></span>
-					<span class="font-label text-[11px] font-normal tracking-[0.8px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_unit ); ?></span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_fare_label ); ?></span>
+					<span class="font-heading text-fix-3 font-bold tracking-[-2px] leading-[0.9] text-neutral-content"><?php echo esc_html( $lp_amount ); ?></span>
+					<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_unit ); ?></span>
 				</div>
 				<div>
 					<?php $lp_book_button( 'primary' ); ?>
 				</div>
-				<p class="font-label text-[11px] font-normal tracking-[0.2px] leading-[1.5] text-neutral-content/50 m-0"><?php echo esc_html( $lp_reassure ); ?></p>
+				<p class="font-label text-fix--2 font-normal tracking-[0.2px] leading-[1.5] text-neutral-content/50 m-0"><?php echo esc_html( $lp_reassure ); ?></p>
 			</div>
 		</div>
 	</section>
@@ -227,15 +227,15 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-base-100" data-component="private-who">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
 			<header class="flex items-end justify-between gap-4 flex-wrap">
-				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Who it is for</h2>
-				<span class="font-label text-[11px] font-semibold tracking-[1.4px] uppercase text-base-content/65">02 — PRIVATE 1:1</span>
+				<h2 class="font-heading text-fix-1 sm:text-fix-2 font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Who it is for</h2>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.4px] uppercase text-base-content/65">02 — PRIVATE 1:1</span>
 			</header>
 			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
 			<ul class="list-none m-0 p-0" role="list">
 				<?php foreach ( $lp_audience as $lp_row ) : ?>
 					<li class="flex flex-col sm:flex-row gap-4 sm:gap-8 py-7 border-b border-base-300">
-						<span class="font-label text-[11px] font-semibold tracking-[1.4px] uppercase text-base-content sm:w-40 shrink-0"><?php echo esc_html( $lp_row['label'] ); ?></span>
-						<p class="font-body text-[16px] font-normal leading-[1.55] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_row['desc'] ); ?></p>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.4px] uppercase text-base-content sm:w-40 shrink-0"><?php echo esc_html( $lp_row['label'] ); ?></span>
+						<p class="font-body text-fix--1 font-normal leading-[1.55] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_row['desc'] ); ?></p>
 					</li>
 				<?php endforeach; ?>
 			</ul>
@@ -245,15 +245,15 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-neutral" data-component="private-how">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-14">
 			<header class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-neutral-content m-0">How a session works</h2>
-				<p class="font-body text-[15px] font-normal leading-[1.5] text-neutral-content/50 m-0 lg:max-w-[320px]">No request form. Pick a slot and it confirms instantly.</p>
+				<h2 class="font-heading text-fix-1 sm:text-fix-2 font-bold leading-[0.92] tracking-[-1.2px] text-neutral-content m-0">How a session works</h2>
+				<p class="font-body text-fix--1 font-normal leading-[1.5] text-neutral-content/50 m-0 lg:max-w-[320px]">No request form. Pick a slot and it confirms instantly.</p>
 			</header>
 			<ol class="flex flex-col lg:flex-row gap-10 lg:gap-0 list-none m-0 p-0" role="list">
 				<?php foreach ( $lp_steps as $lp_step ) : ?>
 					<li class="flex-1 min-w-0 flex flex-col gap-4 lg:pr-12">
-						<span class="font-label text-[11px] font-semibold tracking-[1.5px] uppercase text-primary"><?php echo esc_html( $lp_step['num'] ); ?></span>
-						<h3 class="font-heading text-[22px] font-bold leading-[1.1] tracking-[-0.5px] text-neutral-content m-0"><?php echo esc_html( $lp_step['title'] ); ?></h3>
-						<p class="font-body text-[15px] font-normal leading-[1.55] tracking-[0.1px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_step['desc'] ); ?></p>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.5px] uppercase text-primary"><?php echo esc_html( $lp_step['num'] ); ?></span>
+						<h3 class="font-heading text-fix-0 font-bold leading-[1.1] tracking-[-0.5px] text-neutral-content m-0"><?php echo esc_html( $lp_step['title'] ); ?></h3>
+						<p class="font-body text-fix--1 font-normal leading-[1.55] tracking-[0.1px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_step['desc'] ); ?></p>
 					</li>
 				<?php endforeach; ?>
 			</ol>
@@ -263,22 +263,22 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-base-100" data-component="private-fare">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
 			<header class="flex items-end justify-between gap-4 flex-wrap">
-				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Fare</h2>
-				<span class="font-label text-[11px] font-semibold tracking-[1.2px] uppercase text-base-content/65">Blocks of 5 sessions available at a reduced rate.</span>
+				<h2 class="font-heading text-fix-1 sm:text-fix-2 font-bold leading-[0.92] tracking-[-1.2px] text-base-content m-0">Fare</h2>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.2px] uppercase text-base-content/65">Blocks of 5 sessions available at a reduced rate.</span>
 			</header>
 			<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0">
 				<div class="flex flex-col gap-4 lg:pr-16" data-fare="one-to-one">
-					<span class="font-label text-[11px] font-semibold tracking-[1.4px] uppercase text-base-content">ONE-TO-ONE</span>
-					<span class="font-heading text-[72px] font-bold leading-[0.85] tracking-[-3px] text-base-content">£65</span>
-					<span class="font-label text-[11px] font-normal tracking-[0.8px] uppercase text-base-content/65">per session / 60 min</span>
-					<p class="font-body text-[15px] font-normal leading-[1.55] text-base-content/65 m-0">One coach, one athlete, full attention. Outdoors at a location of your choice.</p>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.4px] uppercase text-base-content">ONE-TO-ONE</span>
+					<span class="font-heading text-fix-4 font-bold leading-[0.85] tracking-[-3px] text-base-content">£65</span>
+					<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-base-content/65">per session / 60 min</span>
+					<p class="font-body text-fix--1 font-normal leading-[1.55] text-base-content/65 m-0">One coach, one athlete, full attention. Outdoors at a location of your choice.</p>
 				</div>
 				<div class="flex flex-col gap-4 lg:pl-16" data-fare="shared">
-					<span class="font-label text-[11px] font-semibold tracking-[1.4px] uppercase text-base-content">SHARED (2 PEOPLE)</span>
-					<span class="font-heading text-[72px] font-bold leading-[0.85] tracking-[-3px] text-base-content">£40</span>
-					<span class="font-label text-[11px] font-normal tracking-[0.8px] uppercase text-base-content/65">per person / 60 min</span>
-					<p class="font-body text-[15px] font-normal leading-[1.55] text-base-content/65 m-0">Two athletes, same session. Split the price, keep the focus. You organise your own pair.</p>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.4px] uppercase text-base-content">SHARED (2 PEOPLE)</span>
+					<span class="font-heading text-fix-4 font-bold leading-[0.85] tracking-[-3px] text-base-content">£40</span>
+					<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-base-content/65">per person / 60 min</span>
+					<p class="font-body text-fix--1 font-normal leading-[1.55] text-base-content/65 m-0">Two athletes, same session. Split the price, keep the focus. You organise your own pair.</p>
 				</div>
 			</div>
 		</div>
@@ -307,24 +307,24 @@ if ( $lp_appt_id > 0 && function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full" data-component="private-faq-book">
 		<div class="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[840px]">
 			<div class="w-full lg:w-1/2 bg-neutral px-6 py-scale-2xl lg:pl-16 lg:pr-16 flex flex-col gap-10">
-				<h2 class="font-heading text-[26px] sm:text-[32px] font-bold leading-[0.92] tracking-[-0.8px] text-neutral-content m-0">Common questions</h2>
+				<h2 class="font-heading text-fix-1 sm:text-fix-2 font-bold leading-[0.92] tracking-[-0.8px] text-neutral-content m-0">Common questions</h2>
 				<div>
 					<?php foreach ( $lp_faqs as $lp_faq ) : ?>
 						<div class="flex flex-col gap-4 py-6 border-b border-neutral-content/10">
-							<h3 class="font-heading text-[18px] font-bold tracking-[-0.3px] leading-[1.1] text-neutral-content m-0"><?php echo esc_html( $lp_faq['q'] ); ?></h3>
-							<p class="font-body text-[15px] font-normal leading-[1.55] text-neutral-content/50 m-0"><?php echo esc_html( $lp_faq['a'] ); ?></p>
+							<h3 class="font-heading text-fix-0 font-bold tracking-[-0.3px] leading-[1.1] text-neutral-content m-0"><?php echo esc_html( $lp_faq['q'] ); ?></h3>
+							<p class="font-body text-fix--1 font-normal leading-[1.55] text-neutral-content/50 m-0"><?php echo esc_html( $lp_faq['a'] ); ?></p>
 						</div>
 					<?php endforeach; ?>
 				</div>
 			</div>
 			<div class="w-full lg:w-1/2 bg-primary px-6 py-scale-2xl lg:pl-16 lg:pr-16 flex flex-col justify-end gap-8">
-				<span class="font-label text-[11px] font-semibold tracking-[1.5px] uppercase text-primary-content/70">BOOK WHEN YOU'RE READY</span>
-				<h2 class="font-heading text-[28px] sm:text-[40px] font-bold leading-[0.92] tracking-[-1.2px] text-primary-content m-0">Book your session</h2>
-				<p class="font-body text-[16px] font-normal leading-[1.55] text-primary-content/70 m-0">Choose a date and location in the booking panel. Each slot shows the venue and the coach running it. Confirms instantly.</p>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.5px] uppercase text-primary-content/70">BOOK WHEN YOU'RE READY</span>
+				<h2 class="font-heading text-fix-1 sm:text-fix-2 font-bold leading-[0.92] tracking-[-1.2px] text-primary-content m-0">Book your session</h2>
+				<p class="font-body text-fix--1 font-normal leading-[1.55] text-primary-content/70 m-0">Choose a date and location in the booking panel. Each slot shows the venue and the coach running it. Confirms instantly.</p>
 				<div>
 					<?php $lp_book_button( 'inverse' ); ?>
 				</div>
-				<p class="font-label text-[11px] font-normal tracking-[0.2px] leading-[1.5] text-primary-content/70 m-0">Instant confirmation · Cancellation policy applies · Blocks of 5 available</p>
+				<p class="font-label text-fix--2 font-normal tracking-[0.2px] leading-[1.5] text-primary-content/70 m-0">Instant confirmation · Cancellation policy applies · Blocks of 5 available</p>
 			</div>
 		</div>
 	</section>

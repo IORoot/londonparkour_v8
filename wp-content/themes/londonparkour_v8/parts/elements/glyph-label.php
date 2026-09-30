@@ -53,7 +53,7 @@ $lp_tones = array(
 	),
 );
 
-$lp_root    = 'inline-flex items-center gap-[8px] font-label text-[10px] font-semibold tracking-[1px] uppercase whitespace-nowrap';
+$lp_root    = 'inline-flex items-center gap-[8px] font-label text-fix--2 font-semibold tracking-[1px] uppercase whitespace-nowrap';
 $lp_surface = $lp_tones[ $args['surface'] ?? 'page' ] ?? $lp_tones['page'];
 $lp_tone    = $lp_surface[ $args['tone'] ?? 'muted' ] ?? $lp_surface['muted'];
 $lp_extra   = (string) ( $args['class'] ?? '' );

@@ -56,9 +56,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
-$lp_row_value       = 'font-label text-[11px] font-normal tracking-[0.4px] text-base-content';
-$lp_row_value_muted = 'font-label text-[11px] font-normal tracking-[0.4px] text-base-content/65';
-$lp_row_label       = 'font-label text-[11px] font-normal tracking-[0.9px] uppercase text-base-content/65';
+$lp_row_value       = 'font-label text-fix--2 font-normal tracking-[0.4px] text-base-content';
+$lp_row_value_muted = 'font-label text-fix--2 font-normal tracking-[0.4px] text-base-content/65';
+$lp_row_label       = 'font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-base-content/65';
 
 $lp_default_why_points = array(
 	array(
@@ -227,7 +227,7 @@ $lp_spacing = lp_section_spacing( $args );
 	<div class="flex flex-col">
 		<div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-[24px]">
 			<div class="flex flex-col gap-[16px]">
-				<span class="font-label text-[11px] font-semibold tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
+				<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_eyebrow ); ?></span>
 				<h2 class="font-heading text-step-3 font-semibold tracking-[-1px] text-base-content max-w-[700px]"><?php echo esc_html( $lp_heading ); ?></h2>
 			</div>
 			<?php if ( '' !== $lp_note ) : ?>
@@ -240,14 +240,14 @@ $lp_spacing = lp_section_spacing( $args );
 			<div class="pt-[56px] pb-[40px] lg:pb-[80px] flex flex-col lg:flex-row lg:items-start gap-[40px] lg:gap-[80px]">
 				<div class="flex-1 min-w-0">
 					<?php if ( '' !== $lp_why_statement ) : ?>
-						<p class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0" data-slot="why-statement"><?php echo esc_html( $lp_why_statement ); ?></p>
+						<p class="font-heading text-fix-3 font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0" data-slot="why-statement"><?php echo esc_html( $lp_why_statement ); ?></p>
 					<?php endif; ?>
 				</div>
 				<div class="hidden lg:flex w-full lg:w-[520px] shrink-0 flex-col gap-[32px]" data-slot="why-points">
 					<?php foreach ( $lp_default_why_points as $lp_point ) : ?>
 						<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
-							<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
-							<p class="font-body text-[16px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
+							<span class="font-label text-fix--2 font-semibold tracking-[0.5px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
+							<p class="font-body text-fix--1 leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
 						</div>
 					<?php endforeach; ?>
 				</div>
@@ -274,9 +274,9 @@ $lp_spacing = lp_section_spacing( $args );
 					<div class="hidden sm:grid sm:row-span-full sm:grid-rows-subgrid border-r border-base-300/60" data-slot="pricing-rail">
 						<div class="bg-base-300" aria-hidden="true"></div>
 						<div class="flex flex-col gap-[8px] pt-[24px] pb-[36px] px-[24px]">
-							<span class="font-label text-[11px] font-normal tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
+							<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
 							<?php if ( '' !== $lp_subkicker ) : ?>
-								<span class="font-label text-[11px] font-normal tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_subkicker ); ?></span>
+								<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_subkicker ); ?></span>
 							<?php endif; ?>
 						</div>
 						<div class="py-[11px] px-[24px] border-t border-base-300/60 min-h-[36px] flex items-center">
@@ -288,7 +288,7 @@ $lp_spacing = lp_section_spacing( $args );
 							</div>
 						<?php endforeach; ?>
 						<div class="pt-[16px] px-[24px] pb-[24px] flex items-end">
-							<p class="font-label text-[11px] font-normal tracking-[0.7px] uppercase text-base-content/65"><?php echo esc_html( $lp_notice ); ?></p>
+							<p class="font-label text-fix--2 font-normal tracking-[0.7px] uppercase text-base-content/65"><?php echo esc_html( $lp_notice ); ?></p>
 						</div>
 					</div>
 					<?php
@@ -324,27 +324,27 @@ $lp_spacing = lp_section_spacing( $args );
 									<?php if ( '' !== $lp_glyph_id ) : ?>
 										<?php lp_icon( $lp_glyph_id, 'w-[18px] h-[18px] text-base-content/65', array( 'data-slot' => 'glyph' ) ); ?>
 									<?php endif; ?>
-									<span class="font-label text-[11px] font-semibold tracking-[0.6px] uppercase text-base-content"><?php echo esc_html( (string) ( $lp_tier['label'] ?? '' ) ); ?></span>
+									<span class="font-label text-fix--2 font-semibold tracking-[0.6px] uppercase text-base-content"><?php echo esc_html( (string) ( $lp_tier['label'] ?? '' ) ); ?></span>
 									<?php if ( '' !== $lp_badge ) : ?>
-										<span class="font-label text-[11px] font-semibold tracking-[0.8px] uppercase text-accent">— <?php echo esc_html( $lp_badge ); ?></span>
+										<span class="font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-accent">— <?php echo esc_html( $lp_badge ); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="flex items-end gap-[8px]">
 									<span class="font-heading text-step-3 font-semibold tracking-[-1px] text-base-content"><?php echo esc_html( (string) ( $lp_tier['price'] ?? '' ) ); ?></span>
 									<?php if ( '' !== $lp_unit ) : ?>
-										<span class="font-label text-[11px] font-normal tracking-[0.4px] text-base-content/65 pb-[6px]"><?php echo esc_html( $lp_unit ); ?></span>
+										<span class="font-label text-fix--2 font-normal tracking-[0.4px] text-base-content/65 pb-[6px]"><?php echo esc_html( $lp_unit ); ?></span>
 									<?php endif; ?>
 								</div>
 								<?php if ( '' !== $lp_desc ) : ?>
-									<p class="font-body text-[11px] leading-[1.5] text-base-content/65 max-w-[280px]"><?php echo esc_html( $lp_desc ); ?></p>
+									<p class="font-body text-fix--2 leading-[1.5] text-base-content/65 max-w-[280px]"><?php echo esc_html( $lp_desc ); ?></p>
 								<?php endif; ?>
 							</div>
 							<div class="flex items-center gap-[7px] py-[11px] px-[28px] border-t border-base-300/60 min-h-[36px]" data-slot="work-out">
 								<?php if ( '' !== $lp_work_val ) : ?>
-									<span class="font-heading text-[17px] font-medium text-base-content"><?php echo esc_html( $lp_work_val ); ?></span>
+									<span class="font-heading text-fix--1 font-medium text-base-content"><?php echo esc_html( $lp_work_val ); ?></span>
 								<?php endif; ?>
 								<?php if ( '' !== $lp_work_unit ) : ?>
-									<span class="font-label text-[11px] font-normal text-base-content/65"><?php echo esc_html( $lp_work_unit ); ?></span>
+									<span class="font-label text-fix--2 font-normal text-base-content/65"><?php echo esc_html( $lp_work_unit ); ?></span>
 								<?php endif; ?>
 							</div>
 							<?php foreach ( $lp_row_labels as $lp_row ) : ?>
@@ -393,7 +393,7 @@ $lp_spacing = lp_section_spacing( $args );
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[20px] border-l-[3px] border-primary py-[8px] pl-[20px]" data-slot="pricing-note-strip">
 				<div class="flex flex-col gap-[8px]">
 					<?php if ( '' !== $lp_guar_kicker ) : ?>
-						<span class="font-label text-[11px] font-normal tracking-[0.7px] uppercase text-base-content/65"><?php echo esc_html( $lp_guar_kicker ); ?></span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.7px] uppercase text-base-content/65"><?php echo esc_html( $lp_guar_kicker ); ?></span>
 					<?php endif; ?>
 					<p class="font-heading text-step-0 text-base-content"><?php echo esc_html( $lp_guar_copy ); ?></p>
 				</div>
@@ -415,19 +415,19 @@ $lp_spacing = lp_section_spacing( $args );
 			<div class="flex flex-col gap-[32px] lg:hidden" data-slot="why-points-mobile">
 				<?php foreach ( $lp_default_why_points as $lp_point ) : ?>
 					<div class="flex flex-col gap-[14px] pt-[20px] border-t border-base-300/60">
-						<span class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
-						<p class="font-body text-[16px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
+						<span class="font-label text-fix--2 font-semibold tracking-[0.5px] uppercase text-base-content"><?php echo esc_html( $lp_point['label'] ); ?></span>
+						<p class="font-body text-fix--1 leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_point['body'] ); ?></p>
 					</div>
 				<?php endforeach; ?>
 			</div>
 
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[10px] pt-[16px] border-t border-base-300/60">
-				<p class="font-label text-[11px] font-normal tracking-[0.6px] uppercase text-base-content/65">
+				<p class="font-label text-fix--2 font-normal tracking-[0.6px] uppercase text-base-content/65">
 					<span><?php echo esc_html( $lp_sites_lead ); ?></span>
 					<span class="text-base-content/65 mx-2" aria-hidden="true">·</span>
 					<span><?php echo esc_html( $lp_sites_list ); ?></span>
 				</p>
-				<p class="font-label text-[11px] font-normal tracking-[0.6px] uppercase text-base-content/65"><?php echo esc_html( $lp_kit_note ); ?></p>
+				<p class="font-label text-fix--2 font-normal tracking-[0.6px] uppercase text-base-content/65"><?php echo esc_html( $lp_kit_note ); ?></p>
 			</div>
 		</div>
 	</div>

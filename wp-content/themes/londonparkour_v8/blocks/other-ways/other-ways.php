@@ -80,11 +80,11 @@ $lp_spacing = lp_section_spacing( $args );
 							)
 						);
 						?>
-						<p class="font-body text-[17px] leading-[1.4] tracking-[-0.1px] text-base-content whitespace-pre-line m-0"><?php echo esc_html( $lp_value ); ?></p>
+						<p class="font-body text-fix--1 leading-[1.4] tracking-[-0.1px] text-base-content whitespace-pre-line m-0"><?php echo esc_html( $lp_value ); ?></p>
 						<?php if ( '' !== $lp_link_label ) : ?>
-							<a href="<?php echo esc_url( $lp_link_href ?: '#' ); ?>" class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-base-content/65 hover:text-base-content transition-colors duration-150"><?php echo esc_html( $lp_link_label ); ?></a>
+							<a href="<?php echo esc_url( $lp_link_href ?: '#' ); ?>" class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-base-content/65 hover:text-base-content transition-colors duration-150"><?php echo esc_html( $lp_link_label ); ?></a>
 						<?php elseif ( '' !== $lp_col_note ) : ?>
-							<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_col_note ); ?></span>
+							<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_col_note ); ?></span>
 						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>

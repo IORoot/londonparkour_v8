@@ -58,8 +58,8 @@ $lp_foot      = (string) ( $args['foot'] ?? '£15 · 90 min' );
 $lp_banner    = (string) ( $args['banner'] ?? '' );
 $lp_h           = 'h2' === ( $args['heading_level'] ?? 'h3' ) ? 'h2' : 'h3';
 $lp_title_class = '' !== $lp_banner
-	? 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content line-through'
-	: 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content';
+	? 'card-title font-heading text-fix-0 font-medium tracking-[-0.4px] leading-none text-base-content line-through'
+	: 'card-title font-heading text-fix-0 font-medium tracking-[-0.4px] leading-none text-base-content';
 
 $lp_root = lp_classes( 'card', $lp_root_base, $lp_is_link ? $lp_root_interactive : '' );
 
@@ -128,10 +128,10 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 		</div>
 		<<?php echo $lp_h; ?> class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_h; ?>>
 		<?php if ( '' !== $lp_note ) : ?>
-			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/65"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="font-body text-fix--2 font-normal tracking-[0.1px] leading-normal text-base-content/65"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>
 		<div class="flex items-center justify-between gap-3 pt-[15px]">
-			<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_foot ); ?></span>
+			<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_foot ); ?></span>
 			<?php if ( $lp_is_link ) : ?>
 				<?php lp_part( 'elements/chevron', array( 'variant' => 'media_card' ) ); ?>
 			<?php endif; ?>

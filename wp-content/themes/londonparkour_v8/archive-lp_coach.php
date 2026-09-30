@@ -79,9 +79,9 @@ get_header();
 			<div class="flex flex-col gap-8 lg:gap-12">
 				<header class="flex flex-col gap-[18px]">
 					<div class="flex items-baseline justify-between gap-4">
-						<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65">COACHES / THE TEAM</span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-base-content/65">COACHES / THE TEAM</span>
 						<?php if ( '' !== $lp_meta ) : ?>
-							<span class="font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_meta ); ?></span>
+							<span class="font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-base-content/65"><?php echo esc_html( $lp_meta ); ?></span>
 						<?php endif; ?>
 					</div>
 					<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
@@ -109,14 +109,14 @@ get_header();
 							</a>
 							<div class="flex flex-col gap-1.5 lg:gap-2.5 pt-3 lg:pt-5">
 								<div class="flex items-baseline justify-between gap-3">
-									<span class="font-label text-[12px] font-semibold tracking-[0.6px] text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
+									<span class="font-label text-fix--2 font-semibold tracking-[0.6px] text-base-content/65"><?php echo esc_html( (string) ( $lp_coach['index'] ?? '' ) ); ?></span>
 								</div>
-								<h2 class="font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight text-base-content m-0">
+								<h2 class="font-heading text-fix--1 lg:text-fix-0 font-semibold tracking-[-0.4px] leading-tight text-base-content m-0">
 									<a href="<?php echo esc_url( (string) ( $lp_coach['href'] ?? '' ) ); ?>" class="hover:text-accent transition-colors duration-150"><?php echo esc_html( (string) ( $lp_coach['name'] ?? '' ) ); ?></a>
 								</h2>
-								<p class="font-label text-[12px] font-semibold tracking-[0.8px] uppercase text-base-content/65 m-0"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
+								<p class="font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-base-content/65 m-0"><?php echo esc_html( (string) ( $lp_coach['role'] ?? '' ) ); ?></p>
 								<?php if ( '' !== (string) ( $lp_coach['bio'] ?? '' ) ) : ?>
-									<p class="font-body text-[12px] lg:text-[13px] leading-[1.45] lg:leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) $lp_coach['bio'] ); ?></p>
+									<p class="font-body text-fix--2 lg:text-fix--2 leading-[1.45] lg:leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) $lp_coach['bio'] ); ?></p>
 								<?php endif; ?>
 							</div>
 						</article>
@@ -126,8 +126,8 @@ get_header();
 				<footer class="flex flex-col gap-4">
 					<div class="h-px w-full bg-base-300" aria-hidden="true"></div>
 					<div class="flex items-baseline justify-between gap-4 flex-wrap">
-						<span class="font-label text-[12px] font-normal tracking-[0.8px] uppercase text-base-content/65">LONDON-BASED COACHES — TEACHING ACROSS THE CITY SINCE 2005</span>
-						<a href="<?php echo esc_url( $lp_classes ); ?>" class="font-label text-[12px] font-semibold tracking-[0.5px] uppercase text-accent hover:text-accent/70 transition-colors">TRAIN WITH US →</a>
+						<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-base-content/65">LONDON-BASED COACHES — TEACHING ACROSS THE CITY SINCE 2005</span>
+						<a href="<?php echo esc_url( $lp_classes ); ?>" class="font-label text-fix--2 font-semibold tracking-[0.5px] uppercase text-accent hover:text-accent/70 transition-colors">TRAIN WITH US →</a>
 					</div>
 				</footer>
 			</div>
