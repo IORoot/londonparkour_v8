@@ -111,7 +111,7 @@ while ( have_posts() ) :
 	$lp_coach_id  = $lp_coach_ids ? (int) $lp_coach_ids[0] : 0;
 
 	$lp_upcoming       = lp_class_upcoming_sessions( $lp_post_id, 8 );
-	$lp_next           = $lp_upcoming[0] ?? null;
+	$lp_next           = lp_class_focus_session( (int) $lp_post_id, $lp_upcoming );
 	$lp_next_cancelled = is_array( $lp_next ) && ! empty( $lp_next['cancelled'] );
 
 	$lp_book = lp_class_book_button_args(

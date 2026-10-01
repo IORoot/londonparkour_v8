@@ -944,6 +944,102 @@ function lp_class_spaces_label( int $remaining, int $capacity = 0 ): string {
 }
 
 /**
+ * Strict Y-m-d, or empty when the string is not a real calendar day.
+ */
+function lp_class_ymd( string $raw ): string {
+	$raw = trim( $raw );
+	if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw ) ) {
+		return '';
+	}
+	$dt = DateTimeImmutable::createFromFormat( 'Y-m-d', $raw );
+	if ( ! $dt instanceof DateTimeImmutable || $dt->format( 'Y-m-d' ) !== $raw ) {
+		return '';
+	}
+	return $raw;
+}
+
+/**
+ * Class permalink for one sitting. Bare permalink when $date is empty/invalid.
+ */
+function lp_class_url_for_date( string $permalink, string $date ): string {
+	$ymd = lp_class_ymd( $date );
+	if ( '' === $ymd || '' === $permalink ) {
+		return $permalink;
+	}
+	return (string) add_query_arg( 'date', $ymd, $permalink );
+}
+
+/**
+ * Occurrence matching $ymd, or null when that day is not in the list.
+ *
+ * @param array<int,array<string,mixed>> $sessions
+ */
+function lp_class_find_session( array $sessions, string $ymd ): ?array {
+	$ymd = lp_class_ymd( $ymd );
+	if ( '' === $ymd ) {
+		return null;
+	}
+	foreach ( $sessions as $row ) {
+		if ( is_array( $row ) && lp_class_ymd( (string) ( $row['date'] ?? '' ) ) === $ymd ) {
+			return $row;
+		}
+	}
+	return null;
+}
+
+/**
+ * Occurrence matching $ymd, or the first row when none matches / none requested.
+ *
+ * @param array<int,array<string,mixed>> $sessions
+ */
+function lp_class_pick_session( array $sessions, string $ymd = '' ): ?array {
+	$found = lp_class_find_session( $sessions, $ymd );
+	if ( $found ) {
+		return $found;
+	}
+	$first = $sessions[0] ?? null;
+	return is_array( $first ) ? $first : null;
+}
+
+/**
+ * Public `date` (or `preset_date`) query on a class permalink.
+ */
+function lp_class_requested_date(): string {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- public read-only date pin.
+	$raw = '';
+	if ( isset( $_GET['date'] ) ) {
+		$raw = sanitize_text_field( wp_unslash( (string) $_GET['date'] ) );
+	} elseif ( isset( $_GET['preset_date'] ) ) {
+		$raw = sanitize_text_field( wp_unslash( (string) $_GET['preset_date'] ) );
+	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+	return lp_class_ymd( $raw );
+}
+
+/**
+ * Sitting the class-detail page should book: the requested date when it is a
+ * real upcoming occurrence, otherwise the next available session.
+ *
+ * @param array<int,array<string,mixed>> $upcoming From lp_class_upcoming_sessions().
+ */
+function lp_class_focus_session( int $class_id, array $upcoming ): ?array {
+	$ymd   = lp_class_requested_date();
+	$found = lp_class_find_session( $upcoming, $ymd );
+	if ( $found ) {
+		return $found;
+	}
+	if ( '' !== $ymd ) {
+		$found = lp_class_find_session( lp_class_upcoming_sessions( $class_id, 26 ), $ymd );
+		if ( $found ) {
+			return $found;
+		}
+	}
+	$first = $upcoming[0] ?? null;
+	return is_array( $first ) ? $first : null;
+}
+
+/**
  * Board date_label for a Y-m-d date.
  *
  * @param string $date Y-m-d.
@@ -1239,7 +1335,9 @@ function lp_class_sessions_between( DateTimeImmutable $start, DateTimeImmutable 
 				'capacity'   => $capacity,
 				'book_label' => $label,
 			);
-			$rows[] = array_merge( $board, $session );
+			$row        = array_merge( $board, $session );
+			$row['url'] = lp_class_url_for_date( (string) ( $board['url'] ?? '' ), $date );
+			$rows[]     = $row;
 		}
 	}
 

@@ -905,7 +905,12 @@ function lp_expand_sessions( array $items, int $limit ): array {
 					continue;
 				}
 
-				$rows[] = array_merge( $item, $board, $session );
+				$row = array_merge( $item, $board, $session );
+				$ymd = (string) ( $session['date'] ?? '' );
+				if ( '' !== $ymd ) {
+					$row['url'] = lp_class_url_for_date( (string) ( $row['url'] ?? '' ), $ymd );
+				}
+				$rows[] = $row;
 
 				if ( count( $rows ) >= $limit ) {
 					return $rows;
