@@ -65,15 +65,18 @@ function lp_clasbpro_register_level_taxonomy(): void {
 add_action( 'init', 'lp_clasbpro_register_level_taxonomy', 20 );
 
 /**
- * Flush rewrites once after the theme starts exposing clasbpro_class publicly.
+ * Flush rewrites when the public class archive is missing from rewrite_rules.
+ *
+ * Same trap as the tutorials series/category rules: a one-shot option flag
+ * can be true on live while `/all-classes/` still 404s.
  */
 function lp_clasbpro_maybe_flush_rewrites(): void {
-	$flag = 'lp_clasbpro_rewrite_v2';
-	if ( get_option( $flag ) ) {
+	$rules = get_option( 'rewrite_rules' );
+	if ( is_array( $rules ) && isset( $rules['all-classes/?$'] ) ) {
 		return;
 	}
 	flush_rewrite_rules( false );
-	update_option( $flag, 1, true );
+	update_option( 'lp_clasbpro_rewrite_v2', 1, true );
 }
 add_action( 'init', 'lp_clasbpro_maybe_flush_rewrites', 99 );
 

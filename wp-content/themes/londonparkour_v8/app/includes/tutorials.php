@@ -1926,15 +1926,24 @@ function lp_tutorials_series_rewrite(): void {
 add_action( 'init', 'lp_tutorials_series_rewrite', 10 );
 
 /**
- * Flush rewrites once after the series/category/pagination rules are registered.
+ * Flush rewrites when the pretty /tutorials/{series,category}/ rules are missing.
+ *
+ * A version flag is not enough: copying staging's options onto live (or
+ * activating the theme before these rules existed) can leave the flag set
+ * while rewrite_rules still lack the keys. Then `/tutorials/series/` 404s
+ * as a missing tutorial slug even though the `tutorials-series` page exists.
  */
 function lp_tutorials_series_maybe_flush(): void {
-	$flag = 'lp_tutorials_view_rewrite_v2';
-	if ( get_option( $flag ) ) {
+	$rules = get_option( 'rewrite_rules' );
+	if ( is_array( $rules )
+		&& isset( $rules['^tutorials/series/?$'] )
+		&& isset( $rules['^tutorials/category/?$'] )
+		&& isset( $rules['^tutorials/page/([0-9]{1,})/?$'] )
+	) {
 		return;
 	}
 	flush_rewrite_rules( false );
-	update_option( $flag, 1, true );
+	update_option( 'lp_tutorials_view_rewrite_v2', 1, true );
 }
 add_action( 'init', 'lp_tutorials_series_maybe_flush', 99 );
 
