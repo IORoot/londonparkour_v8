@@ -2065,6 +2065,9 @@ function lp_clasbpro_status_product( $view ): string {
 	if ( $class_id <= 0 && $booking_id > 0 ) {
 		$class_id = (int) get_post_meta( $booking_id, '_clasbpro_class_id', true );
 	}
+	if ( $booking_id > 0 && 'custom_payment' === (string) get_post_meta( $booking_id, '_clasbpro_type', true ) ) {
+		return 'custom';
+	}
 	if ( $class_id > 0 && function_exists( 'lp_class_is_appointment' ) && lp_class_is_appointment( $class_id ) ) {
 		return 'private';
 	}
@@ -2626,6 +2629,57 @@ function lp_clasbpro_status_context( $view ): array {
 			),
 		);
 		$seats          = (string) ( $booking['seats'] ?? '' );
+	} elseif ( 'custom' === $product ) {
+		$pay_href       = function_exists( 'lp_pay_url' ) ? lp_pay_url() : home_url( '/pay/' );
+		$title          = 'Payment received.';
+		$note           = 'This is not a class booking. Standard sessions are on the agenda.';
+		$class_name     = 'Agreed amount';
+		$class_href     = $pay_href;
+		$ticket_kicker  = 'THIS PAYMENT';
+		$place_mode     = 'custom';
+		$show_whatsapp  = false;
+		$show_film      = false;
+		$show_private   = false;
+		$receipt_email  = $booking_id ? (string) get_post_meta( $booking_id, '_clasbpro_customer_email', true ) : '';
+		$ticket_rows    = array(
+			array( 'AMOUNT', (string) ( $booking['amount_total'] ?? '' ) ),
+			array( 'CURRENCY', 'GBP' ),
+			array( 'RECEIPT', $receipt_email ? $receipt_email : 'Sent to the email you enter' ),
+			array( 'CHECKOUT', 'Stripe hosted card form' ),
+			array( 'NAME', (string) ( $booking['customer_name'] ?? '' ) ),
+			array( 'REFERENCE', $ref ),
+		);
+		$crumbs         = array(
+			array(
+				'label' => 'HOME',
+				'href'  => home_url( '/' ),
+			),
+			array(
+				'label' => 'PAY',
+				'href'  => $pay_href,
+			),
+			array( 'label' => 'CONFIRMED' ),
+		);
+		$crumb_action   = array(
+			'label' => 'CLASSES ↗',
+			'href'  => $classes_href,
+		);
+		$onward         = array(
+			'prev' => array(
+				'keyword' => '← CONTACT',
+				'label'   => 'Write to the school',
+				'href'    => $contact_href,
+			),
+			'next' => array(
+				'keyword' => 'BOOK A CLASS →',
+				'label'   => 'Standard £15 sessions',
+				'href'    => $classes_href,
+			),
+		);
+		$faqs           = array();
+		$session        = '';
+		$location       = '';
+		$seats          = '';
 	} else {
 		$seats = (string) ( $booking['seats'] ?? '' );
 	}
@@ -2665,6 +2719,15 @@ function lp_clasbpro_status_context( $view ): array {
 			array( 'icon' => 'icon-clock', 'label' => 'WHEN', 'value' => $session ? $session : '—' ),
 			array( 'icon' => 'icon-map-pin', 'label' => 'SITE', 'value' => $location ? $location : '—' ),
 			array( 'icon' => 'icon-user', 'label' => 'COACH', 'value' => $seats ? $seats : '—' ),
+			array( 'icon' => 'icon-currency-pound', 'label' => 'TOTAL', 'value' => $total ? $total : '—' ),
+			array( 'icon' => 'icon-hashtag', 'label' => 'REF', 'value' => $ref ? $ref : '—' ),
+		);
+	} elseif ( 'custom' === $product ) {
+		$receipt_email = $booking_id ? (string) get_post_meta( $booking_id, '_clasbpro_customer_email', true ) : '';
+		$facts_confirmed = array(
+			array( 'icon' => 'icon-currency-pound', 'label' => 'CURRENCY', 'value' => 'GBP' ),
+			array( 'icon' => 'icon-envelope', 'label' => 'RECEIPT', 'value' => $receipt_email ? $receipt_email : 'Sent to the email you enter' ),
+			array( 'icon' => 'icon-arrow-up-right', 'label' => 'CHECKOUT', 'value' => 'Stripe hosted card form' ),
 			array( 'icon' => 'icon-currency-pound', 'label' => 'TOTAL', 'value' => $total ? $total : '—' ),
 			array( 'icon' => 'icon-hashtag', 'label' => 'REF', 'value' => $ref ? $ref : '—' ),
 		);

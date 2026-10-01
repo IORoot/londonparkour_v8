@@ -44,6 +44,7 @@ $lp_includes = array(
 	'app/includes/docs.php',
 	'app/includes/redirects.php',
 	'app/includes/contact.php',
+	'app/includes/pay.php',
 	'app/includes/tutorials.php',
 	// Setup.
 	'app/setup/theme.php',

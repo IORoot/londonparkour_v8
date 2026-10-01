@@ -456,19 +456,30 @@ function lp_clasbpro_purchase_marker( array $template_args, string $layout_path 
 		$booking_id = (int) ( $booking['booking_id'] ?? 0 );
 		$txn        = $session ? $session : ( 'booking-' . $booking_id );
 		$value      = lp_clasbpro_money_to_float( $booking['amount_total'] ?? 0 );
-		$class_id   = $booking_id ? (int) get_post_meta( $booking_id, '_clasbpro_class_id', true ) : 0;
-		$category   = function_exists( 'lp_commerce_category_for_class' )
-			? lp_commerce_category_for_class( $class_id )
-			: 'class';
-		$qty        = max( 1, (int) ( $booking['seats'] ?? 1 ) );
-		$unit       = $qty > 0 ? round( $value / $qty, 2 ) : $value;
-		$items[]    = array(
-			'item_id'       => $category . ':' . $class_id,
-			'item_name'     => (string) ( $booking['class_name'] ?? 'Class' ),
-			'item_category' => $category,
-			'price'         => $unit,
-			'quantity'      => $qty,
-		);
+		$is_custom  = $booking_id > 0 && 'custom_payment' === (string) get_post_meta( $booking_id, '_clasbpro_type', true );
+		if ( $is_custom ) {
+			$items[] = array(
+				'item_id'       => 'custom:' . $booking_id,
+				'item_name'     => 'Agreed amount',
+				'item_category' => 'custom',
+				'price'         => $value,
+				'quantity'      => 1,
+			);
+		} else {
+			$class_id   = $booking_id ? (int) get_post_meta( $booking_id, '_clasbpro_class_id', true ) : 0;
+			$category   = function_exists( 'lp_commerce_category_for_class' )
+				? lp_commerce_category_for_class( $class_id )
+				: 'class';
+			$qty        = max( 1, (int) ( $booking['seats'] ?? 1 ) );
+			$unit       = $qty > 0 ? round( $value / $qty, 2 ) : $value;
+			$items[]    = array(
+				'item_id'       => $category . ':' . $class_id,
+				'item_name'     => (string) ( $booking['class_name'] ?? 'Class' ),
+				'item_category' => $category,
+				'price'         => $unit,
+				'quantity'      => $qty,
+			);
+		}
 	} else {
 		return;
 	}

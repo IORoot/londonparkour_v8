@@ -282,6 +282,37 @@ $lp_facts = $lp_compact
 					<p class="font-body text-fix--2 font-normal leading-[1.55] text-base-content/65 m-0"><?php echo esc_html( $lp['next_body'] ); ?></p>
 					<a href="<?php echo esc_url( $lp['timetable_href'] ); ?>" class="font-label text-fix--2 font-semibold leading-[1.5] text-accent">CLASS TIMETABLE ↗</a>
 				</aside>
+				<?php elseif ( 'custom' === ( $lp['place_mode'] ?? '' ) ) : ?>
+				<?php
+				lp_part(
+					'components/aside-panel',
+					array(
+						'title'     => 'THIS PAYMENT',
+						'rows'      => array(
+							array(
+								'label' => 'CURRENCY',
+								'value' => 'GBP',
+							),
+							array(
+								'label' => 'RECEIPT',
+								'value' => 'Sent to the email you enter',
+							),
+							array(
+								'label' => 'CHECKOUT',
+								'value' => 'Stripe hosted card form',
+							),
+							array(
+								'label' => 'AFTER',
+								'value' => 'Confirmation page',
+							),
+						),
+						'cta_label' => 'FIND A CLASS',
+						'href'      => $lp['timetable_href'] ? $lp['timetable_href'] : home_url( '/classes/' ),
+						'note'      => 'This is not a class booking. Standard sessions are on the agenda.',
+						'surface'   => 'page',
+					)
+				);
+				?>
 				<?php else : ?>
 				<div class="bg-base-200 p-[22px] flex flex-col gap-4">
 					<?php if ( $lp['site_kicker'] ) : ?>
@@ -420,6 +451,7 @@ $lp_facts = $lp_compact
 		</section>
 	<?php endif; ?>
 
+	<?php if ( ! empty( $lp['faqs'] ) ) : ?>
 	<div class="w-full bg-base-100" data-component="booking-status-before-you-come">
 		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-x-16 gap-y-16 items-start">
 			<aside class="flex flex-col gap-4">
@@ -466,6 +498,7 @@ $lp_facts = $lp_compact
 			</div>
 		</div>
 	</div>
+	<?php endif; ?>
 	<?php
 	if ( ! empty( $lp['show_film'] ) && $lp['video_id'] ) {
 		lp_part(

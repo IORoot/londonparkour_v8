@@ -39,6 +39,9 @@
  * @param string $args['error_message']
  * @param string $args['pattern']
  * @param string $args['autocomplete']
+ * @param string $args['inputmode']
+ * @param string $args['min']
+ * @param string $args['step']
  *
  * @package londonparkour_v8
  */
@@ -135,6 +138,9 @@ $lp_disabled        = ! empty( $args['disabled'] );
 $lp_error           = ! empty( $args['error'] );
 $lp_error_message   = (string) ( $args['error_message'] ?? '' );
 $lp_pattern         = (string) ( $args['pattern'] ?? '' );
+$lp_inputmode       = (string) ( $args['inputmode'] ?? '' );
+$lp_min             = (string) ( $args['min'] ?? '' );
+$lp_step            = (string) ( $args['step'] ?? '' );
 // Default autocomplete token from type/name (WCAG 1.3.5); 'off' opts out.
 $lp_ac_by_type   = array( 'email' => 'email', 'tel' => 'tel' );
 $lp_ac_by_name   = array( 'name' => 'name', 'fullname' => 'name', 'full-name' => 'name', 'email' => 'email', 'tel' => 'tel', 'phone' => 'tel' );
@@ -209,6 +215,9 @@ $lp_input_class = $lp_is_filled
 		<?php echo $lp_required ? 'required' : ''; ?>
 		<?php echo $lp_disabled ? 'disabled' : ''; ?>
 		<?php if ( '' !== $lp_pattern ) : ?>pattern="<?php echo esc_attr( $lp_pattern ); ?>"<?php endif; ?>
+		<?php if ( '' !== $lp_inputmode ) : ?>inputmode="<?php echo esc_attr( $lp_inputmode ); ?>"<?php endif; ?>
+		<?php if ( '' !== $lp_min ) : ?>min="<?php echo esc_attr( $lp_min ); ?>"<?php endif; ?>
+		<?php if ( '' !== $lp_step ) : ?>step="<?php echo esc_attr( $lp_step ); ?>"<?php endif; ?>
 		<?php if ( '' !== $lp_autocomplete ) : ?>autocomplete="<?php echo esc_attr( $lp_autocomplete ); ?>"<?php endif; ?>
 		<?php echo $lp_error ? 'aria-invalid="true"' : ''; ?>
 		<?php if ( $lp_show_hint ) : ?>aria-describedby="<?php echo esc_attr( $lp_error_id ); ?>"<?php endif; ?>

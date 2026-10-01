@@ -6,6 +6,7 @@ import { initBookingDrawer } from './elements/BookingDrawer.js';
 import { initCommercePurchase } from './elements/CommercePurchase.js';
 import { initAllSeriesShelves } from './elements/SeriesShelf.js';
 import { initNavDismiss } from './elements/NavDismiss.js';
+import { initPayForm } from './elements/PayForm.js';
 import { AppInitialiser } from './AppInitialiser.js';
 import { createDOMObserver } from './utils/createDOMObserver.js';
 import { initAll as initMotion } from './motion/index.js';
@@ -106,6 +107,14 @@ const MODULES = {
     critical: false,
     lazy: false,
     timeout: 3000
+  },
+
+  payForm: {
+    init: () => initPayForm(),
+    selector: 'form[data-form="pay"]',
+    critical: false,
+    lazy: false,
+    timeout: 5000
   }
 };
 
@@ -143,7 +152,7 @@ export async function initApp(options = {}) {
  */
 const boot = () =>
   initApp({
-    modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'commercePurchase', 'siteNetworkMap', 'classDetailOsmMap', 'seriesShelves', 'navDismiss'],
+    modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'commercePurchase', 'siteNetworkMap', 'classDetailOsmMap', 'seriesShelves', 'navDismiss', 'payForm'],
   });
 
 if (document.readyState === 'loading') {

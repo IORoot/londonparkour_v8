@@ -50,6 +50,10 @@ function lp_seo_page_defaults(): array {
 			'Contact London Parkour',
 			'Tell us what you\'re training for and we\'ll point you in the right direction. Email is faster than the phone — coaches are on the floor during sessions.',
 		),
+		'pay'                => array(
+			'Pay an agreed amount | London Parkour',
+			'For a figure already discussed — a workshop rest, a private adjustment, or anything that is not a standard class fare.',
+		),
 		'docs'               => array(
 			'Parkour FAQ & Docs | London Parkour',
 			'Guides, FAQs and stories from London Parkour. Start with answers to common questions — or switch to Blog for news and projects.',

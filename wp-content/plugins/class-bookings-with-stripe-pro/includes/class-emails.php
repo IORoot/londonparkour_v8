@@ -439,6 +439,102 @@ abstract class Emails {
 	}
 
 	/**
+	 * Receipt emails after a custom /pay/ amount is taken.
+	 */
+	public static function send_for_custom_payment( int $booking_id ): void {
+		static $sent = [];
+		if ( isset( $sent[ $booking_id ] ) ) {
+			return;
+		}
+		$sent[ $booking_id ] = true;
+
+		$email  = sanitize_email( (string) get_post_meta( $booking_id, '_clasbpro_customer_email', true ) );
+		$name   = sanitize_text_field( (string) get_post_meta( $booking_id, '_clasbpro_customer_name', true ) );
+		$amount = Helpers::format_stripe_amount( (int) get_post_meta( $booking_id, '_clasbpro_amount_total', true ) );
+		$receipt_url = (string) get_post_meta( $booking_id, '_clasbpro_stripe_receipt_url', true );
+
+		$tags = [
+			'{customer_name}'      => $name ?: __( 'there', 'class-bookings-with-stripe-pro' ),
+			'{customer_email}'     => $email,
+			'{amount_total}'       => $amount,
+			'{booking_id}'         => (string) $booking_id,
+			'{stripe_receipt_url}' => $receipt_url,
+		];
+
+		if ( $email && is_email( $email ) ) {
+			$subject = sprintf(
+				/* translators: %s: formatted amount */
+				__( 'Payment received — %s', 'class-bookings-with-stripe-pro' ),
+				$amount
+			);
+			$body = sprintf(
+				"Hi %s,\n\nWe received your payment of %s. A Stripe receipt is on its way to this address.\n\nThis is not a class booking. Standard sessions are on the agenda.\n\nLondon Parkour",
+				$tags['{customer_name}'],
+				$amount
+			);
+			$ok = self::send_raw_template(
+				$email,
+				$subject,
+				$body,
+				$tags,
+				__( 'Customer', 'class-bookings-with-stripe-pro' ),
+				false,
+				false
+			);
+			self::record_instant_delivery( $booking_id, Booking_Email_Status::TYPE_CUSTOMER, $ok );
+		} else {
+			Booking_Email_Status::record_instant_delivery(
+				$booking_id,
+				Booking_Email_Status::TYPE_CUSTOMER,
+				[
+					'status' => 'failed',
+					'error'  => __( 'No valid customer email on this payment.', 'class-bookings-with-stripe-pro' ),
+				]
+			);
+		}
+
+		$admin = trim( (string) Helpers::get_option( 'admin_email', '' ) );
+		if ( '' === $admin || ! is_email( $admin ) ) {
+			$admin = (string) get_option( 'admin_email' );
+		}
+		if ( $admin && is_email( $admin ) ) {
+			$subject = sprintf(
+				/* translators: 1: formatted amount, 2: customer name */
+				__( 'Custom payment — %1$s — %2$s', 'class-bookings-with-stripe-pro' ),
+				$amount,
+				$name ?: __( 'Customer', 'class-bookings-with-stripe-pro' )
+			);
+			$body = sprintf(
+				"%s <%s> paid %s.\n\nReference: #%d\nReceipt: %s\n\nThis is not a class booking.",
+				$name ?: __( 'Customer', 'class-bookings-with-stripe-pro' ),
+				$email,
+				$amount,
+				$booking_id,
+				$receipt_url ?: '—'
+			);
+			$ok = self::send_raw_template(
+				$admin,
+				$subject,
+				$body,
+				$tags,
+				__( 'Admin', 'class-bookings-with-stripe-pro' ),
+				true,
+				false
+			);
+			self::record_instant_delivery( $booking_id, Booking_Email_Status::TYPE_ADMIN, $ok );
+		} else {
+			Booking_Email_Status::record_instant_delivery(
+				$booking_id,
+				Booking_Email_Status::TYPE_ADMIN,
+				[
+					'status' => 'failed',
+					'error'  => __( 'No valid admin notification email configured.', 'class-bookings-with-stripe-pro' ),
+				]
+			);
+		}
+	}
+
+	/**
 	 * Email the pack code + restore link after a pack purchase.
 	 */
 	public static function send_for_pack_purchase( int $purchase_id, string $code, string $restore_url ): void {

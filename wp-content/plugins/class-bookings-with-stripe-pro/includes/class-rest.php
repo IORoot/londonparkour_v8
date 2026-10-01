@@ -66,6 +66,18 @@ abstract class REST {
 			],
 		] );
 
+		register_rest_route( CLASBOWPRO_REST_NS, '/custom-checkout', [
+			'methods'             => 'POST',
+			'callback'            => [ self::class, 'create_custom_checkout' ],
+			'permission_callback' => '__return_true',
+			'args'                => [
+				'customer_name'  => [ 'required' => false, 'sanitize_callback' => 'sanitize_text_field' ],
+				'customer_email' => [ 'required' => false, 'sanitize_callback' => 'sanitize_email' ],
+				'amount'         => [ 'required' => false ],
+				'origin_url'     => [ 'required' => false, 'sanitize_callback' => 'esc_url_raw' ],
+			],
+		] );
+
 		register_rest_route( CLASBOWPRO_REST_NS, '/pack-checkout', [
 			'methods'             => 'POST',
 			'callback'            => [ self::class, 'create_pack_checkout' ],
@@ -442,6 +454,27 @@ abstract class REST {
 	}
 
 	/**
+	 * POST /custom-checkout — pay an agreed amount via Stripe Checkout.
+	 */
+	public static function create_custom_checkout( \WP_REST_Request $request ) {
+		$result = Custom_Payments::start_checkout(
+			(string) ( $request['customer_name'] ?? '' ),
+			(string) ( $request['customer_email'] ?? '' ),
+			$request['amount'] ?? '',
+			(string) ( $request['origin_url'] ?? '' )
+		);
+
+		if ( is_wp_error( $result ) ) {
+			$code   = $result->get_error_code();
+			$status = 'validation' === $code ? 422 : ( 'rate_limited' === $code ? 429 : 502 );
+			$extra  = is_array( $result->get_error_data() ) ? $result->get_error_data() : [];
+			return self::error( $status, (string) $code, $result->get_error_message(), $extra );
+		}
+
+		return new \WP_REST_Response( $result, 200 );
+	}
+
+	/**
 	 * POST /pack-checkout — buy a class pack via Stripe Checkout.
 	 */
 	public static function create_pack_checkout( \WP_REST_Request $request ) {
@@ -687,20 +720,34 @@ abstract class REST {
 		}
 
 		// Update post title to reflect customer.
+		$is_custom = Custom_Payments::is( $booking_id );
 		wp_update_post( [
 			'ID'         => $booking_id,
-			'post_title' => sprintf(
-				'%s · %s · %s',
-				$name ?: __( 'Customer', 'class-bookings-with-stripe-pro' ),
-				get_the_title( (int) get_post_meta( $booking_id, '_clasbpro_class_id', true ) ),
-				Helpers::format_date( (string) get_post_meta( $booking_id, '_clasbpro_class_date', true ) )
-			),
+			'post_title' => $is_custom
+				? sprintf(
+					/* translators: 1: customer name, 2: formatted amount */
+					__( '%1$s · Custom payment · %2$s', 'class-bookings-with-stripe-pro' ),
+					$name ?: __( 'Customer', 'class-bookings-with-stripe-pro' ),
+					Helpers::format_stripe_amount( (int) get_post_meta( $booking_id, '_clasbpro_amount_total', true ) )
+				)
+				: sprintf(
+					'%s · %s · %s',
+					$name ?: __( 'Customer', 'class-bookings-with-stripe-pro' ),
+					get_the_title( (int) get_post_meta( $booking_id, '_clasbpro_class_id', true ) ),
+					Helpers::format_date( (string) get_post_meta( $booking_id, '_clasbpro_class_date', true ) )
+				),
 		] );
 
 		Bookings::set_status( $booking_id, Bookings::STATUS_PAID );
 		Merge_Tags::persist_booking_coupon_snapshot( $booking_id );
-		Mailchimp::subscribe_booking( $booking_id );
 
+		if ( $is_custom ) {
+			Emails::send_for_custom_payment( $booking_id );
+			Helpers::debug_log( '[class-bookings-with-stripe-pro] checkout.session.completed custom payment marked paid. booking_id=' . $booking_id );
+			return;
+		}
+
+		Mailchimp::subscribe_booking( $booking_id );
 		Emails::send_for_booking( $booking_id );
 		Scheduled_Emails::queue_for_booking( $booking_id );
 		Helpers::debug_log( '[class-bookings-with-stripe-pro] checkout.session.completed marked paid. booking_id=' . $booking_id );
@@ -1097,7 +1144,7 @@ abstract class REST {
 	 *
 	 * @return \WP_REST_Response|null
 	 */
-	private static function checkout_rate_limit_error( string $email ): ?\WP_REST_Response {
+	public static function checkout_rate_limit_error( string $email ): ?\WP_REST_Response {
 		$email  = strtolower( sanitize_email( $email ) );
 		$ip     = self::client_ip();
 		$config = self::checkout_rate_limit_config();

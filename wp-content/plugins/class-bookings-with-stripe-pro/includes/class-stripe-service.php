@@ -318,6 +318,63 @@ abstract class Stripe_Service {
 	}
 
 	/**
+	 * Checkout Session for a custom agreed amount (the /pay/ page).
+	 *
+	 * @throws \Stripe\Exception\ApiErrorException|\RuntimeException
+	 */
+	public static function create_custom_payment_checkout_session(
+		int $amount_pence,
+		string $customer_email,
+		string $customer_name,
+		int $booking_id,
+		string $success_url,
+		string $cancel_url
+	): \Stripe\Checkout\Session {
+		$client = self::client();
+		if ( ! $client ) {
+			throw new \RuntimeException( 'Stripe secret key is not configured.' );
+		}
+
+		$params = [
+			'mode'                => 'payment',
+			'success_url'         => $success_url,
+			'cancel_url'          => $cancel_url,
+			'expires_at'          => time() + CLASBOWPRO_HOLD_SECONDS,
+			'line_items'          => [
+				[
+					'quantity'   => 1,
+					'price_data' => [
+						'currency'     => Helpers::currency(),
+						'unit_amount'  => $amount_pence,
+						'product_data' => [
+							'name'        => __( 'Agreed amount', 'class-bookings-with-stripe-pro' ),
+							'description' => __( 'Not a class booking. A figure already discussed.', 'class-bookings-with-stripe-pro' ),
+						],
+					],
+				],
+			],
+			'metadata'            => [
+				'clasbpro_type' => Custom_Payments::META_TYPE,
+				'booking_id'    => (string) $booking_id,
+			],
+			'payment_intent_data' => [
+				'metadata' => [
+					'clasbpro_type' => Custom_Payments::META_TYPE,
+					'booking_id'    => (string) $booking_id,
+				],
+			],
+		];
+
+		if ( $customer_email && is_email( $customer_email ) ) {
+			$params['customer_email'] = $customer_email;
+		}
+
+		unset( $customer_name );
+
+		return $client->checkout->sessions->create( $params );
+	}
+
+	/**
 	 * Ensure a shared 100% off coupon exists for pack redemptions.
 	 *
 	 * @throws \Stripe\Exception\ApiErrorException|\RuntimeException

@@ -611,6 +611,7 @@ function lp_seed_template_pages(): void {
 		'about'            => array( 'About', 'templates/about.php' ),
 		'coupons'          => array( 'Coupons', 'templates/coupons.php' ),
 		'contact'          => array( 'Contact', 'templates/contact.php' ),
+		'pay'              => array( 'Pay', 'templates/pay.php' ),
 		'docs'             => array( 'Docs', 'templates/docs-faq.php' ),
 		'tutorials-series'   => array( 'Tutorials — Series', 'templates/tutorials-series.php' ),
 		'tutorials-category' => array( 'Tutorials — Category', 'templates/tutorials-category.php' ),
