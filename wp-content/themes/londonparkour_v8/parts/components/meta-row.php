@@ -24,10 +24,10 @@ defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_surfaces = array(
-	'page'   => 'font-label text-[10px] font-normal tracking-[0.5px] uppercase text-base-content/65',
-	'board'  => 'font-label text-[10px] font-normal tracking-[0.5px] uppercase text-neutral-content/50',
-	'accent' => 'font-label text-[10px] font-normal tracking-[0.5px] uppercase text-accent-content/70',
-	'fill'   => 'font-label text-[10px] font-normal tracking-[0.5px] uppercase text-primary-content/70',
+	'page'   => 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-base-content/65',
+	'board'  => 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-neutral-content/50',
+	'accent' => 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-accent-content/70',
+	'fill'   => 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-primary-content/70',
 );
 
 $lp_surface = (string) ( $args['surface'] ?? 'page' );

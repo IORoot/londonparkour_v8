@@ -65,7 +65,7 @@ foreach ( $lp_week['days'] as $lp_day_group ) {
 $lp_sites      = count( lp_locations_by_kind( 'site' ) );
 $lp_mast_media = (int) get_post_thumbnail_id();
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">
@@ -115,7 +115,7 @@ get_header();
 				?>
 			</span>
 			<div class="flex flex-col items-center gap-[10px] min-w-0 flex-1">
-				<h2 class="font-heading text-[18px] font-semibold tracking-[-0.3px] lg:text-[26px] text-base-content text-center"><?php echo esc_html( lp_agenda_week_label( $lp_week ) ); ?></h2>
+				<h2 class="font-heading text-fix-0 font-semibold tracking-[-0.3px] lg:text-fix-1 text-base-content text-center"><?php echo esc_html( lp_agenda_week_label( $lp_week ) ); ?></h2>
 				<div class="flex items-center gap-[16px]">
 					<span>
 						<?php
@@ -164,10 +164,10 @@ get_header();
 	<section class="w-full bg-neutral" data-component="agenda-cards-board">
 		<div class="px-6 lg:px-16 pt-scale-2xl pb-scale-2xl flex flex-col gap-3.5">
 			<div class="flex items-center justify-between gap-4 flex-wrap pb-[18px] border-b border-neutral-content/20">
-				<h2 class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-primary m-0"><?php echo esc_html( sprintf( 'AGENDA · WEEK %d', $lp_week['week'] ) ); ?></h2>
+				<h2 class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-primary m-0"><?php echo esc_html( sprintf( 'AGENDA · WEEK %d', $lp_week['week'] ) ); ?></h2>
 				<span class="inline-flex items-center gap-[9px]">
 					<span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-hidden="true"></span>
-					<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-neutral-content/80"><?php echo esc_html( sprintf( 'UPDATED %s · %s', $lp_now->format( 'H:i' ), strtoupper( $lp_now->format( 'D j M' ) ) ) ); ?></span>
+					<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-neutral-content/80"><?php echo esc_html( sprintf( 'UPDATED %s · %s', $lp_now->format( 'H:i' ), strtoupper( $lp_now->format( 'D j M' ) ) ) ); ?></span>
 				</span>
 			</div>
 
@@ -221,15 +221,15 @@ get_header();
 					?>
 					<div class="w-full flex items-center justify-between gap-3 pt-6 pb-4" data-component="agenda-day-header">
 						<div class="flex items-end gap-[14px] min-w-0">
-							<span class="font-heading text-[42px] font-semibold tracking-[-1px] uppercase text-neutral-content leading-none"><?php echo esc_html( $lp_day_group['day'] ); ?></span>
-							<span class="font-label text-[11px] font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[6px]"><?php echo esc_html( $lp_day_group['date'] ); ?></span>
+							<span class="font-heading text-fix-2 font-semibold tracking-[-1px] uppercase text-neutral-content leading-none"><?php echo esc_html( $lp_day_group['day'] ); ?></span>
+							<span class="font-label text-fix--2 font-normal tracking-[0.6px] uppercase text-neutral-content/50 pb-[6px]"><?php echo esc_html( $lp_day_group['date'] ); ?></span>
 						</div>
 						<div class="flex items-center gap-3 shrink-0">
-							<span class="hidden lg:inline font-label text-[11px] font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( _n( '%d SESSION', '%d SESSIONS', $lp_total, 'londonparkour_v8' ), $lp_total ) ); ?></span>
+							<span class="hidden lg:inline font-label text-fix--2 font-semibold tracking-[1px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( _n( '%d SESSION', '%d SESSIONS', $lp_total, 'londonparkour_v8' ), $lp_total ) ); ?></span>
 							<?php if ( $lp_upcoming_day === $lp_day_group['day'] ) : ?>
 								<span class="inline-flex items-center gap-1.5 bg-primary px-2.5 py-1">
 									<span class="w-[5px] h-[5px] rounded-full bg-primary-content" aria-hidden="true"></span>
-									<span class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-primary-content">NEXT UP</span>
+									<span class="font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-primary-content">NEXT UP</span>
 								</span>
 							<?php endif; ?>
 						</div>
@@ -314,7 +314,7 @@ get_header();
 					)
 				);
 				?>
-				<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( '%d SITES · %d CLASSES A WEEK', $lp_sites, $lp_week['count'] ) ); ?></span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-neutral-content/50"><?php echo esc_html( sprintf( '%d SITES · %d CLASSES A WEEK', $lp_sites, $lp_week['count'] ) ); ?></span>
 			</div>
 		</div>
 	</section>

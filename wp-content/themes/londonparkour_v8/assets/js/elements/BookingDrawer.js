@@ -6,11 +6,11 @@ import { lpAddPaymentInfo, lpBeginCheckout, lpSelectItem } from '../utils/analyt
 
 const DRAWER_ID = 'lp-booking-drawer';
 const LOADING_HTML =
-  '<p class="px-[28px] py-[20px] font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Loading…</p>';
+  '<p class="px-[28px] py-[20px] font-label text-fix--2 uppercase tracking-[0.8px] text-neutral-content/50">Loading…</p>';
 const UNAVAILABLE_HTML =
-  '<p class="px-[28px] py-[20px] font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Booking unavailable</p>';
+  '<p class="px-[28px] py-[20px] font-label text-fix--2 uppercase tracking-[0.8px] text-neutral-content/50">Booking unavailable</p>';
 const FAIL_HTML =
-  '<p class="px-[28px] py-[20px] font-label text-[11px] uppercase tracking-[0.8px] text-neutral-content/50">Could not load form</p>';
+  '<p class="px-[28px] py-[20px] font-label text-fix--2 uppercase tracking-[0.8px] text-neutral-content/50">Could not load form</p>';
 
 /**
  * Plugin JS overwrites the submit label with "Book & pay with Stripe" when a

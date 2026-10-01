@@ -22,7 +22,7 @@ $session = function_exists( 'lp_booking_form_session' )
 				<p class="cbfs-form__when"><?php echo esc_html( $session['when'] ); ?></p>
 			<?php endif; ?>
 			<?php if ( '' !== $session['name'] ) : ?>
-				<p class="cbfs-form__title"><?php echo esc_html( $session['name'] ); ?></p>
+				<h2 class="cbfs-form__title"><?php echo esc_html( $session['name'] ); ?></h2>
 			<?php endif; ?>
 			<?php if ( '' !== $session['sub'] ) : ?>
 				<p class="cbfs-form__meta"><?php echo esc_html( $session['sub'] ); ?></p>

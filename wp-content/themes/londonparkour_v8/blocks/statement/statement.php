@@ -78,8 +78,8 @@ $lp_spacing = lp_section_spacing( $args );
 		<div class="mt-[56px] flex flex-col lg:flex-row lg:items-start gap-10 lg:gap-[80px]">
 			<h2 class="flex-1 min-w-0 font-heading text-step-4 font-semibold leading-[0.95] tracking-[-2.4px] text-base-content"><?php echo esc_html( $lp_statement ); ?></h2>
 			<div class="w-full lg:w-[380px] lg:shrink-0 flex flex-col gap-6">
-				<p class="font-body text-[14px] leading-[1.65] tracking-[0.2px] text-base-content/65"><?php echo esc_html( $lp_quote ); ?></p>
-				<cite class="not-italic font-body text-[12px] font-semibold tracking-[0.5px] text-base-content"><?php echo esc_html( $lp_signature ); ?></cite>
+				<p class="font-body text-fix--1 leading-[1.65] tracking-[0.2px] text-base-content/65"><?php echo esc_html( $lp_quote ); ?></p>
+				<cite class="not-italic font-body text-fix--2 font-semibold tracking-[0.5px] text-base-content"><?php echo esc_html( $lp_signature ); ?></cite>
 			</div>
 		</div>
 
@@ -88,9 +88,9 @@ $lp_spacing = lp_section_spacing( $args );
 				<div class="flex-1 flex flex-col gap-[16px] border-t border-base-content pt-[24px]">
 					<div class="flex items-center gap-[10px] text-base-content">
 						<?php lp_icon( (string) ( $lp_principle['icon_id'] ?? 'glyph-understanding' ), 'w-[24px] h-[24px] text-current' ); ?>
-						<span class="font-label text-[11px] font-semibold uppercase tracking-[1px]"><?php echo esc_html( (string) ( $lp_principle['label'] ?? '' ) ); ?></span>
+						<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px]"><?php echo esc_html( (string) ( $lp_principle['label'] ?? '' ) ); ?></span>
 					</div>
-					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65"><?php echo esc_html( (string) ( $lp_principle['body'] ?? '' ) ); ?></p>
+					<p class="font-body text-fix--2 leading-[1.65] tracking-[0.1px] text-base-content/65"><?php echo esc_html( (string) ( $lp_principle['body'] ?? '' ) ); ?></p>
 				</div>
 			<?php endforeach; ?>
 		</div>

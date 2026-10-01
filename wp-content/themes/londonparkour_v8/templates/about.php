@@ -128,23 +128,23 @@ $lp_floor_facts = array(
 );
 
 $lp_stat_tones = array(
-	'signal' => 'font-heading text-[43px] font-bold tracking-[-1.5px] leading-none text-accent',
-	'ink'    => 'font-heading text-[43px] font-bold tracking-[-1.5px] leading-none text-base-content',
+	'signal' => 'font-heading text-fix-3 font-bold tracking-[-1.5px] leading-none text-accent',
+	'ink'    => 'font-heading text-fix-3 font-bold tracking-[-1.5px] leading-none text-base-content',
 );
 
 $lp_year_tones = array(
-	'live' => 'font-heading text-[28px] font-bold tracking-[-1px] leading-none text-primary lg:w-[90px] shrink-0',
-	'past' => 'font-heading text-[28px] font-bold tracking-[-1px] leading-none text-neutral-content lg:w-[90px] shrink-0',
+	'live' => 'font-heading text-fix-1 font-bold tracking-[-1px] leading-none text-primary lg:w-[90px] shrink-0',
+	'past' => 'font-heading text-fix-1 font-bold tracking-[-1px] leading-none text-neutral-content lg:w-[90px] shrink-0',
 );
 
 $lp_service_tones = array(
-	'live' => 'font-label text-[12px] font-semibold tracking-[0.8px] uppercase text-primary lg:w-[260px] shrink-0',
-	'past' => 'font-label text-[12px] font-semibold tracking-[0.8px] uppercase text-neutral-content lg:w-[260px] shrink-0',
+	'live' => 'font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-primary lg:w-[260px] shrink-0',
+	'past' => 'font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-neutral-content lg:w-[260px] shrink-0',
 );
 
 $lp_attr_tones = array(
-	'hot'  => 'font-label text-[12px] font-semibold tracking-[0.9px] uppercase text-primary',
-	'cool' => 'font-label text-[12px] font-semibold tracking-[0.9px] uppercase text-neutral-content',
+	'hot'  => 'font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-primary',
+	'cool' => 'font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-neutral-content',
 );
 
 $lp_hero_id  = $lp_page_id ? (int) get_post_thumbnail_id( $lp_page_id ) : 0;
@@ -227,15 +227,15 @@ foreach ( $lp_coaches as $lp_row ) {
 
 $lp_heads = array(
 	'page'   => array(
-		'note' => 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65',
+		'note' => 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-base-content/65',
 		'rule' => 'h-px w-full bg-base-300',
 	),
 	'accent' => array(
-		'note' => 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-accent-content/70',
+		'note' => 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-accent-content/70',
 		'rule' => 'h-px w-full bg-accent-content/15',
 	),
 	'board'  => array(
-		'note' => 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-neutral-content/50',
+		'note' => 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-neutral-content/50',
 		'rule' => 'h-px w-full bg-neutral-content/10',
 	),
 );
@@ -252,7 +252,7 @@ $lp_section_head = static function ( string $eyebrow, string $meta, array $tone 
 	<?php
 };
 
-get_header();
+get_header( null, array( 'active_key' => '' ) );
 ?>
 
 <main id="main">
@@ -305,7 +305,7 @@ get_header();
 			<div class="absolute left-0 right-0 top-[65%] h-px bg-neutral-content"></div>
 			<div class="absolute left-0 right-0 top-[88%] h-px bg-neutral-content"></div>
 		</div>
-		<span class="absolute z-10 top-6 right-6 lg:top-10 lg:right-16 font-label text-[10px] font-semibold tracking-[1px] uppercase text-primary m-0" data-slot="hero-coords"><?php echo esc_html( $lp_coords ); ?></span>
+		<span class="absolute z-10 top-6 right-6 lg:top-10 lg:right-16 font-label text-fix--2 font-semibold tracking-[1px] uppercase text-primary m-0" data-slot="hero-coords" data-motion-decode="<?php echo esc_attr( $lp_coords ); ?>" data-motion-decode-charset="gps"><?php echo esc_html( $lp_coords ); ?></span>
 		<div class="relative z-10 flex flex-col justify-end gap-7 min-h-[640px] lg:min-h-[780px] px-6 lg:px-16 pb-16">
 			<div class="self-start">
 				<?php
@@ -334,7 +334,7 @@ get_header();
 						?>
 					</span>
 				</h1>
-				<p class="font-body text-[14px] font-normal tracking-[0.1px] leading-[1.55] text-neutral-content/50 m-0 max-w-[560px]"><?php echo esc_html( $lp_hero_dek ); ?></p>
+				<p class="font-body text-fix--1 font-normal tracking-[0.1px] leading-[1.55] text-neutral-content m-0 max-w-[560px]"><?php echo esc_html( $lp_hero_dek ); ?></p>
 			</div>
 			<div class="flex items-center gap-4 flex-wrap">
 				<?php
@@ -348,7 +348,7 @@ get_header();
 					)
 				);
 				?>
-				<a href="#team" class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-neutral-content hover:text-primary transition-colors duration-150">MEET THE TEAM ↓</a>
+				<a href="#team" class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-neutral-content hover:text-primary transition-colors duration-150">MEET THE TEAM ↓</a>
 			</div>
 		</div>
 	</section>
@@ -377,15 +377,15 @@ get_header();
 			<h2 class="font-heading text-step-3 font-semibold leading-[1.02] tracking-[-1.6px] text-base-content m-0">From the classes that made him to the ones he runs now.</h2>
 			<div class="flex flex-col lg:flex-row gap-16 items-start">
 				<div class="flex-1 min-w-0 flex flex-col gap-5">
-					<p class="font-body text-[16px] font-normal leading-[1.55] text-base-content m-0">Andy started in 2005. He trained consistently, became a coach in 2008, and spent a decade helping grow the practice — teaching, designing indoor space, and delivering coach education around the world.</p>
-					<p class="font-body text-[16px] font-normal leading-[1.55] text-base-content/65 m-0">In 2018 he founded LondonParkour: high-quality, well-taught, reasonably priced, accessible and fun coaching, pointed at this city.</p>
-					<p class="font-heading text-[22px] font-semibold tracking-[-0.6px] leading-[1.25] text-accent m-0">“High-quality. Well taught. Reasonably priced. Accessible. Fun.”</p>
+					<p class="font-body text-fix--1 font-normal leading-[1.55] text-base-content m-0">Andy started in 2005. He trained consistently, became a coach in 2008, and spent a decade helping grow the practice — teaching, designing indoor space, and delivering coach education around the world.</p>
+					<p class="font-body text-fix--1 font-normal leading-[1.55] text-base-content/65 m-0">In 2018 he founded LondonParkour: high-quality, well-taught, reasonably priced, accessible and fun coaching, pointed at this city.</p>
+					<p class="font-heading text-fix-0 font-semibold tracking-[-0.6px] leading-[1.25] text-accent m-0">“High-quality. Well taught. Reasonably priced. Accessible. Fun.”</p>
 				</div>
 				<div class="w-full lg:w-[360px] shrink-0 border-l border-base-300">
 					<?php foreach ( $lp_stats as $lp_stat ) : ?>
 						<div class="flex flex-col gap-1 py-5 pl-6 border-b border-base-300" data-component="about-stat">
 							<span class="<?php echo esc_attr( $lp_stat['signal'] ? $lp_stat_tones['signal'] : $lp_stat_tones['ink'] ); ?>"><?php echo esc_html( $lp_stat['value'] ); ?></span>
-							<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-base-content/65"><?php echo esc_html( $lp_stat['label'] ); ?></span>
+							<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-base-content/65"><?php echo esc_html( $lp_stat['label'] ); ?></span>
 						</div>
 					<?php endforeach; ?>
 				</div>
@@ -397,24 +397,24 @@ get_header();
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-10">
 			<div class="flex items-end justify-between gap-4">
 				<div class="flex flex-col gap-3 min-w-0">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary">02 — SERVICE HISTORY</span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-primary">02 — SERVICE HISTORY</span>
 					<h2 class="font-heading text-step-2 font-semibold leading-none tracking-[-1.2px] text-neutral-content m-0">The line before LondonParkour.</h2>
 				</div>
-				<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-primary shrink-0">LIVE</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-primary shrink-0">LIVE</span>
 			</div>
 			<div class="h-px w-full bg-neutral-content/10" aria-hidden="true"></div>
 			<div class="hidden lg:flex items-center justify-between pb-2">
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50 w-[72px]">PLT</span>
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50 w-[90px]">YEAR</span>
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50 w-[260px]">SERVICE</span>
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50 flex-1">NOTES</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content/50 w-[72px]">PLT</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content/50 w-[90px]">YEAR</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content/50 w-[260px]">SERVICE</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content/50 flex-1">NOTES</span>
 			</div>
 			<?php foreach ( $lp_history as $lp_row ) : ?>
 				<div class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-0 py-[22px] border-b border-neutral-content/10" data-component="about-history-row">
-					<span class="font-label text-[12px] font-semibold tracking-[1px] uppercase text-primary lg:w-[72px] shrink-0"><?php echo esc_html( $lp_row['plt'] ); ?></span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-primary lg:w-[72px] shrink-0"><?php echo esc_html( $lp_row['plt'] ); ?></span>
 					<span class="<?php echo esc_attr( $lp_row['live'] ? $lp_year_tones['live'] : $lp_year_tones['past'] ); ?>"><?php echo esc_html( $lp_row['year'] ); ?></span>
 					<span class="<?php echo esc_attr( $lp_row['live'] ? $lp_service_tones['live'] : $lp_service_tones['past'] ); ?>"><?php echo esc_html( $lp_row['service'] ); ?></span>
-					<p class="font-body text-[14px] font-normal leading-[1.45] text-neutral-content/50 m-0 min-w-0"><?php echo esc_html( $lp_row['notes'] ); ?></p>
+					<p class="font-body text-fix--1 font-normal leading-[1.45] text-neutral-content/50 m-0 min-w-0"><?php echo esc_html( $lp_row['notes'] ); ?></p>
 				</div>
 			<?php endforeach; ?>
 		</div>
@@ -425,7 +425,7 @@ get_header();
 			<?php $lp_section_head( '03 — DELIVERED TO', 'WORKSHOPS + SEMINARS', $lp_heads['accent'] ); ?>
 			<div class="flex flex-col gap-4">
 				<h2 class="font-heading text-step-3 font-semibold leading-[0.95] tracking-[-1.6px] text-accent-content m-0">Army, palace, paper, punk.</h2>
-				<p class="font-body text-[16px] font-normal leading-[1.5] text-accent-content/70 m-0 max-w-[640px]">Workshops and seminars for the British Army, the MOD and Special Forces — and for brands including The Stranglers, Decathlon, The Guardian and Sandringham Palace.</p>
+				<p class="font-body text-fix--1 font-normal leading-[1.5] text-accent-content/70 m-0 max-w-[640px]">Workshops and seminars for the British Army, the MOD and Special Forces — and for brands including The Stranglers, Decathlon, The Guardian and Sandringham Palace.</p>
 			</div>
 			<?php
 			lp_render_block(
@@ -446,9 +446,9 @@ get_header();
 				<?php foreach ( $lp_ethos as $lp_item ) : ?>
 					<div class="flex flex-col gap-4 min-w-0">
 						<span class="block w-6 h-0.5 bg-accent" aria-hidden="true"></span>
-						<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-accent"><?php echo esc_html( $lp_item['idx'] ); ?></span>
-						<h3 class="font-label text-[12px] font-semibold tracking-[0.9px] uppercase text-base-content m-0"><?php echo esc_html( $lp_item['title'] ); ?></h3>
-						<p class="font-body text-[14px] font-normal leading-[1.5] text-base-content/65 m-0"><?php echo esc_html( $lp_item['body'] ); ?></p>
+						<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-accent"><?php echo esc_html( $lp_item['idx'] ); ?></span>
+						<h3 class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-base-content m-0"><?php echo esc_html( $lp_item['title'] ); ?></h3>
+						<p class="font-body text-fix--1 font-normal leading-[1.5] text-base-content/65 m-0"><?php echo esc_html( $lp_item['body'] ); ?></p>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -464,12 +464,12 @@ get_header();
 			</div>
 			<div class="flex flex-col lg:flex-row gap-16 items-start">
 				<div class="flex-1 min-w-0 flex flex-col gap-5">
-					<p class="font-body text-[16px] font-normal leading-[1.55] text-neutral-content/50 m-0">We train practical movement. Not a workout that calls itself functional — the actual skills that are useful. Run, climb, vault, land, keep going. The work is to realise what you can already do, then attain it.</p>
-					<p class="font-body text-[16px] font-normal leading-[1.55] text-neutral-content/50 m-0">This is not high-flying building jumping. It is not flips. It is a discipline built for anyone who will show up. The city is the playground and the facility. You will see it differently. You will train in a way you have never trained before.</p>
-					<p class="font-heading text-[32px] font-semibold tracking-[-1px] text-primary m-0">Become a pathfinder.</p>
+					<p class="font-body text-fix--1 font-normal leading-[1.55] text-neutral-content/50 m-0">We train practical movement. Not a workout that calls itself functional — the actual skills that are useful. Run, climb, vault, land, keep going. The work is to realise what you can already do, then attain it.</p>
+					<p class="font-body text-fix--1 font-normal leading-[1.55] text-neutral-content/50 m-0">This is not high-flying building jumping. It is not flips. It is a discipline built for anyone who will show up. The city is the playground and the facility. You will see it differently. You will train in a way you have never trained before.</p>
+					<p class="font-heading text-fix-2 font-semibold tracking-[-1px] text-primary m-0">Become a pathfinder.</p>
 				</div>
 				<div class="w-full lg:w-[420px] shrink-0 border-l border-neutral-content/10">
-					<p class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-primary pl-6 pb-4 m-0">ATTRIBUTES + SKILLS</p>
+					<p class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-primary pl-6 pb-4 m-0">ATTRIBUTES + SKILLS</p>
 					<?php foreach ( $lp_attributes as $lp_label ) : ?>
 						<?php $lp_hot = ( 'FEAR' === $lp_label || 'GRIT' === $lp_label ); ?>
 						<div class="flex items-center justify-between py-3 pl-6 border-b border-neutral-content/10">
@@ -486,7 +486,7 @@ get_header();
 			<?php $lp_section_head( '06 — THE TEAM', 'LONDON COMMUNITY', $lp_heads['page'] ); ?>
 			<div class="flex flex-col gap-4">
 				<h2 class="font-heading text-step-3 font-semibold leading-[0.95] tracking-[-1.6px] text-base-content m-0">The people who teach the practice.</h2>
-				<p class="font-body text-[16px] font-normal leading-[1.5] text-base-content/65 m-0 max-w-[640px]">Every coach has been part of the London community for decades — and is highly respected as a parkour coach. They remember being the person at the back of the class.</p>
+				<p class="font-body text-fix--1 font-normal leading-[1.5] text-base-content/65 m-0 max-w-[640px]">Every coach has been part of the London community for decades — and is highly respected as a parkour coach. They remember being the person at the back of the class.</p>
 			</div>
 			<?php if ( $lp_team ) : ?>
 				<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
@@ -510,14 +510,14 @@ get_header();
 							</a>
 							<div class="flex flex-col gap-1.5 lg:gap-2.5 pt-3 lg:pt-5">
 								<div class="flex items-baseline justify-between gap-3">
-									<span class="font-label text-[11px] font-semibold tracking-[0.6px] text-base-content/65"><?php echo esc_html( (string) $lp_coach['index'] ); ?></span>
+									<span class="font-label text-fix--2 font-semibold tracking-[0.6px] text-base-content/65"><?php echo esc_html( (string) $lp_coach['index'] ); ?></span>
 								</div>
-								<h3 class="font-heading text-[16px] lg:text-[22px] font-semibold tracking-[-0.4px] leading-tight text-base-content m-0">
+								<h3 class="font-heading text-fix--1 lg:text-fix-0 font-semibold tracking-[-0.4px] leading-tight text-base-content m-0">
 									<a href="<?php echo esc_url( (string) ( $lp_coach['href'] ?? '' ) ); ?>" class="hover:text-accent transition-colors duration-150"><?php echo esc_html( (string) $lp_coach['name'] ); ?></a>
 								</h3>
-								<p class="font-label text-[10px] font-semibold tracking-[0.8px] uppercase text-base-content/65 m-0"><?php echo esc_html( (string) $lp_coach['role'] ); ?></p>
+								<p class="font-label text-fix--2 font-semibold tracking-[0.8px] uppercase text-base-content/65 m-0"><?php echo esc_html( (string) $lp_coach['role'] ); ?></p>
 								<?php if ( '' !== (string) $lp_coach['bio'] ) : ?>
-									<p class="font-body text-[12px] lg:text-[13px] leading-[1.45] lg:leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) $lp_coach['bio'] ); ?></p>
+									<p class="font-body text-fix--2 lg:text-fix--2 leading-[1.45] lg:leading-[1.55] text-base-content/70 m-0"><?php echo esc_html( (string) $lp_coach['bio'] ); ?></p>
 								<?php endif; ?>
 							</div>
 						</article>
@@ -529,17 +529,17 @@ get_header();
 
 	<section class="w-full bg-neutral" data-component="about-floor">
 		<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-9">
-			<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary">07 — THE FLOOR</span>
+			<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-primary">07 — THE FLOOR</span>
 			<h2 class="font-heading text-step-3 font-semibold leading-[0.95] tracking-[-1.6px] text-neutral-content m-0">Regulars. All abilities. All ages.</h2>
-			<p class="font-body text-[16px] font-normal leading-[1.55] text-neutral-content/50 m-0 max-w-[720px]">A solid group of people who show up, work hard, and love what they do. Beginners next to people who have been on this floor for years. Classes stay intense — and stay scaled to whoever is in them.</p>
+			<p class="font-body text-fix--1 font-normal leading-[1.55] text-neutral-content/50 m-0 max-w-[720px]">A solid group of people who show up, work hard, and love what they do. Beginners next to people who have been on this floor for years. Classes stay intense — and stay scaled to whoever is in them.</p>
 			<div class="relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full m-0" data-component="about-floor-video">
 				<iframe src="https://www.youtube-nocookie.com/embed/raakvpb_q9E" title="YouTube video" width="1280" height="720" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 			</div>
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				<?php foreach ( $lp_floor_facts as $lp_fact ) : ?>
 					<div class="flex flex-col gap-2.5 pl-6 border-l border-neutral-content/10 min-w-0">
-						<h3 class="font-label text-[12px] font-semibold tracking-[0.9px] uppercase text-primary m-0"><?php echo esc_html( $lp_fact['title'] ); ?></h3>
-						<p class="font-body text-[14px] font-normal leading-[1.5] text-neutral-content/50 m-0"><?php echo esc_html( $lp_fact['body'] ); ?></p>
+						<h3 class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-primary m-0"><?php echo esc_html( $lp_fact['title'] ); ?></h3>
+						<p class="font-body text-fix--1 font-normal leading-[1.5] text-neutral-content/50 m-0"><?php echo esc_html( $lp_fact['body'] ); ?></p>
 					</div>
 				<?php endforeach; ?>
 			</div>

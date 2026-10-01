@@ -4,7 +4,7 @@
  *
  * Ported from src/stories/Elements/Badge/Badge.js. One component for both
  * design nodes: `paper` (rest only — no hover node in the source file) and
- * `category` (rest + hover). Built on daisyUI's `badge` class per the
+ * `category` (hover fires via a parent `.group` only). Built on daisyUI's `badge` class per the
  * Blueprint rules, with the design's exact geometry layered on as Tailwind
  * utilities.
  *
@@ -19,10 +19,10 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per variant — Tailwind v4 scans source text.
 $lp_variants = array(
 	'paper'    => 'badge rounded-none border-none py-[5px] px-[9px] bg-neutral-content text-neutral ' .
-		'font-label text-[10px] font-semibold uppercase tracking-[1px]',
-	'category' => 'badge rounded-none border-none py-[5px] px-[8px] bg-neutral/89 text-neutral-content ' .
-		'hover:bg-primary hover:text-neutral transition-colors duration-150 ' .
-		'font-label text-[9px] font-semibold uppercase tracking-[1px]',
+		'font-label text-fix--2 font-semibold uppercase tracking-[1px]',
+	'category' => 'badge rounded-none border-none py-[5px] px-[8px] bg-neutral/88 text-neutral-content ' .
+		'group-hover:bg-primary group-hover:text-neutral transition-colors duration-150 ' .
+		'font-label text-fix--2 font-semibold uppercase tracking-[1px]',
 );
 
 $lp_variant = $args['variant'] ?? 'paper';

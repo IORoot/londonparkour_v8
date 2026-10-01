@@ -73,8 +73,23 @@ function lp_preload_fonts(): void {
 			esc_url( get_theme_file_uri( 'assets/fonts/' . $file ) )
 		);
 	}
+
+	// Scope Trial sets every page's display H1. main.css references Vite's
+	// hashed copy, so preload that exact URL (the source path would fetch twice).
+	$scope = lp_vite_asset( 'assets/fonts/ScopeTrial-Variable.ttf' );
+	if ( is_readable( get_theme_file_path( 'assets/dist/' . $scope ) ) ) {
+		printf(
+			'<link rel="preload" href="%s" as="font" type="font/ttf" crossorigin>' . "\n",
+			esc_url( get_theme_file_uri( 'assets/dist/' . $scope ) )
+		);
+	}
 }
 add_action( 'wp_head', 'lp_preload_fonts', 1 );
+
+// Core's emoji polyfill: an extra script + inline CSS on every page; every
+// supported browser renders emoji natively.
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
 /**
  * Make relative url() paths in a CSS file absolute so inlined CSS still loads fonts.
@@ -99,33 +114,23 @@ function lp_css_absolutize_urls( string $css, string $base_uri ): string {
 }
 
 /**
- * Archivo faces + fold CSS in <head>. main.css is async and must not be the first paint.
+ * Archivo @font-face rules inline, so font discovery doesn't wait on main.css.
+ *
+ * main.css is render-blocking on purpose. It used to load async behind an
+ * inlined "critical" subset built from the homepage fold only; every other
+ * template painted unstyled first and shifted when main.css landed (Lighthouse
+ * CLS up to 0.95 on /classes-map/). Blocking cost ~0.2s mobile FCP and no LCP.
  */
 function lp_print_critical_css(): void {
-	$chunks = array();
-
 	$faces = get_theme_file_path( 'assets/fonts/faces.css' );
-	if ( is_readable( $faces ) ) {
-		$chunks[] = lp_css_absolutize_urls(
-			(string) file_get_contents( $faces ), // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			get_theme_file_uri( 'assets/fonts' )
-		);
-	}
-
-	$critical_rel  = lp_vite_asset( 'assets/css/critical.css' );
-	$critical_disk = get_theme_file_path( 'assets/dist/' . $critical_rel );
-	if ( is_readable( $critical_disk ) ) {
-		$chunks[] = lp_css_absolutize_urls(
-			(string) file_get_contents( $critical_disk ), // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			get_theme_file_uri( 'assets/dist' )
-		);
-	}
-
-	if ( ! $chunks ) {
+	if ( ! is_readable( $faces ) ) {
 		return;
 	}
-
-	echo '<style id="londonparkour-critical">' . implode( "\n", $chunks ) . "</style>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- first-party CSS.
+	$css = lp_css_absolutize_urls(
+		(string) file_get_contents( $faces ), // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		get_theme_file_uri( 'assets/fonts' )
+	);
+	echo '<style id="londonparkour-critical">' . $css . "</style>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- first-party CSS.
 }
 add_action( 'wp_head', 'lp_print_critical_css', 2 );
 
@@ -166,28 +171,6 @@ function lp_enqueue_assets(): void {
 }
 add_action( 'wp_enqueue_scripts', 'lp_enqueue_assets' );
 
-/**
- * Fold CSS is inlined. main.css (and Vite sibling CSS) must not block first paint.
- *
- * @param string $html   Full link tag.
- * @param string $handle Style handle.
- * @param string $href   Stylesheet URL.
- * @param string $media  Media attribute.
- * @return string
- */
-function lp_async_theme_stylesheet( string $html, string $handle, string $href, $media = 'all' ): string {
-	unset( $media );
-	if ( 'londonparkour' !== $handle && ! str_starts_with( $handle, 'londonparkour-app-' ) ) {
-		return $html;
-	}
-
-	$href = esc_url( $href );
-	$id   = esc_attr( $handle . '-css' );
-
-	return '<link rel="stylesheet" id="' . $id . '" href="' . $href . '" media="print" onload="this.media=\'all\'">' . "\n"
-		. '<noscript><link rel="stylesheet" href="' . $href . '"></noscript>' . "\n";
-}
-add_filter( 'style_loader_tag', 'lp_async_theme_stylesheet', 10, 4 );
 
 /**
  * The bundle is an ES module — Vite emits `import`/`export` syntax.

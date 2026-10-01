@@ -5,6 +5,15 @@
  * Automatically respects prefers-reduced-motion.
  */
 
+/* Hover standard: every bare `transition*` utility inherits these, so hover and
+   colour transitions share one curve + duration. Strong ease-out (animate skill:
+   hovers 150-200ms, never ease-in). `ease-hover` is the named utility. */
+@theme static {
+  --ease-hover: cubic-bezier(0.23, 1, 0.32, 1);
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: var(--ease-hover);
+}
+
 :root {
   /* ═══════════════════════════════════════════════════════════════
      DURATIONS
@@ -68,6 +77,9 @@
    ═══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   :root {
+    /* Hover/colour transitions become instant */
+    --default-transition-duration: 0s;
+
     /* Set all durations to instant */
     --anim-duration-fast: 0s;
     --anim-duration-normal: 0s;

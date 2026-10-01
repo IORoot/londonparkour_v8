@@ -87,7 +87,7 @@ if ( ! $lp_tag_term instanceof WP_Term ) {
 	$lp_tag_term = null;
 }
 
-get_header();
+get_header( null, array( 'active_key' => 'tutorials' ) );
 ?>
 
 <main id="main">
@@ -212,15 +212,20 @@ get_header();
 		?>
 		<div class="w-full bg-base-100" data-component="board">
 			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-[24px]">
+				<h2 class="sr-only"><?php echo esc_html( $lp_content_left ); ?></h2>
+				<div aria-hidden="true">
+					<?php
+					lp_part(
+						'components/meta-row',
+						array(
+							'left'    => $lp_content_left,
+							'right'   => '',
+							'surface' => 'page',
+						)
+					);
+					?>
+				</div>
 				<?php
-				lp_part(
-					'components/meta-row',
-					array(
-						'left'    => $lp_content_left,
-						'right'   => '',
-						'surface' => 'page',
-					)
-				);
 
 				lp_part( 'elements/rule', array( 'tone' => 'ink' ) );
 				?>
@@ -229,9 +234,7 @@ get_header();
 					while ( have_posts() ) :
 						the_post();
 						$lp_card = lp_video_card_args_from_tutorial( get_post(), 'full' );
-						if ( 0 === (int) $wp_query->current_post ) {
-							$lp_card['loading'] = 'eager';
-						}
+						$lp_card['heading_level'] = 'h3';
 						lp_part( 'components/video-card', $lp_card );
 					endwhile;
 					?>

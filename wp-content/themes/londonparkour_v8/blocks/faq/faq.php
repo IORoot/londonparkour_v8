@@ -40,13 +40,13 @@ $lp_render_group = static function ( array $lp_group, int &$lp_ordinal ) {
 	?>
 	<div<?php echo $lp_id ? ' id="' . esc_attr( $lp_id ) . '"' : ''; ?> class="flex flex-col">
 		<div class="w-full flex items-center justify-between gap-4 pb-[17px]" data-component="docs-faq-group-head">
-			<span class="inline-flex items-center gap-3 font-label text-[11px] font-semibold tracking-[1px] uppercase text-base-content">
+			<span class="inline-flex items-center gap-3 font-label text-fix--2 font-semibold tracking-[1px] uppercase text-base-content">
 				<?php if ( $lp_icon ) : ?>
 					<span class="shrink-0" aria-hidden="true"><?php lp_icon( $lp_icon, 'w-[14px] h-[14px]' ); ?></span>
 				<?php endif; ?>
 				<?php echo esc_html( $lp_label ); ?>
 			</span>
-			<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_entries ); ?></span>
+			<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-base-content/65"><?php echo esc_html( $lp_entries ); ?></span>
 		</div>
 		<div class="h-px w-full bg-base-content" aria-hidden="true"></div>
 		<div class="divide-y divide-base-300">
@@ -218,8 +218,8 @@ $lp_still_mailto  = 'mailto:' . $lp_still_email;
 						)
 					);
 					?>
-					<p class="font-body text-[13px] leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_still_body ); ?></p>
-					<a href="<?php echo esc_url( $lp_still_mailto ); ?>" class="inline-flex items-center gap-[9px] font-body text-[16px] font-medium tracking-[0.1px] text-base-content hover:text-base-content/70 transition-colors duration-150">
+					<p class="font-body text-fix--2 leading-[1.65] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_still_body ); ?></p>
+					<a href="<?php echo esc_url( $lp_still_mailto ); ?>" class="inline-flex items-center gap-[9px] font-body text-fix--1 font-medium tracking-[0.1px] text-base-content hover:text-base-content/70 transition-colors duration-150">
 						<?php echo esc_html( $lp_still_email ); ?>
 						<?php lp_icon( 'icon-arrow-up-right', 'w-[12px] h-[12px]' ); ?>
 					</a>

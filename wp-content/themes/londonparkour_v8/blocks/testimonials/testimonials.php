@@ -80,22 +80,22 @@ $lp_meta = $lp_show_see_all ? '' : sprintf( '(%02d)', count( $lp_visible ) );
 
 $lp_band = isset( $args['surface'] ) && 'band' === $args['surface'];
 if ( $lp_band ) {
-	$lp_section_class = 'w-full bg-neutral px-6 py-[120px] lg:px-[72px]';
-	$lp_meta_class    = 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-neutral-content/65';
+	$lp_section_class = 'w-full bg-neutral px-6 py-scale-2xl lg:px-16';
+	$lp_meta_class    = 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-neutral-content/65';
 	$lp_rule_class    = 'h-px w-full bg-neutral-content/20';
-	$lp_index_class   = 'font-label text-[14px] font-semibold tracking-[0.4px] text-primary shrink-0 pt-1';
-	$lp_quote_class   = 'font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-neutral-content m-0';
-	$lp_footer_class  = 'flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-neutral-content/65';
+	$lp_index_class   = 'font-label text-fix--1 font-semibold tracking-[0.4px] text-primary shrink-0 pt-1';
+	$lp_quote_class   = 'font-heading text-fix-1 sm:text-fix-2 font-medium leading-[1.2] tracking-[-0.6px] text-neutral-content m-0';
+	$lp_footer_class  = 'flex flex-wrap items-center gap-3 font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-neutral-content/65';
 	$lp_bar_class     = 'w-px h-2.5 bg-neutral-content/20 shrink-0';
 	$lp_star_class    = 'w-3 h-3 text-primary';
 	$lp_surface       = 'band';
 } else {
-	$lp_section_class = 'w-full bg-base-100 px-6 py-[120px] lg:px-[72px]';
-	$lp_meta_class    = 'font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65';
+	$lp_section_class = 'w-full bg-base-100 px-6 py-scale-2xl lg:px-16';
+	$lp_meta_class    = 'font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-base-content/65';
 	$lp_rule_class    = 'h-px w-full bg-base-300';
-	$lp_index_class   = 'font-label text-[14px] font-semibold tracking-[0.4px] text-accent shrink-0 pt-1';
-	$lp_quote_class   = 'font-heading text-[28px] sm:text-[32px] font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0';
-	$lp_footer_class  = 'flex flex-wrap items-center gap-3 font-label text-[12px] font-normal tracking-[0.5px] uppercase text-base-content/65';
+	$lp_index_class   = 'font-label text-fix--1 font-semibold tracking-[0.4px] text-accent shrink-0 pt-1';
+	$lp_quote_class   = 'font-heading text-fix-1 sm:text-fix-2 font-medium leading-[1.2] tracking-[-0.6px] text-base-content m-0';
+	$lp_footer_class  = 'flex flex-wrap items-center gap-3 font-label text-fix--2 font-normal tracking-[0.5px] uppercase text-base-content/65';
 	$lp_bar_class     = 'w-px h-2.5 bg-base-300 shrink-0';
 	$lp_star_class    = 'w-3 h-3 text-accent';
 	$lp_surface       = 'page';

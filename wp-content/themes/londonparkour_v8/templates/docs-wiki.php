@@ -15,7 +15,7 @@ $lp_title  = $lp_post instanceof WP_Post ? get_the_title( $lp_post ) : '';
 $lp_crumb  = strtoupper( $lp_title );
 $lp_active = 'wiki';
 
-get_header();
+get_header( null, array( 'active_key' => 'docs' ) );
 ?>
 
 <main id="main">
@@ -24,7 +24,7 @@ get_header();
 	?>
 
 	<div class="w-full bg-base-100" data-component="docs-wiki-body">
-		<div class="mx-auto w-full max-w-[960px] px-6 lg:px-16 py-scale-2xl flex flex-col gap-[28px]">
+		<div class="mx-auto w-full max-w-[960px] px-6 lg:px-16 py-scale-2xl prose-module">
 			<?php lp_docs_render_markdown_body( $lp_post ); ?>
 		</div>
 	</div>

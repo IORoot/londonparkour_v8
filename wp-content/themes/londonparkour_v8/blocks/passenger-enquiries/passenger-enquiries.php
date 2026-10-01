@@ -104,7 +104,7 @@ $lp_spacing = lp_section_spacing( $args );
 				?>
 			<?php endforeach; ?>
 		</div>
-		<p class="max-w-[520px] font-body text-[13px] leading-[1.6] tracking-[0.1px] text-primary-content/70 m-0"><?php echo esc_html( $lp_note ); ?></p>
+		<p class="max-w-[520px] font-body text-fix--2 leading-[1.6] tracking-[0.1px] text-primary-content/70 m-0"><?php echo esc_html( $lp_note ); ?></p>
 		<?php
 		lp_part(
 			'elements/button',

@@ -63,7 +63,7 @@ $lp_sites_lbl = preg_replace_callback(
 
 $lp_mast_media = (int) get_post_thumbnail_id();
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">
@@ -121,7 +121,7 @@ get_header();
 		</div>
 		<div class="flex flex-col lg:flex-row lg:items-stretch pb-scale-2xl px-6 lg:px-16" data-map-stage>
 			<div class="w-full lg:w-[300px] xl:w-[340px] lg:shrink-0 flex flex-col bg-base-100 mb-0 overflow-hidden min-h-0" data-map-sidebar>
-				<div class="shrink-0 px-[22px] py-[15px] font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-accent border-b border-base-300">
+				<div class="shrink-0 px-[22px] py-[15px] font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-accent border-b border-base-300">
 					CLASSES · <?php echo esc_html( (string) $lp_site_n ); ?>
 				</div>
 
@@ -162,7 +162,7 @@ get_header();
 						</li>
 					<?php endforeach; ?>
 					<?php if ( ! $lp_sites ) : ?>
-						<li class="px-[22px] py-4 font-label text-[11px] uppercase tracking-[0.8px] text-base-content/65">No class locations yet.</li>
+						<li class="px-[22px] py-4 font-label text-fix--2 uppercase tracking-[0.8px] text-base-content/65">No class locations yet.</li>
 					<?php endif; ?>
 				</ul>
 			</div>

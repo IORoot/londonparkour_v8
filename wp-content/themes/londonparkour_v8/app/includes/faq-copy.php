@@ -258,9 +258,9 @@ function lp_render_class_youth_notes( int $class_id ): void {
 			<div class="flex flex-col gap-10">
 				<?php foreach ( $lp_items as $lp_item ) : ?>
 					<div class="flex flex-col gap-[18px]">
-						<h3 class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-primary-content m-0"><?php echo esc_html( (string) ( $lp_item['title'] ?? '' ) ); ?></h3>
+						<h3 class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-primary-content m-0"><?php echo esc_html( (string) ( $lp_item['title'] ?? '' ) ); ?></h3>
 						<?php foreach ( (array) ( $lp_item['body'] ?? array() ) as $lp_para ) : ?>
-							<p class="font-body text-[16px] font-normal leading-[1.55] text-primary-content/70 m-0"><?php echo esc_html( (string) $lp_para ); ?></p>
+							<p class="font-body text-fix--1 font-normal leading-[1.55] text-primary-content/70 m-0"><?php echo esc_html( (string) $lp_para ); ?></p>
 						<?php endforeach; ?>
 					</div>
 				<?php endforeach; ?>

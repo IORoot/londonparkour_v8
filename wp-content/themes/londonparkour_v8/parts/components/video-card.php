@@ -36,6 +36,7 @@
  * @param string $args['badge_label'] full only.
  * @param string $args['flag']        full only — optional signal word.
  * @param string $args['cta_label']   full only.
+ * @param string $args['heading_level'] full only: 'h3' (default) or 'h2' when the card sits directly under the page <h1>.
  * @param string $args['cta_href']    full only.
  * @param string $args['foot_label']  compact only.
  * @param string $args['href']        compact and lesson — makes the card one <a>.
@@ -49,8 +50,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
-$lp_compact_root_base        = 'rounded-none bg-transparent overflow-hidden no-underline text-left group hover:bg-primary';
-$lp_compact_root_interactive = 'cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+$lp_compact_root_base        = 'rounded-none bg-transparent overflow-hidden no-underline text-left';
+$lp_compact_root_interactive = 'group hover:bg-primary cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 
 $lp_is_compact = 'compact' === ( $args['variant'] ?? 'full' );
 $lp_is_lesson  = 'lesson' === ( $args['variant'] ?? 'full' );
@@ -79,7 +80,7 @@ if ( 'eager' === $lp_loading || 'lazy' === $lp_loading ) {
 }
 
 /** The kicker/meta pair, identical in both variants. */
-$lp_head_row = static function ( $lp_kicker, $lp_meta, $lp_glyph_id ) {
+$lp_head_row = static function ( $lp_kicker, $lp_meta, $lp_glyph_id, $lp_hover = '' ) {
 	?>
 	<div class="flex items-center justify-between gap-3">
 		<span class="min-w-0">
@@ -91,7 +92,7 @@ $lp_head_row = static function ( $lp_kicker, $lp_meta, $lp_glyph_id ) {
 					'icon_id' => $lp_glyph_id,
 					'surface' => 'page',
 					'tone'    => 'ink',
-					'class'   => 'group-hover:text-neutral',
+					'class'   => $lp_hover,
 				)
 			);
 			?>
@@ -105,7 +106,7 @@ $lp_head_row = static function ( $lp_kicker, $lp_meta, $lp_glyph_id ) {
 					'label'   => $lp_meta,
 					'surface' => 'page',
 					'tone'    => 'muted',
-					'class'   => 'group-hover:text-neutral',
+					'class'   => $lp_hover,
 				)
 			);
 			?>
@@ -129,8 +130,8 @@ if ( $lp_is_lesson ) :
 	}
 
 	$lp_root = lp_classes(
-		'flex flex-col w-full bg-secondary border border-neutral-content/10 no-underline text-left overflow-hidden group hover:bg-primary',
-		$lp_is_link ? 'cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary' : ''
+		'flex flex-col w-full bg-secondary border border-neutral-content/10 no-underline text-left overflow-hidden',
+		$lp_is_link ? 'group hover:bg-primary cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary' : ''
 	);
 	?>
 	<?php if ( $lp_is_link ) : ?>
@@ -167,7 +168,7 @@ if ( $lp_is_lesson ) :
 				?>
 			</span>
 			<?php endif; ?>
-			<span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-primary text-primary-content grid place-items-center font-label text-[12px] font-bold" aria-hidden="true">▶</span>
+			<span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-primary text-primary-content grid place-items-center" aria-hidden="true"><?php lp_icon( 'icon-play', 'w-3.5 h-3.5' ); ?></span>
 		</div>
 		<div class="flex flex-col gap-2.5 px-4 pt-4 pb-3.5">
 			<?php if ( '' !== $lp_kicker || '' !== $lp_glyph_id ) : ?>
@@ -176,21 +177,21 @@ if ( $lp_is_lesson ) :
 						<span class="w-4 h-4 grid place-items-center shrink-0 text-primary group-hover:text-neutral" aria-hidden="true"><?php lp_icon( $lp_glyph_id, 'w-3 h-3' ); ?></span>
 					<?php endif; ?>
 					<?php if ( '' !== $lp_kicker ) : ?>
-						<span class="font-label text-[9px] font-bold tracking-[1.1px] uppercase text-neutral-content/50 group-hover:text-neutral"><?php echo esc_html( $lp_kicker ); ?></span>
+						<span class="font-label text-fix--2 font-bold tracking-[1.1px] uppercase text-neutral-content/50 group-hover:text-neutral"><?php echo esc_html( $lp_kicker ); ?></span>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-			<h3 class="font-heading text-[18px] font-semibold tracking-[-0.4px] leading-[1.15] text-neutral-content m-0 group-hover:text-neutral"><?php echo esc_html( $lp_title ); ?></h3>
+			<h3 class="font-heading text-fix--1 font-semibold tracking-[-0.4px] leading-[1.15] text-neutral-content m-0 group-hover:text-neutral"><?php echo esc_html( $lp_title ); ?></h3>
 			<?php if ( '' !== $lp_coach ) : ?>
-				<p class="font-label text-[11px] font-normal tracking-[0.2px] text-neutral-content/70 m-0 group-hover:text-neutral"><?php echo esc_html( $lp_coach ); ?></p>
+				<p class="font-label text-fix--2 font-normal tracking-[0.2px] text-neutral-content/70 m-0 group-hover:text-neutral"><?php echo esc_html( $lp_coach ); ?></p>
 			<?php endif; ?>
 			<div class="flex items-center justify-between gap-3 border-t border-neutral-content/10 pt-2.5">
 				<?php if ( '' !== $lp_duration ) : ?>
-					<span class="font-label text-[10px] font-semibold tracking-[0.6px] text-neutral-content/50 group-hover:text-neutral"><?php echo esc_html( $lp_duration ); ?></span>
+					<span class="font-label text-fix--2 font-semibold tracking-[0.6px] text-neutral-content/50 group-hover:text-neutral"><?php echo esc_html( $lp_duration ); ?></span>
 				<?php else : ?>
 					<span></span>
 				<?php endif; ?>
-				<span class="font-label text-[10px] font-bold tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral"><?php echo esc_html( $lp_status ); ?></span>
+				<span class="font-label text-fix--2 font-bold tracking-[0.8px] uppercase text-neutral-content/50 group-hover:text-neutral"><?php echo esc_html( $lp_status ); ?></span>
 			</div>
 		</div>
 	<?php echo $lp_is_link ? '</a>' : '</div>'; ?>
@@ -231,14 +232,14 @@ if ( $lp_is_compact ) :
 				<?php lp_part( 'elements/icon-circle', array( 'variant' => '34' ) ); ?>
 			</span>
 		</figure>
-		<div class="card-body p-0 pt-[19px] gap-[13px]">
-			<?php $lp_head_row( $lp_kicker, $lp_meta, $lp_glyph_id ); ?>
-			<h3 class="card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content group-hover:text-neutral"><?php echo esc_html( $lp_title ); ?></h3>
+		<div class="<?php echo lp_classes( 'card-body', $lp_is_link ? 'p-3 pt-[19px]' : 'p-0 pt-[19px]', 'gap-[13px]' ); ?>">
+			<?php $lp_head_row( $lp_kicker, $lp_meta, $lp_glyph_id, 'group-hover:text-neutral' ); ?>
+			<h3 class="card-title font-heading text-fix-0 font-medium tracking-[-0.4px] leading-none text-base-content group-hover:text-neutral"><?php echo esc_html( $lp_title ); ?></h3>
 			<?php if ( '' !== $lp_note ) : ?>
-				<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/70 group-hover:text-neutral"><?php echo esc_html( $lp_note ); ?></p>
+				<p class="font-body text-fix--1 font-normal tracking-[0.1px] leading-normal text-base-content/70 group-hover:text-neutral"><?php echo esc_html( $lp_note ); ?></p>
 			<?php endif; ?>
 			<div class="flex items-center justify-between gap-3 pt-[15px]">
-				<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content group-hover:text-neutral"><?php echo esc_html( $lp_foot_label ); ?></span>
+				<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-base-content group-hover:text-neutral"><?php echo esc_html( $lp_foot_label ); ?></span>
 				<?php lp_part( 'elements/chevron', array( 'variant' => 'media_card_static', 'class' => 'group-hover:text-neutral' ) ); ?>
 			</div>
 		</div>
@@ -254,8 +255,9 @@ $lp_duration    = (string) ( $args['duration'] ?? '4:12' );
 $lp_badge_label = (string) ( $args['badge_label'] ?? 'Lesson' );
 $lp_flag        = (string) ( $args['flag'] ?? '' );
 $lp_cta_label   = (string) ( $args['cta_label'] ?? 'Watch lesson' );
+$lp_h           = 'h2' === ( $args['heading_level'] ?? 'h3' ) ? 'h2' : 'h3';
 ?>
-<article class="card rounded-none bg-base-200 border border-base-300 overflow-hidden group hover:bg-primary" data-component="video-card" data-variant="full">
+<article class="card rounded-none bg-base-200 border border-base-300 overflow-hidden" data-component="video-card" data-variant="full">
 	<figure class="relative aspect-video w-full bg-base-300 overflow-hidden m-0">
 		<?php
 		if ( $lp_has_image ) {
@@ -276,8 +278,8 @@ $lp_cta_label   = (string) ( $args['cta_label'] ?? 'Watch lesson' );
 			<?php
 		}
 		?>
-		<div class="absolute inset-0 flex flex-col justify-between p-[13px]" aria-hidden="true">
-			<div class="flex items-center justify-between gap-2">
+		<div class="absolute inset-0 flex flex-col justify-between p-[13px]">
+			<div class="flex items-center justify-between gap-2" aria-hidden="true">
 				<span>
 					<?php
 					lp_part(
@@ -289,21 +291,21 @@ $lp_cta_label   = (string) ( $args['cta_label'] ?? 'Watch lesson' );
 					);
 					?>
 				</span>
-				<span class="font-label text-[10px] font-semibold tracking-[0.8px] text-neutral-content"><?php echo esc_html( $lp_duration ); ?></span>
+				<span class="font-label text-fix--2 font-semibold tracking-[0.8px] text-neutral-content"><?php echo esc_html( $lp_duration ); ?></span>
 			</div>
 			<div class="flex items-center justify-between gap-2">
 				<?php lp_part( 'elements/icon-circle', array( 'variant' => '34' ) ); ?>
 				<?php if ( '' !== $lp_flag ) : ?>
-					<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary"><?php echo esc_html( $lp_flag ); ?></span>
+					<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-primary"><?php echo esc_html( $lp_flag ); ?></span>
 				<?php endif; ?>
 			</div>
 		</div>
 	</figure>
 	<div class="card-body p-[16px] pt-[18px] gap-[14px]">
 		<?php $lp_head_row( $lp_kicker, $lp_meta, $lp_glyph_id ); ?>
-		<h3 class="card-title font-heading text-[22px] font-bold tracking-[-0.5px] leading-none text-base-content group-hover:text-neutral"><?php echo esc_html( $lp_title ); ?></h3>
+		<<?php echo $lp_h; ?> class="card-title font-heading text-fix-0 font-bold tracking-[-0.5px] leading-none text-base-content"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_h; ?>>
 		<?php if ( '' !== $lp_note ) : ?>
-			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/65 group-hover:text-neutral"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="font-body text-fix--1 font-normal tracking-[0.1px] leading-normal text-base-content/65"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>
 		<div class="pt-[14px] border-t border-base-300">
 			<?php
@@ -314,7 +316,7 @@ $lp_cta_label   = (string) ( $args['cta_label'] ?? 'Watch lesson' );
 					'label'            => $lp_cta_label,
 					'href'             => $args['cta_href'] ?? '',
 					'trailing_icon_id' => 'icon-arrow-right',
-					'aria_label'       => sprintf( 'Watch: %s, %s', $lp_title, $lp_duration ),
+					'aria_label'       => sprintf( '%s: %s, %s', $lp_cta_label, $lp_title, $lp_duration ),
 				)
 			);
 			?>

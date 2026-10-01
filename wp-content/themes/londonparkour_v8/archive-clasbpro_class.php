@@ -65,7 +65,7 @@ $lp_classes = lp_class_dedupe_by_title( $lp_classes );
 
 $lp_arch = (string) get_post_type_archive_link( lp_class_post_type() );
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">
@@ -113,7 +113,7 @@ get_header();
 				?>
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
 					<?php foreach ( $lp_classes as $lp_post ) : ?>
-						<div><?php lp_part( 'components/media-card', $lp_card( $lp_post ) ); ?></div>
+						<div><?php lp_part( 'components/media-card', $lp_card( $lp_post ) + array( 'heading_level' => 'h2' ) ); ?></div>
 					<?php endforeach; ?>
 				</div>
 			</div>

@@ -68,12 +68,12 @@ $lp_cell = array(
 	'last_current'  => 'flex-1 min-w-0 flex flex-col gap-1 lg:gap-3 pt-4 pb-4 px-3 lg:pt-[34px] lg:pb-[36px] lg:pl-[44px] lg:pr-16 border-l border-base-300 no-underline text-left bg-primary',
 );
 $lp_title_class = array(
-	'default' => 'font-heading text-[16px] lg:text-[24px] font-medium tracking-[-0.6px] leading-tight text-base-content group-hover:text-neutral',
-	'current' => 'font-heading text-[16px] lg:text-[24px] font-medium tracking-[-0.6px] leading-tight text-neutral',
+	'default' => 'font-heading text-fix--1 lg:text-fix-1 font-medium tracking-[-0.6px] leading-tight text-base-content group-hover:text-neutral',
+	'current' => 'font-heading text-fix--1 lg:text-fix-1 font-medium tracking-[-0.6px] leading-tight text-neutral',
 );
 $lp_meta_class = array(
-	'default' => 'font-body text-[11px] font-normal tracking-[0.15px] leading-[1.55] text-base-content/65 group-hover:text-neutral',
-	'current' => 'font-body text-[11px] font-normal tracking-[0.15px] leading-[1.55] text-neutral',
+	'default' => 'font-body text-fix--2 font-normal tracking-[0.15px] leading-[1.55] text-base-content/65 group-hover:text-neutral',
+	'current' => 'font-body text-fix--2 font-normal tracking-[0.15px] leading-[1.55] text-neutral',
 );
 ?>
 <section class="<?php echo lp_classes( 'w-full bg-base-100 border-b border-base-300', $lp_spacing ); ?>" data-component="docs-faq-section-directory"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>

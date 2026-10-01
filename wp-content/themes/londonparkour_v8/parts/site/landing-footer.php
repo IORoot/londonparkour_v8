@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || exit;
 
 $lp_focus = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
-$lp_link  = 'font-body text-[18px] font-normal text-neutral-content hover:text-primary transition-colors duration-150';
+$lp_link  = 'font-body text-fix-0 font-normal text-neutral-content hover:text-primary transition-colors duration-150';
 $lp_social_link = 'inline-flex items-center justify-center text-neutral-content/50 hover:text-primary transition-colors duration-150';
 
 $lp_brand_href  = (string) ( $args['brand_href'] ?? home_url( '/' ) );
@@ -75,7 +75,7 @@ $lp_social = array(
 		</nav>
 		<div class="w-full h-px bg-neutral-content/10" aria-hidden="true"></div>
 		<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-			<p class="font-label text-[12px] font-normal uppercase tracking-[0.5px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_copyright ); ?></p>
+			<p class="font-label text-fix--2 font-normal uppercase tracking-[0.5px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_copyright ); ?></p>
 			<ul class="flex items-center gap-[18px] m-0 p-0 list-none">
 				<?php foreach ( $lp_social as $lp_item ) : ?>
 					<li>

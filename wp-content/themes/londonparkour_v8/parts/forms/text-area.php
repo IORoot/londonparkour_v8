@@ -62,14 +62,14 @@ $lp_state_underline = array(
 $lp_state_boxed = array(
 	'page'  => array(
 		'default'  => 'border-base-300 text-base-content focus:border-base-content',
-		'error'    => 'border-error text-error',
+		'error'    => 'border-error text-base-content',
 		'disabled' => 'border-base-300 text-base-content/50',
 	),
 	'board' => array(
 		// `bg-transparent` kills daisyUI `.textarea`'s default `base-100` fill —
 		// on light themes that cream chip + `text-neutral-content` is white-on-white.
 		'default'  => 'border-neutral-content/10 text-neutral-content focus:border-neutral-content/20 bg-transparent',
-		'error'    => 'border-error text-error bg-transparent',
+		'error'    => 'border-error text-neutral-content bg-transparent',
 		'disabled' => 'border-neutral-content/10 text-neutral-content/50 bg-transparent',
 	),
 );
@@ -112,6 +112,7 @@ $lp_disabled        = ! empty( $args['disabled'] );
 $lp_error           = ! empty( $args['error'] );
 $lp_error_message   = (string) ( $args['error_message'] ?? '' );
 $lp_rows            = (int) ( $args['rows'] ?? 5 );
+$lp_autocomplete    = (string) ( $args['autocomplete'] ?? '' );
 
 $lp_field_id  = (string) ( $args['id'] ?? wp_unique_id( 'textarea-' ) );
 $lp_error_id  = $lp_field_id . '-error';
@@ -130,7 +131,7 @@ $lp_textarea_class = $lp_is_boxed
 	? lp_classes(
 		'textarea textarea-sm validator w-full rounded-none border resize-none',
 		$lp_on_surface[ $lp_state ],
-		'min-h-[120px] py-[14px] px-[16px] font-body text-[13px] tracking-[0.2px]',
+		'min-h-[120px] py-[14px] px-[16px] font-body text-base sm:text-fix--2 tracking-[0.2px]',
 		$lp_pick( $lp_placeholder ),
 		'user-invalid:border-error',
 		$lp_pick( $lp_disabled_bg_boxed ),
@@ -140,7 +141,7 @@ $lp_textarea_class = $lp_is_boxed
 	: lp_classes(
 		'textarea textarea-ghost textarea-sm validator w-full rounded-none border-0 border-b resize-none',
 		$lp_on_surface[ $lp_state ],
-		'focus:border-b-2 user-invalid:border-error px-0 font-body text-[14px] tracking-[0.1px]',
+		'focus:border-b-2 user-invalid:border-error px-0 font-body text-base sm:text-fix--1 tracking-[0.1px]',
 		$lp_pick( $lp_placeholder ),
 		'disabled:bg-transparent',
 		$lp_pick( $lp_disabled_border ),
@@ -149,15 +150,15 @@ $lp_textarea_class = $lp_is_boxed
 ?>
 <div class="<?php echo lp_classes( 'group flex flex-col', $lp_error ? 'gap-[8px]' : 'gap-[9px]' ); ?>" data-component="text-area" data-state="<?php echo esc_attr( $lp_state ); ?>">
 	<div class="flex items-center justify-between">
-		<label for="<?php echo esc_attr( $lp_field_id ); ?>" class="<?php echo lp_classes( 'font-label text-[10px] font-semibold tracking-[1px] uppercase', $lp_pick( $lp_label_class ) ); ?>"><?php echo esc_html( $lp_label ); ?></label>
+		<label for="<?php echo esc_attr( $lp_field_id ); ?>" class="<?php echo lp_classes( 'font-label text-fix--2 font-semibold tracking-[1px] uppercase', $lp_pick( $lp_label_class ) ); ?>"><?php echo esc_html( $lp_label ); ?></label>
 		<span class="inline-flex items-center">
 			<?php if ( 'disabled' === $lp_state ) : ?>
-				<span class="<?php echo lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted_disabled ) ); ?>">DISABLED</span>
+				<span class="<?php echo lp_classes( 'font-label text-fix--2 tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted_disabled ) ); ?>">DISABLED</span>
 			<?php elseif ( 'error' === $lp_state ) : ?>
-				<span class="font-label text-[10px] tracking-[0.9px] uppercase text-error">INVALID</span>
+				<span class="<?php echo lp_classes( 'font-label text-fix--2 tracking-[0.9px] uppercase', $lp_pick( $lp_label_class ) ); ?>">INVALID</span>
 			<?php else : ?>
-				<span class="<?php echo lp_classes( 'font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted ), 'group-focus-within:hidden' ); ?>"><?php echo $lp_required ? 'REQUIRED' : ''; ?></span>
-				<span class="<?php echo lp_classes( 'hidden font-label text-[10px] tracking-[0.9px] uppercase', $lp_pick( $lp_label_class ), 'group-focus-within:inline' ); ?>">FOCUS</span>
+				<span class="<?php echo lp_classes( 'font-label text-fix--2 tracking-[0.9px] uppercase', $lp_pick( $lp_meta_muted ) ); ?>"><?php echo $lp_required ? 'REQUIRED' : ''; ?></span>
+				<span class="<?php echo lp_classes( 'hidden font-label text-fix--2 tracking-[0.9px] uppercase ml-2', $lp_pick( $lp_label_class ), 'group-focus-within:inline' ); ?>" aria-hidden="true">FOCUS</span>
 			<?php endif; ?>
 		</span>
 	</div>
@@ -166,6 +167,7 @@ $lp_textarea_class = $lp_is_boxed
 		id="<?php echo esc_attr( $lp_field_id ); ?>"
 		<?php if ( '' !== $lp_name ) : ?>name="<?php echo esc_attr( $lp_name ); ?>"<?php endif; ?>
 		rows="<?php echo esc_attr( $lp_rows ); ?>"
+		<?php if ( '' !== $lp_autocomplete ) : ?>autocomplete="<?php echo esc_attr( $lp_autocomplete ); ?>"<?php endif; ?>
 		<?php if ( '' !== $lp_placeholder_val ) : ?>placeholder="<?php echo esc_attr( $lp_placeholder_val ); ?>"<?php endif; ?>
 		<?php echo $lp_required ? 'required' : ''; ?>
 		<?php echo $lp_disabled ? 'disabled' : ''; ?>
@@ -173,6 +175,6 @@ $lp_textarea_class = $lp_is_boxed
 		<?php if ( $lp_show_hint ) : ?>aria-describedby="<?php echo esc_attr( $lp_error_id ); ?>"<?php endif; ?>
 	><?php echo esc_textarea( $lp_value ); ?></textarea>
 	<?php if ( $lp_show_hint ) : ?>
-		<p id="<?php echo esc_attr( $lp_error_id ); ?>" class="validator-hint font-body text-[10px] text-error m-0"><?php echo esc_html( $lp_error_message ); ?></p>
+		<p id="<?php echo esc_attr( $lp_error_id ); ?>"<?php echo $lp_error ? ' role="alert"' : ''; ?> class="<?php echo lp_classes( 'validator-hint font-body text-fix--2', $lp_pick( $lp_label_class ), 'm-0' ); ?>"><?php echo esc_html( $lp_error_message ); ?></p>
 	<?php endif; ?>
 </div>

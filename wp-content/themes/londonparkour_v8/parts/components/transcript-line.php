@@ -23,12 +23,12 @@ defined( 'ABSPATH' ) || exit;
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_surfaces = array(
 	'board' => array(
-		'stamp' => 'shrink-0 font-mono text-[12px] font-semibold tracking-[0.6px] text-neutral-content/50',
-		'text'  => 'm-0 font-body text-[14px] font-normal leading-[1.55] tracking-[0.1px] text-neutral-content/90',
+		'stamp' => 'shrink-0 font-label text-fix--2 font-semibold tracking-[0.6px] text-neutral-content/50',
+		'text'  => 'm-0 font-body text-fix--1 font-normal leading-[1.55] tracking-[0.1px] text-neutral-content/90',
 	),
 	'page'  => array(
-		'stamp' => 'shrink-0 font-mono text-[12px] font-semibold tracking-[0.6px] text-base-content/65',
-		'text'  => 'm-0 font-body text-[14px] font-normal leading-[1.55] tracking-[0.1px] text-base-content',
+		'stamp' => 'shrink-0 font-label text-fix--2 font-semibold tracking-[0.6px] text-base-content/65',
+		'text'  => 'm-0 font-body text-fix--1 font-normal leading-[1.55] tracking-[0.1px] text-base-content',
 	),
 );
 

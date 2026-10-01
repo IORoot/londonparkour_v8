@@ -35,7 +35,11 @@ function lp_gtm_container_id(): string {
 }
 
 /**
- * Official GTM <head> snippet. Call after charset/viewport, before wp_head().
+ * GTM <head> snippet, deferred. Call after charset/viewport, before wp_head().
+ *
+ * The dataLayer and gtm.start are set immediately (queued pushes and page
+ * timing are unchanged); only gtm.js itself waits for window load + idle, so
+ * GTM/gtag (~350 KB) no longer competes with LCP. Every pageview is still sent.
  */
 function lp_gtm_print_head(): void {
 	$id = lp_gtm_container_id();
@@ -45,9 +49,12 @@ function lp_gtm_print_head(): void {
 	?>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+new Date().getTime(),event:'gtm.js'});
+function g(){var f=d.getElementsByTagName(s)[0],j=d.createElement(s),
+dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}
+function idle(){(w.requestIdleCallback||function(c){setTimeout(c,1)})(g,{timeout:2000});}
+d.readyState==='complete'?idle():w.addEventListener('load',idle,{once:true});
 })(window,document,'script','dataLayer','<?php echo esc_js( $id ); ?>');</script>
 <!-- End Google Tag Manager -->
 	<?php

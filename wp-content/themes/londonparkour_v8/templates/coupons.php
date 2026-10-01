@@ -92,7 +92,7 @@ $lp_buy_btn = static function ( int $pack_id, string $label, string $variant ) u
 	);
 };
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 
 if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 	$lp_view_packs = array();
@@ -139,13 +139,13 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-neutral border-b border-neutral-content/10" data-component="coupons-hero">
 		<div class="flex flex-col lg:flex-row lg:items-stretch">
 			<div class="w-full lg:w-1/2 flex flex-col gap-6 px-6 py-scale-2xl lg:px-16 lg:py-[72px]">
-				<span class="font-label text-[11px] font-semibold tracking-[1.5px] uppercase text-neutral-content/50">08 — COUPON SALE</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.5px] uppercase text-neutral-content/50">08 — COUPON SALE</span>
 				<h1 class="font-display text-step-5 font-bold leading-[0.92] tracking-[-2.4px] text-neutral-content m-0">No contract.<br />Ever.</h1>
 				<div class="flex-1"></div>
-				<p class="font-body text-[13px] font-normal leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0">Buy a class, a pack of five, or ten. Use them at any site — Vauxhall, Old Street or Kilburn Park. No membership. No lock-in.</p>
+				<p class="font-body text-fix--2 font-normal leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0">Buy a class, a pack of five, or ten. Use them at any site — Vauxhall, Old Street or Kilburn Park. No membership. No lock-in.</p>
 			</div>
 			<div class="w-full lg:w-1/2 flex flex-col justify-end px-6 py-scale-xl lg:px-16 lg:pb-[20px] border-t lg:border-t-0 lg:border-l border-neutral-content/10">
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-neutral-content/50">FARES</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content/50">FARES</span>
 				<ul class="list-none m-0 p-0 mt-3" role="list">
 					<?php
 					$lp_fares = array(
@@ -159,16 +159,16 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 					?>
 					<li class="flex items-center justify-between py-[18px] border-t border-neutral-content/10">
 						<div class="flex items-center gap-[14px]">
-							<span class="font-label text-[12px] font-semibold tracking-[1.2px] uppercase <?php echo esc_attr( $lp_name_cls ); ?>"><?php echo esc_html( (string) $lp_fare['name'] ); ?></span>
-							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/50"><?php echo esc_html( (string) $lp_fare['unit'] ); ?></span>
+							<span class="font-label text-fix--2 font-semibold tracking-[1.2px] uppercase <?php echo esc_attr( $lp_name_cls ); ?>"><?php echo esc_html( (string) $lp_fare['name'] ); ?></span>
+							<span class="font-label text-fix--2 font-normal tracking-[0.3px] text-neutral-content/50"><?php echo esc_html( (string) $lp_fare['unit'] ); ?></span>
 						</div>
-						<span class="font-heading text-[36px] font-bold leading-[0.9] tracking-[-1.5px] <?php echo esc_attr( $lp_price_cls ); ?>"><?php echo esc_html( (string) $lp_fare['price'] ); ?></span>
+						<span class="font-heading text-fix-2 font-bold leading-[0.9] tracking-[-1.5px] <?php echo esc_attr( $lp_price_cls ); ?>"><?php echo esc_html( (string) $lp_fare['price'] ); ?></span>
 					</li>
 					<?php endforeach; ?>
 				</ul>
 				<div class="flex items-center gap-2 py-[14px] border-t border-neutral-content/10">
 					<div class="w-[2px] h-[28px] bg-primary shrink-0" aria-hidden="true"></div>
-					<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50">PRICES HELD UNTIL 1 APRIL 2027</span>
+					<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-neutral-content/50">PRICES HELD UNTIL 1 APRIL 2027</span>
 				</div>
 			</div>
 		</div>
@@ -178,13 +178,13 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-base-200 border-b border-base-300/60" data-component="coupons-table">
 		<div class="px-6 lg:px-24 pt-[80px] pb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
 			<div class="flex flex-col gap-4">
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">COUPON SALE</span>
-				<h2 class="font-heading text-[43px] font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0">No contract.<br />Three ways to pay.</h2>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">COUPON SALE</span>
+				<h2 class="font-heading text-fix-3 font-semibold leading-[1.05] tracking-[-1.6px] text-base-content m-0">No contract.<br />Three ways to pay.</h2>
 			</div>
-			<p class="font-label text-[11px] font-normal leading-[1.6] tracking-[0.2px] text-base-content/65 lg:text-right lg:max-w-[280px] m-0">Coupons work at Vauxhall, Old Street and Kilburn Park. Buy once, book when you want.</p>
+			<p class="font-label text-fix--2 font-normal leading-[1.6] tracking-[0.2px] text-base-content/65 lg:text-right lg:max-w-[280px] m-0">Coupons work at Vauxhall, Old Street and Kilburn Park. Buy once, book when you want.</p>
 		</div>
 		<div class="h-10" aria-hidden="true"></div>
-		<div class="overflow-x-auto px-6 lg:px-24 pb-[80px]">
+		<div class="overflow-x-auto px-6 lg:px-24 pb-[80px]" role="region" aria-label="Coupon comparison table" tabindex="0">
 			<?php
 			$lp_table_tiers = array(
 				array(
@@ -250,59 +250,59 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 				<div class="hidden sm:grid sm:row-span-full sm:grid-rows-subgrid border-r border-base-300/60" data-slot="coupons-rail">
 					<div class="bg-base-300" aria-hidden="true"></div>
 					<div class="flex flex-col pt-6 pb-5 pr-7">
-						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">COUPON SALE</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">COUPON SALE</span>
 						<div class="flex-1"></div>
-						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">WHAT YOU GET</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">WHAT YOU GET</span>
 					</div>
 					<div class="pr-7 border-t border-base-300/60 h-[38px] flex items-center">
-						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">PRICE PER CLASS</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">PRICE PER CLASS</span>
 					</div>
 					<div class="pr-7 border-t border-base-300/60 h-[38px] flex items-center">
-						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">SESSIONS</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">SESSIONS</span>
 					</div>
 					<div class="pr-7 border-t border-base-300/60 h-[38px] flex items-center">
-						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">SAVING</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">SAVING</span>
 					</div>
 					<div class="pr-7 border-t border-base-300/60 h-[38px] flex items-center">
-						<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">VALIDITY</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">VALIDITY</span>
 					</div>
 					<div class="pr-7 border-t border-base-300/60 h-[80px] flex items-center">
-						<span class="font-label text-[10px] font-normal tracking-[0.9px] leading-[1.6] uppercase text-base-content/65">PRICES HELD UNTIL 1 APRIL 2027</span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.9px] leading-[1.6] uppercase text-base-content/65">PRICES HELD UNTIL 1 APRIL 2027</span>
 					</div>
 				</div>
 				<?php foreach ( $lp_table_tiers as $lp_tier ) :
 					$lp_bar  = $lp_tier['highlight'] ? 'bg-primary' : 'bg-base-300/60';
 					$lp_wash = $lp_tier['highlight'] ? 'bg-primary/8' : '';
 					$lp_val  = $lp_tier['highlight']
-						? 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content'
-						: 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content/65';
+						? 'font-label text-fix--2 font-normal tracking-[0.2px] text-base-content'
+						: 'font-label text-fix--2 font-normal tracking-[0.2px] text-base-content/65';
 				?>
 				<div class="<?php echo lp_classes( 'row-span-full grid grid-rows-subgrid w-[280px] sm:w-auto border-l border-base-300/60', $lp_wash ); ?>" data-component="coupon-tier" data-tier="<?php echo esc_attr( (string) $lp_tier['id'] ); ?>">
 					<div class="<?php echo esc_attr( $lp_bar ); ?> h-[3px]" aria-hidden="true"></div>
 					<div class="flex flex-col pt-[20px] pb-[16px] px-[28px] min-h-[193px] min-w-0">
 						<div class="flex items-center gap-[10px] flex-wrap">
-							<span class="font-label text-[11px] font-semibold tracking-[1.2px] uppercase text-base-content"><?php echo esc_html( (string) $lp_tier['label'] ); ?></span>
+							<span class="font-label text-fix--2 font-semibold tracking-[1.2px] uppercase text-base-content"><?php echo esc_html( (string) $lp_tier['label'] ); ?></span>
 							<?php if ( '' !== $lp_tier['badge'] ) : ?>
-								<span class="font-label text-[10px] font-normal tracking-[0.8px] uppercase text-accent">— <?php echo esc_html( (string) $lp_tier['badge'] ); ?></span>
+								<span class="font-label text-fix--2 font-normal tracking-[0.8px] uppercase text-accent">— <?php echo esc_html( (string) $lp_tier['badge'] ); ?></span>
 							<?php endif; ?>
 						</div>
 						<div class="h-4" aria-hidden="true"></div>
 						<div class="flex items-end gap-2 flex-wrap">
-							<span class="font-heading text-[57px] font-bold leading-[0.9] tracking-[-2.6px] text-base-content"><?php echo esc_html( (string) $lp_tier['price'] ); ?></span>
-							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-base-content/65 pb-[6px]"><?php echo esc_html( (string) $lp_tier['unit'] ); ?></span>
+							<span class="font-heading text-fix-4 font-bold leading-[0.9] tracking-[-2.6px] text-base-content"><?php echo esc_html( (string) $lp_tier['price'] ); ?></span>
+							<span class="font-label text-fix--2 font-normal tracking-[0.3px] text-base-content/65 pb-[6px]"><?php echo esc_html( (string) $lp_tier['unit'] ); ?></span>
 						</div>
 						<div class="h-2.5" aria-hidden="true"></div>
-						<p class="font-label text-[11px] font-normal leading-[1.6] tracking-[0.2px] text-base-content/65 m-0"><?php echo esc_html( (string) $lp_tier['desc'] ); ?></p>
+						<p class="font-label text-fix--2 font-normal leading-[1.6] tracking-[0.2px] text-base-content/65 m-0"><?php echo esc_html( (string) $lp_tier['desc'] ); ?></p>
 					</div>
 					<div class="flex items-center gap-[7px] px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
-						<span class="font-heading text-[17px] font-semibold tracking-[-0.3px] text-base-content"><?php echo esc_html( (string) $lp_tier['ppc'] ); ?></span>
-						<span class="font-label text-[11px] font-normal tracking-[0.2px] text-base-content/65">a class</span>
+						<span class="font-heading text-fix--1 font-semibold tracking-[-0.3px] text-base-content"><?php echo esc_html( (string) $lp_tier['ppc'] ); ?></span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.2px] text-base-content/65">a class</span>
 					</div>
 					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
 						<span class="<?php echo esc_attr( $lp_val ); ?>"><?php echo esc_html( (string) $lp_tier['sessions'] ); ?></span>
 					</div>
 					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
-						<span class="<?php echo esc_attr( '—' !== $lp_tier['saving'] ? 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content' : 'font-label text-[11px] font-normal tracking-[0.2px] text-base-content/65' ); ?>"><?php echo esc_html( (string) $lp_tier['saving'] ); ?></span>
+						<span class="<?php echo esc_attr( '—' !== $lp_tier['saving'] ? 'font-label text-fix--2 font-normal tracking-[0.2px] text-base-content' : 'font-label text-fix--2 font-normal tracking-[0.2px] text-base-content/65' ); ?>"><?php echo esc_html( (string) $lp_tier['saving'] ); ?></span>
 					</div>
 					<div class="flex items-center px-[28px] border-t border-base-300/60 h-[38px] min-w-0">
 						<span class="<?php echo esc_attr( $lp_val ); ?>"><?php echo esc_html( (string) $lp_tier['validity'] ); ?></span>
@@ -324,16 +324,16 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 		<div class="flex flex-col lg:flex-row lg:min-h-[660px]">
 			<div class="w-full lg:w-[576px] shrink-0 flex flex-col px-6 py-scale-2xl lg:px-[80px] lg:py-[72px] bg-neutral">
 				<div class="flex items-center justify-between">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content">01</span>
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content">DROP-IN</span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content">01</span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content">DROP-IN</span>
 				</div>
 				<div class="h-12" aria-hidden="true"></div>
-				<span class="font-heading text-[96px] font-bold leading-[0.9] tracking-[-4px] text-neutral-content">£15</span>
-				<span class="font-label text-[13px] font-normal tracking-[0.3px] text-neutral-content/50">per session</span>
+				<span class="font-heading text-fix-6 font-bold leading-[0.9] tracking-[-4px] text-neutral-content">£15</span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.3px] text-neutral-content/50">per session</span>
 				<div class="flex-1 min-h-8"></div>
 				<div class="h-px w-full bg-neutral-content/20" aria-hidden="true"></div>
 				<div class="h-6" aria-hidden="true"></div>
-				<p class="font-label text-[13px] font-normal leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0">Turn up when it suits. One session at the door — no pack required.</p>
+				<p class="font-label text-fix--2 font-normal leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0">Turn up when it suits. One session at the door — no pack required.</p>
 				<div class="h-8" aria-hidden="true"></div>
 				<?php $lp_buy_btn( $lp_drop_in_id, 'BUY 1 COUPON', 'inverse' ); ?>
 			</div>
@@ -381,18 +381,18 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 		<div class="relative z-10 px-6 py-[80px] lg:px-24 flex flex-col gap-8">
 			<div class="flex items-center gap-3">
 				<span class="w-2 h-2 bg-primary shrink-0" aria-hidden="true"></span>
-				<span class="font-label text-[11px] font-semibold tracking-[1.2px] uppercase text-primary">MOST POPULAR — 5-PACK</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.2px] uppercase text-primary">MOST POPULAR — 5-PACK</span>
 			</div>
 			<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
 				<div class="flex flex-col gap-4">
-					<span class="font-heading text-[96px] font-bold leading-[0.9] tracking-[-4px] text-neutral-content">£65</span>
+					<span class="font-heading text-fix-6 font-bold leading-[0.9] tracking-[-4px] text-neutral-content">£65</span>
 					<div class="flex items-center gap-2.5 flex-wrap">
-						<span class="font-heading text-[20px] font-semibold tracking-[-0.4px] text-primary">£13.00 a class</span>
-						<span class="font-label text-[13px] font-normal tracking-[0.1px] text-neutral-content/50">— saves 13% vs drop-in</span>
+						<span class="font-heading text-fix-0 font-semibold tracking-[-0.4px] text-primary">£13.00 a class</span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.1px] text-neutral-content/50">— saves 13% vs drop-in</span>
 					</div>
 				</div>
 				<div class="flex flex-col gap-6 lg:items-end lg:max-w-[420px]">
-					<p class="font-label text-[13px] font-normal leading-[1.65] tracking-[0.1px] text-neutral-content m-0 lg:text-right">Five classes, bought once. Use them when you want — any site, any coach. No membership.</p>
+					<p class="font-label text-fix--2 font-normal leading-[1.65] tracking-[0.1px] text-neutral-content m-0 lg:text-right">Five classes, bought once. Use them when you want — any site, any coach. No membership.</p>
 					<?php $lp_buy_btn( $lp_five_pack_id, 'BUY 5 CLASSES', 'primary' ); ?>
 				</div>
 			</div>
@@ -424,29 +424,29 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 			</div>
 			<div class="w-full lg:w-[580px] shrink-0 flex flex-col px-6 py-scale-2xl lg:px-[80px] lg:py-[72px] bg-neutral lg:border-l lg:border-neutral-content/20 order-first lg:order-last">
 				<div class="flex items-center justify-between">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-neutral-content">03</span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-neutral-content">03</span>
 					<span class="inline-flex items-center px-2.5 py-[5px] bg-primary">
-						<span class="font-label text-[10px] font-bold tracking-[1.1px] uppercase text-primary-content">BEST VALUE</span>
+						<span class="font-label text-fix--2 font-bold tracking-[1.1px] uppercase text-primary-content">BEST VALUE</span>
 					</span>
 				</div>
 				<div class="h-12" aria-hidden="true"></div>
-				<span class="font-heading text-[96px] font-bold leading-[0.9] tracking-[-4px] text-neutral-content">£120</span>
-				<span class="font-label text-[13px] font-normal tracking-[0.3px] text-neutral-content/50">for 10 classes</span>
+				<span class="font-heading text-fix-6 font-bold leading-[0.9] tracking-[-4px] text-neutral-content">£120</span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.3px] text-neutral-content/50">for 10 classes</span>
 				<div class="h-5" aria-hidden="true"></div>
 				<div class="flex items-start gap-8">
 					<div class="flex flex-col gap-1">
-						<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-neutral-content/50">PER CLASS</span>
-						<span class="font-heading text-[22px] font-semibold tracking-[-0.5px] text-neutral-content">£12.00</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-neutral-content/50">PER CLASS</span>
+						<span class="font-heading text-fix-0 font-semibold tracking-[-0.5px] text-neutral-content">£12.00</span>
 					</div>
 					<div class="flex flex-col gap-1">
-						<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-neutral-content/50">YOU SAVE</span>
-						<span class="font-heading text-[22px] font-semibold tracking-[-0.5px] text-neutral-content">20%</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-neutral-content/50">YOU SAVE</span>
+						<span class="font-heading text-fix-0 font-semibold tracking-[-0.5px] text-neutral-content">20%</span>
 					</div>
 				</div>
 				<div class="flex-1 min-h-8"></div>
 				<div class="h-px w-full bg-neutral-content/20" aria-hidden="true"></div>
 				<div class="h-6" aria-hidden="true"></div>
-				<p class="font-label text-[13px] font-normal leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0">Ten classes at the best rate we offer. Buy once, book when you want — no membership required.</p>
+				<p class="font-label text-fix--2 font-normal leading-[1.65] tracking-[0.1px] text-neutral-content/50 m-0">Ten classes at the best rate we offer. Buy once, book when you want — no membership required.</p>
 				<div class="h-8" aria-hidden="true"></div>
 				<?php $lp_buy_btn( $lp_ten_pack_id, 'BUY 10 CLASSES', 'primary' ); ?>
 			</div>
@@ -457,10 +457,10 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 	<section class="w-full bg-base-100 border-b border-base-300" data-component="coupons-details">
 		<div class="px-6 lg:px-16 pt-[80px] pb-[48px] flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
 			<div class="flex flex-col gap-4">
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65">TERMS + HOW IT WORKS</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65">TERMS + HOW IT WORKS</span>
 				<h2 class="font-heading text-step-3 font-semibold tracking-[-1px] text-base-content m-0">Everything you need to know.</h2>
 			</div>
-			<p class="font-body text-[11px] leading-[1.6] tracking-[0.2px] text-base-content/65 lg:text-right lg:max-w-[300px] m-0">Keep this to hand before you buy. Most questions have a straightforward answer.</p>
+			<p class="font-body text-fix--2 leading-[1.6] tracking-[0.2px] text-base-content/65 lg:text-right lg:max-w-[300px] m-0">Keep this to hand before you buy. Most questions have a straightforward answer.</p>
 		</div>
 
 		<!-- Validity strip -->
@@ -488,12 +488,12 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 			?>
 			<div class="flex-1 flex flex-col gap-2 py-6 px-6 lg:px-16 <?php echo esc_attr( $lp_border ); ?>">
 				<div class="flex items-center gap-2">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content/65"><?php echo esc_html( (string) $lp_v['pack'] ); ?></span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65"><?php echo esc_html( (string) $lp_v['pack'] ); ?></span>
 					<?php lp_icon( 'icon-arrow-right', 'w-3 h-3 text-base-content/40' ); ?>
 				</div>
-				<span class="font-heading text-[24px] font-semibold tracking-[-0.8px] text-base-content"><?php echo esc_html( (string) $lp_v['period'] ); ?></span>
+				<span class="font-heading text-fix-1 font-semibold tracking-[-0.8px] text-base-content"><?php echo esc_html( (string) $lp_v['period'] ); ?></span>
 				<?php if ( (int) $lp_v['months'] > 0 ) : ?>
-					<span class="font-label text-[10px] font-normal tracking-[0.3px] text-base-content/65">from date of purchase</span>
+					<span class="font-label text-fix--2 font-normal tracking-[0.3px] text-base-content/65">from date of purchase</span>
 				<?php endif; ?>
 			</div>
 			<?php endforeach; ?>
@@ -540,8 +540,8 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 			foreach ( $lp_detail_rows as $lp_row ) :
 			?>
 			<li class="flex flex-col sm:flex-row gap-4 sm:gap-12 py-7 border-t border-base-300">
-				<span class="font-label text-[10px] font-semibold tracking-[1.1px] uppercase text-base-content/65 sm:w-[200px] shrink-0"><?php echo esc_html( (string) $lp_row['label'] ); ?></span>
-				<p class="font-body text-[13px] font-normal leading-[1.65] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( (string) $lp_row['text'] ); ?></p>
+				<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content/65 sm:w-[200px] shrink-0"><?php echo esc_html( (string) $lp_row['label'] ); ?></span>
+				<p class="font-body text-fix--2 font-normal leading-[1.65] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( (string) $lp_row['text'] ); ?></p>
 			</li>
 			<?php endforeach; ?>
 		</ul>
@@ -552,13 +552,13 @@ if ( function_exists( 'lp_analytics_view_item_marker' ) ) {
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 			<div class="flex items-center gap-3 flex-wrap">
 				<?php lp_icon( 'icon-map-pin', 'w-[14px] h-[14px] text-neutral-content/50 shrink-0' ); ?>
-				<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50">EVERY COUPON WORKS AT ALL THREE SITES</span>
-				<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-primary">VAUXHALL · OLD STREET · KILBURN PARK</span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-neutral-content/50">EVERY COUPON WORKS AT ALL THREE SITES</span>
+				<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-primary">VAUXHALL · OLD STREET · KILBURN PARK</span>
 			</div>
 			<div class="flex items-center gap-5">
-				<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50">JUST TRAINERS — NO SPECIALIST KIT NEEDED</span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-neutral-content/50">JUST TRAINERS — NO SPECIALIST KIT NEEDED</span>
 				<span class="hidden sm:inline-block w-[3px] h-[3px] rounded-full bg-neutral-content/30" aria-hidden="true"></span>
-				<span class="font-label text-[10px] font-normal tracking-[0.9px] uppercase text-neutral-content/50">PRICES HELD UNTIL 1 APRIL 2027</span>
+				<span class="font-label text-fix--2 font-normal tracking-[0.9px] uppercase text-neutral-content/50">PRICES HELD UNTIL 1 APRIL 2027</span>
 			</div>
 		</div>
 	</section>

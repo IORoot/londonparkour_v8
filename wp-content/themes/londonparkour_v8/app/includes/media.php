@@ -270,6 +270,37 @@ function lp_lcp_from_opening_hero(): ?array {
 }
 
 /**
+ * Largest design-system crop that really exists at full width for an attachment.
+ *
+ * WordPress never upscales: a source narrower than the requested crop gets no
+ * such size (core serves the FULL file with an empty srcset) or a clipped,
+ * off-ratio one (no ratio-matched siblings, so again no srcset). Step down the
+ * family (lp_wide_lg -> lp_wide -> lp_wide_sm). Shared by media-photo and the
+ * LCP preload so both name the same candidate set.
+ */
+function lp_fit_image_size( int $attachment_id, string $size ): string {
+	$reg = wp_get_additional_image_sizes();
+	if ( ! isset( $reg[ $size ] ) ) {
+		return $size;
+	}
+
+	$have = (array) ( wp_get_attachment_metadata( $attachment_id )['sizes'] ?? array() );
+	$full = static fn( string $n ): bool => isset( $reg[ $n ] ) && (int) ( $have[ $n ]['width'] ?? 0 ) >= (int) $reg[ $n ]['width'];
+	if ( ! $have || $full( $size ) ) {
+		return $size;
+	}
+
+	$base = preg_replace( '/_(sm|lg)$/', '', $size );
+	foreach ( array( $base . '_lg', $base, $base . '_sm' ) as $try ) {
+		if ( $full( $try ) ) {
+			return $try;
+		}
+	}
+
+	return $size;
+}
+
+/**
  * @return array{id:int,size:string,sizes:string}|null
  */
 function lp_lcp_attachment( int $attachment_id, string $size, string $sizes ): ?array {
@@ -279,7 +310,7 @@ function lp_lcp_attachment( int $attachment_id, string $size, string $sizes ): ?
 
 	return array(
 		'id'    => $attachment_id,
-		'size'  => $size,
+		'size'  => lp_fit_image_size( $attachment_id, $size ),
 		'sizes' => $sizes,
 	);
 }

@@ -97,36 +97,42 @@ export const kenBurnsEffect = {
       return img;
     };
 
+    let coordsEl = root?.querySelector('[data-kb-live-coords]') || null;
+
     const syncCoords = (img) => {
-      const coordsEl = root?.querySelector('[data-kb-live-coords]');
       if (!coordsEl) return;
 
       const coordinates = img.dataset.kbCoordinates || '';
       const href = safeKbHref(img.dataset.kbHref || '');
+
+      if (typeof stopDecode === 'function') stopDecode();
+      stopDecode = null;
+
+      // A link with an href is an <a>; without one it is a non-interactive
+      // <span> (an <a> without href is generic: aria-disabled/aria-label are
+      // prohibited there). Swap the tag rather than toggling ARIA.
+      if (Boolean(href) !== (coordsEl.tagName === 'A')) {
+        const next = document.createElement(href ? 'a' : 'span');
+        Array.from(coordsEl.attributes).forEach((attr) => {
+          if (!['href', 'target', 'rel', 'aria-disabled', 'aria-label', 'style'].includes(attr.name)) {
+            next.setAttribute(attr.name, attr.value);
+          }
+        });
+        coordsEl.replaceWith(next);
+        coordsEl = next;
+      }
 
       if (coordinates) {
         coordsEl.dataset.motionDecode = coordinates;
         coordsEl.dataset.motionDecodeCharset = 'gps';
       }
 
+      coordsEl.classList.toggle('hover:text-primary', Boolean(href));
       if (href) {
         coordsEl.setAttribute('href', href);
         coordsEl.setAttribute('target', '_blank');
         coordsEl.setAttribute('rel', 'noopener noreferrer');
-        coordsEl.removeAttribute('aria-disabled');
-        coordsEl.style.pointerEvents = '';
-        coordsEl.style.cursor = 'pointer';
-      } else {
-        coordsEl.removeAttribute('href');
-        coordsEl.removeAttribute('target');
-        coordsEl.removeAttribute('rel');
-        coordsEl.setAttribute('aria-disabled', 'true');
-        coordsEl.style.pointerEvents = 'none';
-        coordsEl.style.cursor = 'default';
       }
-
-      if (typeof stopDecode === 'function') stopDecode();
-      stopDecode = null;
 
       if (!coordinates) {
         coordsEl.textContent = '';
@@ -232,7 +238,12 @@ export const kenBurnsEffect = {
         const img = slides[i];
         const cfg = readCfg(img, defaults);
         const fade = Math.min(cfg.fade, cfg.duration);
-        const holdMs = Math.max(0, (cfg.duration - fade) * 1000 - elapsedOnCurrent);
+        // Single slide: wait the full zoom before reversing so two animations
+        // never write `transform` at once.
+        const holdMs =
+          slides.length === 1
+            ? cfg.duration * 1000
+            : Math.max(0, (cfg.duration - fade) * 1000 - elapsedOnCurrent);
         await wait(holdMs);
         if (stopped) break;
 

@@ -18,6 +18,7 @@
  * row. Omitting `index` keeps the tick row for Key Takeaways callers.
  *
  * @param string $args['text']  The row copy.
+ * @param string $args['size']  'lg' reads one step up (Tutorial Detail VIDEO DETAILS).
  * @param string $args['index'] Any truthy value swaps the tick for that numeral;
  *                              the caller formats it ('1', '01'), as in list-row.
  *
@@ -27,19 +28,22 @@
 defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
-$lp_numeral_class = 'shrink-0 w-[44px] font-heading text-[24px] font-semibold leading-none tracking-[-0.8px] text-base-content/65';
+$lp_numeral_class = 'shrink-0 w-[44px] font-heading text-fix-1 font-semibold leading-none tracking-[-0.8px] text-base-content/65';
 
 $lp_text  = (string) ( $args['text'] ?? 'Start with your feet hitting the wall first to control impact.' );
 $lp_index = (string) ( $args['index'] ?? '' );
+$lp_tick_text = 'lg' === ( $args['size'] ?? '' )
+	? 'm-0 font-body text-fix--1 font-normal leading-[1.4] tracking-[0.1px] text-base-content/70'
+	: 'm-0 font-body text-fix--2 font-normal leading-[1.4] tracking-[0.1px] text-base-content/70';
 ?>
 <?php if ( '' !== $lp_index ) : ?>
 	<div class="flex items-center gap-[28px] w-full border-b border-base-300 py-[20px]" data-component="checklist-item" data-variant="expect">
 		<span class="<?php echo esc_attr( $lp_numeral_class ); ?>"><?php echo esc_html( $lp_index ); ?></span>
-		<p class="m-0 flex-1 min-w-0 font-label text-[14px] font-normal leading-[1.6] tracking-[0.1px] text-base-content/80"><?php echo esc_html( $lp_text ); ?></p>
+		<p class="m-0 flex-1 min-w-0 font-label text-fix--1 font-normal leading-[1.6] tracking-[0.1px] text-base-content/80"><?php echo esc_html( $lp_text ); ?></p>
 	</div>
 <?php else : ?>
 	<div class="flex items-start gap-3" data-component="checklist-item">
 		<span class="shrink-0 text-base-content" aria-hidden="true"><?php lp_icon( 'icon-check', 'w-[13px] h-[13px]' ); ?></span>
-		<p class="m-0 font-body text-[12px] font-normal leading-[1.4] tracking-[0.1px] text-base-content/70"><?php echo esc_html( $lp_text ); ?></p>
+		<p class="<?php echo esc_attr( $lp_tick_text ); ?>"><?php echo esc_html( $lp_text ); ?></p>
 	</div>
 <?php endif; ?>

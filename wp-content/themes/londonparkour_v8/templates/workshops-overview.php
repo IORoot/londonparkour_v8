@@ -75,28 +75,28 @@ $lp_row = static function ( WP_Post $lp_post ): void {
 		<div class="flex-1 min-w-0 flex flex-col gap-[14px] py-7 px-8 lg:pl-9 justify-between">
 			<div class="flex flex-col gap-[14px]">
 				<div class="flex items-center gap-2.5 flex-wrap">
-					<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( lp_class_workshop_date_label( $lp_id ) ); ?></span>
+					<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( lp_class_workshop_date_label( $lp_id ) ); ?></span>
 					<?php if ( '' !== $lp_level ) : ?>
-						<span class="font-label text-[10px] font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_level ); ?></span>
+						<span class="font-label text-fix--2 font-semibold tracking-[0.9px] uppercase text-neutral-content/50 group-hover:text-neutral/70"><?php echo esc_html( $lp_level ); ?></span>
 					<?php endif; ?>
 				</div>
-				<h2 class="font-heading text-[34px] font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral"><?php echo esc_html( get_the_title( $lp_post ) ); ?></h2>
+				<h3 class="font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-0.9px] leading-[1.02] text-neutral-content m-0 [text-box:normal] group-hover:text-neutral"><?php echo esc_html( get_the_title( $lp_post ) ); ?></h3>
 				<?php if ( '' !== $lp_logline ) : ?>
-					<p class="font-label text-[13px] font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80"><?php echo esc_html( $lp_logline ); ?></p>
+					<p class="font-label text-fix--2 font-normal leading-[1.45] tracking-[0.1px] text-neutral-content/70 m-0 group-hover:text-neutral/80"><?php echo esc_html( $lp_logline ); ?></p>
 				<?php endif; ?>
 				<?php if ( $lp_chips ) : ?>
 					<div class="flex flex-wrap gap-2">
 						<?php foreach ( $lp_chips as $lp_chip ) : ?>
 							<?php $lp_chip_label = (string) ( $lp_chip['label'] ?? '' ); ?>
 							<?php if ( '' !== $lp_chip_label ) : ?>
-								<span class="inline-flex items-center py-[5px] px-2.5 border border-neutral-content/20 font-label text-[9px] font-bold tracking-[0.8px] uppercase text-neutral-content/80 group-hover:border-neutral/40 group-hover:text-neutral"><?php echo esc_html( $lp_chip_label ); ?></span>
+								<span class="inline-flex items-center py-[5px] px-2.5 border border-neutral-content/20 font-label text-fix--2 font-bold tracking-[0.8px] uppercase text-neutral-content/80 group-hover:border-neutral/40 group-hover:text-neutral"><?php echo esc_html( $lp_chip_label ); ?></span>
 							<?php endif; ?>
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
 			</div>
 			<div class="flex items-center justify-between gap-4 flex-wrap pt-[6px]">
-				<span class="flex items-center gap-3 font-label text-[10px] font-semibold uppercase tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral/70">
+				<span class="flex items-center gap-3 font-label text-fix--2 font-semibold uppercase tracking-[0.8px] text-neutral-content/50 group-hover:text-neutral/70">
 					<?php foreach ( array_values( $lp_meta ) as $lp_i => $lp_bit ) : ?>
 						<?php if ( $lp_i ) : ?>
 							<span class="w-[3px] h-[3px] bg-neutral-content/25 group-hover:bg-neutral/40" aria-hidden="true"></span>
@@ -104,14 +104,14 @@ $lp_row = static function ( WP_Post $lp_post ): void {
 						<span><?php echo esc_html( $lp_bit ); ?></span>
 					<?php endforeach; ?>
 				</span>
-				<span class="inline-flex items-center gap-2 py-[11px] px-4 bg-neutral-content text-neutral font-label text-[10px] font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary">THE DETAILS</span>
+				<span class="inline-flex items-center gap-2 py-[11px] px-4 bg-neutral-content text-neutral font-label text-fix--2 font-bold uppercase tracking-[1px] group-hover:bg-neutral group-hover:text-primary">THE DETAILS</span>
 			</div>
 		</div>
 	</a>
 	<?php
 };
 
-get_header();
+get_header( null, array( 'active_key' => 'classes' ) );
 ?>
 
 <main id="main">
@@ -181,7 +181,7 @@ get_header();
 					?>
 				</div>
 				<?php if ( '' !== $lp_lead_meta ) : ?>
-					<p class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_lead_meta ); ?></p>
+					<p class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_lead_meta ); ?></p>
 				<?php endif; ?>
 				<?php lp_part( 'elements/rule', array( 'tone' => 'accent' ) ); ?>
 				<?php
@@ -210,10 +210,10 @@ get_header();
 				<div>
 					<div class="flex items-end justify-between gap-4 pb-[14px]">
 						<div class="flex flex-col gap-2">
-							<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-primary">ALSO COMING</span>
-							<h2 class="font-heading text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">More dates on the board.</h2>
+							<span class="font-label text-fix--2 font-bold tracking-[1.2px] uppercase text-primary">ALSO COMING</span>
+							<h2 class="font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">More dates on the board.</h2>
 						</div>
-						<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( sprintf( '%02d DATES', count( $lp_rest ) ) ); ?></span>
+						<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50"><?php echo esc_html( sprintf( '%02d DATES', count( $lp_rest ) ) ); ?></span>
 					</div>
 					<div class="h-px w-full bg-neutral-content/20" aria-hidden="true"></div>
 				</div>
@@ -232,10 +232,10 @@ get_header();
 				<div>
 					<div class="flex items-end justify-between gap-4 pb-[14px]">
 						<div class="flex flex-col gap-2">
-							<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-base-content/65">ALREADY RUN</span>
-							<h2 class="font-heading text-[32px] font-semibold tracking-[-0.8px] text-base-content m-0 [text-box:normal]">Dates that have been.</h2>
+							<span class="font-label text-fix--2 font-bold tracking-[1.2px] uppercase text-base-content/65">ALREADY RUN</span>
+							<h2 class="font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-0.8px] text-base-content m-0 [text-box:normal]">Dates that have been.</h2>
 						</div>
-						<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( sprintf( '%02d DATES', count( $lp_past ) ) ); ?></span>
+						<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( sprintf( '%02d DATES', count( $lp_past ) ) ); ?></span>
 					</div>
 					<div class="h-px w-full bg-base-content/20" aria-hidden="true"></div>
 				</div>

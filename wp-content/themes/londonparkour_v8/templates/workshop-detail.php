@@ -269,9 +269,9 @@ $lp_grid = $lp_show_book
 
 	<?php if ( $lp_facts ) : ?>
 		<div class="w-full bg-neutral" data-component="class-detail-fact-rail">
-			<div class="px-6 lg:px-16 py-scale-s grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-[40px] gap-y-6" data-mount="rail">
+			<div class="px-6 lg:px-16 py-scale-s grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 md:gap-x-[40px] gap-y-6" data-mount="rail">
 				<?php foreach ( $lp_facts as $lp_fact ) : ?>
-					<?php lp_part( 'components/fact-row', array_merge( $lp_fact, array( 'surface' => 'board' ) ) ); ?>
+					<span class="block min-w-0"><?php lp_part( 'components/fact-row', array_merge( $lp_fact, array( 'surface' => 'board' ) ) ); ?></span>
 				<?php endforeach; ?>
 			</div>
 		</div>
@@ -346,13 +346,13 @@ $lp_grid = $lp_show_book
 			</div>
 			<?php if ( $lp_about ) : ?>
 				<div class="flex flex-col gap-[22px] border-t border-base-content pt-[22px] order-3 lg:col-start-1 lg:order-none">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">ABOUT THIS WORKSHOP</span>
-					<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&>p]:m-0 [&>p:first-of-type]:font-heading [&>p:first-of-type]:text-step-1 [&>p:first-of-type]:font-semibold [&>p:first-of-type]:text-base-content [&>p:nth-of-type(2)]:font-body [&>p:nth-of-type(2)]:text-step-0 [&>p:nth-of-type(2)]:font-medium [&>p:nth-of-type(2)]:text-base-content [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_about ); ?></div>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content">ABOUT THIS WORKSHOP</span>
+					<div class="m-0 font-label text-fix--1 font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&>p]:m-0 [&>p:first-of-type]:font-heading [&>p:first-of-type]:text-step-1 [&>p:first-of-type]:font-semibold [&>p:first-of-type]:text-base-content [&>p:nth-of-type(2)]:font-body [&>p:nth-of-type(2)]:text-step-0 [&>p:nth-of-type(2)]:font-medium [&>p:nth-of-type(2)]:text-base-content [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_about ); ?></div>
 				</div>
 			<?php endif; ?>
 			<?php if ( $lp_expect ) : ?>
 				<div class="flex flex-col border-t border-base-content pt-[22px] order-4 lg:col-start-1 lg:order-none">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content"><?php echo esc_html( $lp_expect_heading ); ?></span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content"><?php echo esc_html( $lp_expect_heading ); ?></span>
 					<ol class="flex flex-col m-0 p-0 list-none [&>li:last-child_[data-variant=expect]]:border-b-0">
 						<?php foreach ( $lp_expect as $lp_i => $lp_step ) : ?>
 							<li>
@@ -401,13 +401,13 @@ $lp_grid = $lp_show_book
 			<div class="px-6 lg:px-16 py-scale-2xl flex flex-col gap-12">
 				<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-[16px]">
 					<div class="flex flex-col gap-[14px] min-w-0">
-						<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-base-content">MEETING POINT</span>
+						<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-base-content">MEETING POINT</span>
 						<?php if ( '' !== $lp_site_heading ) : ?>
-							<h2 class="font-heading text-[36px] lg:text-[42px] font-bold leading-none tracking-[-1.6px] text-base-content m-0"><?php echo esc_html( $lp_site_heading ); ?></h2>
+							<h2 class="font-heading text-fix-2 lg:text-fix-2 font-bold leading-none tracking-[-1.6px] text-base-content m-0"><?php echo esc_html( $lp_site_heading ); ?></h2>
 						<?php endif; ?>
 					</div>
 					<?php if ( '' !== $lp_streetview ) : ?>
-						<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[11px] font-semibold uppercase tracking-[1px] text-accent shrink-0">STREETVIEW ↗</a>
+						<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-accent shrink-0">STREETVIEW ↗</a>
 					<?php endif; ?>
 				</div>
 
@@ -416,33 +416,33 @@ $lp_grid = $lp_show_book
 						<?php if ( '' !== $lp_meeting_kicker ) : ?>
 							<div class="flex items-center gap-[8px]">
 								<span class="text-base-content" aria-hidden="true"><?php lp_icon( 'icon-map-pin', 'w-[12px] h-[12px]' ); ?></span>
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_meeting_kicker ); ?></span>
+								<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp_meeting_kicker ); ?></span>
 							</div>
 						<?php endif; ?>
 						<?php if ( '' !== $lp_meeting_point ) : ?>
 							<div class="flex flex-col gap-[10px]">
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
-								<p class="font-label text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
+								<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
+								<p class="font-label text-fix--1 font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_meeting_point ); ?></p>
 							</div>
 						<?php endif; ?>
 						<?php if ( '' !== $lp_transport_rail || '' !== $lp_transport_bus ) : ?>
 							<div class="flex flex-col gap-[10px]">
-								<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
+								<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
 								<?php if ( '' !== $lp_transport_rail ) : ?>
-									<p class="font-body text-[13px] font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_transport_rail ); ?></p>
+									<p class="font-body text-fix--2 font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp_transport_rail ); ?></p>
 								<?php endif; ?>
 								<?php if ( '' !== $lp_transport_bus ) : ?>
-									<p class="font-body text-[12px] font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_transport_bus ); ?></p>
+									<p class="font-body text-fix--2 font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp_transport_bus ); ?></p>
 								<?php endif; ?>
 							</div>
 						<?php endif; ?>
 						<?php if ( '' !== $lp_meeting_foot || '' !== $lp_osm_maps ) : ?>
 							<div class="flex flex-wrap items-center justify-between gap-[16px] border-t border-base-300 pt-[14px]">
 								<?php if ( '' !== $lp_meeting_foot ) : ?>
-									<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_meeting_foot ); ?></span>
+									<span class="font-label text-fix--2 font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_meeting_foot ); ?></span>
 								<?php endif; ?>
 								<?php if ( '' !== $lp_osm_maps ) : ?>
-									<a href="<?php echo esc_url( $lp_osm_maps ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent">OPEN IN MAPS ↗</a>
+									<a href="<?php echo esc_url( $lp_osm_maps ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-accent">OPEN IN MAPS ↗</a>
 								<?php endif; ?>
 							</div>
 						<?php endif; ?>
@@ -459,15 +459,15 @@ $lp_grid = $lp_show_book
 							>
 								<div class="absolute inset-0 z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:!z-0" data-mount="leaflet" role="region" aria-label="<?php echo esc_attr( sprintf( 'Map of %s', $lp_location_title ? $lp_location_title : 'Meeting point' ) ); ?>"></div>
 								<div class="absolute inset-x-0 top-0 z-[500] flex items-center justify-between h-10 px-4 bg-base-100 border-b border-base-300 pointer-events-none">
-									<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content">OPENSTREETMAP</span>
+									<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content">OPENSTREETMAP</span>
 									<?php if ( '' !== $lp_coords_label ) : ?>
-										<span class="font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_coords_label ); ?></span>
+										<span class="font-label text-fix--2 font-normal tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_coords_label ); ?></span>
 									<?php endif; ?>
 								</div>
 								<div class="absolute inset-x-0 bottom-0 z-[500] flex items-center justify-between h-11 px-4 bg-base-100 border-t border-base-300">
-									<span class="font-label text-[9px] font-normal tracking-[0.7px] text-base-content/65">© OPENSTREETMAP CONTRIBUTORS</span>
+									<span class="font-label text-fix--2 font-normal tracking-[0.7px] text-base-content/65">© OPENSTREETMAP CONTRIBUTORS</span>
 									<?php if ( '' !== $lp_streetview ) : ?>
-										<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent pointer-events-auto">STREETVIEW ↗</a>
+										<a href="<?php echo esc_url( $lp_streetview ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-accent pointer-events-auto">STREETVIEW ↗</a>
 									<?php endif; ?>
 								</div>
 								<div class="hidden" data-meeting-pin aria-hidden="true">
@@ -484,7 +484,7 @@ $lp_grid = $lp_show_book
 									?>
 								</div>
 							</div>
-							<p class="font-label text-[11px] font-normal leading-[1.5] tracking-[0.1px] text-base-content/65 m-0">Map centres on the meeting point.</p>
+							<p class="font-label text-fix--2 font-normal leading-[1.5] tracking-[0.1px] text-base-content/65 m-0">Map centres on the meeting point.</p>
 						</div>
 					<?php endif; ?>
 				</div>
@@ -498,10 +498,10 @@ $lp_grid = $lp_show_book
 				<div>
 					<div class="flex items-end justify-between gap-4 pb-[14px]">
 						<div class="flex flex-col gap-2">
-							<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-primary">FROM THE FLOOR</span>
-							<h2 class="font-heading text-[32px] font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">What the day looks like.</h2>
+							<span class="font-label text-fix--2 font-bold tracking-[1.2px] uppercase text-primary">FROM THE FLOOR</span>
+							<h2 class="font-heading text-fix-1 sm:text-fix-2 font-semibold tracking-[-0.8px] text-neutral-content m-0 [text-box:normal]">What the day looks like.</h2>
 						</div>
-						<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-neutral-content/50">(<?php echo esc_html( str_pad( (string) count( $lp_gallery ), 2, '0', STR_PAD_LEFT ) ); ?>)</span>
+						<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-neutral-content/50">(<?php echo esc_html( str_pad( (string) count( $lp_gallery ), 2, '0', STR_PAD_LEFT ) ); ?>)</span>
 					</div>
 					<div class="h-px w-full bg-neutral-content/20" aria-hidden="true"></div>
 				</div>
@@ -575,7 +575,7 @@ $lp_grid = $lp_show_book
 		<section class="w-full bg-accent" data-component="workshop-detail-coaches">
 			<div class="px-6 lg:px-16 py-scale-2xl">
 				<div class="flex flex-col gap-10 border-t border-accent-content pt-[22px]">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-accent-content">THE COACHES</span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-accent-content">THE COACHES</span>
 					<div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 						<?php foreach ( $lp_coach_ids as $lp_coach_id ) : ?>
 							<?php

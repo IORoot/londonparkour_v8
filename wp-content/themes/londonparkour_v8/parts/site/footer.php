@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
 
 /* Whole literal strings. Tailwind v4 scans source text — never build a class. */
 $lp_focus       = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
-$lp_link_class  = 'font-body text-[18px] font-normal text-neutral-content hover:text-primary transition-colors duration-150';
+$lp_link_class  = 'font-body text-fix-0 font-normal text-neutral-content hover:text-primary transition-colors duration-150';
 $lp_social_link = 'inline-flex items-center justify-center text-neutral-content/50 hover:text-primary transition-colors duration-150';
 
 // Brand marks now live in the sprite — see the docblock.
@@ -147,7 +147,7 @@ $lp_instance    = sanitize_html_class( (string) ( $args['instance_id'] ?? 'site-
 $lp_columns = is_array( $args['columns'] ?? null ) && $args['columns'] ? $args['columns'] : $lp_default_columns;
 $lp_social  = is_array( $args['social'] ?? null ) && $args['social'] ? $args['social'] : $lp_default_social;
 ?>
-<footer class="w-full bg-neutral" aria-label="<?php esc_attr_e( 'Site footer', 'londonparkour_v8' ); ?>" data-component="site-footer" id="<?php echo esc_attr( $lp_instance ); ?>">
+<footer class="w-full max-w-full overflow-x-clip bg-neutral" aria-label="<?php esc_attr_e( 'Site footer', 'londonparkour_v8' ); ?>" data-component="site-footer" id="<?php echo esc_attr( $lp_instance ); ?>">
 	<div class="flex flex-col gap-10 lg:gap-[52px] px-6 lg:px-16 py-10 lg:py-[72px]">
 
 		<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-10 lg:gap-[64px]">
@@ -164,16 +164,16 @@ $lp_social  = is_array( $args['social'] ?? null ) && $args['social'] ? $args['so
 					);
 					?>
 				</a>
-				<p class="font-body text-[14px] leading-[1.6] text-neutral-content/50 m-0"><?php echo esc_html( $lp_tagline ); ?></p>
+				<p class="font-body text-fix--1 leading-[1.6] text-neutral-content/50 m-0"><?php echo esc_html( $lp_tagline ); ?></p>
 			</div>
 
-			<nav aria-label="<?php esc_attr_e( 'Footer', 'londonparkour_v8' ); ?>" class="flex flex-col sm:flex-row gap-10 lg:gap-[72px]">
+			<nav aria-label="<?php esc_attr_e( 'Footer', 'londonparkour_v8' ); ?>" class="flex flex-col sm:flex-row sm:flex-wrap min-w-0 gap-10 lg:gap-[72px]">
 				<?php
 				foreach ( $lp_columns as $lp_i => $lp_column ) :
 					$lp_heading_id = $lp_instance . '-col-' . (int) $lp_i;
 					?>
 					<div class="flex flex-col gap-[16px]">
-						<h2 id="<?php echo esc_attr( $lp_heading_id ); ?>" class="font-label text-[12px] font-normal uppercase tracking-[1px] text-neutral-content/50 m-0"><?php echo esc_html( (string) ( $lp_column['heading'] ?? '' ) ); ?></h2>
+						<h2 id="<?php echo esc_attr( $lp_heading_id ); ?>" class="font-label text-fix--2 font-normal uppercase tracking-[1px] text-neutral-content/50 m-0"><?php echo esc_html( (string) ( $lp_column['heading'] ?? '' ) ); ?></h2>
 						<ul class="flex flex-col gap-[16px] m-0 p-0 list-none" aria-labelledby="<?php echo esc_attr( $lp_heading_id ); ?>">
 							<?php foreach ( is_array( $lp_column['links'] ?? null ) ? $lp_column['links'] : array() as $lp_link ) : ?>
 								<li>
@@ -189,7 +189,7 @@ $lp_social  = is_array( $args['social'] ?? null ) && $args['social'] ? $args['so
 		<div class="flex flex-col gap-[22px]">
 			<div class="w-full h-px bg-neutral-content/10" aria-hidden="true"></div>
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-				<p class="font-label text-[12px] font-normal uppercase tracking-[0.5px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_copyright ); ?></p>
+				<p class="font-label text-fix--2 font-normal uppercase tracking-[0.5px] text-neutral-content/50 m-0 break-words min-w-0"><?php echo esc_html( $lp_copyright ); ?></p>
 				<ul class="flex items-center gap-[18px] m-0 p-0 list-none">
 					<?php
 					foreach ( $lp_social as $lp_item ) :

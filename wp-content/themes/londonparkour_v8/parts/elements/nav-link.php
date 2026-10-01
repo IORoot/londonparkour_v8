@@ -16,6 +16,10 @@
  * without it the link is text-only and the gap is inert. Sibling spacing in
  * a nav row remains the parent's job.
  *
+ * Band-only component, so the signal-colour focus ring is safe (it would fail on
+ * the page ground). `min-h-6` keeps the tap target at 24px (WCAG 2.5.8).
+ * `group-hover` is deliberate: the nav wraps each item in a `group`.
+ *
  * @param string $args['label']   Default 'Classes'.
  * @param string $args['href']    Default '#'.
  * @param bool   $args['active']
@@ -39,7 +43,7 @@ $lp_icon   = (string) ( $args['icon_id'] ?? '' );
 
 $lp_state_class = $lp_active ? $lp_states['active'] : $lp_states['inactive'];
 ?>
-<a href="<?php echo esc_url( $lp_href ); ?>" class="<?php echo lp_classes( 'inline-flex items-center gap-[9px] font-label uppercase text-[12px] font-semibold tracking-[1.1px] transition-colors duration-150', $lp_state_class ); ?>" data-component="nav-link"<?php echo $lp_active ? ' aria-current="page"' : ''; ?>><?php
+<a href="<?php echo esc_url( $lp_href ); ?>" class="<?php echo lp_classes( 'inline-flex items-center min-h-6 gap-[9px] font-label uppercase text-fix--2 font-semibold tracking-[1.1px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary', $lp_state_class ); ?>" data-component="nav-link"<?php echo $lp_active ? ' aria-current="page"' : ''; ?>><?php
 if ( '' !== $lp_icon ) {
 	// Decorative — the label already carries the meaning, and it inherits
 	// currentColor so it tracks the hover/active colour for free.

@@ -154,7 +154,7 @@ if ( ! empty( $lp_cards[0]['href'] ) && ! empty( $lp_cards[0]['title'] ) ) {
 	$lp_onward_next['href']  = $lp_cards[0]['href'];
 }
 
-get_header();
+get_header( null, array( 'active_key' => 'docs' ) );
 ?>
 
 <main id="main">
@@ -198,7 +198,7 @@ get_header();
 					);
 					?>
 				</div>
-				<p class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_lead_meta ); ?></p>
+				<p class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-accent-content/70"><?php echo esc_html( $lp_lead_meta ); ?></p>
 				<?php lp_part( 'elements/rule', array( 'tone' => 'accent' ) ); ?>
 				<?php
 				lp_part(

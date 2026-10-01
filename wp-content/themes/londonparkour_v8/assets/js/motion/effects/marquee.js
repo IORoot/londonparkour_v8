@@ -22,7 +22,15 @@ export const marqueeEffect = {
         // Clone existing child nodes (not innerHTML/insertAdjacentHTML — no
         // HTML re-parsing, so this can't become an injection sink even though
         // the content here is already-trusted, same-page DOM).
-        Array.from(el.childNodes).forEach((node) => el.appendChild(node.cloneNode(true)));
+        // The copy is decoration: hide it from AT and take it out of the tab order.
+        Array.from(el.childNodes).forEach((node) => {
+          const copy = node.cloneNode(true);
+          if (copy.nodeType === 1) {
+            copy.setAttribute('aria-hidden', 'true');
+            copy.setAttribute('inert', '');
+          }
+          el.appendChild(copy);
+        });
         el.dataset.motionMarqueeCloned = 'true';
       }
 
@@ -39,7 +47,19 @@ export const marqueeEffect = {
         { duration, ease: 'linear', repeat: Infinity }
       );
 
+      // WCAG 2.2.2: moving content can be paused on hover / keyboard focus.
+      const pause = () => controls.pause();
+      const play = () => controls.play();
+      el.addEventListener('mouseenter', pause);
+      el.addEventListener('mouseleave', play);
+      el.addEventListener('focusin', pause);
+      el.addEventListener('focusout', play);
+
       return () => {
+        el.removeEventListener('mouseenter', pause);
+        el.removeEventListener('mouseleave', play);
+        el.removeEventListener('focusin', pause);
+        el.removeEventListener('focusout', play);
         controls.stop();
         el.style.transform = 'none';
       };

@@ -42,12 +42,12 @@ $lp_variants = array(
 		'root'        => 'card flex flex-col h-full bg-base-200 border border-base-300 rounded-none overflow-hidden',
 		'media'       => 'aspect-[16/9] w-full bg-base-300 overflow-hidden m-0',
 		'body'        => 'card-body flex flex-col flex-1 p-0 pt-[18px] px-[16px] pb-[16px] gap-[14px]',
-		'read_time'   => 'font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65',
-		'title'       => 'card-title font-heading text-[22px] font-bold tracking-[-0.5px] leading-tight text-base-content',
-		'excerpt'     => 'font-body text-[12px] font-normal tracking-[0.1px] leading-[1.6] text-base-content/65',
+		'read_time'   => 'font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-base-content/65',
+		'title'       => 'card-title font-heading text-fix-0 font-bold tracking-[-0.5px] leading-tight text-base-content',
+		'excerpt'     => 'font-body text-fix--2 font-normal tracking-[0.1px] leading-[1.6] text-base-content/65',
 		'foot_wrap'   => 'mt-auto flex flex-col gap-[14px] border-t border-base-300 pt-[14px]',
-		'author_name' => 'font-body text-[12px] font-semibold tracking-[0.1px] text-base-content',
-		'author_date' => 'font-body text-[12px] font-normal tracking-[0.1px] text-base-content/65',
+		'author_name' => 'font-body text-fix--2 font-semibold tracking-[0.1px] text-base-content',
+		'author_date' => 'font-body text-fix--2 font-normal tracking-[0.1px] text-base-content/65',
 		// byline `sm` on this surface produces the source's exact avatar box.
 		'avatar_surf' => 'board',
 		'kicker_surf' => 'page',
@@ -58,12 +58,12 @@ $lp_variants = array(
 		'media'       => 'aspect-[16/9] w-full lg:w-3/5 overflow-hidden m-0 shrink-0',
 		'body'        => 'flex flex-col gap-[22px] w-full lg:w-2/5',
 		'read_time'   => '',
-		'title'       => 'font-heading text-[36px] lg:text-[43px] font-bold tracking-[-1.6px] leading-none text-accent-content',
-		'excerpt'     => 'font-body text-[14px] font-normal tracking-[0.15px] leading-[1.65] text-accent-content/70',
+		'title'       => 'font-heading text-fix-2 lg:text-fix-3 font-bold tracking-[-1.6px] leading-none text-accent-content',
+		'excerpt'     => 'font-body text-fix--1 font-normal tracking-[0.15px] leading-[1.65] text-accent-content/70',
 		'foot_wrap'   => 'flex items-center gap-3 border-t border-accent-content/15 pt-[22px]',
 		'spacer'      => 'max-lg:hidden flex-1 min-h-0',
-		'author_name' => 'font-body text-[12px] font-semibold tracking-[0.1px] text-accent-content',
-		'author_date' => 'font-body text-[12px] font-normal tracking-[0.1px] text-accent-content/70',
+		'author_name' => 'font-body text-fix--2 font-semibold tracking-[0.1px] text-accent-content',
+		'author_date' => 'font-body text-fix--2 font-normal tracking-[0.1px] text-accent-content/70',
 		'avatar_surf' => 'accent',
 		'kicker_surf' => 'accent',
 		'kicker_tone' => 'muted',
@@ -80,7 +80,7 @@ $lp_title     = (string) ( $args['title'] ?? 'Imperial College London' );
 $lp_excerpt   = (string) ( $args['excerpt'] ?? 'LondonParkour is teaming up with Imperial College London to bring parkour classes to students every Wednesday.' );
 $lp_author    = (string) ( $args['author'] ?? 'Andy Pearson' );
 $lp_date      = (string) ( $args['date'] ?? 'Nov 19, 2024' );
-$lp_href      = (string) ( $args['href'] ?? '#' );
+$lp_href      = (string) ( $args['href'] ?? '' );
 
 $lp_photo = array(
 	'image_id'  => ! empty( $args['image_id'] ) ? (int) $args['image_id'] : 0,
@@ -144,7 +144,7 @@ $lp_author_row = static function () use ( $lp_v, $lp_author, $lp_date ) {
 				<span class="<?php echo lp_classes( $lp_v['read_time'], 'shrink-0' ); ?>"><?php echo esc_html( $lp_read_time ); ?></span>
 			<?php endif; ?>
 		</div>
-		<h3 class="<?php echo esc_attr( $lp_v['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></h3>
+		<<?php echo $lp_is_lead ? 'h2' : 'h3'; ?> class="<?php echo esc_attr( $lp_v['title'] ); ?>"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_is_lead ? 'h2' : 'h3'; ?>>
 		<p class="<?php echo esc_attr( $lp_v['excerpt'] ); ?>"><?php echo esc_html( $lp_excerpt ); ?></p>
 		<?php if ( $lp_is_lead ) : ?>
 			<div class="<?php echo esc_attr( $lp_v['spacer'] ); ?>" aria-hidden="true"></div>

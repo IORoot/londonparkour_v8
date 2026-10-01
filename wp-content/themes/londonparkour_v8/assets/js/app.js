@@ -5,6 +5,7 @@ import { initAllFilterForms } from './elements/FilterForm.js';
 import { initBookingDrawer } from './elements/BookingDrawer.js';
 import { initCommercePurchase } from './elements/CommercePurchase.js';
 import { initAllSeriesShelves } from './elements/SeriesShelf.js';
+import { initNavDismiss } from './elements/NavDismiss.js';
 import { AppInitialiser } from './AppInitialiser.js';
 import { createDOMObserver } from './utils/createDOMObserver.js';
 import { initAll as initMotion } from './motion/index.js';
@@ -97,6 +98,14 @@ const MODULES = {
     critical: false,
     lazy: false,
     timeout: 3000
+  },
+
+  navDismiss: {
+    init: () => initNavDismiss(),
+    selector: '[data-component="site-nav"] [data-nav-panel]',
+    critical: false,
+    lazy: false,
+    timeout: 3000
   }
 };
 
@@ -134,7 +143,7 @@ export async function initApp(options = {}) {
  */
 const boot = () =>
   initApp({
-    modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'commercePurchase', 'siteNetworkMap', 'classDetailOsmMap', 'seriesShelves'],
+    modules: ['motion', 'videoDialogs', 'filterForms', 'bookingDrawer', 'commercePurchase', 'siteNetworkMap', 'classDetailOsmMap', 'seriesShelves', 'navDismiss'],
   });
 
 if (document.readyState === 'loading') {

@@ -69,3 +69,9 @@ h6 {
 .font-display {
   font-variation-settings: "wght" 60, "wdth" 500;
 }
+
+/* Decode hosts: JS later builds nowrap lines (buildDecodeNodes). Match that before
+   it runs so the raw-text H1 does not reflow (CLS) when the effect mounts. */
+[data-motion-decode]:not([data-motion-decode-wrap]) {
+  white-space: nowrap;
+}

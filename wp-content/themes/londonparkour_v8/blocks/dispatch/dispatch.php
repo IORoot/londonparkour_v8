@@ -52,20 +52,20 @@ $lp_is_success = 'sent' === $lp_status;
 
 $lp_heading_id  = wp_unique_id( 'dispatch-heading-' );
 $lp_honeypot_id = wp_unique_id( 'dispatch-hp-' );
-$lp_note_class  = 'font-label text-[12px] font-normal tracking-[0.4px] text-base-content/65 m-0';
+$lp_note_class  = 'font-label text-fix--2 font-normal tracking-[0.4px] text-base-content/65 m-0';
 
 $lp_spacing = lp_section_spacing( $args );
 ?>
 <section class="w-full bg-base-100 border-t border-base-300" data-component="dispatch"<?php echo lp_section_anchor( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper. ?>>
 	<div class="<?php echo lp_classes( 'px-6 lg:px-16 py-scale-xl flex flex-col gap-7 lg:gap-10', $lp_spacing ); ?>">
 		<div class="flex items-center justify-between gap-4">
-			<span class="font-label text-[12px] font-semibold tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
+			<span class="font-label text-fix--2 font-semibold tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
 			<span class="<?php echo lp_classes( 'hidden lg:block', $lp_note_class ); ?>"><?php echo esc_html( $lp_note ); ?></span>
 		</div>
 		<div class="flex flex-col lg:flex-row lg:items-start gap-7 lg:gap-[72px]">
 			<div class="flex flex-col gap-7 lg:gap-4 flex-1 min-w-0">
-				<h2 id="<?php echo esc_attr( $lp_heading_id ); ?>" class="font-heading text-[28px] font-semibold tracking-[-0.6px] text-base-content lg:text-[32px] lg:tracking-[-0.8px] m-0"><?php echo esc_html( $lp_headline ); ?></h2>
-				<p class="font-body text-[14px] leading-[1.55] lg:leading-[1.6] text-base-content/65 m-0"><?php echo esc_html( $lp_standfirst ); ?></p>
+				<h2 id="<?php echo esc_attr( $lp_heading_id ); ?>" class="font-heading text-fix-1 font-semibold tracking-[-0.6px] text-base-content lg:text-fix-2 lg:tracking-[-0.8px] m-0"><?php echo esc_html( $lp_headline ); ?></h2>
+				<p class="font-body text-fix--1 leading-[1.55] lg:leading-[1.6] text-base-content/65 m-0"><?php echo esc_html( $lp_standfirst ); ?></p>
 				<p class="<?php echo lp_classes( 'lg:hidden', $lp_note_class ); ?>"><?php echo esc_html( $lp_note ); ?></p>
 			</div>
 			<?php if ( $lp_is_success ) : ?>
@@ -75,9 +75,9 @@ $lp_spacing = lp_section_spacing( $args );
 				}
 				?>
 				<div class="flex flex-col gap-[14px] w-full lg:w-[480px]" role="status" aria-live="polite">
-					<span class="font-label text-[12px] font-semibold tracking-[0.9px] text-success"><?php echo esc_html( $lp_success_kicker ); ?></span>
-					<p class="font-heading text-[22px] font-semibold tracking-[-0.4px] text-base-content m-0"><?php echo esc_html( $lp_success_headline ); ?></p>
-					<p class="font-body text-[14px] leading-[1.55] text-base-content/65 m-0"><?php echo esc_html( $lp_success_body ); ?></p>
+					<span class="font-label text-fix--2 font-semibold tracking-[0.9px] text-success"><?php echo esc_html( $lp_success_kicker ); ?></span>
+					<p class="font-heading text-fix-0 font-semibold tracking-[-0.4px] text-base-content m-0"><?php echo esc_html( $lp_success_headline ); ?></p>
+					<p class="font-body text-fix--1 leading-[1.55] text-base-content/65 m-0"><?php echo esc_html( $lp_success_body ); ?></p>
 				</div>
 			<?php else : ?>
 				<form
@@ -119,8 +119,8 @@ $lp_spacing = lp_section_spacing( $args );
 					);
 					?>
 					<div class="flex flex-col gap-1.5 lg:flex-row lg:items-center lg:gap-2">
-						<p class="font-label text-[12px] font-normal tracking-[0.2px] text-base-content/65 m-0"><?php echo esc_html( $lp_consent ); ?></p>
-						<a href="<?php echo esc_url( $lp_privacy_href ); ?>" class="font-label text-[12px] font-semibold tracking-[0.9px] text-accent"><?php echo esc_html( $lp_privacy_label ); ?></a>
+						<p class="font-label text-fix--2 font-normal tracking-[0.2px] text-base-content/65 m-0"><?php echo esc_html( $lp_consent ); ?></p>
+						<a href="<?php echo esc_url( $lp_privacy_href ); ?>" class="font-label text-fix--2 font-semibold tracking-[0.9px] text-accent"><?php echo esc_html( $lp_privacy_label ); ?></a>
 					</div>
 				</form>
 			<?php endif; ?>

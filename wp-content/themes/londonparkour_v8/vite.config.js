@@ -27,7 +27,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'assets/css/main.css',
-        critical: 'assets/css/critical.css',
         app: 'assets/js/app.js',
       },
       output: {

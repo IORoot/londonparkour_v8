@@ -10,13 +10,8 @@
       "leaflet-CIGW-MKW.css"
     ]
   },
-  "assets/css/critical.css": {
-    "file": "critical-CO_v7I_n.css",
-    "src": "assets/css/critical.css",
-    "isEntry": true
-  },
   "assets/css/main.css": {
-    "file": "main-DeRYggWd.css",
+    "file": "main-BLOXtYQb.css",
     "src": "assets/css/main.css",
     "isEntry": true
   },
@@ -25,7 +20,7 @@
     "src": "assets/fonts/ScopeTrial-Variable.ttf"
   },
   "assets/js/app.js": {
-    "file": "app-CQw7mPt_.js",
+    "file": "app-DWjZL87P.js",
     "name": "app",
     "src": "assets/js/app.js",
     "isEntry": true,

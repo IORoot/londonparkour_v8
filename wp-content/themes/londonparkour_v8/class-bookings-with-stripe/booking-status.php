@@ -135,13 +135,13 @@ $lp_facts = $lp_compact
 				?>
 				<div class="<?php echo esc_attr( $lp_cell ); ?>">
 					<div class="flex flex-col gap-3">
-						<div class="flex items-center gap-2 font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">
+						<div class="flex items-center gap-2 font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50">
 							<?php if ( ! empty( $lp_fact['icon'] ) ) : ?>
 								<span class="shrink-0" aria-hidden="true"><?php lp_icon( $lp_fact['icon'], 'w-[12px] h-[12px]' ); ?></span>
 							<?php endif; ?>
 							<?php echo esc_html( $lp_fact['label'] ); ?>
 						</div>
-						<div class="font-heading text-[16px] font-medium text-neutral-content"><?php echo esc_html( $lp_fact['value'] ); ?></div>
+						<div class="font-heading text-fix--1 font-medium text-neutral-content"><?php echo esc_html( $lp_fact['value'] ); ?></div>
 					</div>
 				</div>
 			<?php endforeach; ?>
@@ -149,7 +149,7 @@ $lp_facts = $lp_compact
 	</div>
 <?php if ( $lp_pending ) : ?>
 	<div class="w-full bg-primary text-primary-content">
-		<p class="px-6 lg:px-16 py-4 font-label text-[11px] font-semibold uppercase tracking-[1px] m-0">Confirming your booking… Stripe is still settling. This page will update.</p>
+		<p class="px-6 lg:px-16 py-4 font-label text-fix--2 font-semibold uppercase tracking-[1px] m-0">Confirming your booking… Stripe is still settling. This page will update.</p>
 	</div>
 <?php endif; ?>
 
@@ -172,9 +172,9 @@ $lp_facts = $lp_compact
 		<?php if ( $lp_error ) : ?>
 		<div class="px-6 lg:px-16 py-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-6 items-start">
 			<article class="bg-neutral-content/5 border border-neutral-content/40 px-8 pt-8 pb-9 flex flex-col gap-4">
-				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-neutral-content/50"><?php echo esc_html( $lp_kicker ); ?></span>
-				<h2 class="font-display text-[32px] font-bold leading-[38px] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_headline ); ?></h2>
-				<p class="font-body text-[13px] font-normal leading-4 text-neutral-content/50 m-0"><?php echo esc_html( $lp_lede ); ?></p>
+				<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase leading-[1.5] text-neutral-content/50"><?php echo esc_html( $lp_kicker ); ?></span>
+				<h2 class="font-display text-fix-2 font-bold leading-[1.15] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_headline ); ?></h2>
+				<p class="font-body text-fix--2 font-normal leading-4 text-neutral-content/50 m-0"><?php echo esc_html( $lp_lede ); ?></p>
 				<dl class="m-0 border-t border-neutral-content/40">
 					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name, 'error' ); ?>
 					<?php lp_clasbpro_status_ticket_row( 'SESSION', $lp_when, 'error' ); ?>
@@ -196,18 +196,18 @@ $lp_facts = $lp_compact
 				</div>
 			</article>
 			<aside class="bg-secondary border border-neutral-content/40 p-6 flex flex-col gap-4">
-				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-neutral-content/50"><?php echo esc_html( $lp_aside_kick ); ?></span>
-				<h3 class="font-display text-[22px] font-bold leading-[26px] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_aside_title ); ?></h3>
-				<p class="font-body text-[12px] font-normal leading-[15px] text-neutral-content/50 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
-				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-[11px] font-semibold leading-[13px] text-primary">Write to hello@londonparkour.com ↗</a>
+				<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase leading-[1.5] text-neutral-content/50"><?php echo esc_html( $lp_aside_kick ); ?></span>
+				<h3 class="font-display text-fix-0 font-bold leading-[1.25] text-neutral-content m-0 [text-box:normal]"><?php echo esc_html( $lp_aside_title ); ?></h3>
+				<p class="font-body text-fix--2 font-normal leading-[1.55] text-neutral-content/50 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
+				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-fix--2 font-semibold leading-[1.5] text-primary">Write to hello@londonparkour.com ↗</a>
 			</aside>
 		</div>
 		<?php else : ?>
 		<div class="px-6 lg:px-16 py-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-6 items-start">
 			<article class="bg-neutral-content border border-base-300 px-8 pt-8 pb-9 flex flex-col gap-4">
-				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
-				<h2 class="font-display text-[32px] font-bold leading-[38px] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp_headline ); ?></h2>
-				<p class="font-body text-[13px] font-normal leading-4 text-base-content/65 m-0"><?php echo esc_html( $lp_lede ); ?></p>
+				<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase leading-[1.5] text-base-content/65"><?php echo esc_html( $lp_kicker ); ?></span>
+				<h2 class="font-display text-fix-2 font-bold leading-[1.15] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp_headline ); ?></h2>
+				<p class="font-body text-fix--2 font-normal leading-4 text-base-content/65 m-0"><?php echo esc_html( $lp_lede ); ?></p>
 				<dl class="m-0 border-t border-base-300">
 					<?php lp_clasbpro_status_ticket_row( 'CLASS', $lp_name, 'cancelled' ); ?>
 					<?php lp_clasbpro_status_ticket_row( 'SESSION', $lp_when, 'cancelled' ); ?>
@@ -229,10 +229,10 @@ $lp_facts = $lp_compact
 				</div>
 			</article>
 			<aside class="bg-base-200 border border-base-300 p-6 flex flex-col gap-4">
-				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-base-content/65"><?php echo esc_html( $lp_aside_kick ); ?></span>
-				<h3 class="font-display text-[22px] font-bold leading-[26px] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp_aside_title ); ?></h3>
-				<p class="font-body text-[12px] font-normal leading-[15px] text-base-content/65 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
-				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-[11px] font-semibold leading-[13px] text-accent">Write to hello@londonparkour.com ↗</a>
+				<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase leading-[1.5] text-base-content/65"><?php echo esc_html( $lp_aside_kick ); ?></span>
+				<h3 class="font-display text-fix-0 font-bold leading-[1.25] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp_aside_title ); ?></h3>
+				<p class="font-body text-fix--2 font-normal leading-[1.55] text-base-content/65 m-0"><?php echo esc_html( $lp_aside_body ); ?></p>
+				<a href="<?php echo esc_url( $lp['contact_mail'] ); ?>" class="font-label text-fix--2 font-semibold leading-[1.5] text-accent">Write to hello@londonparkour.com ↗</a>
 			</aside>
 		</div>
 		<?php endif; ?>
@@ -241,9 +241,9 @@ $lp_facts = $lp_compact
 	<div class="w-full bg-base-100" data-component="booking-status-ticket-place">
 		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 			<article class="bg-neutral-content border border-base-300 px-7 pt-7 pb-8 flex flex-col" data-mount="ticket">
-				<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase text-base-content/65"><?php echo esc_html( $lp['ticket_kicker'] ? $lp['ticket_kicker'] : 'YOUR BOOKING' ); ?></span>
-				<h2 class="font-display text-[32px] font-bold leading-none text-base-content mt-2 mb-0">Receipt</h2>
-				<p class="font-label text-[11px] font-normal leading-none tracking-[0.1px] text-base-content/65 mt-2 mb-4">Paid in full · confirmation emailed.</p>
+				<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase text-base-content/65"><?php echo esc_html( $lp['ticket_kicker'] ? $lp['ticket_kicker'] : 'YOUR BOOKING' ); ?></span>
+				<h2 class="font-display text-fix-2 font-bold leading-none text-base-content mt-2 mb-0">Receipt</h2>
+				<p class="font-label text-fix--2 font-normal leading-none tracking-[0.1px] text-base-content/65 mt-2 mb-4">Paid in full · confirmation emailed.</p>
 				<dl class="m-0">
 					<?php
 					if ( ! empty( $lp['ticket_rows'] ) ) {
@@ -258,60 +258,60 @@ $lp_facts = $lp_compact
 				<?php if ( 'coupon' === ( $lp['place_mode'] ?? '' ) ) : ?>
 				<div class="bg-base-200 p-[22px] flex flex-col gap-4">
 					<?php if ( $lp['pack_name'] ) : ?>
-						<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp['pack_name'] ); ?></span>
+						<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp['pack_name'] ); ?></span>
 					<?php endif; ?>
 					<div class="flex flex-col gap-[10px]">
-						<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">YOUR CODE</span>
-						<p class="font-body text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['code_help'] ); ?></p>
+						<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">YOUR CODE</span>
+						<p class="font-body text-fix--1 font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['code_help'] ); ?></p>
 					</div>
 					<div class="flex flex-col gap-[10px]">
-						<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">AUTO-APPLY</span>
-						<p class="font-body text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['auto_apply'] ); ?></p>
+						<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">AUTO-APPLY</span>
+						<p class="font-body text-fix--1 font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['auto_apply'] ); ?></p>
 					</div>
 					<?php if ( $lp['eligibility'] ) : ?>
-						<p class="font-body text-[13px] font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp['eligibility'] ); ?></p>
+						<p class="font-body text-fix--2 font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp['eligibility'] ); ?></p>
 					<?php endif; ?>
 					<div class="flex flex-wrap items-center justify-between gap-4 border-t border-base-300 pt-[14px]">
-						<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['sites_line'] ); ?></span>
-						<a href="<?php echo esc_url( $lp['timetable_href'] ); ?>" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent">CLASS TIMETABLE ↗</a>
+						<span class="font-label text-fix--2 font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['sites_line'] ); ?></span>
+						<a href="<?php echo esc_url( $lp['timetable_href'] ); ?>" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-accent">CLASS TIMETABLE ↗</a>
 					</div>
 				</div>
 				<aside class="bg-base-200 p-[22px] flex flex-col gap-2" data-component="booking-status-coupon-next">
-					<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-base-content/65">NEXT</span>
-					<h3 class="font-display text-[22px] font-bold leading-[26px] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp['next_title'] ); ?></h3>
-					<p class="font-body text-[12px] font-normal leading-[15px] text-base-content/65 m-0"><?php echo esc_html( $lp['next_body'] ); ?></p>
-					<a href="<?php echo esc_url( $lp['timetable_href'] ); ?>" class="font-label text-[11px] font-semibold leading-[13px] text-accent">CLASS TIMETABLE ↗</a>
+					<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase leading-[1.5] text-base-content/65">NEXT</span>
+					<h3 class="font-display text-fix-0 font-bold leading-[1.25] text-base-content m-0 [text-box:normal]"><?php echo esc_html( $lp['next_title'] ); ?></h3>
+					<p class="font-body text-fix--2 font-normal leading-[1.55] text-base-content/65 m-0"><?php echo esc_html( $lp['next_body'] ); ?></p>
+					<a href="<?php echo esc_url( $lp['timetable_href'] ); ?>" class="font-label text-fix--2 font-semibold leading-[1.5] text-accent">CLASS TIMETABLE ↗</a>
 				</aside>
 				<?php else : ?>
 				<div class="bg-base-200 p-[22px] flex flex-col gap-4">
 					<?php if ( $lp['site_kicker'] ) : ?>
 						<div class="flex items-center gap-2">
 							<?php lp_icon( 'icon-map-pin', 'w-3 h-3 text-base-content shrink-0' ); ?>
-							<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp['site_kicker'] ); ?></span>
+							<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65"><?php echo esc_html( $lp['site_kicker'] ); ?></span>
 						</div>
 					<?php endif; ?>
 					<div class="flex flex-col gap-[10px]">
-						<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
+						<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">MEETING POINT</span>
 						<?php if ( $lp['meeting_point'] ) : ?>
-							<p class="font-body text-[14px] font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['meeting_point'] ); ?></p>
+							<p class="font-body text-fix--1 font-normal leading-[1.7] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['meeting_point'] ); ?></p>
 						<?php endif; ?>
 					</div>
 					<?php if ( $lp['transport_rail'] || $lp['transport_bus'] || $lp['maps_href'] ) : ?>
 						<div class="flex flex-col gap-[10px]">
-							<span class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
+							<span class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-base-content/65">TRANSPORT</span>
 							<?php if ( $lp['transport_rail'] ) : ?>
-								<p class="font-body text-[13px] font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['transport_rail'] ); ?></p>
+								<p class="font-body text-fix--2 font-medium leading-[1.6] tracking-[0.1px] text-base-content m-0"><?php echo esc_html( $lp['transport_rail'] ); ?></p>
 							<?php endif; ?>
 							<?php if ( $lp['transport_bus'] ) : ?>
-								<p class="font-body text-[12px] font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp['transport_bus'] ); ?></p>
+								<p class="font-body text-fix--2 font-normal leading-[1.6] tracking-[0.1px] text-base-content/65 m-0"><?php echo esc_html( $lp['transport_bus'] ); ?></p>
 							<?php endif; ?>
 						</div>
 						<div class="flex flex-wrap items-center justify-between gap-4 border-t border-base-300 pt-[14px]">
 							<?php if ( $lp['foot'] ) : ?>
-								<span class="font-label text-[10px] font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['foot'] ); ?></span>
+								<span class="font-label text-fix--2 font-medium uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['foot'] ); ?></span>
 							<?php endif; ?>
 							<?php if ( $lp['maps_href'] ) : ?>
-								<a href="<?php echo esc_url( $lp['maps_href'] ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[10px] font-semibold uppercase tracking-[1px] text-accent">OPEN IN MAPS ↗</a>
+								<a href="<?php echo esc_url( $lp['maps_href'] ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-fix--2 font-semibold uppercase tracking-[1px] text-accent">OPEN IN MAPS ↗</a>
 							<?php endif; ?>
 						</div>
 					<?php endif; ?>
@@ -334,20 +334,20 @@ $lp_facts = $lp_compact
 				</div>
 				<?php if ( ! empty( $lp['show_coupon_used'] ) ) : ?>
 				<aside class="bg-accent p-[22px] flex flex-col gap-2" data-component="booking-status-coupon-used">
-					<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-accent-content">COUPON</span>
-					<h3 class="font-display text-[22px] font-bold leading-[26px] text-accent-content m-0 [text-box:normal]"><?php echo esc_html( $lp['coupon_code'] ); ?></h3>
+					<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase leading-[1.5] text-accent-content">COUPON</span>
+					<h3 class="font-display text-fix-0 font-bold leading-[1.25] text-accent-content m-0 [text-box:normal]"><?php echo esc_html( $lp['coupon_code'] ); ?></h3>
 					<?php if ( ! empty( $lp['coupon_uses_left_label'] ) ) : ?>
-						<p class="font-body text-[12px] font-normal leading-[15px] text-accent-content m-0"><?php echo esc_html( $lp['coupon_uses_left_label'] ); ?></p>
+						<p class="font-body text-fix--2 font-normal leading-[1.55] text-accent-content m-0"><?php echo esc_html( $lp['coupon_uses_left_label'] ); ?></p>
 					<?php endif; ?>
 				</aside>
 				<?php endif; ?>
 				<?php if ( ! empty( $lp['show_whatsapp'] ) ) : ?>
 				<aside class="bg-base-200 p-[22px] flex flex-row gap-5 items-center" data-component="booking-status-whatsapp">
 					<div class="flex flex-col gap-2 min-w-0 flex-1">
-						<span class="font-label text-[10px] font-normal tracking-[1.2px] uppercase leading-[12px] text-base-content/65">CLASS GROUP</span>
-						<h3 class="font-display text-[22px] font-bold leading-[26px] text-base-content m-0 [text-box:normal]">Join the WhatsApp.</h3>
-						<p class="font-body text-[12px] font-normal leading-[15px] text-base-content/65 m-0">Scan to join the class group. Coaches post the pin the morning of.</p>
-						<a href="<?php echo esc_url( $lp['whatsapp_href'] ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-[11px] font-semibold leading-[13px] text-accent">Open WhatsApp ↗</a>
+						<span class="font-label text-fix--2 font-normal tracking-[1.2px] uppercase leading-[1.5] text-base-content/65">CLASS GROUP</span>
+						<h3 class="font-display text-fix-0 font-bold leading-[1.25] text-base-content m-0 [text-box:normal]">Join the WhatsApp.</h3>
+						<p class="font-body text-fix--2 font-normal leading-[1.55] text-base-content/65 m-0">Scan to join the class group. Coaches post the pin the morning of.</p>
+						<a href="<?php echo esc_url( $lp['whatsapp_href'] ); ?>" target="_blank" rel="noopener noreferrer" class="font-label text-fix--2 font-semibold leading-[1.5] text-accent">Open WhatsApp ↗</a>
 					</div>
 					<div class="w-[132px] h-[132px] shrink-0 bg-base-100 p-2 relative">
 						<?php
@@ -372,7 +372,7 @@ $lp_facts = $lp_compact
 		<section class="w-full bg-accent" data-component="class-detail-your-coach">
 			<div class="px-6 lg:px-16 py-scale-2xl">
 				<div class="flex flex-col gap-[18px] border-t border-accent-content pt-[22px]">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-accent-content">YOUR COACH</span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-accent-content">YOUR COACH</span>
 					<?php
 					lp_part(
 						'components/byline',
@@ -396,7 +396,7 @@ $lp_facts = $lp_compact
 		<section class="w-full bg-accent" data-component="workshop-detail-coaches">
 			<div class="px-6 lg:px-16 py-scale-2xl">
 				<div class="flex flex-col gap-10 border-t border-accent-content pt-[22px]">
-					<span class="font-label text-[11px] font-semibold tracking-[1.1px] uppercase text-accent-content">THE COACHES</span>
+					<span class="font-label text-fix--2 font-semibold tracking-[1.1px] uppercase text-accent-content">THE COACHES</span>
 					<div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 						<?php foreach ( $lp['coaches'] as $lp_coach_row ) : ?>
 							<?php
@@ -423,9 +423,9 @@ $lp_facts = $lp_compact
 	<div class="w-full bg-base-100" data-component="booking-status-before-you-come">
 		<div class="px-6 lg:px-16 py-scale-2xl grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-x-16 gap-y-16 items-start">
 			<aside class="flex flex-col gap-4">
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['faq_kicker'] ? $lp['faq_kicker'] : 'COMMON QUESTIONS' ); ?></span>
-				<h2 class="font-display text-[36px] font-bold leading-none text-base-content m-0"><?php echo esc_html( $lp['faq_title'] ? $lp['faq_title'] : 'Before you come.' ); ?></h2>
-				<p class="font-body text-[12px] leading-[1.25] text-base-content/65 m-0"><?php echo esc_html( $lp['faq_lede'] ? $lp['faq_lede'] : 'Anything else, email hello@londonparkour.com or ask the coach on the meeting point.' ); ?></p>
+				<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['faq_kicker'] ? $lp['faq_kicker'] : 'COMMON QUESTIONS' ); ?></span>
+				<h2 class="font-display text-fix-2 font-bold leading-none text-base-content m-0"><?php echo esc_html( $lp['faq_title'] ? $lp['faq_title'] : 'Before you come.' ); ?></h2>
+				<p class="font-body text-fix--2 leading-[1.25] text-base-content/65 m-0"><?php echo esc_html( $lp['faq_lede'] ? $lp['faq_lede'] : 'Anything else, email hello@londonparkour.com or ask the coach on the meeting point.' ); ?></p>
 				<div class="flex flex-col gap-2 mt-2">
 					<div class="relative w-full aspect-[380/214] bg-neutral overflow-hidden">
 						<?php if ( $lp['image_id'] ) : ?>
@@ -456,7 +456,7 @@ $lp_facts = $lp_compact
 							</a>
 						<?php endif; ?>
 					</div>
-					<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['film_caption'] ? $lp['film_caption'] : strtoupper( $lp_name ) ); ?></span>
+					<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-base-content/65"><?php echo esc_html( $lp['film_caption'] ? $lp['film_caption'] : strtoupper( $lp_name ) ); ?></span>
 				</div>
 			</aside>
 			<div class="flex flex-col divide-y divide-base-300 border-t border-t-base-content border-b border-b-base-300">
@@ -499,12 +499,12 @@ $lp_facts = $lp_compact
 				<?php endif; ?>
 			</div>
 			<div class="flex flex-col gap-3 items-start">
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">PRIVATE 1:1</span>
-				<h2 class="font-display text-[36px] font-bold leading-none text-neutral-content m-0">Train one-to-one.</h2>
-				<p class="font-body text-[13px] leading-[1.25] text-neutral-content/50 m-0">Same coaches, your pace. First wall or a skill you want locked in — sixty minutes on the Southbank.</p>
+				<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50">PRIVATE 1:1</span>
+				<h2 class="font-display text-fix-2 font-bold leading-none text-neutral-content m-0">Train one-to-one.</h2>
+				<p class="font-body text-fix--2 leading-[1.25] text-neutral-content/50 m-0">Same coaches, your pace. First wall or a skill you want locked in — sixty minutes on the Southbank.</p>
 				<div class="flex items-end gap-5">
-					<span class="font-display font-bold text-[28px] leading-none text-neutral-content">£60</span>
-					<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50 pb-1">/ SESSION · 60 MIN</span>
+					<span class="font-display font-bold text-fix-1 leading-none text-neutral-content">£60</span>
+					<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50 pb-1">/ SESSION · 60 MIN</span>
 				</div>
 				<?php
 				lp_part(
@@ -524,9 +524,9 @@ $lp_facts = $lp_compact
 
 	<div class="bg-primary px-6 lg:px-16 py-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-20" data-component="gift-card-upsell">
 		<div class="flex flex-col gap-[22px] flex-1 items-start max-w-[912px]">
-			<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-primary-content/70">GIFT CARDS</span>
-			<h2 class="font-heading text-[32px] font-semibold leading-none text-primary-content m-0">Give the gift of movement.</h2>
-			<p class="font-body text-[13px] leading-[1.6] text-primary-content/75 m-0 max-w-[520px]">A LondonParkour gift card unlocks classes, private tuition and the full tutorial library — for anyone ready to move.</p>
+			<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-primary-content/70">GIFT CARDS</span>
+			<h2 class="font-heading text-fix-2 font-semibold leading-none text-primary-content m-0">Give the gift of movement.</h2>
+			<p class="font-body text-fix--2 leading-[1.6] text-primary-content/75 m-0 max-w-[520px]">A LondonParkour gift card unlocks classes, private tuition and the full tutorial library — for anyone ready to move.</p>
 			<?php
 			lp_part(
 				'elements/button',
@@ -541,33 +541,33 @@ $lp_facts = $lp_compact
 		</div>
 		<div class="w-[320px] shrink-0 bg-secondary flex flex-col">
 			<div class="flex items-center justify-between px-[18px] py-[14px]">
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-primary">LONDON PARKOUR</span>
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-neutral-content">VALID</span>
+				<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-primary">LONDON PARKOUR</span>
+				<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-neutral-content">VALID</span>
 			</div>
 			<div class="flex items-center gap-5 px-[18px] py-4">
 				<div class="flex flex-col gap-1 flex-1">
-					<span class="font-label text-[9px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FROM</span>
-					<span class="font-heading text-[15px] font-semibold text-neutral-content">ANY SITE</span>
+					<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FROM</span>
+					<span class="font-heading text-fix--1 font-semibold text-neutral-content">ANY SITE</span>
 				</div>
 				<?php lp_icon( 'icon-arrow-right', 'w-4 h-4 text-primary shrink-0' ); ?>
 				<div class="flex flex-col gap-1 flex-1">
-					<span class="font-label text-[9px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">TO</span>
-					<span class="font-heading text-[15px] font-semibold text-neutral-content">CLASSES</span>
+					<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-neutral-content/50">TO</span>
+					<span class="font-heading text-fix--1 font-semibold text-neutral-content">CLASSES</span>
 				</div>
 			</div>
 			<div class="flex items-end justify-between px-[18px] pt-[22px] pb-[18px]">
 				<div class="flex flex-col gap-1.5">
-					<span class="font-label text-[9px] font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FARE</span>
-					<span class="font-heading text-[42px] font-bold leading-none text-primary">£50</span>
+					<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-neutral-content/50">FARE</span>
+					<span class="font-heading text-fix-2 font-bold leading-none text-primary">£50</span>
 				</div>
 				<div class="flex flex-col items-end gap-1">
-					<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-neutral-content">GIFT CARD</span>
-					<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">NO EXPIRY</span>
+					<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-neutral-content">GIFT CARD</span>
+					<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50">NO EXPIRY</span>
 				</div>
 			</div>
 			<div class="flex items-center justify-between px-[18px] py-3 bg-neutral">
-				<span class="font-label text-[10px] font-semibold uppercase tracking-[0.9px] text-primary">DEP · GIFT</span>
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-neutral-content/50">REF LP-50-GFT</span>
+				<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-primary">DEP · GIFT</span>
+				<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-neutral-content/50">REF LP-50-GFT</span>
 			</div>
 		</div>
 	</div>

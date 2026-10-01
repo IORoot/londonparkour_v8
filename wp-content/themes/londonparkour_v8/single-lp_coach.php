@@ -174,7 +174,7 @@ while ( have_posts() ) :
 				<div class="flex-1 min-w-0 flex flex-col gap-[28px]">
 					<?php if ( '' !== trim( wp_strip_all_tags( $lp_body ) ) ) : ?>
 						<?php /* Div not <p>: post content may already contain block tags. */ ?>
-						<div class="m-0 font-label text-[15px] font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_body ); ?></div>
+						<div class="m-0 font-label text-fix--1 font-normal leading-[1.75] tracking-[0.1px] text-base-content/80 flex flex-col gap-[22px] [&_a]:text-accent [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5"><?php echo wp_kses_post( $lp_body ); ?></div>
 					<?php endif; ?>
 					<?php
 					lp_part(

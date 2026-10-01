@@ -378,7 +378,7 @@ function lp_docs_render_index( string $lp_current_title = '' ): void {
 		foreach ( $lp_groups as $lp_group ) :
 			?>
 			<div class="flex flex-col">
-				<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-base-content/65 pb-3"><?php echo esc_html( $lp_group['heading'] ); ?></span>
+				<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-base-content/65 pb-3"><?php echo esc_html( $lp_group['heading'] ); ?></span>
 				<div class="divide-y divide-base-300">
 					<?php foreach ( $lp_group['pages'] as $lp_page ) : ?>
 						<?php
@@ -403,14 +403,14 @@ function lp_docs_render_index( string $lp_current_title = '' ): void {
 	?>
 	<div class="w-full bg-base-200" data-component="docs-index" id="docs-index">
 		<details class="group/docs lg:hidden" data-component="docs-index-picker">
-			<summary class="list-none cursor-pointer px-6 py-4 [&::-webkit-details-marker]:hidden" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: current wiki page title */ __( 'Docs index: %s', 'londonparkour_v8' ), $lp_current_page['title'] ) ); ?>">
+			<summary class="list-none cursor-pointer px-6 py-4 [&::-webkit-details-marker]:hidden">
 				<span class="flex flex-col gap-2">
 					<span class="flex items-end justify-between gap-4">
-						<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-base-content">DOCS INDEX</span>
-						<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_label ); ?></span>
+						<span class="font-label text-fix--2 font-bold tracking-[1.2px] uppercase text-base-content">DOCS INDEX</span>
+						<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_label ); ?></span>
 					</span>
 					<span class="flex items-center justify-between gap-3">
-						<span class="font-heading text-[16px] font-medium tracking-[-0.2px] text-base-content min-w-0"><?php echo esc_html( $lp_current_page['title'] ); ?></span>
+						<span class="font-heading text-fix--1 font-medium tracking-[-0.2px] text-base-content min-w-0"><?php echo esc_html( $lp_current_page['title'] ); ?></span>
 						<span class="shrink-0" aria-hidden="true"><?php lp_icon( 'icon-chevron-down', 'w-5 h-5 shrink-0 text-accent transition-transform duration-200 group-open/docs:rotate-180' ); ?></span>
 					</span>
 				</span>
@@ -421,8 +421,8 @@ function lp_docs_render_index( string $lp_current_title = '' ): void {
 		</details>
 		<div class="hidden lg:flex px-6 lg:px-16 py-scale-2xl flex-col gap-[28px]">
 			<div class="flex items-end justify-between gap-4">
-				<span class="font-label text-[11px] font-bold tracking-[1.2px] uppercase text-base-content">DOCS INDEX</span>
-				<span class="font-label text-[10px] font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_label ); ?></span>
+				<span class="font-label text-fix--2 font-bold tracking-[1.2px] uppercase text-base-content">DOCS INDEX</span>
+				<span class="font-label text-fix--2 font-normal uppercase tracking-[0.8px] text-base-content/65"><?php echo esc_html( $lp_label ); ?></span>
 			</div>
 			<div class="h-px w-full bg-base-content" aria-hidden="true"></div>
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-x-16 gap-y-10">
@@ -526,7 +526,7 @@ function lp_docs_render_markdown_body( ?WP_Post $lp_post ): void {
 	}
 
 	$lp_parsed = lp_blog_parse_markdown( (string) $lp_post->post_content );
-	$lp_h      = 'font-heading text-[27px] font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]';
+	$lp_h      = 'font-heading text-fix-1 font-semibold tracking-[-0.5px] text-base-content scroll-mt-[24px]';
 
 	lp_blog_render_blocks(
 		(array) ( $lp_parsed['intro'] ?? array() ),

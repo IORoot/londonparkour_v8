@@ -21,6 +21,7 @@
  * @param string $args['surface']      page|board|accent. Default 'page'.
  * @param bool   $args['default_open'] Renders the <details> open.
  * @param bool   $args['collapsible']  When false, static Q then A — no accordion.
+ * @param int    $args['level']        Non-collapsible only: question heading level 2|3|4 (default: div).
  *
  * @package londonparkour_v8
  */
@@ -46,15 +47,16 @@ $lp_surfaces = array(
 	),
 );
 
+$lp_static_tag = array( 2 => 'h2', 3 => 'h3', 4 => 'h4' )[ (int) ( $args['level'] ?? 0 ) ] ?? 'div';
 $lp_surface  = (string) ( $args['surface'] ?? 'page' );
 $lp_tone     = $lp_surfaces[ $lp_surface ] ?? $lp_surfaces['page'];
 $lp_index    = (string) ( $args['index'] ?? '01' );
 $lp_question = (string) ( $args['question'] ?? 'Do I need any experience?' );
 $lp_answer   = (string) ( $args['answer'] ?? 'No. This is an outdoor parkour class built for adults of all abilities.' );
-$lp_title        = lp_classes( 'flex items-center gap-[18px] px-0 py-[10px] font-heading text-[20px] font-medium tracking-[-0.3px]', $lp_tone['question'] );
-$lp_title_static = lp_classes( 'flex items-center gap-[18px] px-0 font-heading text-[20px] font-medium tracking-[-0.3px] leading-[22px]', $lp_tone['question'] );
-$lp_index_c      = lp_classes( 'font-label text-[10px] font-normal tracking-[0.9px] shrink-0', $lp_tone['index'] );
-$lp_answer_c     = lp_classes( 'font-body text-[13px] font-normal tracking-[0.1px] leading-[1.7]', $lp_tone['answer'] );
+$lp_title        = lp_classes( 'flex items-center gap-[18px] px-0 py-[10px] font-heading text-fix-0 font-medium tracking-[-0.3px]', $lp_tone['question'] );
+$lp_title_static = lp_classes( 'flex items-center gap-[18px] px-0 font-heading text-fix-0 font-medium tracking-[-0.3px] leading-[1.4]', $lp_tone['question'] );
+$lp_index_c      = lp_classes( 'font-label text-fix--2 font-normal tracking-[0.9px] shrink-0', $lp_tone['index'] );
+$lp_answer_c     = lp_classes( 'font-body text-fix--1 font-normal tracking-[0.1px] leading-[1.7]', $lp_tone['answer'] );
 
 $lp_answer_paras = array_values(
 	array_filter(
@@ -74,10 +76,10 @@ $lp_render_answer = static function () use ( $lp_answer_paras, $lp_answer_c ) {
 if ( isset( $args['collapsible'] ) && false === $args['collapsible'] ) :
 	?>
 <div class="flex flex-col gap-4 py-[26px]" data-component="faq-item" data-collapsible="false" data-surface="<?php echo esc_attr( $lp_surface ); ?>">
-	<div class="<?php echo $lp_title_static; ?>">
+	<<?php echo $lp_static_tag; ?> class="<?php echo $lp_title_static; ?> m-0">
 		<span class="<?php echo $lp_index_c; ?>"><?php echo esc_html( $lp_index ); ?></span>
 		<span class="min-w-0"><?php echo esc_html( $lp_question ); ?></span>
-	</div>
+	</<?php echo $lp_static_tag; ?>>
 	<div class="pl-7 pr-[60px] flex flex-col gap-3">
 		<?php $lp_render_answer(); ?>
 	</div>

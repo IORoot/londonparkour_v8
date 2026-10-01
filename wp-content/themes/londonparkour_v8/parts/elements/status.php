@@ -20,10 +20,9 @@
  * `neutral` are the same value in both light themes, so the `live` variant's
  * muted label is invisible on a `bg-neutral` band there while looking correct
  * in the dark themes. Pass `surface = 'board'` on the dark band. The
- * signal/spaces variants are `text-primary`, which is ground-independent, so
- * they are identical in the page/board maps below — kept spelled out rather
- * than merged because Tailwind v4 scans source text and these must stay
- * complete literals.
+ * signal/spaces (and the dot) follow the matrix's signal role: `text-accent` /
+ * `status-accent` on `page` (`text-primary` there is 1.54:1 / 1.27:1 in the
+ * light themes), `text-primary` / `status-primary` on `board`.
  *
  * `fill` and `accent` (Phase 7, docs/phase7/surface-axis.md) were added for
  * Docs "Passenger Enquiries", which sits on a `bg-primary` band — the dot
@@ -51,24 +50,24 @@ defined( 'ABSPATH' ) || exit;
 // Full literal strings per surface x variant — Tailwind v4 scans source text.
 $lp_surfaces = array(
 	'page'   => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-base-content/65',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-primary',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-primary',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-base-content/65',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-accent',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-accent',
 	),
 	'board'  => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-neutral-content/50',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-primary',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-primary',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-neutral-content/50',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-primary',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-primary',
 	),
 	'fill'   => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-primary-content/70',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-primary-content',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-primary-content',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-primary-content/70',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-primary-content',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-primary-content',
 	),
 	'accent' => array(
-		'live'   => 'text-[10px] font-normal tracking-[0.9px] text-accent-content/70',
-		'signal' => 'text-[10px] font-semibold tracking-[1.1px] text-accent-content',
-		'spaces' => 'text-[10px] font-semibold tracking-[0.8px] text-accent-content',
+		'live'   => 'text-fix--2 font-normal tracking-[0.9px] text-accent-content/70',
+		'signal' => 'text-fix--2 font-semibold tracking-[1.1px] text-accent-content',
+		'spaces' => 'text-fix--2 font-semibold tracking-[0.8px] text-accent-content',
 	),
 );
 
@@ -77,7 +76,7 @@ $lp_surfaces = array(
 // matching `-content` modifier, so the dot is coloured with the plain
 // Tailwind utility instead (see docblock above).
 $lp_dots = array(
-	'page'   => 'status status-sm status-primary',
+	'page'   => 'status status-sm status-accent',
 	'board'  => 'status status-sm status-primary',
 	'fill'   => 'status status-sm bg-primary-content',
 	'accent' => 'status status-sm bg-accent-content',

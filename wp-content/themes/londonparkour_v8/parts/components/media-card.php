@@ -25,6 +25,7 @@
  * @param string $args['note']      Optional.
  * @param string $args['foot']
  * @param string $args['href']      Renders the card as one focusable <a>.
+ * @param string $args['heading_level'] 'h3' (default) or 'h2' when the card sits directly under the page <h1>.
  * @param string $args['banner']    Optional label over the image (e.g. CANCELLED).
  *
  * @package londonparkour_v8
@@ -39,7 +40,7 @@ $lp_aspects = array(
 );
 
 $lp_root_base        = 'rounded-none bg-transparent overflow-hidden no-underline text-left';
-$lp_root_interactive = 'group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+$lp_root_interactive = 'group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content';
 
 $lp_aspect_key = (string) ( $args['aspect'] ?? 'wide' );
 $lp_aspect     = $lp_aspects[ $lp_aspect_key ] ?? $lp_aspects['wide'];
@@ -55,9 +56,10 @@ $lp_title     = (string) ( $args['title'] ?? 'Outdoor Class' );
 $lp_note      = (string) ( $args['note'] ?? '' );
 $lp_foot      = (string) ( $args['foot'] ?? '£15 · 90 min' );
 $lp_banner    = (string) ( $args['banner'] ?? '' );
+$lp_h           = 'h2' === ( $args['heading_level'] ?? 'h3' ) ? 'h2' : 'h3';
 $lp_title_class = '' !== $lp_banner
-	? 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content line-through'
-	: 'card-title font-heading text-[22px] font-medium tracking-[-0.4px] leading-none text-base-content';
+	? 'card-title font-heading text-fix-0 font-medium tracking-[-0.4px] leading-none text-base-content line-through'
+	: 'card-title font-heading text-fix-0 font-medium tracking-[-0.4px] leading-none text-base-content';
 
 $lp_root = lp_classes( 'card', $lp_root_base, $lp_is_link ? $lp_root_interactive : '' );
 
@@ -124,13 +126,15 @@ if ( array_key_exists( 'image_alt', $args ) ) {
 				?>
 			</span>
 		</div>
-		<h3 class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></h3>
+		<<?php echo $lp_h; ?> class="<?php echo esc_attr( $lp_title_class ); ?>"><?php echo esc_html( $lp_title ); ?></<?php echo $lp_h; ?>>
 		<?php if ( '' !== $lp_note ) : ?>
-			<p class="font-body text-[12px] font-normal tracking-[0.1px] leading-normal text-base-content/70"><?php echo esc_html( $lp_note ); ?></p>
+			<p class="font-body text-fix--2 font-normal tracking-[0.1px] leading-normal text-base-content/65"><?php echo esc_html( $lp_note ); ?></p>
 		<?php endif; ?>
 		<div class="flex items-center justify-between gap-3 pt-[15px]">
-			<span class="font-label text-[11px] font-semibold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_foot ); ?></span>
-			<?php lp_part( 'elements/chevron', array( 'variant' => $lp_is_link ? 'media_card' : 'media_card_static' ) ); ?>
+			<span class="font-label text-fix--2 font-semibold uppercase tracking-[0.9px] text-base-content"><?php echo esc_html( $lp_foot ); ?></span>
+			<?php if ( $lp_is_link ) : ?>
+				<?php lp_part( 'elements/chevron', array( 'variant' => 'media_card' ) ); ?>
+			<?php endif; ?>
 		</div>
 	</div>
 <?php echo $lp_is_link ? '</a>' : '</div>'; ?>

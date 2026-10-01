@@ -417,19 +417,19 @@ function lp_blog_image_block_from_markdown( string $lp_text ): ?array {
  */
 function lp_blog_markdown_class( string $lp_key ): string {
 	$lp_map = array(
-		'p'           => 'font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content',
-		'p_lead'      => 'font-body text-[16px] leading-[1.75] tracking-[0.1px] text-base-content',
-		'heading_3'   => 'font-heading text-[18px] font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
-		'heading_4'   => 'font-heading text-[16px] font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
-		'heading_5'   => 'font-heading text-[16px] font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
+		'p'           => 'font-body text-fix--1 leading-[1.75] tracking-[0.1px] text-base-content',
+		'p_lead'      => 'font-body text-fix--1 leading-[1.75] tracking-[0.1px] text-base-content',
+		'heading_3'   => 'font-heading text-fix-0 font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
+		'heading_4'   => 'font-heading text-fix--1 font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
+		'heading_5'   => 'font-heading text-fix--1 font-semibold tracking-[-0.3px] text-base-content scroll-mt-[24px]',
 		'quote'       => 'border-l-2 border-accent pl-[24px] flex flex-col gap-[12px]',
-		'quote_title' => 'font-label text-[10px] font-semibold uppercase tracking-[1.1px] text-accent m-0',
-		'quote_p'     => 'font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content m-0',
-		'ul'          => 'list-disc pl-5 m-0 flex flex-col gap-[12px] font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content',
-		'ol'          => 'list-decimal pl-5 m-0 flex flex-col gap-[12px] font-body text-[14px] leading-[1.75] tracking-[0.1px] text-base-content',
-		'embed'       => 'relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full m-0',
-		'caption'     => 'font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65',
-		'figure'      => 'm-0 flex flex-col gap-[12px]',
+		'quote_title' => 'font-label text-fix--2 font-semibold uppercase tracking-[1.1px] text-accent m-0',
+		'quote_p'     => 'font-body text-fix--1 leading-[1.75] tracking-[0.1px] text-base-content m-0',
+		'ul'          => 'list-disc pl-5 font-body text-fix--1 leading-[1.75] tracking-[0.1px] text-base-content',
+		'ol'          => 'list-decimal pl-5 font-body text-fix--1 leading-[1.75] tracking-[0.1px] text-base-content',
+		'embed'       => 'relative w-full overflow-hidden bg-secondary aspect-video [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:size-full',
+		'caption'     => 'font-label text-fix--2 font-normal tracking-[0.8px] text-base-content/65',
+		'figure'      => 'flex flex-col gap-[12px]',
 		'img'         => 'w-full h-auto',
 		'hr'          => 'w-full h-px bg-base-300 border-0',
 	);
@@ -633,7 +633,7 @@ function lp_blog_inline_markdown( string $lp_text ): string {
 		'/\[([^\]]+)\]\(([^)]+)\)/',
 		static function ( array $lp_m ): string {
 			$lp_href = html_entity_decode( $lp_m[2], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
-			return '<a class="text-accent hover:text-accent/70" href="' . esc_url( $lp_href ) . '">' . $lp_m[1] . '</a>';
+			return '<a class="text-accent underline hover:text-accent/70" href="' . esc_url( $lp_href ) . '">' . $lp_m[1] . '</a>';
 		},
 		$lp_text
 	);

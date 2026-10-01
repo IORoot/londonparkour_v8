@@ -32,6 +32,11 @@ $lp_marker_tones = array(
 	'flagship' => 'text-primary',
 );
 
+$lp_ring_tones = array(
+	'default'  => 'border-neutral-content',
+	'flagship' => 'border-primary',
+);
+
 $lp_root_base        = 'inline-flex items-center gap-[10px] bg-neutral/88 py-[7px] px-[11px]';
 $lp_root_compact     = 'inline-flex items-center justify-center bg-neutral/88 p-[7px]';
 $lp_root_interactive = 'no-underline cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
@@ -43,25 +48,28 @@ $lp_href    = (string) ( $args['href'] ?? '' );
 $lp_label   = ! array_key_exists( 'label', $args ) || ! empty( $args['label'] );
 $lp_is_link = '' !== $lp_href;
 
+// No visible label and no name would leave an unnamed control; fall back to sub.
+$lp_acc_name    = ! $lp_label ? ( '' !== $lp_name ? $lp_name : $lp_sub ) : '';
+$lp_ring_tone   = empty( $args['flagship'] ) ? $lp_ring_tones['default'] : $lp_ring_tones['flagship'];
 $lp_marker_tone = empty( $args['flagship'] ) ? $lp_marker_tones['default'] : $lp_marker_tones['flagship'];
 $lp_root_shape  = $lp_label ? $lp_root_base : $lp_root_compact;
 $lp_root        = $lp_is_link ? $lp_root_shape . ' ' . $lp_root_interactive : $lp_root_shape;
 ?>
 <?php if ( $lp_is_link ) : ?>
-<a class="<?php echo esc_attr( $lp_root ); ?>" data-component="map-pin" href="<?php echo esc_url( $lp_href ); ?>"<?php echo ! $lp_label && '' !== $lp_name ? ' aria-label="' . esc_attr( $lp_name ) . '"' : ''; ?>>
+<a class="<?php echo esc_attr( $lp_root ); ?>" data-component="map-pin" href="<?php echo esc_url( $lp_href ); ?>"<?php echo '' !== $lp_acc_name ? ' aria-label="' . esc_attr( $lp_acc_name ) . '"' : ''; ?>>
 <?php else : ?>
-<span class="<?php echo esc_attr( $lp_root ); ?>" data-component="map-pin"<?php echo ! $lp_label && '' !== $lp_name ? ' aria-label="' . esc_attr( $lp_name ) . '"' : ''; ?>>
+<span class="<?php echo esc_attr( $lp_root ); ?>" data-component="map-pin"<?php echo '' !== $lp_acc_name ? ' aria-label="' . esc_attr( $lp_acc_name ) . '"' : ''; ?>>
 <?php endif; ?>
 	<?php if ( 'icon' === $lp_variant ) : ?>
-		<?php lp_icon( (string) ( $args['icon_id'] ?? 'icon-map-pin' ), lp_classes( 'w-3 h-3 shrink-0', $lp_marker_tone ) ); ?>
+		<span class="inline-flex shrink-0" aria-hidden="true"><?php lp_icon( (string) ( $args['icon_id'] ?? 'icon-map-pin' ), lp_classes( 'w-3 h-3 shrink-0', $lp_marker_tone ) ); ?></span>
 	<?php else : ?>
-		<span class="w-3 h-3 shrink-0 rounded-full border-[2.7px] border-neutral-content" aria-hidden="true"></span>
+		<span class="<?php echo lp_classes( 'w-3 h-3 shrink-0 rounded-full border-[3px]', $lp_ring_tone ); ?>" aria-hidden="true"></span>
 	<?php endif; ?>
 	<?php if ( $lp_label ) : ?>
 		<span class="flex flex-col gap-[3px]">
-			<span class="font-label text-[11px] font-semibold tracking-[0.9px] text-neutral-content"><?php echo esc_html( $lp_name ); ?></span>
+			<span class="font-label text-fix--2 font-semibold tracking-[0.9px] text-neutral-content"><?php echo esc_html( $lp_name ); ?></span>
 			<?php if ( '' !== $lp_sub ) : ?>
-				<span class="font-label text-[9px] font-normal uppercase tracking-[0.7px] text-neutral-content/50"><?php echo esc_html( $lp_sub ); ?></span>
+				<span class="font-label text-fix--2 font-normal uppercase tracking-[0.7px] text-neutral-content/60"><?php echo esc_html( $lp_sub ); ?></span>
 			<?php endif; ?>
 		</span>
 	<?php endif; ?>

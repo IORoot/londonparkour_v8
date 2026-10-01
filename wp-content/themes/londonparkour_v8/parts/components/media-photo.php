@@ -72,7 +72,7 @@ $lp_scrims = array(
 	'hero'               => 'absolute inset-0 bg-neutral/50',
 	'video_full'         => 'absolute inset-0 bg-neutral/65',
 	'video_stage'        => 'absolute inset-0 bg-secondary/45',
-	'locations_flagship' => 'absolute inset-0 bg-neutral/35',
+	'locations_flagship' => 'absolute inset-0 bg-neutral/60',
 );
 
 $lp_layouts = array(
@@ -95,6 +95,7 @@ $lp_scrim_key = (string) ( $args['scrim'] ?? 'none' );
 $lp_scrim     = $lp_scrims[ $lp_scrim_key ] ?? '';
 $lp_layout    = $lp_layouts[ $args['layout'] ?? 'fill' ] ?? $lp_layouts['fill'];
 $lp_size      = (string) ( $args['size'] ?? 'lp_wide' );
+$lp_size      = $lp_image_id ? lp_fit_image_size( $lp_image_id, $lp_size ) : $lp_size;
 $lp_sizes     = (string) ( $args['sizes'] ?? '100vw' );
 $lp_alt       = (string) ( $args['alt'] ?? '' );
 $lp_caption   = (string) ( $args['caption'] ?? '' );
@@ -209,7 +210,7 @@ $lp_wrapper_class = (string) ( $args['wrapper_class'] ?? '' );
 			<?php $lp_img(); ?>
 		<?php endif; ?>
 		<?php if ( '' !== $lp_caption ) : ?>
-			<figcaption class="font-label text-[10px] font-normal tracking-[0.8px] text-base-content/65"><?php echo wp_kses_post( $lp_caption ); ?></figcaption>
+			<figcaption class="font-label text-fix--2 font-normal tracking-[0.8px] text-base-content/65"><?php echo wp_kses_post( $lp_caption ); ?></figcaption>
 		<?php endif; ?>
 	</figure>
 <?php elseif ( 'picture' === $lp_element ) : ?>

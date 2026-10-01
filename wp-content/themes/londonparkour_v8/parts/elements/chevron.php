@@ -57,7 +57,7 @@ $lp_variants = array(
 		'icon'    => 'w-3.5 h-3.5',
 	),
 	'media_card'        => array(
-		'wrapper' => 'text-base-content group-hover:text-accent transition-colors duration-150',
+		'wrapper' => 'text-base-content group-hover:text-accent group-focus-visible:text-accent transition-colors duration-150 motion-reduce:transition-none',
 		'icon'    => 'w-3.5 h-3.5',
 	),
 	// MediaCard drops the hover half when the card is not a link — the source
@@ -68,7 +68,7 @@ $lp_variants = array(
 		'icon'    => 'w-3.5 h-3.5',
 	),
 	'search_result_row' => array(
-		'wrapper' => 'shrink-0 text-base-content/65 group-hover:text-accent transition-colors duration-150',
+		'wrapper' => 'shrink-0 text-base-content/65 group-hover:text-accent group-focus-visible:text-accent transition-colors duration-150',
 		'icon'    => 'w-[13px] h-[13px]',
 	),
 	'accent_band'       => array(

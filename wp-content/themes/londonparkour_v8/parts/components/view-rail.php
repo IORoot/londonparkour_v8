@@ -1,6 +1,6 @@
 <?php
 /**
- * ViewRail — the tablist that switches page view modes.
+ * ViewRail — the rail that switches page view modes.
  *
  * Ported from src/stories/Components/ViewRail/ViewRail.js.
  *
@@ -12,12 +12,10 @@
  * The source binds click handlers here; server-side there is nothing to bind,
  * so each tab carries its data-tab-index and the page's own JS owns selection.
  *
- * When the tabs carry `href` they render as links and the inner div drops
- * role="tablist" — a set of links to three separate pages is navigation, not a
- * tablist, and claiming otherwise promises arrow-key behaviour that does not
- * exist. That is what the Classes view rail is: the source exposes cross-page
- * navigation as an `onTabSelect` callback precisely because it has no opinion
- * on routing, and on WordPress the answer is a URL.
+ * Link tabs (`href`) sit in a <nav> with aria-current="page" on the active one;
+ * in-place tabs are aria-pressed buttons in a role="group". No tabs-widget
+ * contract is implemented, so no tab roles. That is what the Classes view rail
+ * is: cross-page navigation, and on WordPress the answer is a URL.
  *
  * @param string $args['context']    concourse|classes|… Default 'classes'.
  * @param array  $args['tabs']       Ordered tabs: label, meta, icon_id, active, href.
@@ -34,12 +32,18 @@ $lp_tabs       = is_array( $args['tabs'] ?? null ) ? array_values( $args['tabs']
 $lp_stamp      = (string) ( $args['stamp'] ?? '' );
 $lp_aria_label = (string) ( $args['aria_label'] ?? 'View' );
 
+// Whole literals keyed on tab count so no grid cell is left empty at lg.
+$lp_lg_cols = array(
+	2 => 'lg:grid-cols-2',
+	3 => 'lg:grid-cols-3',
+);
+
 // Links are navigation, not a tablist — see the docblock.
 $lp_is_links = (bool) array_filter( $lp_tabs, static fn( $lp_t ) => ! empty( $lp_t['href'] ) );
 ?>
 <?php if ( 'concourse' === $lp_context ) : ?>
-	<nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex flex-wrap items-center justify-between gap-4 bg-base-100 border-b border-base-300 px-6" data-component="view-rail" data-context="concourse">
-		<div role="tablist" aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center gap-[34px]">
+	<div class="flex flex-wrap items-center justify-between gap-4 bg-base-100 border-b border-base-300 px-6" data-component="view-rail" data-context="concourse">
+		<div role="group" aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="flex items-center gap-[34px]">
 			<?php foreach ( $lp_tabs as $lp_tab ) : ?>
 				<span>
 					<?php
@@ -55,14 +59,19 @@ $lp_is_links = (bool) array_filter( $lp_tabs, static fn( $lp_t ) => ! empty( $lp
 			<?php endforeach; ?>
 		</div>
 		<?php if ( '' !== $lp_stamp ) : ?>
-			<span class="font-label text-[10px] font-normal uppercase tracking-[0.9px] text-base-content/65 whitespace-nowrap"><?php echo esc_html( $lp_stamp ); ?></span>
+			<span class="font-label text-fix--2 font-normal uppercase tracking-[0.9px] text-base-content/65 whitespace-nowrap"><?php echo esc_html( $lp_stamp ); ?></span>
 		<?php endif; ?>
-	</nav>
+	</div>
 <?php else : ?>
-	<nav aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="bg-neutral" data-component="view-rail" data-context="<?php echo esc_attr( $lp_context ); ?>">
-		<div <?php echo $lp_is_links ? '' : 'role="tablist" aria-label="' . esc_attr( $lp_aria_label ) . '" '; ?>class="grid grid-cols-2 lg:grid-cols-4 px-6 lg:px-16">
+	<<?php echo $lp_is_links ? 'nav' : 'div role="group"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- literal. ?> aria-label="<?php echo esc_attr( $lp_aria_label ); ?>" class="bg-neutral" data-component="view-rail" data-context="<?php echo esc_attr( $lp_context ); ?>">
+		<div class="<?php echo lp_classes( 'grid grid-cols-2', $lp_lg_cols[ count( $lp_tabs ) ] ?? 'lg:grid-cols-4', 'px-6 lg:px-16' ); ?>">
 			<?php foreach ( $lp_tabs as $lp_i => $lp_tab ) : ?>
 				<?php
+				// Odd tab count: the last cell spans the row on mobile so no empty cell shows.
+				$lp_orphan = 1 === count( $lp_tabs ) % 2 && count( $lp_tabs ) - 1 === $lp_i;
+				if ( $lp_orphan ) {
+					echo '<div class="col-span-2 lg:col-span-1 grid">';
+				}
 				lp_part(
 					'elements/view-tab',
 					array(
@@ -75,8 +84,11 @@ $lp_is_links = (bool) array_filter( $lp_tabs, static fn( $lp_t ) => ! empty( $lp
 						'index'   => $lp_i,
 					)
 				);
+				if ( $lp_orphan ) {
+					echo '</div>';
+				}
 				?>
 			<?php endforeach; ?>
 		</div>
-	</nav>
+	</<?php echo $lp_is_links ? 'nav' : 'div'; ?>>
 <?php endif; ?>

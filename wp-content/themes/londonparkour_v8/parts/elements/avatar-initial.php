@@ -38,16 +38,16 @@ $lp_surfaces = array(
 $lp_sizes = array(
 	'md' => array(
 		'box'  => 'w-[34px] h-[34px]',
-		'text' => 'text-[14px]',
+		'text' => 'text-fix--1',
 	),
 	'sm' => array(
 		'box'  => 'w-[26px] h-[26px]',
-		'text' => 'text-[11px]',
+		'text' => 'text-fix--2',
 	),
 	// "Your Coach" (Classes/Class Detail) — a 104×126 portrait, not a square.
 	'lg' => array(
 		'box'  => 'w-[104px] h-[126px]',
-		'text' => 'text-[36px]',
+		'text' => 'text-fix-2',
 	),
 );
 

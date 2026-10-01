@@ -192,12 +192,11 @@ $lp_body = $lp_under_nav
 // Coords are absolute against the hero shell, so under-nav they need the bar
 // height added to the original top-6 / lg:top-10 offsets (24+60 / 40+76).
 $lp_coords_class = $lp_under_nav
-	? 'absolute top-[84px] right-6 lg:top-[116px] lg:right-16 font-label text-step--2 font-normal tracking-[0.6px] uppercase text-neutral-content/50 m-0 hover:text-primary transition-colors duration-150'
-	: 'absolute top-6 right-6 lg:top-10 lg:right-16 font-label text-step--2 font-normal tracking-[0.6px] uppercase text-neutral-content/50 m-0 hover:text-primary transition-colors duration-150';
+	? 'absolute top-[84px] right-6 lg:top-[116px] lg:right-16 font-label text-step--2 font-normal tracking-[0.6px] uppercase text-neutral-content/70 m-0 transition-colors duration-150'
+	: 'absolute top-6 right-6 lg:top-10 lg:right-16 font-label text-step--2 font-normal tracking-[0.6px] uppercase text-neutral-content/70 m-0 transition-colors duration-150';
 
 $lp_headline_html = nl2br( esc_html( $lp_headline ), false );
 $lp_headline_decode = esc_attr( str_replace( array( "\r\n", "\n", "\r" ), '\\n', $lp_headline ) );
-$lp_headline_label  = trim( preg_replace( '/\s+/u', ' ', $lp_headline ) );
 
 $lp_initial_coords = $lp_coordinates;
 $lp_initial_link   = $lp_coordinates_link;
@@ -280,9 +279,8 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 					'fetchpriority' => 0 === $lp_si ? 'high' : 'auto',
 					'attrs'         => $lp_kb_attrs,
 				);
-				if ( 0 === $lp_si && array_key_exists( 'media_alt', $args ) ) {
-					$lp_photo['alt'] = (string) $args['media_alt'];
-				}
+				// Decorative: the stack is aria-hidden.
+				$lp_photo['alt'] = '';
 				lp_part( 'components/media-photo', $lp_photo );
 			endforeach;
 			if ( $lp_in_template ) {
@@ -311,7 +309,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 		<?php if ( $lp_show_coords ) : ?>
 			<?php if ( '' !== $lp_initial_link ) : ?>
 				<a
-					class="<?php echo esc_attr( $lp_coords_class ); ?>"
+					class="<?php echo esc_attr( $lp_coords_class ); ?> hover:text-primary"
 					data-kb-live-coords
 					data-motion-decode="<?php echo esc_attr( $lp_initial_coords ); ?>"
 					data-motion-decode-charset="gps"
@@ -320,20 +318,19 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 					rel="noopener noreferrer"
 				><?php echo esc_html( $lp_initial_coords ); ?></a>
 			<?php else : ?>
-				<a
+				<span
 					class="<?php echo esc_attr( $lp_coords_class ); ?>"
 					data-kb-live-coords
 					data-motion-decode="<?php echo esc_attr( $lp_initial_coords ); ?>"
 					data-motion-decode-charset="gps"
-					aria-disabled="true"
-				><?php echo esc_html( $lp_initial_coords ); ?></a>
+				><?php echo esc_html( $lp_initial_coords ); ?></span>
 			<?php endif; ?>
 		<?php endif; ?>
 
-		<div class="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10 xl:gap-x-[72px] flex-1">
+		<div class="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10 xl:gap-x-12 2xl:gap-x-[72px] flex-1">
 			<div class="flex flex-col gap-6 lg:gap-8 xl:max-w-[664px]" data-slot="claim">
 				<p class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary"><?php echo esc_html( $lp_eyebrow ); ?></p>
-				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.92] text-neutral-content m-0" aria-label="<?php echo esc_attr( $lp_headline_label ); ?>" data-motion-decode="<?php echo $lp_headline_decode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped via esc_attr above. ?>" data-motion-decode-charset="board"><?php echo $lp_headline_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped then nl2br. ?></h1>
+				<h1 class="font-display text-step-5 lg:text-step-7 font-bold tracking-[-0.04em] leading-[0.92] text-neutral-content m-0" data-motion-decode="<?php echo $lp_headline_decode; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped via esc_attr above. ?>" data-motion-decode-charset="board"><?php echo $lp_headline_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped then nl2br. ?></h1>
 				<p class="font-body text-step--1 text-neutral-content/70 max-w-[470px] m-0"><?php echo esc_html( $lp_lead ); ?></p>
 				<div class="flex items-center gap-[28px] flex-wrap">
 					<?php
@@ -369,7 +366,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 				$lp_next_id   = (int) ( $lp_next['class_id'] ?? 0 );
 				$lp_next_date = (string) ( $lp_next['date'] ?? '' );
 				$lp_next_lab  = (string) ( $lp_next['foot_label'] ?? 'Reserve a place' );
-				$lp_board_cls = 'group block w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10 hover:bg-primary hover:border-neutral p-0 text-left no-underline cursor-pointer transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
+				$lp_board_cls = 'group block w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95 border border-neutral-content/10 hover:bg-primary hover:border-neutral p-0 text-left no-underline cursor-pointer transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary';
 				$lp_board_tag = 'div';
 				if ( $lp_next_id ) {
 					$lp_book       = lp_class_book_button_args( $lp_next_id, $lp_next_date, $lp_next_lab );
@@ -399,23 +396,23 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 							$lp_book_attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per attr above.
 						);
 					} else {
-						echo '<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
+						echo '<div class="w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
 					}
 				} else {
-					echo '<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
+					echo '<div class="w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95 border border-neutral-content/10" data-slot="next-class-board">';
 				}
 				?>
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10 group-hover:border-neutral/20">
 						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['title'] ); ?></span>
-						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50 group-hover:text-neutral transition-colors duration-150" data-slot="board-date"><?php echo esc_html( (string) ( $lp_next['when'] ?? '' ) ); ?></span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.6px] text-neutral-content/70 group-hover:text-neutral transition-colors duration-150" data-slot="board-date"><?php echo esc_html( (string) ( $lp_next['when'] ?? '' ) ); ?></span>
 					</div>
 					<div class="flex items-start gap-4 px-5 py-5">
 						<div class="flex-1 min-w-0 flex flex-col gap-1.5">
-							<span class="font-heading text-[22px] font-semibold leading-none tracking-[-0.4px] text-neutral-content group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['name'] ); ?></span>
-							<span class="font-label text-[11px] font-normal tracking-[0.3px] text-neutral-content/50 truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['meta'] ); ?></span>
+							<span class="font-heading text-fix-0 font-semibold leading-none tracking-[-0.4px] text-neutral-content group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['name'] ); ?></span>
+							<span class="font-label text-fix--2 font-normal tracking-[0.3px] text-neutral-content/70 truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['meta'] ); ?></span>
 						</div>
 						<span class="shrink-0 flex items-center gap-2">
-							<span class="font-label text-[11px] font-semibold tracking-[0.6px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['spaces'] ); ?></span>
+							<span class="font-label text-fix--2 font-semibold tracking-[0.6px] uppercase text-primary group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) $lp_next['spaces'] ); ?></span>
 							<?php lp_icon( 'icon-arrow-right', 'w-3.5 h-3.5 shrink-0 text-primary group-hover:text-neutral transition-colors duration-150' ); ?>
 						</span>
 					</div>
@@ -423,22 +420,22 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 						<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 px-5 pb-5 border-b border-neutral-content/10 group-hover:border-neutral/20">
 							<?php foreach ( $lp_next['facts'] as $lp_fact ) : ?>
 								<div class="flex flex-col gap-1.5 min-w-0 pr-3">
-									<span class="font-label text-[10px] font-semibold tracking-[1px] uppercase text-neutral-content/50 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
-									<span class="font-heading text-[15px] font-medium tracking-[-0.2px] text-neutral-content truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
+									<span class="font-label text-fix--2 font-semibold tracking-[1px] uppercase text-neutral-content/70 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['label'] ?? '' ) ); ?></span>
+									<span class="font-heading text-fix--1 font-medium tracking-[-0.2px] text-neutral-content truncate group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_fact['value'] ?? '' ) ); ?></span>
 								</div>
 							<?php endforeach; ?>
 						</div>
 					<?php endif; ?>
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px]">
 						<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-primary group-hover:text-neutral group-hover:font-semibold transition-colors duration-150"><?php echo esc_html( $lp_next_lab ); ?></span>
-						<span class="font-label text-[10px] font-normal tracking-[0.6px] text-neutral-content/50 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
+						<span class="font-label text-fix--2 font-normal tracking-[0.6px] text-neutral-content/70 group-hover:text-neutral transition-colors duration-150"><?php echo esc_html( (string) ( $lp_next['foot_meta'] ?? '' ) ); ?></span>
 					</div>
 				<?php echo '</' . esc_attr( $lp_board_tag ) . '>'; ?>
 			<?php elseif ( 'sessions' === $lp_board_style ) : ?>
-				<div class="w-full xl:w-[576px] xl:shrink-0 xl:self-end bg-secondary/95" data-slot="board">
+				<div class="w-full xl:flex-1 xl:min-w-0 xl:max-w-[576px] xl:self-end bg-secondary/95" data-slot="board">
 					<div class="flex items-center justify-between gap-3 px-5 py-[15px] border-b border-neutral-content/10">
 						<span class="font-label text-step--2 font-semibold tracking-[1px] uppercase text-primary"><?php echo esc_html( $lp_board_ttl ); ?></span>
-						<span class="font-label text-step--2 font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( $lp_board_stmp ); ?></span>
+						<span class="font-label text-step--2 font-normal tracking-[0.6px] text-neutral-content/70"><?php echo esc_html( $lp_board_stmp ); ?></span>
 					</div>
 					<div data-slot="rows">
 						<?php
@@ -468,7 +465,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 						<?php else : ?>
 							<span class="font-label text-step--2 font-normal tracking-[0.5px] uppercase text-neutral-content/80"><?php echo esc_html( $lp_foot_label ); ?></span>
 						<?php endif; ?>
-						<span class="font-label text-step--2 font-normal tracking-[0.6px] text-neutral-content/50"><?php echo esc_html( $lp_foot_count ); ?></span>
+						<span class="font-label text-step--2 font-normal tracking-[0.6px] text-neutral-content/70"><?php echo esc_html( $lp_foot_count ); ?></span>
 					</div>
 				</div>
 			<?php endif; ?>
@@ -481,7 +478,7 @@ $lp_show_coords = ( '' !== $lp_initial_coords || '' !== $lp_coordinates );
 					<?php if ( $lp_ti > 0 ) : ?>
 						<span class="w-px h-[11px] bg-neutral-content/20" aria-hidden="true"></span>
 					<?php endif; ?>
-					<span class="font-label text-step--2 font-normal tracking-[0.8px] uppercase text-neutral-content/50"><?php echo esc_html( $lp_mark ); ?></span>
+					<span class="font-label text-step--2 font-normal tracking-[0.8px] uppercase text-neutral-content/70"><?php echo esc_html( $lp_mark ); ?></span>
 				<?php endforeach; ?>
 				<span class="w-px h-[11px] bg-neutral-content/20" aria-hidden="true"></span>
 				<span class="font-label text-step--2 font-normal tracking-[0.8px] uppercase text-primary"><?php echo esc_html( $lp_rating ); ?></span>
