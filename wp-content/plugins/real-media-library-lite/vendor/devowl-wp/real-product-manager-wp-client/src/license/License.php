@@ -397,8 +397,8 @@ class License
         }
         if (!$isError && isset($response['licenseActivation'])) {
             $licenseActivation = $response['licenseActivation'];
-            if (\array_key_exists('featureFlags', $response) && \is_array($response['featureFlags'])) {
-                $licenseActivation['featureFlags'] = $response['featureFlags'];
+            if (\array_key_exists('featureFlags', $response) && (\is_array($response['featureFlags']) || \is_object($response['featureFlags']))) {
+                $licenseActivation['featureFlags'] = (object) $response['featureFlags'];
             }
             $this->receivedRemoteLicenseActivation($licenseActivation);
         }
@@ -567,6 +567,10 @@ class License
         $this->switch();
         $host = Utils::getCurrentHostName();
         $this->restore();
+        if (!\is_wp_error($remote)) {
+            // json_decode(ARRAY_A) turns JSON {} into []; WP REST would emit [] not {}
+            $remote['featureFlags'] = (object) ($remote['featureFlags'] ?? []);
+        }
         return ['uuid' => $this->getUuid(), 'blog' => $this->getBlogId(), 'host' => $host, 'programmatically' => $this->getProgrammaticActivation(), 'blogName' => $this->getBlogName(), 'installationType' => $this->getActivation()->getInstallationType(), 'telemetryDataSharingOptIn' => $this->getActivation()->isTelemetryDataSharingOptIn(), 'code' => $this->getActivation()->getCode(), 'hint' => $this->getActivation()->getHint(), 'remote' => \is_wp_error($remote) ? null : $remote, 'noUsage' => $this->isNoUsage()];
     }
     /**

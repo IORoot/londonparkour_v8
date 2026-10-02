@@ -1959,6 +1959,7 @@
                             "name": "rating",
                             "label": "Rating",
                             "type": "text",
+                            "instructions": "Shown as typed, e.g. 4.9 ★ (312).",
                             "key": "field_6ba26ba41a6f3d88"
                         },
                         {

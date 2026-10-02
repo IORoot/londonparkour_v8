@@ -1,1 +1,0 @@
-var devowlWp_utils;devowlWp_utils={};

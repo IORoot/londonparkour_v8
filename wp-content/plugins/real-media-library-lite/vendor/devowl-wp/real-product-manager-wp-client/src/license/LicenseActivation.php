@@ -155,8 +155,9 @@ class LicenseActivation
         if ($initiator->isExternalUpdateEnabled()) {
             \update_option(PluginUpdateView::OPTION_NAME_ADMIN_NOTICE_LICENSE_DISMISSED_DAY_PREFIX . $initiator->getPluginSlug(), \PHP_INT_MAX);
         }
-        if (\is_array($featureFlags)) {
-            $licenseActivation['featureFlags'] = $featureFlags;
+        if (\is_array($featureFlags) || \is_object($featureFlags)) {
+            // stdClass so empty flags json_encode as {} not []
+            $licenseActivation['featureFlags'] = (object) $featureFlags;
         }
         $license->receivedRemoteLicenseActivation($licenseActivation);
         /**
@@ -367,8 +368,8 @@ class LicenseActivation
     public function getReceivedFeatureFlags()
     {
         $received = $this->getReceived();
-        if (\is_array($received) && isset($received['featureFlags']) && \is_array($received['featureFlags'])) {
-            return $received['featureFlags'];
+        if (\is_array($received) && isset($received['featureFlags']) && (\is_array($received['featureFlags']) || \is_object($received['featureFlags']))) {
+            return (array) $received['featureFlags'];
         }
         return \false;
     }

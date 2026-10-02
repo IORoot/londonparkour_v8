@@ -183,9 +183,10 @@ return array(
 				'type'  => 'text',
 			),
 			array(
-				'name'  => 'rating',
-				'label' => __( 'Rating', 'londonparkour_v8' ),
-				'type'  => 'text',
+				'name'         => 'rating',
+				'label'        => __( 'Rating', 'londonparkour_v8' ),
+				'type'         => 'text',
+				'instructions' => __( 'Shown as typed, e.g. 4.9 ★ (312).', 'londonparkour_v8' ),
 			),
 			array(
 				'name'         => 'trust',

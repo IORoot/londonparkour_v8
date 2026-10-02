@@ -118,7 +118,8 @@ class PageBuilders
     public function diviBuilder_skip($skip, $type)
     {
         // @see https://gist.github.com/matzeeable/ad1246af9fea87acda40169404df0485
-        if (isset($_GET['et_fb']) && (string) $_GET['et_fb'] === '1' && \defined('ET_BUILDER_PRODUCT_VERSION') && \version_compare(\constant('ET_BUILDER_PRODUCT_VERSION'), '5.0.0', '<')) {
+        // Divi 4 hosts React 16; Ant Design 6 (useId) crashes media pickers. Divi 5 keeps RML.
+        if (\defined('ET_BUILDER_PRODUCT_VERSION') && \version_compare(\constant('ET_BUILDER_PRODUCT_VERSION'), '5.0.0', '<') && (isset($_GET['et_fb']) && (string) $_GET['et_fb'] === '1' || isset($_GET['page']) && (string) $_GET['page'] === 'et_theme_builder')) {
             return \true;
         }
         if ($type === 'et_fb_enqueue_assets') {

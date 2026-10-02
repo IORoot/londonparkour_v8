@@ -1,6 +1,6 @@
 {
     "name": "@devowl-wp/real-utils",
-    "version": "1.14.35",
+    "version": "1.14.38",
     "private": true,
     "description": "Create about page, rating and newsletter input for WP Real plugins.",
     "homepage": "https://devowl.io",
@@ -8,7 +8,7 @@
     "author": "devowl",
     "sideEffects": [
         "**/*.{css,scss,less}",
-        "./src/public/ts/*.tsx"
+        "./lib/*.tsx"
     ],
     "type": "module",
     "exports": {

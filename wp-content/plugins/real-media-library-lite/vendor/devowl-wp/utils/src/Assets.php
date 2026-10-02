@@ -104,8 +104,9 @@ trait Assets
      * @param string[] $features See $ADVANCED_ENQUEUE_FEATURE_* constants or `null` for all features
      * @param string $type Can be `script` or `style`
      * @param string[] $preloadChunks Chunks to preload by name
+     * @param string|null $fetchPriority Optional `high`|`low`|`auto` for `<link rel="preload">`
      */
-    public function enableAdvancedEnqueue($handles, $features = null, $type = 'script', $preloadChunks = [])
+    public function enableAdvancedEnqueue($handles, $features = null, $type = 'script', $preloadChunks = [], $fetchPriority = null)
     {
         $handles = \is_array($handles) ? $handles : [$handles];
         // Add `vendor-` also to the handles for `probablyEnqueueChunk` compatibility
@@ -120,7 +121,7 @@ trait Assets
             $this->enableAsyncEnqueue($handles);
         }
         if ($features === null || \in_array(Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_PRELOADING, $features, \true)) {
-            $this->enablePreloadEnqueue($handles, $type, $preloadChunks);
+            $this->enablePreloadEnqueue($handles, $type, $preloadChunks, $fetchPriority);
         }
         if ($features === null || \in_array(Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_PRIORITY_QUEUE, $features, \true)) {
             $this->enablePriorityQueue($handles, $type);
@@ -149,15 +150,7 @@ trait Assets
         foreach ($handles as $handle) {
             $this->handleToFeatures[$handle] = \array_merge($this->handleToFeatures[$handle] ?? [], [Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_DEFER]);
         }
-        \add_filter('script_loader_tag', function ($tag, $handle) use($handles) {
-            if (\in_array($handle, $handles, \true) && \stripos($tag, 'defer') === \false) {
-                // see https://regex101.com/r/0whi5s/1
-                // phpcs:disable PHPCompatibility.ParameterValues.RemovedPCREModifiers.Removed
-                return \preg_replace(\sprintf('/(%s=[\'"]?)/m', 'src'), 'defer $1', $tag);
-                // phpcs:enable PHPCompatibility.ParameterValues.RemovedPCREModifiers.Removed
-            }
-            return $tag;
-        }, 10, 2);
+        $this->addAttributesToScriptHandles($handles, ['defer' => \true]);
     }
     /**
      * Enable `async` attribute for given handle(s) (only scripts are supported).
@@ -170,15 +163,51 @@ trait Assets
         foreach ($handles as $handle) {
             $this->handleToFeatures[$handle] = \array_merge($this->handleToFeatures[$handle] ?? [], [Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_ASYNC]);
         }
-        \add_filter('script_loader_tag', function ($tag, $handle) use($handles) {
-            if (\in_array($handle, $handles, \true) && \stripos($tag, 'async') === \false) {
-                // see https://regex101.com/r/0whi5s/1
-                // phpcs:disable PHPCompatibility.ParameterValues.RemovedPCREModifiers.Removed
-                return \preg_replace(\sprintf('/(%s=[\'"]?)/m', 'src'), 'async $1', $tag);
-                // phpcs:enable PHPCompatibility.ParameterValues.RemovedPCREModifiers.Removed
+        $this->addAttributesToScriptHandles($handles, ['async' => \true]);
+    }
+    /**
+     * Add HTML attributes to enqueued `<script>` tags for given handle(s).
+     *
+     * @param string|string[] $handles
+     * @param array<string, string|true> $attributes
+     */
+    public function addAttributesToScriptHandles($handles, $attributes)
+    {
+        $handles = \is_array($handles) ? $handles : [$handles];
+        \add_filter('script_loader_tag', function ($tag, $scriptHandle) use($handles, $attributes) {
+            if (!\in_array($scriptHandle, $handles, \true)) {
+                return $tag;
+            }
+            foreach ($attributes as $name => $value) {
+                // Match as standalone attribute to avoid "data-no-defer" matching "defer".
+                if (\preg_match('/\\s' . \preg_quote($name, '/') . '[\\s=>]/i', $tag)) {
+                    continue;
+                }
+                $html = $value === \true ? $name : \sprintf('%s="%s"', $name, $value);
+                $tag = \str_replace('<script ', '<script ' . $html . ' ', $tag);
             }
             return $tag;
         }, 10, 2);
+    }
+    /**
+     * Add HTML attributes to `{handle}-js-before` inline scripts for given handle(s).
+     *
+     * @param string|string[] $handles
+     * @param array<string, string|true> $attributes
+     */
+    public function addAttributesToInlineScriptHandles($handles, $attributes)
+    {
+        $handles = \is_array($handles) ? $handles : [$handles];
+        \add_filter('wp_inline_script_attributes', function ($inlineAttributes) use($handles, $attributes) {
+            $inlineId = $inlineAttributes['id'] ?? '';
+            foreach ($handles as $handle) {
+                if ($inlineId !== $handle . '-js-before') {
+                    continue;
+                }
+                return \array_merge($attributes, $inlineAttributes);
+            }
+            return $inlineAttributes;
+        });
     }
     /**
      * Enable `<link rel="preload" />` HTML tag for given handle(s).
@@ -186,16 +215,22 @@ trait Assets
      * @param string|string[] $handles
      * @param string $type Can be `script` or `style`
      * @param string[] $preloadChunks Chunks to preload by name
+     * @param string|null $fetchPriority Optional `high`|`low`|`auto` (omitted = browser default / Medium for scripts)
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLLinkElement/fetchPriority
      */
-    public function enablePreloadEnqueue($handles, $type = 'script', $preloadChunks = [])
+    public function enablePreloadEnqueue($handles, $type = 'script', $preloadChunks = [], $fetchPriority = null)
     {
         $handles = \is_array($handles) ? $handles : [$handles];
         $wp_dependencies = $type === 'script' ? \wp_scripts() : \wp_styles();
+        $validatedFetchPriority = null;
+        if (\is_string($fetchPriority) && \in_array($fetchPriority, ['high', 'low', 'auto'], \true)) {
+            $validatedFetchPriority = $fetchPriority;
+        }
         foreach ($handles as $handle) {
             $this->handleToFeatures[$handle] = \array_merge($this->handleToFeatures[$handle] ?? [], [Constants::ASSETS_ADVANCED_ENQUEUE_FEATURE_PRELOADING]);
         }
-        \add_action('wp_head', function () use($handles, $type, $wp_dependencies, $preloadChunks) {
+        \add_action('wp_head', function () use($handles, $type, $wp_dependencies, $preloadChunks, $validatedFetchPriority) {
             $preloadedUrls =& self::$preloadedUrlsRegistry;
             foreach ($handles as $handle) {
                 $script = $wp_dependencies->query($handle);
@@ -211,8 +246,7 @@ trait Assets
                     $src = \apply_filters('script_loader_src', $src, $handle);
                     if (!\in_array($src, $preloadedUrls, \true)) {
                         $preloadedUrls[] = $src;
-                        \printf('<link rel="preload" href="%s" as="%s" />
-', \esc_url($src), \esc_attr($type));
+                        $this->printPreloadLink($src, $type, $validatedFetchPriority);
                     }
                     // Add chunk preloads if desired
                     $chunks = $wp_dependencies->get_data($handle, 'chunks');
@@ -224,14 +258,30 @@ trait Assets
                             $chunkUrl = \apply_filters('script_loader_src', $chunkUrl, $handle);
                             if (!\in_array($chunkUrl, $preloadedUrls, \true)) {
                                 $preloadedUrls[] = $chunkUrl;
-                                \printf('<link rel="preload" href="%s" as="%s" />
-', \esc_url($chunkUrl), 'script');
+                                $this->printPreloadLink($chunkUrl, 'script', $validatedFetchPriority);
                             }
                         }
                     }
                 }
             }
         }, 2);
+    }
+    /**
+     * Print a single `<link rel="preload">` tag.
+     *
+     * @param string $href
+     * @param string $as
+     * @param string|null $fetchPriority Already validated `high`|`low`|`auto`, or null
+     */
+    private function printPreloadLink($href, $as, $fetchPriority = null)
+    {
+        if ($fetchPriority === null) {
+            \printf('<link rel="preload" href="%s" as="%s" />
+', \esc_url($href), \esc_attr($as));
+            return;
+        }
+        \printf('<link rel="preload" href="%s" as="%s" fetchpriority="%s" />
+', \esc_url($href), \esc_attr($as), \esc_attr($fetchPriority));
     }
     /**
      * Enable scripts and styles to be appear at the top of `<head`.
@@ -243,16 +293,8 @@ trait Assets
     {
         $handles = \is_array($handles) ? $handles : [$handles];
         $wp_dependencies = $type === 'script' ? \wp_scripts() : \wp_styles();
-        \add_action('wp_head', function () use($handles, $type, $wp_dependencies) {
-            foreach ($handles as $handle) {
-                $script = $wp_dependencies->query($handle);
-                if ($script !== \false) {
-                    if ($wp_dependencies->do_item($handle, \false)) {
-                        $wp_dependencies->done[] = $handle;
-                    }
-                    unset($wp_dependencies->to_do[$handle]);
-                }
-            }
+        \add_action('wp_head', function () use($handles, $wp_dependencies) {
+            $wp_dependencies->do_items($handles);
         }, 3);
     }
     /**
@@ -343,23 +385,6 @@ trait Assets
             }
         }
         return $result;
-    }
-    /**
-     * Enables a dummy handle which is enqueued in the footer. In general, this script is never loaded on the frontend
-     * but it allows you to use the `$handle` for e.g. `wp_localize_script()`. It allows the following scenario:
-     *
-     * 1. Enqueue a `<script defer` script in the header
-     * 2. Instead of localizing a big JSON object in the header, use the dummy handle to wp_localize_script() in the footer
-     *
-     * @return string The handle of the dummy script
-     */
-    public function enqueueFooterDummyHandle()
-    {
-        $handle = $this->enqueueComposerScript('utils', [], 'noop.js', \true);
-        \add_filter('script_loader_tag', function ($tag, $scriptLoaderHandle) use($handle) {
-            return $scriptLoaderHandle === $handle ? '' : $tag;
-        }, 10, 2);
-        return $handle;
     }
     /**
      * When using WordPress < 6.6 we need to enqueue the react/jsx-runtime UMD bundle to make the
@@ -788,6 +813,45 @@ JS;
         return $default;
     }
     /**
+     * HTML attributes that keep localize / bootstrap scripts out of cache-plugin rewrite.
+     * Always applied — detection of a specific cache plugin is not required.
+     *
+     * @return array<string, string|true>
+     */
+    public function getAnonymousLocalizeScriptHtmlAttributes()
+    {
+        return [
+            // Compatibility with most caching plugins which lazy load JavaScript
+            'data-skip-lazy-load' => 'js-extra',
+            // WP Fastest Cache "Eliminate render blocking script" moves all scripts
+            'data-skip-moving' => 'true',
+            // LiteSpeed Cache delay-JS (https://github.com/litespeedtech/lscache_wp/blob/6c95240003b89ef1d4ce190f5a96eba83528cd89/src/optimize.cls.php#L903)
+            'data-no-defer' => \true,
+            // NitroPack
+            'nitro-exclude' => \true,
+            // WP Rocket `rocket_defer_inline_exclusions` only inspects `<script>` inner content
+            // See https://github.com/wp-media/wp-rocket/blob/ffac5d90e5a83bcb5a29b8e43f059a31adfae629/inc/Engine/Optimization/DeferJS/DeferJS.php#L128-L139
+            'data-alt-type' => 'application/ld+json',
+            // Swift Performance
+            'data-dont-merge' => \true,
+            // WP Meteor
+            'data-wpmeteor-nooptimize' => 'true',
+            // Cloudflare Rocket Loader
+            'data-cfasync' => 'false',
+        ];
+    }
+    /**
+     * Space-separated HTML attribute string of `getAnonymousLocalizeScriptHtmlAttributes()`.
+     */
+    public function getAnonymousLocalizeScriptHtmlAttributesString()
+    {
+        $parts = [];
+        foreach ($this->getAnonymousLocalizeScriptHtmlAttributes() as $name => $value) {
+            $parts[] = $value === \true ? $name : \sprintf('%s="%s"', $name, $value);
+        }
+        return \join(' ', $parts);
+    }
+    /**
      * Make a localized array anonymous. Some plugins like WP Rocket tries to lazy load also localized scripts
      * and this should be avoided in some scenarios like Real Cookie Banners' banner script.
      * Use this instead of `wp_localize_script`.
@@ -798,15 +862,7 @@ JS;
      * string[]     makeBase64Encoded       List of keys of the array object which should be converted to base64 at output time (e.g. to avoid ModSecurity issues)
      * boolean      useCore                 Use `wp_localize_script` internally instead of custom localize script
      * string[]     lazyParse               A list of pathes of the array which should be lazy parsed. This could be useful to improve performance and parse as needed (e.g. huge arrays).
-     * boolean      bypassJsonParse         Bypass the JSON.parse call and just expose the raw JSON string in the inline script. In your frontend you need to use the
-     *                                       `getAnonymousLocalizedScript` function to parse the JSON string.
      * ```
-     *
-     * **Performance tip:** If you have a huge JSON object, you can move it to the bottom of the page and offload JSON parsing outside of the HTML parsing process.
-     * For this, you can set the `bypassJsonParse` setting to `true` and use the `getAnonymousLocalizedScript` function in your frontend to parse the JSON string.
-     * If you want to make sure that your enqueued script is still part of the `<head` section (and you do not want to use `$in_footer = true`) to keep script execution
-     * order intact, you can use `enqueueFooterDummyHandle` as `$handle` parameter. But keep attention: You need to make sure that your enqueued script
-     * (which uses `getAnonymousLocalizedScript`) is enqueued with `<script defer` as otherwise the JSON in the footer is not yet available.
      *
      * @param string $handle Name of the script to attach data to.
      * @param string $object_name Name of the variable that will contain the data.
@@ -817,13 +873,12 @@ JS;
      */
     public function anonymous_localize_script($handle, $object_name, $l10n, $settings = [])
     {
-        $settings = \wp_parse_args($settings, ['makeBase64Encoded' => [], 'useCore' => \false, 'lazyParse' => [], 'bypassJsonParse' => \false]);
+        $settings = \wp_parse_args($settings, ['makeBase64Encoded' => [], 'useCore' => \false, 'lazyParse' => []]);
         if ($settings['useCore']) {
             return \wp_localize_script($handle, $object_name, $l10n);
         }
         $makeBase64Encoded = $settings['makeBase64Encoded'];
         $lazyParse = $settings['lazyParse'];
-        $bypassJsonParse = $settings['bypassJsonParse'];
         // Mark the script tag with some identifier, so our helper script (added below) can read
         // the JSON content. See also about: https://stackoverflow.com/q/12090883/5506547
         // Do not use a randomized string as it can lead to issues with cached web pages when the
@@ -831,7 +886,7 @@ JS;
         $uuid = \wp_generate_uuid4();
         $uuid = \md5(\sprintf('%s:%s:%s', $handle, $object_name, $this->getPluginConstant(Constants::PLUGIN_CONST_VERSION)));
         $base64Marker = 'base64-encoded:';
-        \add_filter('script_loader_tag', function ($tag, $scriptHandle) use($handle, $uuid, $l10n, $object_name, $makeBase64Encoded, $base64Marker, $lazyParse, $bypassJsonParse) {
+        \add_filter('script_loader_tag', function ($tag, $scriptHandle) use($handle, $uuid, $l10n, $object_name, $makeBase64Encoded, $base64Marker, $lazyParse) {
             if ($scriptHandle === $handle) {
                 if (\count($makeBase64Encoded) > 0) {
                     \array_walk_recursive($l10n, function (&$val, $key) use($makeBase64Encoded, $base64Marker) {
@@ -868,32 +923,10 @@ JS;
                    window[randomId] = n;
                                     })();
                 */
-                $tag = \sprintf('<script type="application/json" %4$s id="a%1$s1-js-extra">%2$s</script>' . ($bypassJsonParse ? '' : '<script %4$s id="a%1$s2-js-extra">
+                $tag = \sprintf('<script type="application/json" %4$s id="a%1$s1-js-extra">%2$s</script><script %4$s id="a%1$s2-js-extra">
 (()=>{var x=%5$s,t=(e,t)=>new Proxy(e,{get:(e,n)=>{let r=Reflect.get(e,n);return n===t&&"string"==typeof r&&(r=JSON.parse(r,x),Reflect.set(e,n,r)),r}}),n=JSON.parse(document.getElementById("a%1$s1-js-extra").innerHTML,x);%6$s;window.%3$s=n;window[Math.random().toString(36)]=n;
 })();
-</script>'), $uuid, \wp_json_encode($l10n), $object_name, \join(' ', [
-                    // TODO: shouldn't this be part of @devowl-wp/cache-invalidate?
-                    // Compatibility with most caching plugins which lazy load JavaScript
-                    'data-skip-lazy-load="js-extra"',
-                    // Compatibility with WP Fastest Cache and "Eliminate render blocking script"
-                    // as WPFC is moving all scripts (even with `type="text/plain"`).
-                    'data-skip-moving="true"',
-                    // Compatibility with LiteSpeed Cache and do not delay this inline script
-                    // See https://github.com/litespeedtech/lscache_wp/blob/6c95240003b89ef1d4ce190f5a96eba83528cd89/src/optimize.cls.php#L903
-                    'data-no-defer',
-                    // Compatibility with NitroPack
-                    'nitro-exclude',
-                    // Compatibility with WP Rocket as the filter `rocket_defer_inline_exclusions` does only check on `<script>` inner content
-                    // so we cannot exclude by e.g. handle name
-                    // See https://github.com/wp-media/wp-rocket/blob/ffac5d90e5a83bcb5a29b8e43f059a31adfae629/inc/Engine/Optimization/DeferJS/DeferJS.php#L128-L139
-                    'data-alt-type="application/ld+json"',
-                    // Compatibility with Swift Performance
-                    'data-dont-merge',
-                    // Compatibility with WP Meteor
-                    'data-wpmeteor-nooptimize="true"',
-                    // Compatibility with Cloudflare Rocket Loader
-                    'data-cfasync="false"',
-                ]), \sprintf(
+</script>', $uuid, \wp_json_encode($l10n), $object_name, $this->getAnonymousLocalizeScriptHtmlAttributesString(), \sprintf(
                     /*
                     function(k, v) {
                         if (["%1$s"].indexOf(k) > -1 && typeof v === "string" && v.startsWith(%3$d)) {
