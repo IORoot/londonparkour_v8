@@ -14,8 +14,9 @@ defined( 'ABSPATH' ) || exit;
 
 abstract class Scheduled_Emails {
 
-	public const TYPE_REMINDER   = 'reminder';
-	public const TYPE_POST_CLASS = 'post_class';
+	public const TYPE_REMINDER         = 'reminder';
+	public const TYPE_POST_CLASS       = 'post_class';
+	public const TYPE_CUSTOM_FOLLOWUP  = 'custom_followup';
 
 	public const STATUS_PENDING   = 'pending';
 	public const STATUS_SENT      = 'sent';
@@ -70,6 +71,14 @@ abstract class Scheduled_Emails {
 		return __(
 			'<p>Hi {customer_name},</p>'
 			. '<p>Thanks for joining {class_name}. We hope you enjoyed the class!</p>',
+			'class-bookings-with-stripe-pro'
+		);
+	}
+
+	public static function default_custom_followup_rule_body(): string {
+		return __(
+			'<p>Hi {customer_name},</p>'
+			. '<p>Thanks again for your payment of {amount_total}.</p>',
 			'class-bookings-with-stripe-pro'
 		);
 	}
@@ -170,8 +179,8 @@ abstract class Scheduled_Emails {
 			return;
 		}
 
-		foreach ( [ self::TYPE_REMINDER, self::TYPE_POST_CLASS ] as $type ) {
-			$field = self::TYPE_REMINDER === $type ? 'reminder_email_rule_uuid' : 'post_class_email_rule_uuid';
+		foreach ( [ self::TYPE_REMINDER, self::TYPE_POST_CLASS, self::TYPE_CUSTOM_FOLLOWUP ] as $type ) {
+			$field = self::option_prefix_for_type( $type ) . '_email_rule_uuid';
 			$uuid  = trim( (string) Helpers::get_option( $field, '' ) );
 			if ( '' === $uuid ) {
 				update_field( $field, wp_generate_uuid4(), $post_id );
@@ -190,11 +199,28 @@ abstract class Scheduled_Emails {
 		return self::build_rule_from_options( $type );
 	}
 
+	private static function option_prefix_for_type( string $type ): string {
+		if ( self::TYPE_REMINDER === $type ) {
+			return 'reminder';
+		}
+		if ( self::TYPE_POST_CLASS === $type ) {
+			return 'post_class';
+		}
+		if ( self::TYPE_CUSTOM_FOLLOWUP === $type ) {
+			return 'custom_followup';
+		}
+
+		return '';
+	}
+
 	/**
 	 * @return array<string, mixed>|null
 	 */
 	private static function build_rule_from_options( string $type ): ?array {
-		$prefix = self::TYPE_REMINDER === $type ? 'reminder' : 'post_class';
+		$prefix = self::option_prefix_for_type( $type );
+		if ( '' === $prefix ) {
+			return null;
+		}
 
 		$amount = max( 0, (int) Helpers::get_option( $prefix . '_offset_amount', 0 ) );
 		$unit   = (string) Helpers::get_option( $prefix . '_offset_unit', 'hours' );
@@ -203,7 +229,7 @@ abstract class Scheduled_Emails {
 		}
 
 		$subject = trim( (string) Helpers::get_option( $prefix . '_email_subject', '' ) );
-		$body_settings = Emails::resolve_body_template( self::TYPE_REMINDER === $type ? 'reminder' : 'post_class' );
+		$body_settings = Emails::resolve_body_template( $type );
 		$body          = self::strip_feedback_merge_tags( trim( (string) $body_settings['body'] ) );
 		if ( $amount <= 0 || '' === $subject || '' === $body ) {
 			return null;
@@ -216,7 +242,9 @@ abstract class Scheduled_Emails {
 
 		$label = self::TYPE_REMINDER === $type
 			? __( 'Reminder', 'class-bookings-with-stripe-pro' )
-			: __( 'Post-class email', 'class-bookings-with-stripe-pro' );
+			: ( self::TYPE_CUSTOM_FOLLOWUP === $type
+				? __( 'Pay thank-you', 'class-bookings-with-stripe-pro' )
+				: __( 'Post-class email', 'class-bookings-with-stripe-pro' ) );
 
 		return [
 			'uuid'           => $uuid,
@@ -362,6 +390,55 @@ abstract class Scheduled_Emails {
 		}
 	}
 
+	/**
+	 * Queue a thank-you after a /pay/ custom amount is taken.
+	 */
+	public static function queue_for_custom_payment( int $booking_id ): void {
+		if ( ! Custom_Payments::is( $booking_id ) ) {
+			return;
+		}
+		if ( Bookings::STATUS_PAID !== Bookings::get_status( $booking_id ) ) {
+			return;
+		}
+
+		$rule = self::get_global_rule( self::TYPE_CUSTOM_FOLLOWUP );
+		if ( ! $rule ) {
+			return;
+		}
+
+		$email = sanitize_email( (string) get_post_meta( $booking_id, '_clasbpro_customer_email', true ) );
+		if ( ! is_email( $email ) ) {
+			return;
+		}
+
+		$seconds  = self::offset_to_seconds( (int) $rule['offset_amount'], (string) $rule['offset_unit'] );
+		$now_gmt  = gmdate( 'Y-m-d H:i:s' );
+		$send_at  = gmdate( 'Y-m-d H:i:s', time() + $seconds );
+		$due_now  = false;
+		$status   = self::STATUS_PENDING;
+		$skip     = '';
+
+		if ( $send_at <= $now_gmt ) {
+			$send_at = $now_gmt;
+			$due_now = true;
+		}
+
+		self::insert_queue_row(
+			$booking_id,
+			0,
+			$email,
+			$rule,
+			self::TYPE_CUSTOM_FOLLOWUP,
+			$send_at,
+			$status,
+			$skip
+		);
+
+		if ( $due_now ) {
+			self::process_due_queue();
+		}
+	}
+
 	public static function cancel_for_booking( int $booking_id ): void {
 		global $wpdb;
 
@@ -381,7 +458,7 @@ abstract class Scheduled_Emails {
 	}
 
 	public static function process_due_queue(): void {
-		if ( ! self::category_enabled( self::TYPE_REMINDER ) && ! self::category_enabled( self::TYPE_POST_CLASS ) ) {
+		if ( ! self::category_enabled( self::TYPE_REMINDER ) && ! self::category_enabled( self::TYPE_POST_CLASS ) && ! self::category_enabled( self::TYPE_CUSTOM_FOLLOWUP ) ) {
 			return;
 		}
 
@@ -638,7 +715,9 @@ abstract class Scheduled_Emails {
 			wp_die( esc_html__( 'Configure the scheduled email on the settings screen first.', 'class-bookings-with-stripe-pro' ) );
 		}
 
-		$tags = self::sample_merge_tags();
+		$tags = self::TYPE_CUSTOM_FOLLOWUP === $type
+			? Merge_Tags::sample_custom_payment_tags()
+			: Merge_Tags::sample_booking_tags();
 
 		$intended_to  = (string) ( $tags['{customer_email}'] ?? '' );
 		$role_label   = sprintf(
@@ -827,6 +906,10 @@ abstract class Scheduled_Emails {
 		}
 		if ( self::TYPE_POST_CLASS === $type ) {
 			$val = Helpers::get_option( 'enable_post_class_emails', 1 );
+			return (bool) $val;
+		}
+		if ( self::TYPE_CUSTOM_FOLLOWUP === $type ) {
+			$val = Helpers::get_option( 'enable_custom_followup_emails', 0 );
 			return (bool) $val;
 		}
 		return false;

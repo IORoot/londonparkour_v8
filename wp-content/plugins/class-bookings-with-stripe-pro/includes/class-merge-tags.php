@@ -37,6 +37,7 @@ abstract class Merge_Tags {
 		$rows = array_merge(
 			self::booking_catalogue_rows(),
 			self::coupon_catalogue_rows(),
+			self::custom_payment_catalogue_rows(),
 			self::lookup_catalogue_rows()
 		);
 
@@ -176,12 +177,14 @@ abstract class Merge_Tags {
 		$groups = [
 			'booking' => __( 'Booking emails', 'class-bookings-with-stripe-pro' ),
 			'coupon'  => __( 'Coupon emails', 'class-bookings-with-stripe-pro' ),
+			'custom'  => __( 'Pay emails', 'class-bookings-with-stripe-pro' ),
 			'lookup'  => __( 'Post lookups', 'class-bookings-with-stripe-pro' ),
 		];
 
 		$by_group = [
 			'booking' => [],
 			'coupon'  => [],
+			'custom'  => [],
 			'lookup'  => [],
 		];
 		foreach ( self::catalogue() as $row ) {
@@ -292,6 +295,30 @@ abstract class Merge_Tags {
 			$tags,
 			[
 				'kind'        => 'coupon',
+				'booking_id'  => 0,
+				'class_id'    => 0,
+				'purchase_id' => 0,
+				'sample'      => true,
+			]
+		);
+	}
+
+	/**
+	 * @return array<string, string>
+	 */
+	public static function sample_custom_payment_tags(): array {
+		$tags = [
+			'{customer_name}'      => 'Alex Sample',
+			'{customer_email}'     => 'alex@example.com',
+			'{amount_total}'       => Helpers::format_stripe_amount( 4500 ),
+			'{booking_id}'         => '1234',
+			'{stripe_receipt_url}' => 'https://pay.stripe.com/receipts/example',
+		];
+
+		return self::filter_values(
+			$tags,
+			[
+				'kind'        => 'custom',
 				'booking_id'  => 0,
 				'class_id'    => 0,
 				'purchase_id' => 0,
@@ -437,6 +464,16 @@ abstract class Merge_Tags {
 			self::row( '{purchase_id}', __( 'Coupon purchase post ID (raw, no #).', 'class-bookings-with-stripe-pro' ), '1001', 'coupon' ),
 			self::row( '{stripe_receipt_url}', __( 'Stripe hosted receipt URL. Empty when nothing was charged.', 'class-bookings-with-stripe-pro' ), 'https://pay.stripe.com/receipts/…', 'coupon' ),
 			self::row( '{receipt_link}', __( 'Stripe receipt anchor, or “No receipt” when nothing was charged.', 'class-bookings-with-stripe-pro' ), '<a href="https://pay.stripe.com/receipts/example">View stripe receipt</a>', 'coupon' ),
+		];
+	}
+
+	private static function custom_payment_catalogue_rows(): array {
+		return [
+			self::row( '{customer_name}', __( 'Customer’s name.', 'class-bookings-with-stripe-pro' ), 'Alex Sample', 'custom' ),
+			self::row( '{customer_email}', __( 'Customer’s email address.', 'class-bookings-with-stripe-pro' ), 'alex@example.com', 'custom' ),
+			self::row( '{amount_total}', __( 'Total paid.', 'class-bookings-with-stripe-pro' ), '£45.00', 'custom' ),
+			self::row( '{booking_id}', __( 'Payment post ID (raw, no #).', 'class-bookings-with-stripe-pro' ), '1234', 'custom' ),
+			self::row( '{stripe_receipt_url}', __( 'Stripe hosted receipt URL.', 'class-bookings-with-stripe-pro' ), 'https://pay.stripe.com/receipts/…', 'custom' ),
 		];
 	}
 

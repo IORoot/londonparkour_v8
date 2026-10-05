@@ -25,6 +25,9 @@ abstract class Emails {
 		'field_clasbpro_email_test_send_customer'         => 'customer',
 		'field_clasbpro_email_test_send_admin_coupon'     => 'admin_coupon',
 		'field_clasbpro_email_test_send_customer_coupon'  => 'customer_coupon',
+		'field_clasbpro_email_test_send_admin_custom'     => 'admin_custom',
+		'field_clasbpro_email_test_send_customer_custom'  => 'customer_custom',
+		'field_clasbpro_email_test_send_custom_followup'  => 'custom_followup',
 		'field_clasbpro_email_test_send_reminder'         => 'reminder',
 		'field_clasbpro_email_test_send_post_class'       => 'post_class',
 	];
@@ -34,6 +37,9 @@ abstract class Emails {
 		'field_clasbpro_email_tab_intro_customer'         => 'customer',
 		'field_clasbpro_email_tab_intro_admin_coupon'     => 'admin_coupon',
 		'field_clasbpro_email_tab_intro_customer_coupon'  => 'customer_coupon',
+		'field_clasbpro_email_tab_intro_admin_custom'     => 'admin_custom',
+		'field_clasbpro_email_tab_intro_customer_custom'  => 'customer_custom',
+		'field_clasbpro_email_tab_intro_custom_followup'  => 'custom_followup',
 		'field_clasbpro_email_tab_intro_reminder'         => 'reminder',
 		'field_clasbpro_email_tab_intro_post_class'       => 'post_class',
 	];
@@ -142,6 +148,9 @@ abstract class Emails {
 			'customer-coupon'  => __( 'Sent to the customer right after a coupon purchase with their code, uses, and restore link.', 'class-bookings-with-stripe-pro' ),
 			'reminders'        => __( 'Sent automatically before class starts. Late bookings inside that window are skipped by default; turn off “Skip if booked inside the reminder window” to send them immediately instead.', 'class-bookings-with-stripe-pro' ),
 			'post-class'       => __( 'Sent automatically after class ends as a follow-up to customers who attended; timing is based on each class duration.', 'class-bookings-with-stripe-pro' ),
+			'admin-custom'     => __( 'Sent to you immediately when someone pays an agreed amount on the Pay page.', 'class-bookings-with-stripe-pro' ),
+			'customer-custom'  => __( 'Sent to the customer right after a Pay-page amount is taken. There is no class date, so class reminders do not run.', 'class-bookings-with-stripe-pro' ),
+			'custom-followup'  => __( 'Optional thank-you sent a set time after the Pay-page payment. Use this instead of a class reminder or post-class email.', 'class-bookings-with-stripe-pro' ),
 			'extras'           => __( 'Redirect all plugin emails to a test address while developing, and queue scheduled emails for existing upcoming bookings.', 'class-bookings-with-stripe-pro' ),
 		];
 	}
@@ -162,7 +171,7 @@ abstract class Emails {
 		);
 		$test_to       = self::get_test_recipient();
 		$intended      = self::get_intended_test_recipient( $tab );
-		$needs_rule    = in_array( $tab, [ 'reminder', 'post_class' ], true );
+		$needs_rule    = in_array( $tab, [ 'reminder', 'post_class', 'custom_followup' ], true );
 		$scheduled_rule = $needs_rule ? Scheduled_Emails::get_global_rule( $tab ) : null;
 
 		$can_send = '' !== $test_to && ! ( $needs_rule && ! $scheduled_rule );
@@ -172,6 +181,9 @@ abstract class Emails {
 			'customer'         => __( 'Send test customer email', 'class-bookings-with-stripe-pro' ),
 			'admin_coupon'     => __( 'Send test admin coupon email', 'class-bookings-with-stripe-pro' ),
 			'customer_coupon'  => __( 'Send test customer coupon email', 'class-bookings-with-stripe-pro' ),
+			'admin_custom'     => __( 'Send test admin pay email', 'class-bookings-with-stripe-pro' ),
+			'customer_custom'  => __( 'Send test customer pay email', 'class-bookings-with-stripe-pro' ),
+			'custom_followup'  => __( 'Send test pay thank-you', 'class-bookings-with-stripe-pro' ),
 			'reminder'         => __( 'Send test reminder', 'class-bookings-with-stripe-pro' ),
 			'post_class'       => __( 'Send test post-class email', 'class-bookings-with-stripe-pro' ),
 		];
@@ -243,9 +255,11 @@ abstract class Emails {
 	public static function get_intended_test_recipient( string $tab ): array {
 		$tags = in_array( $tab, [ 'admin_coupon', 'customer_coupon' ], true )
 			? Merge_Tags::sample_coupon_tags()
-			: Merge_Tags::sample_booking_tags();
+			: ( in_array( $tab, [ 'admin_custom', 'customer_custom', 'custom_followup' ], true )
+				? Merge_Tags::sample_custom_payment_tags()
+				: Merge_Tags::sample_booking_tags() );
 
-		if ( in_array( $tab, [ 'admin', 'admin_coupon' ], true ) ) {
+		if ( in_array( $tab, [ 'admin', 'admin_coupon', 'admin_custom' ], true ) ) {
 			$admin = trim( (string) Helpers::get_option( 'admin_email', '' ) );
 			if ( '' === $admin ) {
 				$admin = (string) get_option( 'admin_email' );
@@ -271,6 +285,9 @@ abstract class Emails {
 			'customer'         => __( 'Test customer booking email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
 			'admin_coupon'     => __( 'Test admin coupon email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
 			'customer_coupon'  => __( 'Test customer coupon email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
+			'admin_custom'     => __( 'Test admin pay email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
+			'customer_custom'  => __( 'Test customer pay email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
+			'custom_followup'  => __( 'Test pay thank-you email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
 			'reminder'         => __( 'Test reminder email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
 			'post_class'       => __( 'Test post-class email sent to your test recipient.', 'class-bookings-with-stripe-pro' ),
 		];
@@ -287,6 +304,9 @@ abstract class Emails {
 			'customer'         => 'field_clasbpro_email_subtab_customer',
 			'admin_coupon'     => 'field_clasbpro_email_subtab_admin_coupon',
 			'customer_coupon'  => 'field_clasbpro_email_subtab_customer_coupon',
+			'admin_custom'     => 'field_clasbpro_email_subtab_admin_custom',
+			'customer_custom'  => 'field_clasbpro_email_subtab_customer_custom',
+			'custom_followup'  => 'field_clasbpro_email_subtab_custom_followup',
 			'reminder'         => 'field_clasbpro_email_subtab_reminders',
 			'post_class'       => 'field_clasbpro_email_subtab_post_class',
 		];
@@ -388,7 +408,38 @@ abstract class Emails {
 			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['editor_mode'] ?? false );
 		}
 
-		if ( 'reminder' === $type || 'post_class' === $type ) {
+		if ( 'customer_custom' === $type ) {
+			$subject_tpl = (string) Helpers::get_option( 'customer_custom_email_subject', '' );
+			$body        = self::resolve_body_template( 'customer_custom' );
+			if ( '' === $subject_tpl ) {
+				$subject_tpl = self::default_customer_custom_subject();
+			}
+			$intended = self::get_intended_test_recipient( 'customer_custom' );
+			$tags     = Merge_Tags::sample_custom_payment_tags();
+			return self::send_raw_template(
+				$intended['to'] ?: $test_to,
+				$subject_tpl,
+				$body['body'],
+				$tags,
+				$intended['role'],
+				true,
+				$body['editor_mode'] ?? false
+			);
+		}
+
+		if ( 'admin_custom' === $type ) {
+			$subject_tpl = (string) Helpers::get_option( 'admin_custom_email_subject', '' );
+			$body        = self::resolve_body_template( 'admin_custom' );
+			if ( '' === $subject_tpl ) {
+				$subject_tpl = self::default_admin_custom_subject();
+			}
+			$intended = self::get_intended_test_recipient( 'admin_custom' );
+			$tags     = Merge_Tags::sample_custom_payment_tags();
+			$to       = $intended['to'] ?: $test_to;
+			return self::send_raw_template( $to, $subject_tpl, $body['body'], $tags, $intended['role'], true, $body['editor_mode'] ?? false );
+		}
+
+		if ( 'reminder' === $type || 'post_class' === $type || 'custom_followup' === $type ) {
 			return Scheduled_Emails::dispatch_test_rule_email( $type );
 		}
 
@@ -448,38 +499,26 @@ abstract class Emails {
 		}
 		$sent[ $booking_id ] = true;
 
-		$email  = sanitize_email( (string) get_post_meta( $booking_id, '_clasbpro_customer_email', true ) );
-		$name   = sanitize_text_field( (string) get_post_meta( $booking_id, '_clasbpro_customer_name', true ) );
-		$amount = Helpers::format_stripe_amount( (int) get_post_meta( $booking_id, '_clasbpro_amount_total', true ) );
-		$receipt_url = (string) get_post_meta( $booking_id, '_clasbpro_stripe_receipt_url', true );
+		$tags = self::build_merge_tags( $booking_id );
+		if ( empty( $tags ) ) {
+			return;
+		}
 
-		$tags = [
-			'{customer_name}'      => $name ?: __( 'there', 'class-bookings-with-stripe-pro' ),
-			'{customer_email}'     => $email,
-			'{amount_total}'       => $amount,
-			'{booking_id}'         => (string) $booking_id,
-			'{stripe_receipt_url}' => $receipt_url,
-		];
-
+		$email = sanitize_email( (string) ( $tags['{customer_email}'] ?? '' ) );
 		if ( $email && is_email( $email ) ) {
-			$subject = sprintf(
-				/* translators: %s: formatted amount */
-				__( 'Payment received — %s', 'class-bookings-with-stripe-pro' ),
-				$amount
-			);
-			$body = sprintf(
-				"Hi %s,\n\nWe received your payment of %s. A Stripe receipt is on its way to this address.\n\nThis is not a class booking. Standard sessions are on the agenda.\n\nLondon Parkour",
-				$tags['{customer_name}'],
-				$amount
-			);
-			$ok = self::send_raw_template(
+			$subject = (string) Helpers::get_option( 'customer_custom_email_subject', '' );
+			if ( '' === $subject ) {
+				$subject = self::default_customer_custom_subject();
+			}
+			$body = self::resolve_body_template( 'customer_custom' );
+			$ok   = self::send_raw_template(
 				$email,
 				$subject,
-				$body,
+				$body['body'],
 				$tags,
 				__( 'Customer', 'class-bookings-with-stripe-pro' ),
 				false,
-				false
+				$body['editor_mode'] ?? false
 			);
 			self::record_instant_delivery( $booking_id, Booking_Email_Status::TYPE_CUSTOMER, $ok );
 		} else {
@@ -498,28 +537,19 @@ abstract class Emails {
 			$admin = (string) get_option( 'admin_email' );
 		}
 		if ( $admin && is_email( $admin ) ) {
-			$subject = sprintf(
-				/* translators: 1: formatted amount, 2: customer name */
-				__( 'Custom payment — %1$s — %2$s', 'class-bookings-with-stripe-pro' ),
-				$amount,
-				$name ?: __( 'Customer', 'class-bookings-with-stripe-pro' )
-			);
-			$body = sprintf(
-				"%s <%s> paid %s.\n\nReference: #%d\nReceipt: %s\n\nThis is not a class booking.",
-				$name ?: __( 'Customer', 'class-bookings-with-stripe-pro' ),
-				$email,
-				$amount,
-				$booking_id,
-				$receipt_url ?: '—'
-			);
-			$ok = self::send_raw_template(
+			$subject = (string) Helpers::get_option( 'admin_custom_email_subject', '' );
+			if ( '' === $subject ) {
+				$subject = self::default_admin_custom_subject();
+			}
+			$body = self::resolve_body_template( 'admin_custom' );
+			$ok   = self::send_raw_template(
 				$admin,
 				$subject,
-				$body,
+				$body['body'],
 				$tags,
 				__( 'Admin', 'class-bookings-with-stripe-pro' ),
 				true,
-				false
+				$body['editor_mode'] ?? false
 			);
 			self::record_instant_delivery( $booking_id, Booking_Email_Status::TYPE_ADMIN, $ok );
 		} else {
@@ -650,6 +680,30 @@ abstract class Emails {
 	 * @return array<string, string>|null
 	 */
 	public static function build_merge_tags( int $booking_id, array $extra = [] ): ?array {
+		if ( Custom_Payments::is( $booking_id ) ) {
+			$email = sanitize_email( (string) get_post_meta( $booking_id, '_clasbpro_customer_email', true ) );
+			$name  = sanitize_text_field( (string) get_post_meta( $booking_id, '_clasbpro_customer_name', true ) );
+			$tags  = [
+				'{customer_name}'      => $name ?: __( 'there', 'class-bookings-with-stripe-pro' ),
+				'{customer_email}'     => $email,
+				'{amount_total}'       => Helpers::format_stripe_amount( (int) get_post_meta( $booking_id, '_clasbpro_amount_total', true ) ),
+				'{booking_id}'         => (string) $booking_id,
+				'{stripe_receipt_url}' => (string) get_post_meta( $booking_id, '_clasbpro_stripe_receipt_url', true ),
+			];
+			$tags = array_merge( $tags, $extra );
+
+			return Merge_Tags::filter_values(
+				$tags,
+				[
+					'kind'        => 'custom',
+					'booking_id'  => $booking_id,
+					'class_id'    => 0,
+					'purchase_id' => 0,
+					'sample'      => false,
+				]
+			);
+		}
+
 		$meta       = Bookings::get_meta( $booking_id );
 		$class_data = Helpers::get_class_data( $meta['class_id'] );
 		if ( ! $class_data ) {
@@ -773,6 +827,12 @@ abstract class Emails {
 				return self::load_template_file( 'email-customer-coupon.php' );
 			case 'admin_coupon':
 				return self::load_template_file( 'email-admin-coupon.php' );
+			case 'customer_custom':
+				return self::load_template_file( 'email-customer-custom.php' );
+			case 'admin_custom':
+				return self::load_template_file( 'email-admin-custom.php' );
+			case 'custom_followup':
+				return Scheduled_Emails::default_custom_followup_rule_body();
 			case 'reminder':
 				return Scheduled_Emails::default_reminder_rule_body();
 			case 'post_class':
@@ -1193,5 +1253,17 @@ abstract class Emails {
 
 	public static function default_admin_coupon_subject(): string {
 		return 'New coupon purchase: {pack_name}';
+	}
+
+	public static function default_customer_custom_subject(): string {
+		return 'Payment received — {amount_total}';
+	}
+
+	public static function default_admin_custom_subject(): string {
+		return 'Custom payment — {amount_total} — {customer_name}';
+	}
+
+	public static function default_custom_followup_subject(): string {
+		return 'Thank you {customer_name}';
 	}
 }

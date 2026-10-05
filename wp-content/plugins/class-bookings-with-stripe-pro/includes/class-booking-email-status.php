@@ -14,7 +14,8 @@ abstract class Booking_Email_Status {
 	public const TYPE_ADMIN      = 'admin';
 	public const TYPE_CUSTOMER   = 'customer';
 	public const TYPE_REMINDER   = 'reminder';
-	public const TYPE_POST_CLASS = 'post_class';
+	public const TYPE_POST_CLASS       = 'post_class';
+	public const TYPE_CUSTOM_FOLLOWUP  = 'custom_followup';
 
 	public const PILL_SENT             = 'sent';
 	public const PILL_ERROR            = 'error';
@@ -50,6 +51,30 @@ abstract class Booking_Email_Status {
 	}
 
 	/**
+	 * @return list<array{key: string, label: string}>
+	 */
+	public static function email_types_for_booking( int $booking_id ): array {
+		if ( Custom_Payments::is( $booking_id ) ) {
+			return [
+				[
+					'key'   => self::TYPE_ADMIN,
+					'label' => __( 'Admin email', 'class-bookings-with-stripe-pro' ),
+				],
+				[
+					'key'   => self::TYPE_CUSTOMER,
+					'label' => __( 'Customer email', 'class-bookings-with-stripe-pro' ),
+				],
+				[
+					'key'   => self::TYPE_CUSTOM_FOLLOWUP,
+					'label' => __( 'Pay thank-you', 'class-bookings-with-stripe-pro' ),
+				],
+			];
+		}
+
+		return self::email_types();
+	}
+
+	/**
 	 * @return array{slug: string, label: string, detail: string}
 	 */
 	public static function resolve( int $booking_id, string $type ): array {
@@ -76,7 +101,7 @@ abstract class Booking_Email_Status {
 					</tr>
 				</thead>
 				<tbody>
-				<?php foreach ( self::email_types() as $email_type ) : ?>
+				<?php foreach ( self::email_types_for_booking( $booking_id ) as $email_type ) : ?>
 					<?php
 					$status = self::resolve( $booking_id, (string) $email_type['key'] );
 					$pill   = self::pill_label( (string) $status['slug'] );
@@ -311,7 +336,13 @@ abstract class Booking_Email_Status {
 	 * @return array{slug: string, label: string, detail: string}
 	 */
 	private static function resolve_scheduled( int $booking_id, string $type, string $booking_status ): array {
-		$scheduled_type = self::TYPE_REMINDER === $type ? Scheduled_Emails::TYPE_REMINDER : Scheduled_Emails::TYPE_POST_CLASS;
+		if ( self::TYPE_REMINDER === $type ) {
+			$scheduled_type = Scheduled_Emails::TYPE_REMINDER;
+		} elseif ( self::TYPE_CUSTOM_FOLLOWUP === $type ) {
+			$scheduled_type = Scheduled_Emails::TYPE_CUSTOM_FOLLOWUP;
+		} else {
+			$scheduled_type = Scheduled_Emails::TYPE_POST_CLASS;
+		}
 
 		if ( Bookings::STATUS_PAID !== $booking_status ) {
 			if ( Bookings::STATUS_REFUNDED === $booking_status ) {
