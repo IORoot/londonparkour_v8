@@ -148,8 +148,8 @@ $lp_facts = $lp_compact
 		</div>
 	</div>
 <?php if ( $lp_pending ) : ?>
-	<div class="w-full bg-primary text-primary-content">
-		<p class="px-6 lg:px-16 py-4 font-label text-fix--2 font-semibold uppercase tracking-[1px] m-0">Confirming your booking… Stripe is still settling. This page will update.</p>
+	<div class="w-full bg-primary text-primary-content cbfs-status__pending" data-cbfs-pending-banner aria-live="polite">
+		<p class="px-6 lg:px-16 py-4 font-label text-fix--2 font-semibold uppercase tracking-[1px] m-0 cbfs-status__pending-text">Confirming your booking… Stripe is still settling. This page will update.</p>
 	</div>
 <?php endif; ?>
 
