@@ -297,17 +297,28 @@ abstract class Scheduled_Emails {
 		}
 
 		$now_gmt = gmdate( 'Y-m-d H:i:s' );
+		$due_now = false;
 
 		foreach ( self::resolve_rules( $class_id, self::TYPE_REMINDER ) as $rule ) {
-			$seconds  = self::offset_to_seconds( (int) $rule['offset_amount'], (string) $rule['offset_unit'] );
+			$seconds    = self::offset_to_seconds( (int) $rule['offset_amount'], (string) $rule['offset_unit'] );
 			$send_local = $start->modify( '-' . $seconds . ' seconds' );
-			$send_at  = $send_local->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' );
-			$status   = self::STATUS_PENDING;
-			$skip     = '';
+			$send_at    = $send_local->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' );
+			$status     = self::STATUS_PENDING;
+			$skip       = '';
 
-			if ( $send_at <= $now_gmt ) {
+			if ( self::class_has_started( $start, $now_gmt ) ) {
 				$status = self::STATUS_SKIPPED;
 				$skip   = self::SKIP_LATE;
+			} elseif ( $send_at <= $now_gmt ) {
+				if ( self::skip_late_reminders() ) {
+					$status = self::STATUS_SKIPPED;
+					$skip   = self::SKIP_LATE;
+				} else {
+					// Booked inside the reminder window but before class: send now,
+					// never leave a past send_at sitting for a later cron tick.
+					$send_at = $now_gmt;
+					$due_now = true;
+				}
 			}
 
 			self::insert_queue_row(
@@ -344,6 +355,10 @@ abstract class Scheduled_Emails {
 				$status,
 				$skip
 			);
+		}
+
+		if ( $due_now ) {
+			self::process_due_queue();
 		}
 	}
 
@@ -450,11 +465,18 @@ abstract class Scheduled_Emails {
 			return;
 		}
 
-		// Skip-if-late is also applied at queue time. Repeat it here so a
-		// WP-Cron outage (or a restored dump of old pending rows) cannot send
-		// a reminder days after the class.
+		// Never send a reminder after class has started, even if WP-Cron was
+		// down and the row is only a few hours overdue (the old 24-hour grace
+		// still let those through). Post-class mail may still go out late.
 		$send_at = (string) ( $row['send_at'] ?? '' );
-		if ( '' !== $send_at && $send_at < gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS ) ) {
+		$now_gmt = gmdate( 'Y-m-d H:i:s' );
+		if ( self::TYPE_REMINDER === $rule_type ) {
+			$start = self::booking_start_datetime( $booking_id );
+			if ( self::class_has_started( $start, $now_gmt ) ) {
+				self::update_row_status( $id, self::STATUS_SKIPPED, self::SKIP_LATE );
+				return;
+			}
+		} elseif ( '' !== $send_at && $send_at < gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS ) ) {
 			self::update_row_status( $id, self::STATUS_SKIPPED, self::SKIP_LATE );
 			return;
 		}
@@ -794,6 +816,10 @@ abstract class Scheduled_Emails {
 		);
 	}
 
+	public static function skip_late_reminders(): bool {
+		return (bool) Helpers::get_option( 'skip_late_reminder_emails', 1 );
+	}
+
 	public static function category_enabled( string $type ): bool {
 		if ( self::TYPE_REMINDER === $type ) {
 			$val = Helpers::get_option( 'enable_reminder_emails', 1 );
@@ -964,6 +990,14 @@ abstract class Scheduled_Emails {
 			$format,
 			[ '%d' ]
 		);
+	}
+
+	private static function class_has_started( ?\DateTimeImmutable $start, string $now_gmt ): bool {
+		if ( ! $start ) {
+			return true;
+		}
+
+		return $start->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' ) <= $now_gmt;
 	}
 
 	private static function offset_to_seconds( int $amount, string $unit ): int {

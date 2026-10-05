@@ -140,7 +140,7 @@ abstract class Emails {
 			'customer'         => __( 'Sent to the customer right after payment to confirm their class, date, time, and booking reference.', 'class-bookings-with-stripe-pro' ),
 			'admin-coupon'     => __( 'Sent to you immediately when a customer buys a coupon, with their contact details and purchase summary.', 'class-bookings-with-stripe-pro' ),
 			'customer-coupon'  => __( 'Sent to the customer right after a coupon purchase with their code, uses, and restore link.', 'class-bookings-with-stripe-pro' ),
-			'reminders'        => __( 'Sent automatically before class starts to remind booked customers; missed sends are skipped if the booking was made too late.', 'class-bookings-with-stripe-pro' ),
+			'reminders'        => __( 'Sent automatically before class starts. Late bookings inside that window are skipped by default; turn off “Skip if booked inside the reminder window” to send them immediately instead.', 'class-bookings-with-stripe-pro' ),
 			'post-class'       => __( 'Sent automatically after class ends as a follow-up to customers who attended; timing is based on each class duration.', 'class-bookings-with-stripe-pro' ),
 			'extras'           => __( 'Redirect all plugin emails to a test address while developing, and queue scheduled emails for existing upcoming bookings.', 'class-bookings-with-stripe-pro' ),
 		];

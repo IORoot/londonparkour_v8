@@ -1559,6 +1559,16 @@ abstract class ACF_Fields {
 						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-reminders clasbpro-scheduled-email-controls' ],
 					],
 					[
+						'key'           => 'field_clasbpro_skip_late_reminder_emails',
+						'label'         => __( 'Skip if booked inside the reminder window', 'class-bookings-with-stripe-pro' ),
+						'name'          => 'skip_late_reminder_emails',
+						'type'          => 'true_false',
+						'instructions'  => __( 'When on (default), customers who book after the reminder send time do not receive a reminder. When off, they receive it immediately, as long as the class has not started.', 'class-bookings-with-stripe-pro' ),
+						'default_value' => 1,
+						'ui'            => 1,
+						'wrapper'       => [ 'class' => 'clasbpro-email-section clasbpro-email-section-reminders' ],
+					],
+					[
 						'key'           => 'field_clasbpro_reminder_email_subject',
 						'label'         => __( 'Reminder subject', 'class-bookings-with-stripe-pro' ),
 						'name'          => 'reminder_email_subject',

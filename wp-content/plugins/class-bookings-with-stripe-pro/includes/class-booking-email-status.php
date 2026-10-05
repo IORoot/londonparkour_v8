@@ -422,7 +422,7 @@ abstract class Booking_Email_Status {
 				return [
 					'slug'   => self::PILL_PAST_DATE,
 					'label'  => self::pill_label( self::PILL_PAST_DATE ),
-					'detail' => __( 'Booking was made too late for the scheduled send time.', 'class-bookings-with-stripe-pro' ),
+					'detail' => __( 'The scheduled send time had already passed, so this reminder was not sent.', 'class-bookings-with-stripe-pro' ),
 				];
 			}
 
