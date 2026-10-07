@@ -34,6 +34,7 @@ abstract class Constants {
 
 	public const MENU_SETTINGS = 'clasbpro-settings';
 	public const MENU_REPORTS  = 'clasbpro-reports';
+	public const MENU_TOOLS    = 'clasbpro-tools';
 
 	public const REST_NAMESPACE = 'clasbpro/v1';
 

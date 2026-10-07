@@ -40,6 +40,13 @@ abstract class Result_Pages {
 
 	private const ACF_POST_ID = 'clasbpro_options';
 
+	/**
+	 * @return array<string, array{slug: string, title: string, option: string, field_key: string, meta: string, content: string}>
+	 */
+	public static function definitions(): array {
+		return self::SLUGS;
+	}
+
 	public static function init(): void {
 		add_action( 'template_redirect', [ self::class, 'maybe_nocache' ] );
 	}
