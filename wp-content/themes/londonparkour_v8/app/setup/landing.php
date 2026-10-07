@@ -3,8 +3,9 @@
  * Landings — /go/{slug}/ pages for ads.
  *
  * The form and `wp lp landing <file.json>` write the same fields. An
- * incomplete payload is not published. The command publishes immediately,
- * updates the same slug in place, and always forces noindex.
+ * incomplete payload is not published. The command publishes immediately
+ * and updates the same slug in place. Published landings are indexable
+ * and listed in the sitemap.
  *
  * @package londonparkour_v8
  */
@@ -342,43 +343,34 @@ function lp_landing_validate_save_post(): void {
 add_action( 'acf/validate_save_post', 'lp_landing_validate_save_post', 20 );
 
 /**
- * New landings start hidden from search engines.
+ * Drop the noindex flag the publisher used to write on every landing.
  *
- * @param mixed $value   Stored value.
- * @param mixed $post_id Post ID.
- * @return mixed
+ * Runs once. An editor can still tick noindex afterwards; those stay out
+ * of the sitemap.
  */
-function lp_landing_noindex_default( $value, $post_id ) {
-	if ( is_string( $post_id ) && str_starts_with( $post_id, 'post_' ) ) {
-		$post_id = substr( $post_id, 5 );
+function lp_landing_release_forced_noindex(): void {
+	if ( get_option( 'lp_landing_indexable_v1' ) ) {
+		return;
 	}
-	$post_id = (int) $post_id;
-	if ( $post_id < 1 || 'lp_landing' !== get_post_type( $post_id ) ) {
-		return $value;
-	}
-	if ( ! metadata_exists( 'post', $post_id, 'seo_noindex' ) ) {
-		return 1;
-	}
-	return $value;
-}
-add_filter( 'acf/load_value/name=seo_noindex', 'lp_landing_noindex_default', 10, 2 );
 
-/**
- * Hide a landing that has never saved the SEO box.
- *
- * @param bool $noindex Current decision.
- */
-function lp_landing_noindex_filter( $noindex ) {
-	if ( $noindex || ! is_singular( 'lp_landing' ) ) {
-		return $noindex;
+	$ids = get_posts(
+		array(
+			'post_type'      => 'lp_landing',
+			'post_status'    => 'any',
+			'posts_per_page' => 200,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'meta_key'       => 'seo_noindex', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'     => '1', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		)
+	);
+	foreach ( $ids as $id ) {
+		delete_post_meta( (int) $id, 'seo_noindex' );
 	}
-	$post_id = (int) get_queried_object_id();
-	if ( $post_id && ! metadata_exists( 'post', $post_id, 'seo_noindex' ) ) {
-		return true;
-	}
-	return $noindex;
+
+	update_option( 'lp_landing_indexable_v1', '1', false );
 }
-add_filter( 'lp_seo_noindex', 'lp_landing_noindex_filter' );
+add_action( 'init', 'lp_landing_release_forced_noindex', 20 );
 
 /**
  * Write the fixed landing sequence.
@@ -524,8 +516,6 @@ function lp_landing_write_fields( int $post_id, array $data ): void {
 	foreach ( $map as $name ) {
 		update_field( $name, $data[ $name ] ?? '', $post_id );
 	}
-	update_field( 'seo_noindex', 1, $post_id );
-	update_post_meta( $post_id, 'seo_noindex', '1' );
 }
 
 /**

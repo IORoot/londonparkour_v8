@@ -105,7 +105,48 @@ function lp_seo_sitemap_providers( $provider, string $name ) {
 add_filter( 'wp_sitemaps_add_provider', 'lp_seo_sitemap_providers', 10, 2 );
 
 /**
- * Keep noindex / utility pages out of the post sitemaps.
+ * Pages that must not be indexed or listed in the sitemap.
+ *
+ * `legal` and `docs-faq` are published pages that 301 to the docs wiki.
+ * The booking and QA slugs are utility responses.
+ *
+ * @return string[]
+ */
+function lp_seo_utility_page_slugs(): array {
+	return array(
+		'blocks-qa',
+		'booking-error',
+		'booking-cancelled',
+		'booking-confirmed',
+		'clasbpro-theme-preview',
+		'legal',
+		'docs-faq',
+	);
+}
+
+/**
+ * Support articles whose public URL is a 301, not a document.
+ *
+ * FAQ goes to the docs index. Class Locations goes to the classes map.
+ *
+ * @param WP_Post $post Support post.
+ */
+function lp_seo_support_redirects( WP_Post $post ): bool {
+	if ( 'support' !== $post->post_type ) {
+		return false;
+	}
+	if ( function_exists( 'lp_docs_is_faq' ) && lp_docs_is_faq( $post ) ) {
+		return true;
+	}
+	if ( function_exists( 'lp_docs_is_class_locations' ) && lp_docs_is_class_locations( $post ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Keep noindex / utility / redirecting pages out of the post sitemaps.
  *
  * @param array  $args      WP_Query args for the sitemap.
  * @param string $post_type Post type being listed.
@@ -115,10 +156,28 @@ function lp_seo_sitemap_posts_query_args( array $args, string $post_type ): arra
 	$exclude = array();
 
 	if ( 'page' === $post_type ) {
-		foreach ( array( 'blocks-qa', 'booking-error', 'booking-cancelled', 'booking-confirmed', 'clasbpro-theme-preview' ) as $slug ) {
+		foreach ( lp_seo_utility_page_slugs() as $slug ) {
 			$page = get_page_by_path( $slug );
 			if ( $page instanceof WP_Post ) {
 				$exclude[] = (int) $page->ID;
+			}
+		}
+	}
+
+	if ( 'support' === $post_type ) {
+		$support_ids = get_posts(
+			array(
+				'post_type'      => 'support',
+				'post_status'    => 'publish',
+				'posts_per_page' => 200,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			)
+		);
+		foreach ( $support_ids as $id ) {
+			$support = get_post( (int) $id );
+			if ( $support instanceof WP_Post && lp_seo_support_redirects( $support ) ) {
+				$exclude[] = (int) $support->ID;
 			}
 		}
 	}
@@ -148,6 +207,115 @@ function lp_seo_sitemap_posts_query_args( array $args, string $post_type ): arra
 	return $args;
 }
 add_filter( 'wp_sitemaps_posts_query_args', 'lp_seo_sitemap_posts_query_args', 10, 2 );
+
+/**
+ * Attachments are files. Published landings (/go/{slug}/) stay in the sitemap.
+ *
+ * @param array<string, WP_Post_Type> $post_types Post types in the sitemap.
+ * @return array<string, WP_Post_Type>
+ */
+function lp_seo_sitemap_post_types( array $post_types ): array {
+	unset( $post_types['attachment'] );
+
+	return $post_types;
+}
+add_filter( 'wp_sitemaps_post_types', 'lp_seo_sitemap_post_types' );
+
+/**
+ * Rewrite a URL onto the configured home scheme and host.
+ *
+ * Sitemap locs and canonicals then cannot drift to http, www, or dev
+ * while WordPress itself is configured for the public site.
+ *
+ * @param string $url Absolute or root-relative URL.
+ */
+function lp_seo_align_url_to_home( string $url ): string {
+	$url = trim( $url );
+	if ( '' === $url ) {
+		return $url;
+	}
+
+	$home  = wp_parse_url( home_url( '/' ) );
+	$parts = wp_parse_url( $url );
+	if ( ! is_array( $home ) || empty( $home['host'] ) || ! is_array( $parts ) ) {
+		return $url;
+	}
+
+	$path  = (string) ( $parts['path'] ?? '/' );
+	$query = isset( $parts['query'] ) ? '?' . $parts['query'] : '';
+	$frag  = isset( $parts['fragment'] ) ? '#' . $parts['fragment'] : '';
+	$port  = isset( $home['port'] ) ? ':' . $home['port'] : '';
+
+	return (string) ( $home['scheme'] ?? 'https' ) . '://' . $home['host'] . $port . $path . $query . $frag;
+}
+
+/**
+ * Force sitemap locs onto the home origin and drop query strings.
+ *
+ * Dated class occurrences (`?date=`) and filters are not separate documents.
+ *
+ * @param mixed $entry Sitemap entry.
+ * @return mixed
+ */
+function lp_seo_sitemap_entry( $entry ) {
+	if ( ! is_array( $entry ) || empty( $entry['loc'] ) || ! is_string( $entry['loc'] ) ) {
+		return $entry;
+	}
+
+	$loc   = lp_seo_align_url_to_home( $entry['loc'] );
+	$parts = wp_parse_url( $loc );
+	if ( is_array( $parts ) && ! empty( $parts['host'] ) ) {
+		$port = isset( $parts['port'] ) ? ':' . $parts['port'] : '';
+		$loc  = (string) ( $parts['scheme'] ?? 'https' ) . '://' . $parts['host'] . $port . (string) ( $parts['path'] ?? '/' );
+	}
+
+	$entry['loc'] = $loc;
+
+	return $entry;
+}
+add_filter( 'wp_sitemaps_posts_entry', 'lp_seo_sitemap_entry' );
+add_filter( 'wp_sitemaps_taxonomies_entry', 'lp_seo_sitemap_entry' );
+add_filter( 'wp_sitemaps_index_entry', 'lp_seo_sitemap_entry' );
+
+/**
+ * Whether this path is a retired Yoast sitemap, not a WordPress core sitemap.
+ *
+ * @param string $request_path Request path, with or without a query string.
+ */
+function lp_seo_legacy_yoast_sitemap_path( string $request_path ): bool {
+	$path = (string) wp_parse_url( $request_path, PHP_URL_PATH );
+	$base = strtolower( basename( $path ) );
+	if ( '' === $base || 0 === strpos( $base, 'wp-sitemap' ) ) {
+		return false;
+	}
+
+	return (bool) preg_match( '/^(sitemap_index|[a-z0-9_]+-sitemap\d*)\.xml$/', $base );
+}
+
+/**
+ * Send retired Yoast sitemap URLs to the core sitemap index.
+ *
+ * Search Console still has sitemap_index.xml, the http/www copies, and the
+ * dev host copy. Those files 404 after the theme switch. A 301 lets the
+ * next fetch land on the sitemap robots.txt already advertises.
+ */
+function lp_seo_legacy_sitemap_redirect(): void {
+	if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
+		return;
+	}
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		return;
+	}
+
+	$request = isset( $GLOBALS['wp']->request ) ? (string) $GLOBALS['wp']->request : '';
+	if ( ! lp_seo_legacy_yoast_sitemap_path( '/' . ltrim( $request, '/' ) ) ) {
+		return;
+	}
+
+	wp_safe_redirect( home_url( '/wp-sitemap.xml' ), 301 );
+	exit;
+}
+add_action( 'template_redirect', 'lp_seo_legacy_sitemap_redirect', 0 );
 
 /**
  * Built-in homepage title when Site Settings has none.
@@ -379,7 +547,9 @@ function lp_seo_canonical_url(): string {
 	if ( ! empty( $parts['query'] ) ) {
 		parse_str( $parts['query'], $query );
 		foreach ( array_keys( $query ) as $key ) {
-			if ( preg_match( '/^(utm_|mc_|fbclid|gclid|_ga)/i', (string) $key ) ) {
+			$key = (string) $key;
+			// `date` pins a class occurrence. The indexable document is the class URL.
+			if ( 'date' === $key || preg_match( '/^(utm_|mc_|fbclid|gclid|_ga)/i', $key ) ) {
 				unset( $query[ $key ] );
 			}
 		}
@@ -394,7 +564,7 @@ function lp_seo_canonical_url(): string {
 		$built .= '?' . http_build_query( $query );
 	}
 
-	return $built;
+	return lp_seo_align_url_to_home( $built );
 }
 
 /**
@@ -442,10 +612,12 @@ function lp_seo_is_noindex(): bool {
 		return true;
 	}
 
-	$slugs = array( 'blocks-qa', 'booking-error', 'booking-cancelled', 'booking-confirmed', 'clasbpro-theme-preview' );
 	if ( is_singular() ) {
 		$post = get_queried_object();
-		if ( $post instanceof WP_Post && in_array( $post->post_name, $slugs, true ) ) {
+		if ( $post instanceof WP_Post && in_array( $post->post_name, lp_seo_utility_page_slugs(), true ) ) {
+			return true;
+		}
+		if ( $post instanceof WP_Post && lp_seo_support_redirects( $post ) ) {
 			return true;
 		}
 	}
@@ -489,12 +661,10 @@ function lp_seo_robots_txt( string $output, bool $public ): string {
 		return $output;
 	}
 
-	$sitemap = home_url( '/wp-sitemap.xml' );
-	if ( false === strpos( $output, 'Sitemap:' ) ) {
-		$output = rtrim( $output ) . "\n\nSitemap: {$sitemap}\n";
-	}
+	$output  = (string) preg_replace( '/^[ \t]*Sitemap:.*$/mi', '', $output );
+	$sitemap = lp_seo_align_url_to_home( home_url( '/wp-sitemap.xml' ) );
 
-	return $output;
+	return rtrim( $output ) . "\n\nSitemap: {$sitemap}\n";
 }
 
 /**
@@ -801,7 +971,6 @@ function lp_seo_place_node( WP_Post $location ): ?array {
 	$name  = get_the_title( $id );
 	$lat   = function_exists( 'get_field' ) ? trim( (string) get_field( 'latitude', $id ) ) : '';
 	$lon   = function_exists( 'get_field' ) ? trim( (string) get_field( 'longitude', $id ) ) : '';
-	$meta  = function_exists( 'get_field' ) ? (string) get_field( 'meta', $id ) : '';
 	$node  = array(
 		'@type' => 'Place',
 		'@id'   => get_permalink( $id ) ? get_permalink( $id ) . '#place' : home_url( '/#place-' . $id ),
@@ -818,9 +987,7 @@ function lp_seo_place_node( WP_Post $location ): ?array {
 	if ( '' !== $postcode ) {
 		$address['postalCode'] = $postcode;
 	}
-	if ( '' !== lp_seo_plain( $meta ) ) {
-		$address['streetAddress'] = lp_seo_plain( $meta );
-	}
+	// Location `meta` is a schedule line, not a street. postalCode is enough.
 	$node['address'] = $address;
 
 	if ( '' !== $lat && '' !== $lon && is_numeric( $lat ) && is_numeric( $lon ) ) {
@@ -835,7 +1002,11 @@ function lp_seo_place_node( WP_Post $location ): ?array {
 }
 
 /**
- * AggregateRating from imported Google reviews, when we have real scores.
+ * AggregateRating from imported Google reviews.
+ *
+ * Not attached to the sitewide organisation node. Those scores are real,
+ * but printing them on every URL made Google report Review snippets on
+ * pages that do not show the rating.
  *
  * @return array<string, mixed>|null
  */
@@ -1034,13 +1205,23 @@ function lp_seo_organization_node(): array {
 	$image = lp_seo_image();
 	if ( $image ) {
 		$org['image'] = $image['url'];
-		$org['logo']  = $image['url'];
 	}
 
-	$rating = lp_seo_aggregate_rating();
-	if ( $rating ) {
-		$org['aggregateRating'] = $rating;
+	// A class photograph is not a logo. Only a real logo or site icon qualifies.
+	$logo_id = function_exists( 'get_theme_mod' ) ? (int) get_theme_mod( 'custom_logo' ) : 0;
+	if ( $logo_id < 1 ) {
+		$logo_id = (int) get_option( 'site_icon' );
 	}
+	if ( $logo_id > 0 ) {
+		$logo_src = wp_get_attachment_image_src( $logo_id, 'full' );
+		if ( is_array( $logo_src ) && ! empty( $logo_src[0] ) ) {
+			$org['logo'] = (string) $logo_src[0];
+		}
+	}
+
+	// Imported Google-review scores must not be marked up on every URL.
+	// Inspection reported Review snippets on class, tutorial and docs pages
+	// that do not display that aggregate.
 
 	if ( function_exists( 'lp_locations_by_kind' ) ) {
 		$places = array();
@@ -1408,6 +1589,42 @@ function lp_seo_class_offer( int $class_id, int $remaining = -1 ): ?array {
 }
 
 /**
+ * Coaches teaching a class, as Event performers.
+ *
+ * Only published coach records. No stand-in when the class has none.
+ *
+ * @return array<int, array<string, string>>
+ */
+function lp_seo_event_performers( int $class_id ): array {
+	if ( ! function_exists( 'lp_class_coach_ids' ) ) {
+		return array();
+	}
+
+	$people = array();
+	foreach ( lp_class_coach_ids( $class_id ) as $coach_id ) {
+		$coach = get_post( $coach_id );
+		if ( ! $coach instanceof WP_Post || 'publish' !== $coach->post_status ) {
+			continue;
+		}
+		$name = lp_seo_plain( get_the_title( $coach ) );
+		if ( '' === $name ) {
+			continue;
+		}
+		$person = array(
+			'@type' => 'Person',
+			'name'  => $name,
+		);
+		$url = get_permalink( $coach );
+		if ( is_string( $url ) && '' !== $url ) {
+			$person['url'] = $url;
+		}
+		$people[] = $person;
+	}
+
+	return $people;
+}
+
+/**
  * Course + SportsEvent nodes for a class singular.
  *
  * @return array<int, array<string, mixed>>
@@ -1520,14 +1737,16 @@ function lp_seo_class_nodes( int $class_id ): array {
 		if ( ! empty( $course['location'] ) ) {
 			$event['location'] = $course['location'];
 		}
-		$session_offer = empty( $session['cancelled'] ) ? lp_seo_class_offer( $class_id, $remaining ) : null;
+		$performers = lp_seo_event_performers( $class_id );
+		if ( $performers ) {
+			$event['performer'] = 1 === count( $performers ) ? $performers[0] : $performers;
+		}
+		$session_offer = lp_seo_class_offer( $class_id, $remaining );
 		if ( $session_offer ) {
-			if ( ! empty( $session['sold_out'] ) ) {
+			if ( ! empty( $session['cancelled'] ) || ! empty( $session['sold_out'] ) ) {
 				$session_offer['availability'] = 'https://schema.org/SoldOut';
 			}
-			$valid = clone $start;
-			$session_offer['validFrom'] = $valid->format( DATE_ATOM );
-			$event['offers']            = $session_offer;
+			$event['offers'] = $session_offer;
 		}
 		if ( $remaining >= 0 ) {
 			$event['remainingAttendeeCapacity'] = $remaining;
@@ -1854,8 +2073,15 @@ function lp_seo_graph(): array {
 	$graph = array(
 		lp_seo_organization_node(),
 		lp_seo_website_node(),
-		lp_seo_webpage_node(),
 	);
+
+	// A 404 used to emit a WebPage whose url was the homepage and whose name
+	// was "Page not found", which described the homepage as missing.
+	$webpage_index = null;
+	if ( ! is_404() ) {
+		$graph[]       = lp_seo_webpage_node();
+		$webpage_index = count( $graph ) - 1;
+	}
 
 	$crumbs = lp_seo_breadcrumb_node();
 	if ( $crumbs ) {
@@ -1864,9 +2090,9 @@ function lp_seo_graph(): array {
 
 	$faq = lp_seo_faq_node();
 	if ( $faq ) {
-		$webpage_type = $graph[2]['@type'] ?? '';
-		if ( 'FAQPage' === $webpage_type ) {
-			$graph[2]['mainEntity'] = $faq['mainEntity'];
+		$webpage_type = null !== $webpage_index ? (string) ( $graph[ $webpage_index ]['@type'] ?? '' ) : '';
+		if ( null !== $webpage_index && 'FAQPage' === $webpage_type ) {
+			$graph[ $webpage_index ]['mainEntity'] = $faq['mainEntity'];
 		} else {
 			$graph[] = $faq;
 		}
@@ -1876,8 +2102,8 @@ function lp_seo_graph(): array {
 		$article = lp_seo_blog_posting_node( (int) get_queried_object_id() );
 		if ( $article ) {
 			$graph[] = $article;
-			if ( isset( $graph[2] ) && is_array( $graph[2] ) ) {
-				$graph[2]['mainEntity'] = array( '@id' => $article['@id'] );
+			if ( null !== $webpage_index && isset( $graph[ $webpage_index ] ) && is_array( $graph[ $webpage_index ] ) ) {
+				$graph[ $webpage_index ]['mainEntity'] = array( '@id' => $article['@id'] );
 			}
 		}
 	}
