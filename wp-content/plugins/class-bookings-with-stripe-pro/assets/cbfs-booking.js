@@ -448,6 +448,11 @@
 				return;
 			}
 
+			if ( el.dataset.cbfsPolling === '1' ) {
+				return;
+			}
+			el.dataset.cbfsPolling = '1';
+
 			let attempts = 0;
 			const max = 90; // ~3+ minutes with adaptive interval
 			const tick = async function () {
@@ -475,7 +480,8 @@
 					if ( res.ok ) {
 						const data = await res.json();
 						if ( data.status === 'paid' ) {
-							window.location.reload();
+							dismissPendingBanner( el );
+							refreshPaidStatusPage();
 							return;
 						}
 					}
@@ -492,6 +498,31 @@
 			};
 			setTimeout( tick, 2000 );
 		} );
+	}
+
+	/**
+	 * iOS Safari often ignores location.reload() from a fetch timer (no user
+	 * gesture, or it replays the cached pending HTML). Pull the settling
+	 * banner off the page as soon as Stripe reports paid.
+	 *
+	 * @param {Element} el
+	 */
+	function dismissPendingBanner( el ) {
+		el.classList.remove( 'cbfs-status--pending' );
+		el.classList.add( 'cbfs-status--paid' );
+		el.querySelectorAll( '.cbfs-status__pending, [data-cbfs-pending-banner]' ).forEach( function ( node ) {
+			node.remove();
+		} );
+	}
+
+	function refreshPaidStatusPage() {
+		try {
+			const url = new URL( window.location.href );
+			url.searchParams.set( 'cbfs_paid', String( Date.now() ) );
+			window.location.replace( url.toString() );
+		} catch ( e ) {
+			/* Banner already dismissed. */
+		}
 	}
 
 	function attachWaiverRichLabels() {
@@ -1002,4 +1033,14 @@
 	} else {
 		init();
 	}
+
+	window.addEventListener( 'pageshow', function ( event ) {
+		if ( ! event.persisted ) {
+			return;
+		}
+		document.querySelectorAll( '.cbfs-status' ).forEach( function ( el ) {
+			delete el.dataset.cbfsPolling;
+		} );
+		attachStatusPolling();
+	} );
 } )();

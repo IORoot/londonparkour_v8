@@ -4,4 +4,4 @@
 # │                     Export Database                      │
 # ╰──────────────────────────────────────────────────────────╯
 
-source ./config/githooks/pre-commit-scripts/export_database.sh
+    source ./config/githooks/pre-commit-scripts/export_database.sh

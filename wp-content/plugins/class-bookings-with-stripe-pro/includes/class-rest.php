@@ -743,6 +743,7 @@ abstract class REST {
 
 		if ( $is_custom ) {
 			Emails::send_for_custom_payment( $booking_id );
+			Scheduled_Emails::queue_for_custom_payment( $booking_id );
 			Helpers::debug_log( '[class-bookings-with-stripe-pro] checkout.session.completed custom payment marked paid. booking_id=' . $booking_id );
 			return;
 		}

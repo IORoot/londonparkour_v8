@@ -156,6 +156,9 @@
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-customer .clasbpro-email-section-customer,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-admin-coupon .clasbpro-email-section-admin-coupon,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-customer-coupon .clasbpro-email-section-customer-coupon,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-admin-custom .clasbpro-email-section-admin-custom,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-customer-custom .clasbpro-email-section-customer-custom,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-custom-followup .clasbpro-email-section-custom-followup,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-reminders .clasbpro-email-section-reminders,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-email-section-post-class,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-extras .clasbpro-email-section-extras {
@@ -170,6 +173,9 @@
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-customer .clasbpro-email-editor-toolbar--customer,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-admin-coupon .clasbpro-email-editor-toolbar--admin-coupon,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-customer-coupon .clasbpro-email-editor-toolbar--customer-coupon,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-admin-custom .clasbpro-email-editor-toolbar--admin-custom,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-customer-custom .clasbpro-email-editor-toolbar--customer-custom,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-custom-followup .clasbpro-email-editor-toolbar--custom-followup,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-reminders .clasbpro-email-editor-toolbar--reminders,
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-email-editor-toolbar--post-class {
 	display: flex;
@@ -2112,7 +2118,8 @@
 
 /* ----- Scheduled email tabs: inline control row ----- */
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-reminders .clasbpro-scheduled-email-controls-row.clasbpro-email-section-reminders,
-.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-scheduled-email-controls-row.clasbpro-email-section-post-class {
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-scheduled-email-controls-row.clasbpro-email-section-post-class,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-custom-followup .clasbpro-scheduled-email-controls-row.clasbpro-email-section-custom-followup {
 	display: grid;
 	grid-template-columns: 9.5rem 4.75rem 11.5rem 9.5rem;
 	align-items: end;
@@ -2127,7 +2134,8 @@
 }
 
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-reminders .clasbpro-scheduled-email-controls-row.clasbpro-email-section-reminders .acf-field.acf-hidden,
-.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-scheduled-email-controls-row.clasbpro-email-section-post-class .acf-field.acf-hidden {
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-scheduled-email-controls-row.clasbpro-email-section-post-class .acf-field.acf-hidden,
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-custom-followup .clasbpro-scheduled-email-controls-row.clasbpro-email-section-custom-followup .acf-field.acf-hidden {
 	display: flex !important;
 }
 
@@ -2193,7 +2201,8 @@
 }
 
 .clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-reminders .acf-field[data-name="reminder_email_subject"],
-.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .acf-field[data-name="post_class_email_subject"] {
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .acf-field[data-name="post_class_email_subject"],
+.clasbpro-booking-settings.clasbpro-emails-tab-active.clasbpro-email-subtabs-ready.clasbpro-email-view-custom-followup .acf-field[data-name="custom_followup_email_subject"] {
 	border-top: 1px solid #e2e8f0;
 	margin-top: 4px;
 	padding-top: 16px;
@@ -2201,7 +2210,8 @@
 
 @media screen and (max-width: 960px) {
 	.clasbpro-booking-settings.clasbpro-email-subtabs-ready.clasbpro-email-view-reminders .clasbpro-scheduled-email-controls-row.clasbpro-email-section-reminders,
-	.clasbpro-booking-settings.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-scheduled-email-controls-row.clasbpro-email-section-post-class {
+	.clasbpro-booking-settings.clasbpro-email-subtabs-ready.clasbpro-email-view-post-class .clasbpro-scheduled-email-controls-row.clasbpro-email-section-post-class,
+	.clasbpro-booking-settings.clasbpro-email-subtabs-ready.clasbpro-email-view-custom-followup .clasbpro-scheduled-email-controls-row.clasbpro-email-section-custom-followup {
 		grid-template-columns: repeat(2, minmax(8rem, 1fr));
 		width: 100%;
 		gap: 12px 1rem;

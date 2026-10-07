@@ -62,6 +62,9 @@ require_once CLASBOWPRO_DIR . 'includes/class-theme-installer.php';
 require_once CLASBOWPRO_DIR . 'includes/class-theme-preview.php';
 require_once CLASBOWPRO_DIR . 'includes/class-themes.php';
 require_once CLASBOWPRO_DIR . 'includes/class-elementor.php';
+require_once CLASBOWPRO_DIR . 'includes/class-snapshot.php';
+require_once CLASBOWPRO_DIR . 'includes/class-tools.php';
+require_once CLASBOWPRO_DIR . 'includes/class-cli.php';
 require_once CLASBOWPRO_DIR . 'includes/class-plugin.php';
 
 register_activation_hook( __FILE__, [ 'IOROOT_STRIPE_BOOKINGS_PRO\\Migration', 'maybe_run' ] );

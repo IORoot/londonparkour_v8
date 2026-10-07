@@ -40,8 +40,42 @@ abstract class Result_Pages {
 
 	private const ACF_POST_ID = 'clasbpro_options';
 
+	/**
+	 * @return array<string, array{slug: string, title: string, option: string, field_key: string, meta: string, content: string}>
+	 */
+	public static function definitions(): array {
+		return self::SLUGS;
+	}
+
 	public static function init(): void {
-		// Allow the admin to point at custom pages via ACF settings; otherwise fall back to auto-created.
+		add_action( 'template_redirect', [ self::class, 'maybe_nocache' ] );
+	}
+
+	/**
+	 * Stripe return URLs must not be cached as the pending receipt. Mobile
+	 * Safari will otherwise keep serving the settling banner after payment.
+	 */
+	public static function maybe_nocache(): void {
+		if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return;
+		}
+
+		$post = get_queried_object();
+		if ( $post instanceof \WP_Post && has_shortcode( (string) $post->post_content, 'clasbpro_booking_status' ) ) {
+			nocache_headers();
+			return;
+		}
+
+		$ids = array_filter(
+			[
+				self::success_page_id(),
+				self::cancel_page_id(),
+				self::error_page_id(),
+			]
+		);
+		if ( $ids && is_page( $ids ) ) {
+			nocache_headers();
+		}
 	}
 
 	/**

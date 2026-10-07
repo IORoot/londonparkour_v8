@@ -3,8 +3,9 @@
  * Custom-amount payments (the quiet /pay/ page). Not a class booking.
  *
  * Stored as clasbpro_booking rows with `_clasbpro_type = custom_payment` so
- * the existing status page + webhook session lookup still work. Class emails
- * and scheduled reminders are skipped.
+ * the existing status page + webhook session lookup still work. Class
+ * reminders are skipped. Pay confirmation, admin, and optional thank-you
+ * emails use the Emails → Pay settings.
  *
  * @package IOROOT_STRIPE_BOOKINGS_PRO
  */

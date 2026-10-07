@@ -32,6 +32,9 @@ abstract class Email_Body_Editor {
 		'field_clasbpro_customer_coupon_email_body_html',
 		'field_clasbpro_reminder_email_body_html',
 		'field_clasbpro_post_class_email_body_html',
+		'field_clasbpro_admin_custom_email_body_html',
+		'field_clasbpro_customer_custom_email_body_html',
+		'field_clasbpro_custom_followup_email_body_html',
 	];
 
 	/** @var array<string, string> */
@@ -197,6 +200,9 @@ abstract class Email_Body_Editor {
 			'customer_coupon'  => 'customer_coupon_email',
 			'reminder'         => 'reminder_email',
 			'post_class'       => 'post_class_email',
+			'admin_custom'     => 'admin_custom_email',
+			'customer_custom'  => 'customer_custom_email',
+			'custom_followup'  => 'custom_followup_email',
 		];
 
 		return $map[ $template_key ] ?? '';

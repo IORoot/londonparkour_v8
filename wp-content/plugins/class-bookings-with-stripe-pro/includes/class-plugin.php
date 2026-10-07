@@ -44,6 +44,8 @@ final class Plugin {
 		Class_Email_Overrides::init();
 		Email_Body_Editor::init();
 		Scheduled_Emails::init();
+		Tools::init();
+		Cli::init();
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_form_select_style' ], 999 );

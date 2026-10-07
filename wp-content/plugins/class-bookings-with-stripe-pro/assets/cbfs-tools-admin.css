@@ -1,0 +1,51 @@
+/**
+ * Stripe Class Pro — Tools admin screen.
+ */
+
+body.clasbpro-tools .clasbpro-tools-wrap {
+	max-width: 52rem;
+	margin: 12px 0 32px;
+}
+
+body.clasbpro-tools .clasbpro-tools-lead {
+	max-width: 40rem;
+	color: #475569;
+}
+
+body.clasbpro-tools .clasbpro-tools-card {
+	box-sizing: border-box;
+	margin: 0 0 20px;
+	padding: 20px 22px 22px;
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+}
+
+body.clasbpro-tools .clasbpro-tools-card h2 {
+	margin: 0 0 8px;
+	font-size: 1.15rem;
+}
+
+body.clasbpro-tools .clasbpro-tools-card--preview {
+	border-color: #f59e0b;
+}
+
+body.clasbpro-tools .clasbpro-tools-warning {
+	padding: 10px 12px;
+	background: #fffbeb;
+	border: 1px solid #fcd34d;
+	border-radius: 6px;
+}
+
+body.clasbpro-tools .clasbpro-tools-counts {
+	margin: 12px 0;
+	max-width: 28rem;
+}
+
+body.clasbpro-tools .clasbpro-tools-counts th {
+	width: 70%;
+}
+
+body.clasbpro-tools .clasbpro-tools-warnings {
+	color: #92400e;
+}

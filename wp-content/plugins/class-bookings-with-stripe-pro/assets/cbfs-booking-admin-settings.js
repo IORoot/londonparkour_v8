@@ -47,6 +47,9 @@
 		field_clasbpro_email_subtab_customer_coupon: 'customer-coupon',
 		field_clasbpro_email_subtab_reminders: 'reminders',
 		field_clasbpro_email_subtab_post_class: 'post-class',
+		field_clasbpro_email_subtab_admin_custom: 'admin-custom',
+		field_clasbpro_email_subtab_customer_custom: 'customer-custom',
+		field_clasbpro_email_subtab_custom_followup: 'custom-followup',
 		field_clasbpro_email_subtab_extras: 'extras',
 	};
 
@@ -392,6 +395,15 @@
 					'post_class_offset_amount',
 					'post_class_offset_unit',
 					'post_class_admin_copy',
+				],
+			},
+			{
+				section: 'custom-followup',
+				names: [
+					'enable_custom_followup_emails',
+					'custom_followup_offset_amount',
+					'custom_followup_offset_unit',
+					'custom_followup_admin_copy',
 				],
 			},
 		].forEach( function ( cfg ) {
@@ -813,6 +825,24 @@
 			html: 'customer_coupon_email_body_html',
 			mode: 'customer_coupon_email_body_editor_mode',
 			section: 'customer-coupon',
+		},
+		{
+			visual: 'admin_custom_email_body',
+			html: 'admin_custom_email_body_html',
+			mode: 'admin_custom_email_body_editor_mode',
+			section: 'admin-custom',
+		},
+		{
+			visual: 'customer_custom_email_body',
+			html: 'customer_custom_email_body_html',
+			mode: 'customer_custom_email_body_editor_mode',
+			section: 'customer-custom',
+		},
+		{
+			visual: 'custom_followup_email_body',
+			html: 'custom_followup_email_body_html',
+			mode: 'custom_followup_email_body_editor_mode',
+			section: 'custom-followup',
 		},
 		{
 			visual: 'reminder_email_body',
